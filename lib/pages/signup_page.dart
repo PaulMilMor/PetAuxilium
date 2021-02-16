@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
-class LoginPage extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //TODO la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
+      //FIX El contenido de este widget hace overflow en una pantalla de 1280p
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(75),
         child: AppBar(
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                   child: Text(
-                    'Iniciar Sesión',
+                    'Crea una cuenta',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -58,26 +59,45 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                   child: GrayTextField(
-                    hintText: 'Correo Electrónico',
+                    hintText: 'Nombre',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                  child: GrayTextField(
+                    hintText: 'Apellido',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                  child: GrayTextField(
+                    hintText: 'E-mail',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                   child: GrayTextField(
                     hintText: 'Contraseña',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                  child: GrayTextField(
+                    hintText: 'Confirmar contraseña',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      child: Text('Continuar',
-                          style: TextStyle(color: Colors.white)),
+                      child: Text('Registrarse',
+                          style:
+                              TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(49, 232, 93, 1),
+                        primary: Colors.white,
                       ),
                       onPressed: () {},
                     ),

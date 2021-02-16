@@ -56,7 +56,9 @@ class HomePage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
                     ),
                     ElevatedButton(
                       child: Text('Iniciar Sesión',
