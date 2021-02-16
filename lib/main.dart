@@ -12,16 +12,29 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      debugShowCheckedModeBanner: false,
-      theme: myTheme(),
-      initialRoute: '/',
-      routes: {
-        '/': (BuildContext context) => HomePage(),
-        '/login': (BuildContext context) => LoginPage(),
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode _currentFocus = FocusScope.of(context);
+        _unfocus(_currentFocus);
       },
+      child: MaterialApp(
+        title: 'Material App',
+        debugShowCheckedModeBanner: false,
+        theme: myTheme(),
+        initialRoute: '/',
+        routes: {
+          '/': (BuildContext context) => HomePage(),
+          '/login': (BuildContext context) => LoginPage(),
+        },
+      ),
     );
+  }
+
+//Esta función es para perder el focus en un elemento al tocar cualquier parte vacía de la app
+  void _unfocus(FocusScopeNode _currentFocus) {
+    if (!_currentFocus.hasPrimaryFocus && _currentFocus.focusedChild != null) {
+      _currentFocus.focusedChild.unfocus();
+    }
   }
 
   ThemeData myTheme() {
