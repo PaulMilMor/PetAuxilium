@@ -19,7 +19,7 @@ class AuthUtil {
       return null;
     }
   }
-
+//c
   //Obtiene email y password para ingresar
   
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono

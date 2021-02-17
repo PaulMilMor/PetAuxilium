@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       ),
     //body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.registerWithEmailAndPassword(user),))
      body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithEmailAndPassword(user.email,user.pass ),))
-    //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))
+    //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))k
     );
   }
 }
