@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 
 class dbUtil {
@@ -24,5 +25,18 @@ class dbUtil {
        );
 
     });
+  }
+
+//Guarda negocio
+Future<void> addBusiness(BusinessModel business) async {
+    await _firestoreInstance
+        .collection("business").add({
+         'name':business.name,
+         'location':business.location,
+         'description':business.description
+
+        }
+          
+          );       
   }
 }

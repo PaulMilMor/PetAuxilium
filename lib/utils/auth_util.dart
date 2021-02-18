@@ -57,6 +57,7 @@ class AuthUtil {
       return null;
     }
   }
+  
   Future<UserModel> signInWithGoogle() async {
   final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
