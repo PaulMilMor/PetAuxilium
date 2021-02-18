@@ -38,7 +38,20 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+  - assets/images/img1.jpg
+  - assets/images/img2.jpg
+  - assets/images/img3.jpg
+  - assets/images/img4.jpg
+  - assets/images/img5.jpg
+  - assets/images/img6.jpg
+  - assets/images/img7.jpg
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
+        - asset: assets/fonts/OpenSans-Light.ttf
+        - asset: assets/fonts/OpenSans-Regular.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
