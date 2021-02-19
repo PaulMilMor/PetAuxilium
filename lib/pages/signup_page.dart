@@ -31,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
             backgroundColor: Colors.white,
             actions: [
               Image.asset(
-                'lib/assets/logo_asset.png',
+                'assets/logo_asset.png',
                 //width: 120,
               ),
             ]),

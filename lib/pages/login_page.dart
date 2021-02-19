@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.white,
             actions: [
               Image.asset(
-                'lib/assets/logo_asset.png',
+                'assets/logo_asset.png',
                 //width: 120,
               ),
             ]),
