@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
+import 'package:pet_auxilium/pages/map_page.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +17,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final prefs = preferencesUtil();
+    prefs.initPrefs();
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);
@@ -26,9 +31,11 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (BuildContext context) => HomePage(),
-          '/login': (BuildContext context) => LoginPage(),
-          '/signup': (BuildContext context) => SignupPage(),
-          '/navigation': (BuildContext context) => NavigationPage(),
+          'login': (BuildContext context) => LoginPage(),
+          'signup': (BuildContext context) => SignupPage(),
+          'navigation': (BuildContext context) => NavigationPage(),
+          'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
+          'map': (BuildContext context) => MapPage(),
         },
       ),
     );
@@ -48,8 +55,10 @@ class MyApp extends StatelessWidget {
     //gray
     final altColor = Color.fromRGBO(210, 210, 210, 1);
     return ThemeData(
-      iconTheme: IconThemeData(color: accentColor),
-      primaryColor: primaryColor,
-    );
+        iconTheme: IconThemeData(color: accentColor),
+        primaryColor: primaryColor,
+        accentColor: primaryColor,
+        buttonTheme: ButtonThemeData(
+            buttonColor: accentColor, textTheme: ButtonTextTheme.accent));
   }
 }

@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/models/user_model.dart';
+import 'package:pet_auxilium/utils/auth_util.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 
 class HomePage extends StatelessWidget {
+  final db = dbUtil();
+  final auth = AuthUtil();
+  UserModel user = UserModel(
+      name: "fafafa",
+      birthday: "16/02/99",
+      pass: "adadadadad",
+      email: "fafaf@hotmail.com",
+      imgRef: "Fgafaf");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +27,7 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Image.asset(
-                  'lib/assets/whitelogo_asset.png',
+                  'assets/whitelogo_asset.png',
                   width: 120,
                 ),
               ),
@@ -68,7 +79,7 @@ class HomePage extends StatelessWidget {
                         elevation: 0,
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        Navigator.pushNamed(context, 'login');
                       },
                     ),
                   ],
@@ -78,7 +89,7 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/navigation');
+                    Navigator.pushNamed(context, 'navigation');
                   },
                   child: new Text(
                     'Registrarme en otro momento',
@@ -91,6 +102,14 @@ class HomePage extends StatelessWidget {
         ),
       ),
       //  body: Container(child: Icon(Icons.access_alarm_sharp))
+      /*
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+    //body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.registerWithEmailAndPassword(user),))
+     body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithEmailAndPassword(user.email,user.pass ),))
+    //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))
+    */
     );
   }
 }
