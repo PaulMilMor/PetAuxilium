@@ -11,7 +11,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //TODO la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
+      //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(75),
         child: AppBar(

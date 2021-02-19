@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
 class GrayTextField extends StatelessWidget {
-  GrayTextField({this.hintText});
+  GrayTextField({
+    this.hintText,
+    this.obscureText = false,
+    this.autocorrect,
+  });
   String hintText;
+  bool obscureText;
+  bool enableSuggestions;
+  bool autocorrect;
+  bool enableInteractiveSelection;
   @override
   Widget build(BuildContext context) {
     return TextField(

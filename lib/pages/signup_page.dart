@@ -11,8 +11,8 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //TODO la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
-      //FIX El contenido de este widget hace overflow en una pantalla de 1280p
+      //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
+      //FIXME: El contenido de este widget hace overflow en una pantalla de 1280p
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(75),
         child: AppBar(

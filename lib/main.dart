@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
+import 'package:pet_auxilium/pages/navigation_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         _unfocus(_currentFocus);
       },
       child: MaterialApp(
-        title: 'Material App',
+        title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
         initialRoute: '/',
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           '/': (BuildContext context) => HomePage(),
           '/login': (BuildContext context) => LoginPage(),
           '/signup': (BuildContext context) => SignupPage(),
+          '/navigation': (BuildContext context) => NavigationPage(),
         },
       ),
     );
@@ -40,8 +42,10 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData myTheme() {
+    //green
     final accentColor = Color.fromRGBO(49, 232, 93, 1);
     final primaryColor = Colors.white;
+    //gray
     final altColor = Color.fromRGBO(210, 210, 210, 1);
     return ThemeData(
       iconTheme: IconThemeData(color: accentColor),

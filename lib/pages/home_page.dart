@@ -77,6 +77,9 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/navigation');
+                  },
                   child: new Text(
                     'Registrarme en otro momento',
                     style: TextStyle(color: Colors.white),
