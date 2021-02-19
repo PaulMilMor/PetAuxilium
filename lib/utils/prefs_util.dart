@@ -17,4 +17,11 @@ class preferencesUtil{
   set businessName(String name){
     _prefs.setString('name', name);
   }
+   get businessDescription{
+    return _prefs.getString('description') ?? '';
+  }
+  set businessDescription(String desc){
+    _prefs.setString('description', desc);
+  }
+  
 }

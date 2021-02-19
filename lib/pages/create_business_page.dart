@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -12,33 +15,36 @@ class CreateBusinessPage extends StatefulWidget {
 class _CreateBusinessPageState extends State<CreateBusinessPage> {
   TextEditingController _nameTxtController;
   TextEditingController _dirTxtController;
-  final prefs = preferencesUtil();
+  TextEditingController _descTxtController;
+  final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
-  
+  final _db = dbUtil();
   String _name;
+  String _desc;
   List<String> _dir;
   List<LatLng> _locations;
-  final MapsUtil mapsUtil=MapsUtil();
+  final MapsUtil mapsUtil = MapsUtil();
   @override
   void initState() {
     super.initState();
-    _name = prefs.businessName;
-    //TODO: Esto es la mousekeherramienta mistoriosa, Es una herramienta que nos va ayudara mas tarde
-    _nameTxtController = new TextEditingController(text: _name);
-    _nameTxtController = new TextEditingController();
+
+    _name = prefs.businessName ?? ' ';
+    _desc = prefs.businessDescription;
+    _nameTxtController = TextEditingController(text: _name);
+    _dirTxtController = TextEditingController();
+    _descTxtController = TextEditingController(text: _desc);
   }
 
   @override
   Widget build(BuildContext context) {
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-    _dir=mapsUtil.getDir(_locations);
+    getDir(_locations);
+    //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
       body: _businessForm(context),
     );
   }
-
-
 
   Widget _businessForm(BuildContext context) {
     return SafeArea(
@@ -51,8 +57,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           _nameTxt(),
-          if(_dir==null) _dirTxt() ?? _list(_dir, context),
-          
+          _descriptionTxt(),
+          _dirTxt(),
           _buttons()
         ],
       ),
@@ -79,7 +85,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       controller: _dirTxtController,
       decoration: InputDecoration(labelText: 'Direccion'),
       onTap: () {
-        Navigator.pushNamed(context, 'map');
+        Navigator.pushNamed(context, 'map', arguments: _markers);
       },
     ));
   }
@@ -94,41 +100,57 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     );
   }
 
+  Widget _descriptionTxt() {
+    return TextField(
+      maxLines: 8,
+      controller: _descTxtController,
+      decoration: InputDecoration.collapsed(hintText: "Descripcion"),
+      onChanged: (value) {
+        setState(() {
+          prefs.businessDescription = value;
+          _desc = value;
+        });
+      },
+    );
+  }
+//TODO: cambiar el userID por el que este usando el usuario 
   Widget _saveBtn() {
     return Container(
       child: RaisedButton(
           onPressed: () async {
-           _dir=mapsUtil.getDir(_locations);
-           print(_dir);
+            print(mapsUtil.locationtoString(_locations));
+            BusinessModel business = BusinessModel(
+                name: _name,
+                location: mapsUtil.locationtoString(_locations),
+                userID: 'miidxd',
+                description: _desc);
+            _db.addBusiness(business);
+            //print(_dir);
           },
           child: Text('Guardar')),
     );
   }
- List<Widget> _list(List<String> data, BuildContext context) {
-    final List<Widget> opciones = [];
 
-    data.forEach((element) {
-      final widgetTemp = ListTile(
-        title: Text(element),
-      
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          color: Colors.cyanAccent,
-        ),
-        onTap: () {
-          // final route =MaterialPageRoute(
-          //   builder:(context)=> AlertPage()
-          Navigator.pushNamed(context, 'map');
-          // );
-          // Navigator.push(context, route);
-         
-        },
-      );
-      opciones..add(widgetTemp)..add(Divider());
-    });
-    //print(menuProvider.opciones);
-    //menuProvider.cargarData()
-    return opciones;
+//FIXME: optimizar este sector
+  void getDir(List<LatLng> locations) {
+    if (locations != null) {
+      locations.forEach((LatLng element) async {
+        String place = "";
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(element.latitude, element.longitude);
+        placemarks.forEach((Placemark element) {
+          place = place +
+              "\n" +
+              element.street +
+              " " +
+              element.subLocality +
+              ", " +
+              element.locality;
+        });
+        setState(() {
+          _dirTxtController.text = place;
+        });
+      });
+    }
   }
-
 }

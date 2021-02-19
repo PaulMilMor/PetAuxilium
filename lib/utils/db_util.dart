@@ -33,10 +33,25 @@ Future<void> addBusiness(BusinessModel business) async {
         .collection("business").add({
          'name':business.name,
          'location':business.location,
-         'description':business.description
+         'description':business.description,
+         'userID':business.userID
 
         }
           
           );       
   }
-}
+
+  Future <List<BusinessModel>> getAllLocations()async{
+     await _firestoreInstance.collection('business').get().then((value){
+       value.docs.forEach((element) { 
+          var info=element.data();
+         print(info.keys);
+       });
+
+       
+     });
+  }
+  }
+
+
+  

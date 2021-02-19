@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/map_page.dart';
+import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (BuildContext context) => HomePage(),
         'CreateBusiness' :(BuildContext context)=>CreateBusinessPage(),
-        'map':(BuildContext context)=>MapPage()
+        'map':(BuildContext context)=>MapPage(),
+        'userMap':(BuildContext context)=>UserMapPage()
         },
     );
   }
