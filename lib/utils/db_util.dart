@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
 
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -37,6 +38,18 @@ Future<void> addBusiness(BusinessModel business) async {
 
         }
           
+          );       
+  }
+  Future<void> addAdoption(AddAdoption ad) async {
+    await _firestoreInstance
+        .collection("adoption").add({
+         "category": ad.category,
+          "name": ad.name, 
+          "birthday": ad.description, 
+          "ubication":ad.ubication,
+          "imgRef":ad.imgRef
+
+        } 
           );       
   }
 }

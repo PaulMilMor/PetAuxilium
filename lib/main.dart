@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/adoption_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/map_page.dart';
@@ -21,11 +22,11 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       debugShowCheckedModeBanner: false,
       theme: myTheme(),
-      initialRoute: 'CreateBusiness',
+      initialRoute: 'AdoptionPage',
       routes: {
         '/': (BuildContext context) => HomePage(),
-        'CreateBusiness' :(BuildContext context)=>CreateBusinessPage(),
-        'map':(BuildContext context)=>MapPage()
+        'AdoptionPage' :(BuildContext context)=>Adoptionpage(),
+        //'map':(BuildContext context)=>MapPage()
         },
     );
   }

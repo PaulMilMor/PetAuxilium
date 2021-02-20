@@ -36,6 +36,7 @@ dependencies:
   geolocator:
   geocoding: ^1.0.5
   shared_preferences: ^0.5.12+4
+  image_picker: ^0.6.6+5
 dev_dependencies:
   flutter_test:
     sdk: flutter
