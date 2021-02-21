@@ -99,7 +99,7 @@ class Adoption_page extends State {
 
   Widget _decideImageView() {
     if (imagefile == null) {
-      return Text("No Image Selected");
+      return Text("No hay imagenes seleccionadas");
     } else {
       print("dentro del decide");
       print(imagefile);
@@ -112,31 +112,49 @@ class Adoption_page extends State {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('Adopcion'),
         ),
         body: Container(
            child: Column(
             //mainAxisAlignment: MainAxisAligment.spaceAround,
             children: <Widget>[
-            
+              
               Container(
-                height: 200.0,
-                width: 200.0,
+                height: 100.0,
+                child: Center(
+                  child: Text("PUBLICAR ADOPCIÓN", textAlign:  TextAlign.center,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold)
+                  ),
+                ),
+                ),
+              Container(
+                height: 50.0,
+                width: 300.0,
+                child: Text("Completa los siguientes campos:", textAlign:  TextAlign.left,style: TextStyle(fontSize: 18)
+                ),
+                ),
+              
+              Container(
+                height: 70.0,
+                width: 300.0,
                 child: TextField(
                   decoration: InputDecoration(hintText: 'Nombre'),
                 ),
               ),
               Container(
                 child: Container(
+                  height: 100.0,
+                  width: 300.0,
                     child: TextField(
-                  decoration: InputDecoration(hintText: 'Descripcion'),
-                  maxLines: 5,
+                  decoration: InputDecoration(hintText: 'Descripción'),
+                  maxLines: null,
                   keyboardType: TextInputType.multiline,
-                )),
+                ),
+                ),
               ),
               Container(
                 child: Container(
-                    child: Text("Aqui va la ubicacion"),
+                  height: 50.0,
+                    child: Text("Aqui va la ubicación"),
                   ),
               ),
               _decideImageView(),
@@ -144,7 +162,21 @@ class Adoption_page extends State {
                 onPressed: () {
                   _showChoiceDialog(context);
                 },
-                child: Text("Select Image"),
+                child: Text("Agregar imagenes"),
+              ),
+              Container(
+                height: 100.0,
+                width: 200.0,
+                child: Center(
+                  child: Container(
+                    
+                    child: RaisedButton(
+                        onPressed: () {
+
+                        },child: Text("Publicar"),
+                      ),
+                  ),
+                ),
               ),
             ],
           ))
