@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
 
 class HomePage extends StatelessWidget {
   final db = dbUtil();

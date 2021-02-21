@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/adoption_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
+          'AdoptionPage': (BuildContext context) => Adoptionpage(),
         },
       ),
     );
