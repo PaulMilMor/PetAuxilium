@@ -1,19 +1,37 @@
 import 'package:flutter/material.dart';
 
-class GrayTextField extends StatelessWidget {
-  GrayTextField({
+class GrayTextFormField extends StatelessWidget {
+  GrayTextFormField({
     this.hintText,
     this.obscureText = false,
     this.autocorrect,
+    this.textCapitalization = TextCapitalization.none,
+    this.enableSuggestions = true,
+    this.enableInteractiveSelection = false,
+    this.keyboardType,
+    this.controller,
+    this.validator,
   });
-  String hintText;
-  bool obscureText;
-  bool enableSuggestions;
-  bool autocorrect;
-  bool enableInteractiveSelection;
+  final String hintText;
+  final TextInputType keyboardType;
+  final TextCapitalization textCapitalization;
+  final bool obscureText;
+  final bool enableSuggestions;
+  final bool autocorrect;
+  final bool enableInteractiveSelection;
+  final TextEditingController controller;
+  final String Function(String) validator;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      keyboardType: this.keyboardType,
+      textCapitalization: this.textCapitalization,
+      obscureText: this.obscureText,
+      enableSuggestions: this.enableSuggestions,
+      autocorrect: this.autocorrect,
+      enableInteractiveSelection: this.enableInteractiveSelection,
+      controller: this.controller,
+      validator: this.validator,
       decoration: InputDecoration(
         filled: true,
         fillColor: Color.fromRGBO(235, 235, 235, 1),

@@ -60,31 +60,31 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                  child: GrayTextField(
+                  child: GrayTextFormField(
                     hintText: 'Nombre',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                  child: GrayTextField(
+                  child: GrayTextFormField(
                     hintText: 'Apellido',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                  child: GrayTextField(
+                  child: GrayTextFormField(
                     hintText: 'E-mail',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                  child: GrayTextField(
+                  child: GrayTextFormField(
                     hintText: 'Contraseña',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                  child: GrayTextField(
+                  child: GrayTextFormField(
                     hintText: 'Confirmar contraseña',
                   ),
                 ),
