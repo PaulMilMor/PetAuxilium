@@ -6,6 +6,7 @@ import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
 import 'package:pet_auxilium/pages/map_page.dart';
+import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 Future<void> main() async {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           'navigation': (BuildContext context) => NavigationPage(),
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
+          'userMap': (BuildContext context) => UserMapPage(),
         },
       ),
     );

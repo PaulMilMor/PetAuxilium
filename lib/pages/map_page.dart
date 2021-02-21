@@ -17,17 +17,19 @@ class _MapPageState extends State<MapPage> {
   final prefs = preferencesUtil();
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = new Set<Marker>();
-  BusinessModel business = BusinessModel(location: 'geo:29,-111');
+ // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
     super.initState();
-
-    //TODO: Esto es la mousekeherramienta mistoriosa, Es una herramienta que nos va a servir ayudara mas tarde
+    
+   
+  
   }
 
   @override
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
+    if ( ModalRoute.of(context).settings.arguments != null) _markers =ModalRoute.of(context).settings.arguments;
     final CameraPosition puntoInicial = CameraPosition(
       target: tempLocation,
       zoom: 17.5,
@@ -61,7 +63,7 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
-
+//TODO:limitar los markers
   _addMarker(LatLng point) async {
     setState(() {
       _markers.add(Marker(
