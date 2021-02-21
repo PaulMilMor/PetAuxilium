@@ -43,11 +43,11 @@ Future<void> addBusiness(BusinessModel business) async {
   Future<void> addAdoption(AddAdoption ad) async {
     await _firestoreInstance
         .collection("adoption").add({
-         "category": ad.category,
-          "name": ad.name, 
-          "birthday": ad.description, 
-          "ubication":ad.ubication,
-          "imgRef":ad.imgRef
+         'category': ad.category,
+          'name': ad.name, 
+          'description': ad.description, 
+          'location':ad.location,
+          'imgRef':ad.imgRef
 
         } 
           );       

@@ -3,8 +3,8 @@ String id;
 String category;
 String name;
 String description;
-String ubication;
+String location;
 String imgRef;
-AddAdoption({this.id,this.category,this.name,this.description, this.ubication, this.imgRef});
+AddAdoption({this.id,this.category,this.name,this.description, this.location, this.imgRef});
 
 }

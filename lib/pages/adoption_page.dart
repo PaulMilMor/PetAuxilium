@@ -19,7 +19,7 @@ class Adoption_page extends State {
       category: "adopcion",
       name: "Mauricio",
       description: "damos en adopcion a este perro",
-      ubication: "aqui",
+      location: "aqui",
       imgRef: "aquivaunaimagen.png");
 
   File imagefile;
@@ -101,7 +101,9 @@ class Adoption_page extends State {
     if (imagefile == null) {
       return Text("No Image Selected");
     } else {
-      Image.file(imagefile, width: 150, height: 150);
+      print("dentro del decide");
+      print(imagefile);
+      return Image.file(imagefile, width: 200, height: 200);
     }
   }
 
@@ -116,13 +118,7 @@ class Adoption_page extends State {
            child: Column(
             //mainAxisAlignment: MainAxisAligment.spaceAround,
             children: <Widget>[
-              _decideImageView(),
-              RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Text("Select Image"),
-              ),
+            
               Container(
                 height: 200.0,
                 width: 200.0,
@@ -134,14 +130,22 @@ class Adoption_page extends State {
                 child: Container(
                     child: TextField(
                   decoration: InputDecoration(hintText: 'Descripcion'),
-                  /*maxLines: 5,
-                  keyboardType: TextInputType.multiline,*/
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
                 )),
               ),
-              /*Container(child: imagefile ==null ? Text("image is no loaded"):Image.file(_image)
-              
-              ),*/
-              
+              Container(
+                child: Container(
+                    child: Text("Aqui va la ubicacion"),
+                  ),
+              ),
+              _decideImageView(),
+              RaisedButton(
+                onPressed: () {
+                  _showChoiceDialog(context);
+                },
+                child: Text("Select Image"),
+              ),
             ],
           ))
         );
