@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
-
+  final preferencesUtil _prefs=preferencesUtil();
 //Guarda usuario
   Future<void> addUser(UserModel user) async {
     await _firestoreInstance.collection("users").doc(user.id).set({
@@ -19,6 +20,8 @@ class dbUtil {
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
+   _prefs.userName=value.get("name");
+   _prefs.userID=id;
       return UserModel(
           name: value.get("name"),
           birthday: value.get("birthday"),
@@ -37,12 +40,16 @@ class dbUtil {
   }
 
   Future<List<BusinessModel>> getAllLocations() async {
+          List <BusinessModel> locations=List<BusinessModel>();
     await _firestoreInstance.collection('business').get().then((value) {
+
       value.docs.forEach((element) {
-        var info = element.data();
-        print(info.keys);
+    
+      locations.add(BusinessModel.fromJsonMap(element.data()));
+    
       });
     });
+    return locations;
   }
 
   Future<void> addAdoption(AddAdoption ad) async {

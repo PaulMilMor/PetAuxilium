@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
   _NavigationPageState createState() => _NavigationPageState();
+   
 }
 
 class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
+   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -16,6 +19,7 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: Text(_prefs.userName),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,

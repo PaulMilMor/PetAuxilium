@@ -19,7 +19,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
-  String _name;
+  String _name=" ";
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
