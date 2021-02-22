@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
   _login(BuildContext context2) async {
     String _email = _emailController.text;
     String _password = _pswdController.text;
-    final _user = await auth.signInWithEmailAndPassword(_email, _password);
+    UserModel _user = await auth.signInWithEmailAndPassword(_email, _password);
     print('LOGIN');
     print(_user);
     if (_user == null) {
@@ -155,5 +155,7 @@ class _LoginPageState extends State<LoginPage> {
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text('Ingreso correcto')));
     }
+
+    Navigator.pushNamed(context, 'navigation');
   }
 }

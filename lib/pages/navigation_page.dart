@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/account_page.dart';
+import 'package:pet_auxilium/pages/create_business_page.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -13,9 +15,45 @@ class _NavigationPageState extends State<NavigationPage> {
     });
   }
 
+  final List<String> _titles = [
+    'INICIO',
+    'CHAT',
+    'CREAR PUBLICACIÓN',
+    'NOTIFICACIONES',
+    'PERFIL'
+  ];
+  final List<Widget> _tabs = [
+    null,
+    CreateBusinessPage(),
+    AccountPage(),
+    CreateBusinessPage(),
+    AccountPage()
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        title: _selectedIndex == 4
+            ? Center(
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
@@ -24,7 +62,7 @@ class _NavigationPageState extends State<NavigationPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '',
+            label: 'Inicio',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
