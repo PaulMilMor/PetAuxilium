@@ -11,6 +11,9 @@ class GrayTextFormField extends StatelessWidget {
     this.keyboardType,
     this.controller,
     this.validator,
+    this.onChanged,
+    this.onTap,
+    this.focusNode,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -21,6 +24,9 @@ class GrayTextFormField extends StatelessWidget {
   final bool enableInteractiveSelection;
   final TextEditingController controller;
   final String Function(String) validator;
+  final void Function(String) onChanged;
+  final void Function() onTap;
+  final FocusNode focusNode;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -32,6 +38,9 @@ class GrayTextFormField extends StatelessWidget {
       enableInteractiveSelection: this.enableInteractiveSelection,
       controller: this.controller,
       validator: this.validator,
+      onChanged: this.onChanged,
+      onTap: this.onTap,
+      focusNode: this.focusNode,
       decoration: InputDecoration(
         filled: true,
         fillColor: Color.fromRGBO(235, 235, 235, 1),

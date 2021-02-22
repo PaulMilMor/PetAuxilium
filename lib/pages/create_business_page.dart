@@ -6,6 +6,7 @@ import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class CreateBusinessPage extends StatefulWidget {
   @override
@@ -52,13 +53,18 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 15),
-          Text(
-            'PUBLICAR NEGOCIO',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+            child: Text(
+              'PUBLICAR NEGOCIO',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
           ),
+          Text('Completa los siguientes campos'),
           _nameTxt(),
-          _descriptionTxt(),
           _dirTxt(),
+          Text('Describa los servicios que ofrece'),
+          _descriptionTxt(),
           _buttons()
         ],
       ),
@@ -67,7 +73,17 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _nameTxt() {
     return Container(
-        child: TextField(
+      child: GrayTextFormField(
+          controller: _nameTxtController,
+          hintText: 'Nombre',
+          onChanged: (value) {
+            setState(() {
+              prefs.businessName = value;
+              _name = value;
+            });
+          }),
+
+      /*TextField(
       controller: _nameTxtController,
       decoration: InputDecoration(labelText: 'Nombre'),
       onChanged: (value) {
@@ -76,18 +92,28 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           _name = value;
         });
       },
-    ));
+    )*/
+    );
   }
 
   Widget _dirTxt() {
     return Container(
-        child: TextField(
+        child: GrayTextFormField(
+            controller: _dirTxtController,
+            hintText: 'Direccion',
+            //Esto es para que no se pueda editar manualmente el texta de la ubicación
+            focusNode: AlwaysDisabledFocusNode(),
+            onTap: () {
+              Navigator.pushNamed(context, 'map', arguments: _markers);
+            })
+        /*TextField(
       controller: _dirTxtController,
       decoration: InputDecoration(labelText: 'Direccion'),
       onTap: () {
         Navigator.pushNamed(context, 'map', arguments: _markers);
       },
-    ));
+    )*/
+        );
   }
 
   Widget _buttons() {
@@ -95,7 +121,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_saveBtn()],
+        children: [_cancelBtn(), _saveBtn()],
       ),
     );
   }
@@ -113,7 +139,19 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       },
     );
   }
-//TODO: cambiar el userID por el que este usando el usuario 
+
+  Widget _cancelBtn() {
+    return Container(
+      child: TextButton(
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+//TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
     return Container(
       child: RaisedButton(
@@ -127,7 +165,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             _db.addBusiness(business);
             //print(_dir);
           },
-          child: Text('Guardar')),
+          child: Text('Publicar')),
     );
   }
 
@@ -153,4 +191,10 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       });
     }
   }
+}
+
+//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

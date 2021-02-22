@@ -17,19 +17,17 @@ class _MapPageState extends State<MapPage> {
   final prefs = preferencesUtil();
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = new Set<Marker>();
- // BusinessModel business = BusinessModel(location: 'geo:29,-111');
+  // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
     super.initState();
-    
-   
-  
   }
 
   @override
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
-    if ( ModalRoute.of(context).settings.arguments != null) _markers =ModalRoute.of(context).settings.arguments;
+    if (ModalRoute.of(context).settings.arguments != null)
+      _markers = ModalRoute.of(context).settings.arguments;
     final CameraPosition puntoInicial = CameraPosition(
       target: tempLocation,
       zoom: 17.5,
@@ -42,9 +40,7 @@ class _MapPageState extends State<MapPage> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-              
-                Navigator.pushNamed(context, 'CreateBusiness',
-                    arguments: _markers);
+                Navigator.pop(context);
                 // final GoogleMapController controller =
                 //     await _controller.future;
                 // controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -63,6 +59,7 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
     setState(() {
@@ -76,6 +73,4 @@ class _MapPageState extends State<MapPage> {
       ));
     });
   }
-
- 
 }
