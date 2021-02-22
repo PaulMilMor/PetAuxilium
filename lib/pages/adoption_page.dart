@@ -19,18 +19,19 @@ class Adoption_page extends State {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-  TextEditingController _nameTxtController;
-  TextEditingController _dirTxtController;
-  TextEditingController _descTxtController;
+  var _nameTxtController = TextEditingController();
+  //TextEditingController _nameTxtController;
+  var  _dirTxtController = TextEditingController();
+  var _descTxtController = TextEditingController();
 
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
-  String _selectedLocation = 'Escoge una categoria';
+  String _selectedCategory;
+  List listItems = ['Adopción', 'Animales perdidos', 'Situacion de calle'];
   String _name;
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
-  var _controller = TextEditingController();
 
   /*AddAdoption ad = AddAdoption(
       category: "adopcion",
@@ -44,7 +45,6 @@ class Adoption_page extends State {
 
   void initState() {
     super.initState();
-
     /*_name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
@@ -92,12 +92,12 @@ class Adoption_page extends State {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Make a choice wey"),
+            title: Text("Selecciona una opción"),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                    child: Text("Gallery"),
+                    child: Text("Galeria"),
                     onTap: () {
                       print("ostia puta");
                       print(context);
@@ -106,7 +106,7 @@ class Adoption_page extends State {
                   ),
                   Padding(padding: EdgeInsets.all(8.0)),
                   GestureDetector(
-                      child: Text("Camera"),
+                      child: Text("Cámara"),
                       onTap: () {
                         _openCamera(context);
                       })
@@ -167,29 +167,32 @@ class Adoption_page extends State {
 
   Widget _category() {
     return Container(
-      height: 80.0,
-      
+      height: 100.0,
+      margin: const EdgeInsets.only(left: 40.0,top: 20),
       child: Center(
           child: Row(children: [
-        Text(
+            Container(
+            margin: const EdgeInsets.only(right: 30.0),
+            child: Text(
           'Categoría:',
           style: TextStyle(fontSize: 18),
         ),
-        DropdownButton<String>(
-          items: <String>['Adopción', 'Animales perdidos', 'Situacion de calle']
-              .map((String value) {
-            return new DropdownMenuItem<String>(
-              
-              value: value,
-              child: new Text(value),
-            );
-          }).toList(),
-          onChanged: (newVal) {
-            this.setState(() {
-              _selectedLocation = newVal;
-              print(_selectedLocation);
+            ),
+        DropdownButton(
+          hint: Text("Selecciona una categoria"),
+          value: _selectedCategory,
+          onChanged: (newValue){
+            setState(() {
+                _selectedCategory = newValue;          
             });
           },
+          items: listItems.map((valueItem){
+            return DropdownMenuItem(
+            value: valueItem,
+            child: Text(valueItem),
+            );
+          }
+          ).toList(),
         )
       ])),
     );
@@ -197,21 +200,23 @@ class Adoption_page extends State {
 
   Widget _nameTxt() {
     return Container(
-        height: 100.0,
+        //height: 100.0,
         child: Center(
           child: Column(children: [
+            
             Text(
               'Completa los siguientes campos',
               style: TextStyle(fontSize: 18),
             ),
             
             Container(
+                margin: const EdgeInsets.only(top: 20, bottom: 10),
                 width: 300.0,
                 child: TextField(
                   controller: _nameTxtController,
                   decoration: InputDecoration(labelText: 'Nombre',
                   suffixIcon: IconButton(
-                  onPressed: () => _controller.clear(),
+                  onPressed: () => _nameTxtController.clear(),
                   icon: Icon(Icons.clear),
                   )
                   ),
@@ -237,7 +242,7 @@ class Adoption_page extends State {
                   controller: _descTxtController,
                   decoration: InputDecoration(labelText: 'Descripción',
                   suffixIcon: IconButton(
-                  onPressed: () => _controller.clear(),
+                  onPressed: () => _descTxtController.clear(),
                   icon: Icon(Icons.clear),
                   )
                   ),
@@ -258,10 +263,15 @@ class Adoption_page extends State {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
+        margin: const EdgeInsets.only(left: 55.0,bottom: 20),
         child: Center(
             child: TextField(
           controller: _dirTxtController,
-          decoration: InputDecoration(labelText: 'Dirección'),
+          decoration: InputDecoration(labelText: 'Dirección',
+          suffixIcon: IconButton(
+                  onPressed: () => _dirTxtController.clear(),
+                  icon: Icon(Icons.clear),
+                  )),
           onTap: () {
             Navigator.pushNamed(context, 'map', arguments: _markers);
           },
@@ -271,6 +281,7 @@ class Adoption_page extends State {
   Widget _images() {
     return Container(
         width: 300.0,
+        margin: const EdgeInsets.only(top: 40),
         child: Column(
             //mainAxisAlignment: MainAxisAligment.spaceAround,
             children: <Widget>[
@@ -289,24 +300,28 @@ class Adoption_page extends State {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _saveBtn()],
+        children: [
+          _CancelBtn(), 
+          _saveBtn()],
       ),
     );
   }
 
   Widget _CancelBtn() {
     return Container(
+      margin: const EdgeInsets.only(right: 30.0,bottom: 50),
       child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
     );
   }
 
   Widget _saveBtn() {
     return Container(
+      margin: const EdgeInsets.only(right: 40.0,bottom: 50),
       child: RaisedButton(
           onPressed: () async {
             //print(mapsUtil.locationtoString(_locations));
             AddAdoption ad = AddAdoption(
-                category:_selectedLocation,
+                category:_selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
                 id: 'miidxd',
