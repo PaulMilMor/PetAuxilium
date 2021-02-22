@@ -4,7 +4,7 @@ class GrayTextFormField extends StatelessWidget {
   GrayTextFormField({
     this.hintText,
     this.obscureText = false,
-    this.autocorrect,
+    this.autocorrect = true,
     this.textCapitalization = TextCapitalization.none,
     this.enableSuggestions = true,
     this.enableInteractiveSelection = false,

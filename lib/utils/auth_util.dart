@@ -22,20 +22,24 @@ class AuthUtil {
   }
 
   //Obtiene email y password para ingresar
-  
+
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
   Future signInWithEmailAndPassword(String email, String password) async {
+    print('SIGN IN');
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       Future<UserModel> user = _db.getUser(result.user.uid);
+      print('SIGN IN TRY');
       print(user);
       return user;
     } catch (error) {
+      print('SIGN IN CATCH');
       print(error.toString());
       return null;
     }
   }
+
   //Retorna un usuario con nombre 'anonimo' y con una id generada automaticamente
   Future<UserModel> signInAnon() async {
     try {
@@ -48,7 +52,7 @@ class AuthUtil {
       return null;
     }
   }
-   
+
   //Cerrar Sesion
   Future signOut() async {
     try {
@@ -58,27 +62,27 @@ class AuthUtil {
       return null;
     }
   }
-  
+
   Future<UserModel> signInWithGoogle() async {
-  final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-  final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final GoogleSignInAccount googleSignInAccount =
+        await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
 
-  final AuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleSignInAuthentication.idToken,
-      accessToken: googleSignInAuthentication.accessToken);
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken);
 
-  final authResult = await _auth.signInWithCredential(credential);
-  final  user = authResult.user;
-print(user);
-  // assert(!user.isAnonymous);
-  // assert(await user.getIdToken() != null);
+    final authResult = await _auth.signInWithCredential(credential);
+    final user = authResult.user;
+    print(user);
+    // assert(!user.isAnonymous);
+    // assert(await user.getIdToken() != null);
 
+    //return user;
+  }
 
-
-  //return user;
-}
-
-void signOutGoogle() async {
-  await _googleSignIn.signOut();
-}
+  void signOutGoogle() async {
+    await _googleSignIn.signOut();
+  }
 }
