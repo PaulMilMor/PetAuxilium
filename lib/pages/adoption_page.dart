@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/utils/maps_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Adoptionpage extends StatefulWidget {
   @override
@@ -12,18 +16,42 @@ class Adoptionpage extends StatefulWidget {
 }
 
 class Adoption_page extends State {
-  final db = dbUtil();
+  final _db = dbUtil();
   final auth = AuthUtil();
+  final prefs = new preferencesUtil();
+  TextEditingController _nameTxtController;
+  TextEditingController _dirTxtController;
+  TextEditingController _descTxtController;
 
-  AddAdoption ad = AddAdoption(
+  final MapsUtil mapsUtil = MapsUtil();
+  Set<Marker> _markers = new Set<Marker>();
+  String _selectedLocation = 'Escoge una categoria';
+  String _name;
+  String _desc;
+  List<String> _dir;
+  List<LatLng> _locations;
+  var _controller = TextEditingController();
+
+  /*AddAdoption ad = AddAdoption(
       category: "adopcion",
       name: "Mauricio",
       description: "damos en adopcion a este perro",
       location: "aqui",
-      imgRef: "aquivaunaimagen.png");
+      imgRef: "aquivaunaimagen.png");*/
 
   File imagefile;
   final picker = ImagePicker();
+
+  void initState() {
+    super.initState();
+
+    /*_name = prefs.adoptionName ?? ' ';
+    _desc = prefs.adoptionDescription;
+    _nameTxtController = TextEditingController(text: _name);
+    _dirTxtController = TextEditingController();
+    _descTxtController = TextEditingController(text: _desc);*/
+  }
+
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
@@ -43,7 +71,7 @@ class Adoption_page extends State {
     setState(() {
       print("chingadamadre");
       print(picture);
-      
+
       imagefile = picture;
       print(imagefile);
     });
@@ -57,14 +85,6 @@ class Adoption_page extends State {
       print(picture);
       imagefile = picture;
     });
-
-/*setState(() {
-      if (picture != null) {
-        imagefile = picture;
-      } else {
-        print('No image selected');
-      }
-    });*/
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
@@ -103,60 +123,157 @@ class Adoption_page extends State {
     } else {
       print("dentro del decide");
       print(imagefile);
-      return Image.file(imagefile, width: 200, height: 200);
+      return Image.file(imagefile, width: 100, height: 100);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    _markers = ModalRoute.of(context).settings.arguments;
+    _locations = mapsUtil.getLocations(_markers);
+    getDir(_locations);
     return Scaffold(
-        appBar: AppBar(
+      body: _publicationForm(context),
+
+      /*appBar: AppBar(
           title: Text('Adopcion'),
+        ),*/
+    );
+  }
+
+  Widget _publicationForm(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 18),
+          Center(
+            child: Text(
+              'CREAR PUBLICACIÓN',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),
+          _category(),
+          _nameTxt(),
+          _dirTxt(),
+          _descTxt(),
+          _images(),
+          _buttons()
+        ],
+      ),
+    );
+  }
+
+  Widget _category() {
+    return Container(
+      height: 80.0,
+      
+      child: Center(
+          child: Row(children: [
+        Text(
+          'Categoría:',
+          style: TextStyle(fontSize: 18),
         ),
-        body: Container(
-           child: Column(
-            //mainAxisAlignment: MainAxisAligment.spaceAround,
-            children: <Widget>[
+        DropdownButton<String>(
+          items: <String>['Adopción', 'Animales perdidos', 'Situacion de calle']
+              .map((String value) {
+            return new DropdownMenuItem<String>(
               
-              Container(
-                height: 100.0,
-                child: Center(
-                  child: Text("PUBLICAR ADOPCIÓN", textAlign:  TextAlign.center,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold)
-                  ),
-                ),
-                ),
-              Container(
-                height: 50.0,
-                width: 300.0,
-                child: Text("Completa los siguientes campos:", textAlign:  TextAlign.left,style: TextStyle(fontSize: 18)
-                ),
-                ),
-              
-              Container(
-                height: 70.0,
+              value: value,
+              child: new Text(value),
+            );
+          }).toList(),
+          onChanged: (newVal) {
+            this.setState(() {
+              _selectedLocation = newVal;
+              print(_selectedLocation);
+            });
+          },
+        )
+      ])),
+    );
+  }
+
+  Widget _nameTxt() {
+    return Container(
+        height: 100.0,
+        child: Center(
+          child: Column(children: [
+            Text(
+              'Completa los siguientes campos',
+              style: TextStyle(fontSize: 18),
+            ),
+            
+            Container(
                 width: 300.0,
                 child: TextField(
-                  decoration: InputDecoration(hintText: 'Nombre'),
-                ),
-              ),
-              Container(
-                child: Container(
-                  height: 100.0,
-                  width: 300.0,
-                    child: TextField(
-                  decoration: InputDecoration(hintText: 'Descripción'),
+                  controller: _nameTxtController,
+                  decoration: InputDecoration(labelText: 'Nombre',
+                  suffixIcon: IconButton(
+                  onPressed: () => _controller.clear(),
+                  icon: Icon(Icons.clear),
+                  )
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      prefs.adoptionName = value;
+                      _name = value;
+                    });
+                  },
+                )),
+          ]),
+        ));
+  }
+
+  Widget _descTxt() {
+    return Container(
+        height: 100.0,
+        child: Center(
+          child: Column(children: [
+            Container(
+                width: 300.0,
+                child: TextField(
+                  controller: _descTxtController,
+                  decoration: InputDecoration(labelText: 'Descripción',
+                  suffixIcon: IconButton(
+                  onPressed: () => _controller.clear(),
+                  icon: Icon(Icons.clear),
+                  )
+                  ),
+                  maxLength: 500,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
-                ),
-                ),
-              ),
-              Container(
-                child: Container(
-                  height: 50.0,
-                    child: Text("Aqui va la ubicación"),
-                  ),
-              ),
+                  onChanged: (value) {
+                    setState(() {
+                      prefs.adoptionDescription = value;
+                      _desc = value;
+                    });
+                  },
+                )),
+          ]),
+        ));
+  }
+
+  Widget _dirTxt() {
+    return Container(
+        width: 300.0,
+        child: Center(
+            child: TextField(
+          controller: _dirTxtController,
+          decoration: InputDecoration(labelText: 'Dirección'),
+          onTap: () {
+            Navigator.pushNamed(context, 'map', arguments: _markers);
+          },
+        )));
+  }
+
+  Widget _images() {
+    return Container(
+        width: 300.0,
+        child: Column(
+            //mainAxisAlignment: MainAxisAligment.spaceAround,
+            children: <Widget>[
               _decideImageView(),
               RaisedButton(
                 onPressed: () {
@@ -164,22 +281,62 @@ class Adoption_page extends State {
                 },
                 child: Text("Agregar imagenes"),
               ),
-              Container(
-                height: 100.0,
-                width: 200.0,
-                child: Center(
-                  child: Container(
-                    
-                    child: RaisedButton(
-                        onPressed: () {
+            ]));
+  }
 
-                        },child: Text("Publicar"),
-                      ),
-                  ),
-                ),
-              ),
-            ],
-          ))
-        );
+  Widget _buttons() {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [_CancelBtn(), _saveBtn()],
+      ),
+    );
+  }
+
+  Widget _CancelBtn() {
+    return Container(
+      child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
+    );
+  }
+
+  Widget _saveBtn() {
+    return Container(
+      child: RaisedButton(
+          onPressed: () async {
+            //print(mapsUtil.locationtoString(_locations));
+            AddAdoption ad = AddAdoption(
+                category:_selectedLocation,
+                name: _name,
+                location: mapsUtil.locationtoString(_locations),
+                id: 'miidxd',
+                description: _desc);
+            _db.addAdoption(ad);
+            print(_name);
+          },
+          child: Text('Publicar')),
+    );
+  }
+
+  void getDir(List<LatLng> locations) {
+    if (locations != null) {
+      locations.forEach((LatLng element) async {
+        String place = "";
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(element.latitude, element.longitude);
+        placemarks.forEach((Placemark element) {
+          place = place +
+              "\n" +
+              element.street +
+              " " +
+              element.subLocality +
+              ", " +
+              element.locality;
+        });
+        setState(() {
+          _dirTxtController.text = place;
+        });
+      });
+    }
   }
 }

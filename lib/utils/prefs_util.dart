@@ -24,4 +24,16 @@ class preferencesUtil{
     _prefs.setString('description', desc);
   }
   
+   get adoptionName{
+    return _prefs.getString('name') ?? '';
+  }
+  set adoptionName(String name){
+    _prefs.setString('name', name);
+  }
+   get adoptionDescription{
+    return _prefs.getString('description') ?? '';
+  }
+  set adoptionDescription(String desc){
+    _prefs.setString('description', desc);
+  }
 }
