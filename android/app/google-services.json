@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "617649593276",
+    "firebase_url": "https://petauxilium-default-rtdb.firebaseio.com",
+    "project_id": "petauxilium",
+    "storage_bucket": "petauxilium.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617649593276:android:975054706620be083a29b9",
+        "android_client_info": {
+          "package_name": "com.example.pet_auxilium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617649593276-mk2ndc7hdvppe9jrahkqg1biudb5e1dd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVB1UncyljyN7AbV8JPfbgLeHgk2RS-Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617649593276-mk2ndc7hdvppe9jrahkqg1biudb5e1dd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

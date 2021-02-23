@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pet_auxilium/src/pages/counter_page.dart';
-//import 'package:pet_auxilium/src/pages/home_page.dart';
+import 'package:pet_auxilium/src/pages/feed.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'OpenSans'),
       home: Center(
         //child: HomePage(),
-        child: CounterPage(),
+        child: Feed(),
       ),
     );
 

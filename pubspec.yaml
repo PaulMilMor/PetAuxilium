@@ -21,6 +21,14 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  firebase_core: ^0.7.0
+  firebase_database: ^6.0.0
+  cloud_firestore: ^0.16.0+1
+  firebase_auth: ^0.20.1
+  firebase_storage: ^7.0.0
+  provider: ^4.3.3
+  path: ^1.7.0
+  uuid: ^2.2.2
   flutter:
     sdk: flutter
 
@@ -38,14 +46,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-  assets:
-  - assets/images/img1.jpg
-  - assets/images/img2.jpg
-  - assets/images/img3.jpg
-  - assets/images/img4.jpg
-  - assets/images/img5.jpg
-  - assets/images/img6.jpg
-  - assets/images/img7.jpg
   fonts:
     - family: OpenSans
       fonts:
