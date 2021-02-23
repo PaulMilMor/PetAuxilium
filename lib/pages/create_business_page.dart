@@ -60,11 +60,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
+          _selectService(),
           Text('Completa los siguientes campos'),
           _nameTxt(),
           _dirTxt(),
           Text('Describa los servicios que ofrece'),
           _descriptionTxt(),
+          _addBtn(),
           _buttons()
         ],
       ),
@@ -128,9 +130,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _descriptionTxt() {
     return TextField(
+      maxLength: 500,
       maxLines: 8,
       controller: _descTxtController,
-      decoration: InputDecoration.collapsed(hintText: "Descripcion"),
+      decoration: InputDecoration(
+          hintText: "Descripcion",
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
       onChanged: (value) {
         setState(() {
           prefs.businessDescription = value;
@@ -166,6 +172,39 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             //print(_dir);
           },
           child: Text('Publicar')),
+    );
+  }
+
+  Widget _addBtn() {
+    return FlatButton(
+      onPressed: () {},
+      color: Colors.grey[200],
+      height: 85,
+      child: Column(
+        children: [
+          Icon(
+            Icons.add,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _selectService() {
+    return Row(
+      children: [
+        Text('Servicios que ofrece:'),
+        DropdownButton(
+          isExpanded: true,
+          items: [
+            DropdownMenuItem(child: Text('Veterinaria')),
+            DropdownMenuItem(child: Text('???')),
+            DropdownMenuItem(child: Text('Tráfico de personas')),
+          ],
+        ),
+      ],
     );
   }
 
