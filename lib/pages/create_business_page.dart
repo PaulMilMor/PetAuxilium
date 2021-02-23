@@ -165,7 +165,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             print(mapsUtil.locationtoString(_locations));
             BusinessModel business = BusinessModel(
                 name: _name,
-                location: mapsUtil.locationtoString(_locations),
+                //location: mapsUtil.locationtoString(_locations),
                 userID: 'miidxd',
                 description: _desc);
             _db.addBusiness(business);

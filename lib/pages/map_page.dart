@@ -40,7 +40,9 @@ class _MapPageState extends State<MapPage> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.popAndPushNamed(
+                    context, 'AdoptionPage' /*'CreateBusiness'*/,
+                    arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;
                 // controller.animateCamera(CameraUpdate.newCameraPosition(
