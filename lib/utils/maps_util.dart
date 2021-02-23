@@ -22,8 +22,8 @@ class MapsUtil{
 
   List <String> locationtoString(List<LatLng> locations){
    List<String> stringlocations=List<String>();
-   locations.forEach((element) { 
-   stringlocations.add(element.toString());
+   locations.forEach((LatLng element) { 
+   stringlocations.add(element.latitude.toString()+','+element.longitude.toString());
 
    });
     return stringlocations;

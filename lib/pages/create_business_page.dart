@@ -6,6 +6,7 @@ import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class CreateBusinessPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
-  String _name=" ";
+  String _name = " ";
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
@@ -27,7 +28,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   @override
   void initState() {
     super.initState();
-
+//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _name = prefs.businessName ?? ' ';
     _desc = prefs.businessDescription;
     _nameTxtController = TextEditingController(text: _name);
@@ -56,9 +57,15 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             'PUBLICAR NEGOCIO',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+              SizedBox(height:10),
+          Text('Completa los siguientes campos'),
           _nameTxt(),
-          _descriptionTxt(),
+          SizedBox(height:10),
           _dirTxt(),
+              SizedBox(height:10),
+          Text('Describa los servicios que ofrece'),
+           SizedBox(height:10),
+           _descriptionTxt(),
           _buttons()
         ],
       ),
@@ -67,9 +74,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _nameTxt() {
     return Container(
-        child: TextField(
+        child: GrayTextFormField(
       controller: _nameTxtController,
-      decoration: InputDecoration(labelText: 'Nombre'),
+      hintText: 'Nombre',
       onChanged: (value) {
         setState(() {
           prefs.businessName = value;
@@ -81,9 +88,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _dirTxt() {
     return Container(
-        child: TextField(
+        child:  GrayTextFormField(
       controller: _dirTxtController,
-      decoration: InputDecoration(labelText: 'Direccion'),
+    hintText: 'Direccion',
       onTap: () {
         Navigator.pushNamed(context, 'map', arguments: _markers);
       },
@@ -95,16 +102,18 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_saveBtn()],
+        children: [_cancelBtn(),
+        SizedBox(width: 5,),
+        _saveBtn()],
       ),
     );
   }
 
   Widget _descriptionTxt() {
-    return TextField(
-      maxLines: 8,
+    return GrayTextFormField(
+      maxLines: 6,
       controller: _descTxtController,
-      decoration: InputDecoration.collapsed(hintText: "Descripcion"),
+      hintText:'Descripcion',
       onChanged: (value) {
         setState(() {
           prefs.businessDescription = value;
@@ -113,7 +122,19 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       },
     );
   }
-//TODO: cambiar el userID por el que este usando el usuario 
+Widget _cancelBtn(){
+ return Container(
+      child: FlatButton(
+         color: Colors.white,
+         textColor: Colors.grey,
+          onPressed: () async {
+           Navigator.pop(context);
+            //print(_dir);
+          },
+          child: Text('Cancelar')),
+    );  
+}
+//TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
     return Container(
       child: RaisedButton(
@@ -122,6 +143,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             BusinessModel business = BusinessModel(
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
+                 //TODO:poner aqui el id del usuario
                 userID: 'miidxd',
                 description: _desc);
             _db.addBusiness(business);
@@ -139,13 +161,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
         placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
+          place = place  +
               element.street +
               " " +
               element.subLocality +
               ", " +
-              element.locality;
+              element.locality+
+              "\n";
         });
         setState(() {
           _dirTxtController.text = place;

@@ -43,7 +43,7 @@ class _MapPageState extends State<MapPage> {
               icon: Icon(Icons.save),
               onPressed: () async {
               
-                Navigator.pushNamed(context, 'CreateBusiness',
+                Navigator.popAndPushNamed(context, 'CreateBusiness',
                     arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;

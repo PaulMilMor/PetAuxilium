@@ -16,11 +16,12 @@ class _UserMapPageState extends State<UserMapPage> {
    Completer<GoogleMapController> _controller = Completer();
    Set<Marker> _markers = new Set<Marker>();
   final db=dbUtil();
-
+  @override
+  
   @override
   Widget build(BuildContext context) {
-
-  getMarkers();
+ getMarkers();
+  
     //TODO: Tambien aqui poner lo de la geolocalisacion
       final CameraPosition puntoInicial = CameraPosition(
       target: tempLocation,
@@ -28,6 +29,7 @@ class _UserMapPageState extends State<UserMapPage> {
     );
     return GoogleMap(
       mapType: MapType.normal,
+      markers: _markers,
       initialCameraPosition: puntoInicial,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
@@ -37,26 +39,33 @@ class _UserMapPageState extends State<UserMapPage> {
   }
   void getMarkers() async{
 business=await  db.getAllLocations() ;
-business.forEach((BusinessModel business) { 
-business.location.forEach((element) { 
- setState(() {
-   
-       _markers.add(Marker(
+print("negocios "+business.toString());
+ business.forEach((BusinessModel business) { 
+business.location.forEach((element) {
+  String  location= element.toString();
+  print( element.toString().split(',')); 
+   _markers.add(Marker(
         markerId: MarkerId(element),
-        position: LatLng(29.115967, -111.025490),
+        position: LatLng(double.parse(location.substring(0,location.indexOf(',')).trim()
+          
+        ) ,double.parse(location.substring(location.indexOf(',')+1).trim()
+          
+        )),
        infoWindow: InfoWindow(
           title: business.name
         ),
        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       ));
-     });
 
 });
 
+
 });
 
+setState(() {
+  
+});
 
- 
   
     //element[]
 
