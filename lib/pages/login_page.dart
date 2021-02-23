@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final auth = AuthUtil();
+  final preferencesUtil prefs = preferencesUtil();
   //UserModel user;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _pswdController = TextEditingController();
@@ -84,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: GrayTextFormField(
                         hintText: 'Contraseña',
                         controller: _pswdController,
+                        obscureText: true,
                         validator: (value) {
                           return value.trim().isEmpty
                               ? 'Introduce la contraseña'
@@ -143,10 +146,10 @@ class _LoginPageState extends State<LoginPage> {
   _login(BuildContext context2) async {
     String _email = _emailController.text;
     String _password = _pswdController.text;
-    UserModel _user = await auth.signInWithEmailAndPassword(_email, _password);
+    await auth.signInWithEmailAndPassword(_email, _password);
     print('LOGIN');
-    print(_user);
-    if (_user == null) {
+    print(prefs.userName);
+    if (prefs.userName == null) {
       Scaffold.of(context2)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text('Error al ingresar')));

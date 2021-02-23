@@ -3,10 +3,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final preferencesUtil prefs = preferencesUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -24,7 +26,7 @@ class AuthUtil {
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
-  Future signInWithEmailAndPassword(String email, String password) async {
+  /*Future signInWithEmailAndPassword(String email, String password) async {
     print('SIGN IN');
     try {
       var result = await _auth.signInWithEmailAndPassword(
@@ -32,11 +34,18 @@ class AuthUtil {
       Future<UserModel> user = _db.getUser(result.user.uid);
       print('SIGN IN TRY');
       print(user);
-      return user;
+      return user;*/
+  signInWithEmailAndPassword(String email, String password) async {
+    try {
+      var result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print(result);
+      UserModel userModel = await _db.getUser(result.user.uid);
+      prefs.userID = result.user.uid;
+      prefs.userName = userModel.name;
     } catch (error) {
       print('SIGN IN CATCH');
       print(error.toString());
-      return null;
     }
   }
 
