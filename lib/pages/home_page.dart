@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                         primary: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/signup');
+                        Navigator.pushNamed(context, 'signup');
                       },
                     ),
                     ElevatedButton(
