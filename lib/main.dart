@@ -9,9 +9,7 @@ import 'package:pet_auxilium/pages/navigation_page.dart';
 import 'package:pet_auxilium/pages/map_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-
-import 'src/app.dart';
-import 'package:pet_auxilium/src/pages/feed.dart';
+import 'package:pet_auxilium/pages/feed_page.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -35,12 +33,13 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: 'AdoptionPage',
+        initialRoute: 'Feed',
         routes: {
           '/': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
           'signup': (BuildContext context) => SignupPage(),
           'navigation': (BuildContext context) => NavigationPage(),
+          'Feed': (BuildContext context) => Feed(),
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
