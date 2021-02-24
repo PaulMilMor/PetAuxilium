@@ -29,7 +29,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   void initState() {
     super.initState();
 //FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
-    _name = prefs.businessName ?? ' ';
+    _name = prefs.businessName ?? '';
     _desc = prefs.businessDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();

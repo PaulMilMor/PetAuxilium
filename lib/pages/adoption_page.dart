@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/utils/storage_util.dart';
 
 class Adoptionpage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class Adoptionpage extends StatefulWidget {
 class Adoption_page extends State {
   final db = dbUtil();
   final auth = AuthUtil();
+  final _storage=StorageUtil();
 
   AddAdoption ad = AddAdoption(
       category: "adopcion",
@@ -114,7 +116,7 @@ class Adoption_page extends State {
         appBar: AppBar(
           title: Text('Adopcion'),
         ),
-        body: Container(
+        body: SingleChildScrollView(
            child: Column(
             //mainAxisAlignment: MainAxisAligment.spaceAround,
             children: <Widget>[
@@ -173,6 +175,9 @@ class Adoption_page extends State {
                     child: RaisedButton(
                         onPressed: () {
 
+                          //Esto retorna un striing con el enlace
+                    _storage.uploadFile(imagefile, 'adopcion');
+                      
                         },child: Text("Publicar"),
                       ),
                   ),
