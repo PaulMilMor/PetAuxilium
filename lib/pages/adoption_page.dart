@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -14,7 +15,23 @@ class Adoptionpage extends StatefulWidget {
   @override
   Adoption_page createState() => Adoption_page();
 }
+/*class Uploader extends StatefulWidget{
+  final File imagefile;
+  Uploader({Key key, this.imagefile}): super(key: key);
+  
+  createState() => UploaderState();  
+}
+class _UploaderState extends State<Uploader>{
+  final FirebaseStorage _storage= FirebaseStorage( PageStorageBucket: 'gs://petauxilium.appspot.com');
+  StorageUploadTask _uploadTask;
 
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+}*/
 class Adoption_page extends State {
   final _db = dbUtil();
   final auth = AuthUtil();
@@ -33,16 +50,9 @@ class Adoption_page extends State {
   List<String> _dir;
   List<LatLng> _locations;
 
-  /*AddAdoption ad = AddAdoption(
-      category: "adopcion",
-      name: "Mauricio",
-      description: "damos en adopcion a este perro",
-      location: "aqui",
-      imgRef: "aquivaunaimagen.png");*/
-
   File imagefile;
   final picker = ImagePicker();
-
+  
   void initState() {
     super.initState();
     /*_name = prefs.adoptionName ?? ' ';
@@ -118,12 +128,16 @@ class Adoption_page extends State {
   }
 
   Widget _decideImageView() {
+    
     if (imagefile == null) {
-      return Text("No hay imagenes seleccionadas");
+      return Text("");
     } else {
       print("dentro del decide");
       print(imagefile);
+      
+      //Uploader(file: imagefile);
       return Image.file(imagefile, width: 100, height: 100);
+      
     }
   }
 
@@ -281,16 +295,17 @@ class Adoption_page extends State {
   Widget _images() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(top: 40),
-        child: Column(
+        margin: const EdgeInsets.only(left: 40, top: 20),
+        child: Row(
             //mainAxisAlignment: MainAxisAligment.spaceAround,
             children: <Widget>[
+              
               _decideImageView(),
               RaisedButton(
                 onPressed: () {
                   _showChoiceDialog(context);
                 },
-                child: Text("Agregar imagenes"),
+                child: Text("+"),
               ),
             ]));
   }
@@ -323,7 +338,7 @@ class Adoption_page extends State {
             AddAdoption ad = AddAdoption(
                 category:_selectedCategory,
                 name: _name,
-                location: mapsUtil.locationtoString(_locations),
+                //location: mapsUtil.locationtoString(_locations),
                 id: 'miidxd',
                 description: _desc);
             _db.addAdoption(ad);
