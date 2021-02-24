@@ -1,18 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
-class AccountPage extends StatelessWidget {
-  UserModel _user = UserModel(
-      name: "Po Dragon Warrior",
-      birthday: "16/02/99",
-      pass: "adadadadad",
-      email: "dragonwarrior@hotmail.com",
-      imgRef:
-          "https://i.ebayimg.com/00/s/MTI4N1g4MTg=/z/hXYAAOSwcmVfsA3a/\$_1.JPG");
+class AccountPage extends StatefulWidget {
+  @override
+  _AccountPageState createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  final preferencesUtil _prefs = preferencesUtil();
+
+  UserModel _user;
+  void initState() {
+    super.initState();
+    if (_prefs.userID != ' ') {
+      _user = UserModel(
+        name: _prefs.userName,
+        //birthday: "16/02/99",
+        email: _prefs.userEmail,
+        imgRef: _prefs.userImg,
+      );
+    } else {
+      _user = UserModel(
+        name: 'Usuario Anónimo',
+        email: '',
+        imgRef: ' ',
+        //imgRef:
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,6 +95,8 @@ class ProfileInfo extends StatelessWidget {
 }
 
 class ButtonColumn extends StatelessWidget {
+  final preferencesUtil _prefs = preferencesUtil();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -155,15 +178,22 @@ class ButtonColumn extends StatelessWidget {
                     bottom:
                         BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
             child: GrayFlatButton(
-              text: 'Notificaciones',
+              text: 'Ajustes',
               icon: Icons.navigate_next,
               onPressed: () {},
             ),
           ),
           GrayFlatButton(
-            text: 'Ajustes',
+            text: 'Cerrar sesión',
             icon: Icons.navigate_next,
-            onPressed: () {},
+            onPressed: () {
+              _prefs.userID = null;
+              _prefs.userName = null;
+              _prefs.userImg = null;
+              _prefs.userEmail = null;
+
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            },
           ),
         ],
       ),

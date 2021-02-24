@@ -43,6 +43,22 @@ class preferencesUtil {
     _prefs.setString('userID', userID);
   }
 
+  get userImg {
+    return _prefs.getString('userImg') ?? ' ';
+  }
+
+  set userImg(String userImg) {
+    _prefs.setString('userImg', userImg);
+  }
+
+  get userEmail {
+    return _prefs.getString('userEmail') ?? ' ';
+  }
+
+  set userEmail(String userEmail) {
+    _prefs.setString('userEmail', userEmail);
+  }
+
   get adoptionName {
     return _prefs.getString('name') ?? '';
   }

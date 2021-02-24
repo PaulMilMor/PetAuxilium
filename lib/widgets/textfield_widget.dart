@@ -7,13 +7,15 @@ class GrayTextFormField extends StatelessWidget {
     this.autocorrect = true,
     this.textCapitalization = TextCapitalization.none,
     this.enableSuggestions = true,
-    this.enableInteractiveSelection = false,
+    this.enableInteractiveSelection = true,
     this.keyboardType,
     this.controller,
     this.validator,
     this.onChanged,
     this.onTap,
     this.focusNode,
+    this.suffixIcon,
+    this.toolbarOptions,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -27,6 +29,8 @@ class GrayTextFormField extends StatelessWidget {
   final void Function(String) onChanged;
   final void Function() onTap;
   final FocusNode focusNode;
+  final Widget suffixIcon;
+  final ToolbarOptions toolbarOptions;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -41,6 +45,7 @@ class GrayTextFormField extends StatelessWidget {
       onChanged: this.onChanged,
       onTap: this.onTap,
       focusNode: this.focusNode,
+      toolbarOptions: this.toolbarOptions,
       decoration: InputDecoration(
         filled: true,
         fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -48,12 +53,33 @@ class GrayTextFormField extends StatelessWidget {
         hintStyle: TextStyle(
           color: Color.fromRGBO(202, 202, 202, 1),
         ),
+        labelText: this.hintText,
+        labelStyle: TextStyle(
+//          color: Color.fromRGBO(202, 202, 202, 1),
+          color: Color.fromRGBO(49, 232, 93, 1),
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           borderSide: BorderSide(
             color: Color.fromRGBO(235, 235, 235, 1),
           ),
         ),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: Color.fromRGBO(49, 232, 93, 1),
+            )),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: Color.fromRGBO(232, 49, 93, 1),
+            )),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: Color.fromRGBO(232, 49, 93, 1),
+            )),
+        suffixIcon: this.suffixIcon,
       ),
     );
   }

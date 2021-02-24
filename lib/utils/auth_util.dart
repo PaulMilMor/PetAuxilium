@@ -35,17 +35,36 @@ class AuthUtil {
       print('SIGN IN TRY');
       print(user);
       return user;*/
-  signInWithEmailAndPassword(String email, String password) async {
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       print(result);
+
       UserModel userModel = await _db.getUser(result.user.uid);
+      print('SIGN IN');
+      print(result.user.uid);
+
       prefs.userID = result.user.uid;
+      //FIXME: The getter 'name' was called on null
+      return 'Ingresó';
       prefs.userName = userModel.name;
-    } catch (error) {
-      print('SIGN IN CATCH');
-      print(error.toString());
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          return 'No se encontró el usuario.';
+          break;
+        case 'wrong-password':
+          return 'La contraseña es incorrecta.';
+          break;
+        case 'invalid-email':
+          return 'El correo electrónico no es válido.';
+          break;
+        default:
+          return 'Algo salió mal. Error [${e.code}]';
+          break;
+      }
     }
   }
 

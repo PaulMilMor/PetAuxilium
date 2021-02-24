@@ -20,7 +20,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
-  String _name=" ";
+  String _name = " ";
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
@@ -196,14 +196,14 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     return Row(
       children: [
         Text('Servicios que ofrece:'),
-        DropdownButton(
+        /*DropdownButton(
           isExpanded: true,
           items: [
             DropdownMenuItem(child: Text('Veterinaria')),
             DropdownMenuItem(child: Text('???')),
             DropdownMenuItem(child: Text('Tráfico de personas')),
           ],
-        ),
+        ),*/
       ],
     );
   }

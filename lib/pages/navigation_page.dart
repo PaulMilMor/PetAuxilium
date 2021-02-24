@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/adoption_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/src/pages/feed.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -25,9 +27,9 @@ class _NavigationPageState extends State<NavigationPage> {
     'PERFIL'
   ];
   final List<Widget> _tabs = [
+    Feed(),
     null,
-    CreateBusinessPage(),
-    AccountPage(),
+    Adoptionpage(),
     CreateBusinessPage(),
     AccountPage()
   ];

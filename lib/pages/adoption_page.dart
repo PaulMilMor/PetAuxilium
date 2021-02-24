@@ -9,6 +9,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Adoptionpage extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class Adoption_page extends State {
   final prefs = new preferencesUtil();
   var _nameTxtController = TextEditingController();
   //TextEditingController _nameTxtController;
-  var  _dirTxtController = TextEditingController();
+  var _dirTxtController = TextEditingController();
   var _descTxtController = TextEditingController();
 
   final MapsUtil mapsUtil = MapsUtil();
@@ -168,31 +169,30 @@ class Adoption_page extends State {
   Widget _category() {
     return Container(
       height: 100.0,
-      margin: const EdgeInsets.only(left: 40.0,top: 20),
+      margin: const EdgeInsets.only(left: 40.0, top: 20),
       child: Center(
           child: Row(children: [
-            Container(
-            margin: const EdgeInsets.only(right: 30.0),
-            child: Text(
-          'Categoría:',
-          style: TextStyle(fontSize: 18),
+        Container(
+          margin: const EdgeInsets.only(right: 30.0),
+          child: Text(
+            'Categoría:',
+            style: TextStyle(fontSize: 18),
+          ),
         ),
-            ),
         DropdownButton(
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
-          onChanged: (newValue){
+          onChanged: (newValue) {
             setState(() {
-                _selectedCategory = newValue;          
+              _selectedCategory = newValue;
             });
           },
-          items: listItems.map((valueItem){
+          items: listItems.map((valueItem) {
             return DropdownMenuItem(
-            value: valueItem,
-            child: Text(valueItem),
+              value: valueItem,
+              child: Text(valueItem),
             );
-          }
-          ).toList(),
+          }).toList(),
         )
       ])),
     );
@@ -202,33 +202,30 @@ class Adoption_page extends State {
     return Container(
         //height: 100.0,
         child: Center(
-          child: Column(children: [
-            
-            Text(
-              'Completa los siguientes campos',
-              style: TextStyle(fontSize: 18),
-            ),
-            
-            Container(
-                margin: const EdgeInsets.only(top: 20, bottom: 10),
-                width: 300.0,
-                child: TextField(
-                  controller: _nameTxtController,
-                  decoration: InputDecoration(labelText: 'Nombre',
-                  suffixIcon: IconButton(
-                  onPressed: () => _nameTxtController.clear(),
-                  icon: Icon(Icons.clear),
-                  )
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      prefs.adoptionName = value;
-                      _name = value;
-                    });
-                  },
-                )),
-          ]),
-        ));
+      child: Column(children: [
+        Text(
+          'Completa los siguientes campos',
+          style: TextStyle(fontSize: 18),
+        ),
+        Container(
+            margin: const EdgeInsets.only(top: 20, bottom: 10),
+            width: 300.0,
+            child: GrayTextFormField(
+              controller: _nameTxtController,
+              hintText: 'Nombre',
+              suffixIcon: IconButton(
+                onPressed: () => _nameTxtController.clear(),
+                icon: Icon(Icons.clear),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  prefs.adoptionName = value;
+                  _name = value;
+                });
+              },
+            )),
+      ]),
+    ));
   }
 
   Widget _descTxt() {
@@ -240,12 +237,12 @@ class Adoption_page extends State {
                 width: 300.0,
                 child: TextField(
                   controller: _descTxtController,
-                  decoration: InputDecoration(labelText: 'Descripción',
-                  suffixIcon: IconButton(
-                  onPressed: () => _descTxtController.clear(),
-                  icon: Icon(Icons.clear),
-                  )
-                  ),
+                  decoration: InputDecoration(
+                      labelText: 'Descripción',
+                      suffixIcon: IconButton(
+                        onPressed: () => _descTxtController.clear(),
+                        icon: Icon(Icons.clear),
+                      )),
                   maxLength: 500,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -263,15 +260,16 @@ class Adoption_page extends State {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(left: 55.0,bottom: 20),
+        margin: const EdgeInsets.only(left: 55.0, bottom: 20),
         child: Center(
-            child: TextField(
+            child: GrayTextFormField(
           controller: _dirTxtController,
-          decoration: InputDecoration(labelText: 'Dirección',
+          hintText: 'Dirección',
           suffixIcon: IconButton(
-                  onPressed: () => _dirTxtController.clear(),
-                  icon: Icon(Icons.clear),
-                  )),
+            onPressed: () => _dirTxtController.clear(),
+            icon: Icon(Icons.clear),
+          ),
+          focusNode: AlwaysDisabledFocusNode(),
           onTap: () {
             Navigator.pushNamed(context, 'map', arguments: _markers);
           },
@@ -300,28 +298,26 @@ class Adoption_page extends State {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          _CancelBtn(), 
-          _saveBtn()],
+        children: [_CancelBtn(), _saveBtn()],
       ),
     );
   }
 
   Widget _CancelBtn() {
     return Container(
-      margin: const EdgeInsets.only(right: 30.0,bottom: 50),
+      margin: const EdgeInsets.only(right: 30.0, bottom: 50),
       child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
     );
   }
 
   Widget _saveBtn() {
     return Container(
-      margin: const EdgeInsets.only(right: 40.0,bottom: 50),
+      margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
           onPressed: () async {
             //print(mapsUtil.locationtoString(_locations));
             AddAdoption ad = AddAdoption(
-                category:_selectedCategory,
+                category: _selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
                 id: 'miidxd',
@@ -354,4 +350,11 @@ class Adoption_page extends State {
       });
     }
   }
+}
+
+//TODO: Esto debería estar en un archivo aparte?
+//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }
