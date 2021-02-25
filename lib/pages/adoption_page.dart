@@ -51,11 +51,11 @@ class Adoption_page extends State {
       images.add("Add Image");
       images.add("Add Image");
     });
-    /*_name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
+    //_name = prefs.adoptionName ?? ' ';
+    //_desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
-    _descTxtController = TextEditingController(text: _desc);*/
+    _descTxtController = TextEditingController(text: _desc);
   }
 
   Widget buildGridView() {
@@ -392,9 +392,11 @@ class Adoption_page extends State {
               suffixIcon: IconButton(
                 onPressed: () => _dirTxtController.clear(),
                 icon: Icon(Icons.clear),
+                
               )),
+              maxLines: null,
           onTap: () {
-            Navigator.pushNamed(context, 'map', arguments: _markers);
+            Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
         )));
   }
@@ -456,7 +458,7 @@ class Adoption_page extends State {
             AddAdoption ad = AddAdoption(
                 category: _selectedCategory,
                 name: _name,
-                //location: mapsUtil.locationtoString(_locations),
+                location: mapsUtil.locationtoString(_locations),
                 id: 'miidxd',
                 description: _desc);
             _db.addAdoption(ad);

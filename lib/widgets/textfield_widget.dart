@@ -10,7 +10,7 @@ class GrayTextFormField extends StatelessWidget {
     this.enableInteractiveSelection = false,
     this.keyboardType,
     this.controller,
-    this.validator,
+    this.validator, InputDecoration decoration, Null Function() onTap,
   });
   final String hintText;
   final TextInputType keyboardType;
