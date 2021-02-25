@@ -10,6 +10,7 @@ import 'package:pet_auxilium/pages/map_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/detail_page.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           'signup': (BuildContext context) => SignupPage(),
           'navigation': (BuildContext context) => NavigationPage(),
           'Feed': (BuildContext context) => Feed(),
+          'DetailPage': (BuildContext context) => DetailPage(),
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),

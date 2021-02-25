@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/detail_page.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -38,11 +39,14 @@ class _FeedState extends State<Feed> {
                             child: Card(
                               child: Row(
                                 children: <Widget>[
-                                  //Container(
-                                  //width: 200,
-                                  //height: 200,
-                                  //child: Image.asset(publications['imgRef']),
-                                  // ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: Image.network(
+                                      publications.data()['imgRef'],
+                                      width: 145,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Column(
@@ -65,20 +69,30 @@ class _FeedState extends State<Feed> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 21,
+                                          height: 5,
                                         ),
                                         Container(
                                           width: 150,
                                           child: Text(
                                             // "\$${(publications['description'] == null) ? "no" : publications['description']}",
-                                            publications['description'],
+
+                                            publications['pricing'],
                                             style: TextStyle(
-                                              fontSize: 17,
+                                              fontSize: 15,
+                                              color: Colors.grey[700],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          child: Text(
+                                            publications['location'].toString(),
+                                            style: TextStyle(
+                                              fontSize: 15,
                                               color: Colors.grey,
                                             ),
                                           ),
                                         ),
-
                                         /* Container(
                                           width: 185,
                                           child: Text(
@@ -106,116 +120,5 @@ class _FeedState extends State<Feed> {
                 }
               }),
         ));
-  }
-}
-
-//DETALLES DE LA PUBLICACION AL DAR CLICK
-class DetailPage extends StatelessWidget {
-  DocumentSnapshot detailDocument;
-  DetailPage(this.detailDocument);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(30),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 21,
-                  ),
-                  Positioned(
-                    right: 0.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: CircleAvatar(
-                          radius: 14.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(Icons.arrow_back, color: Colors.green),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  /*ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.asset(
-                    img,
-                    width: 200,
-                    height: 200,
-                  ),
-                ),*/
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    detailDocument['name'],
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    detailDocument['category'],
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.green,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    height: 5,
-                    thickness: 1,
-                    indent: 1,
-                    endIndent: 1,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    detailDocument['description'],
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 21,
-                  ),
-                  Container(
-                    // width: 200,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        detailDocument['description'],
-                        maxLines: 3,
-                        style: TextStyle(fontSize: 15, color: Colors.grey[500]),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )));
   }
 }
