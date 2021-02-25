@@ -57,7 +57,7 @@ class dbUtil {
   }
 
   Future<void> addAdoption(AddAdoption ad) async {
-    await _firestoreInstance.collection("adoption").add({
+    await _firestoreInstance.collection("publications").add({
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,

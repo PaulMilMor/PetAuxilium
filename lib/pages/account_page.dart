@@ -156,10 +156,11 @@ class ButtonColumn extends StatelessWidget {
                     bottom:
                         BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
             child: GrayFlatButton(
-              text: 'Mis Publicaciones',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
+                text: 'Crear Publicación',
+                icon: Icons.navigate_next,
+                onPressed: () {
+                  Navigator.pushNamed(context, 'AdoptionPage');
+                }),
           ),
           Container(
             decoration: BoxDecoration(

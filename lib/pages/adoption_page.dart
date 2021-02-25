@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -34,23 +36,116 @@ class Adoption_page extends State {
   List<String> _dir;
   List<LatLng> _locations;
 
-  /*AddAdoption ad = AddAdoption(
-      category: "adopcion",
-      name: "Mauricio",
-      description: "damos en adopcion a este perro",
-      location: "aqui",
-      imgRef: "aquivaunaimagen.png");*/
+  List<Object> images = List<Object>();
+  Future<File> _imageFile;
 
   File imagefile;
+  List<File> _listImages = [];
   final picker = ImagePicker();
 
   void initState() {
     super.initState();
+    setState(() {
+      images.add("Add Image");
+      /*images.add("Add Image");
+      images.add("Add Image");
+      images.add("Add Image");
+      images.add("Add Image");*/
+    });
     /*_name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);*/
+  }
+
+  Widget buildGridView() {
+    return GridView.count(
+      shrinkWrap: true,
+      padding: EdgeInsets.only(left: 48, right: 48),
+      crossAxisCount: 3,
+      childAspectRatio: 1,
+      children: List.generate(images.length, (index) {
+        if (images[index] is ImageUploadModel) {
+          ImageUploadModel uploadModel = images[index];
+          return Card(
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              children: <Widget>[
+                Image.file(
+                  uploadModel.imageFile,
+                  width: 300,
+                  height: 300,
+                ),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 20,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        images.removeAt(index);
+                        // images.replaceRange(index, index + 1, ['Add Image']);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Card(
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                //_showChoiceDialog(context);
+                images.length < 6
+                    ? _onAddImageClick(index)
+                    : _limitImages(context);
+              },
+            ),
+          );
+        }
+      }),
+    );
+  }
+
+  Future _onAddImageClick(int index) async {
+    setState(() {
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      if (_imageFile != null) {
+        getFileImage(index);
+      } else {
+        print("faros");
+      }
+      images.length < 6 ? images.add("Add Image") : null;
+    });
+  }
+
+  _limitImages(BuildContext context) {
+    Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+          content: Text('Solo se pueden insertar 5 imágenes a la vez')));
+  }
+
+  void getFileImage(int index) async {
+//    var dir = await path_provider.getTemporaryDirectory();
+
+    _imageFile.then((file) async {
+      setState(() {
+        ImageUploadModel imageUpload = new ImageUploadModel();
+        imageUpload.isUploaded = false;
+        imageUpload.uploading = false;
+        imageUpload.imageFile = file;
+        imageUpload.imageUrl = '';
+        images.replaceRange(index, index + 1, [imageUpload]);
+      });
+    });
   }
 
   Future getImage() async {
@@ -118,14 +213,49 @@ class Adoption_page extends State {
         });
   }
 
-  Widget _decideImageView() {
+  /*List<Widget> renderImages() {
+    var temp = <Widget>[];
+    print(imagefile);
+    for (var i = 0; i < _listImages.length; i++) {
+      print(imagefile);
+      _addImages();
+      //imagefile =null;
+      print(_listImages);
+      // add some conditional logic here
+      // we only add more Item if it matches certain condition
+      temp.add(Image.file(imagefile, width: 100, height: 100));
+      print("fuckyou");
+      print(temp.length);
+    }
+    return temp;
+  }*/
+
+  /*Widget _decideImageView() {
+    
     if (imagefile == null) {
-      return Text("No hay imagenes seleccionadas");
+      return Text("");
     } else {
       print("dentro del decide");
       print(imagefile);
-      return Image.file(imagefile, width: 100, height: 100);
+      _addImages();
+      imagefile =null;
+      print(_listImages);
+      //Uploader(file: imagefile);
+      print(_listImages.length);
+      for (var i = 0; i < _listImages.length; i++) {
+        print("faros en vinagre");
+        print(i);
+      //return Image.file(_listImages[i],fit: BoxFit.cover, width: 100, height: 100);
+      
+      }
+      return Image.file(_listImages[1], width: 100, height: 100);
+      
     }
+  }*/
+  void _addImages() {
+    setState(() {
+      _listImages.add(imagefile);
+    });
   }
 
   @override
@@ -159,7 +289,9 @@ class Adoption_page extends State {
           _nameTxt(),
           _dirTxt(),
           _descTxt(),
-          _images(),
+          //_images(),
+          buildGridView(),
+          //_boton(),
           _buttons()
         ],
       ),
@@ -276,22 +408,36 @@ class Adoption_page extends State {
         )));
   }
 
-  Widget _images() {
+  Widget _boton() {
+    return Container(
+      width: 300.0,
+      margin: const EdgeInsets.only(left: 40, top: 20),
+      child: RaisedButton(
+        onPressed: () {
+          _showChoiceDialog(context);
+        },
+        child: Text("+"),
+      ),
+    );
+  }
+
+  /*Widget _images() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(top: 40),
-        child: Column(
-            //mainAxisAlignment: MainAxisAligment.spaceAround,
-            children: <Widget>[
-              _decideImageView(),
-              RaisedButton(
+        margin: const EdgeInsets.only(left: 40, top: 20),
+        child: Row(
+          children: renderImages(),
+
+          //mainAxisAlignment: MainAxisAligment.spaceAround,
+
+          /*child: RaisedButton(
                 onPressed: () {
                   _showChoiceDialog(context);
                 },
-                child: Text("Agregar imagenes"),
-              ),
-            ]));
-  }
+                child: Text("+"),
+              ),*/
+        ));
+  }*/
 
   Widget _buttons() {
     return Expanded(
@@ -319,7 +465,7 @@ class Adoption_page extends State {
             AddAdoption ad = AddAdoption(
                 category: _selectedCategory,
                 name: _name,
-                location: mapsUtil.locationtoString(_locations),
+                //location: mapsUtil.locationtoString(_locations),
                 id: 'miidxd',
                 description: _desc);
             _db.addAdoption(ad);
