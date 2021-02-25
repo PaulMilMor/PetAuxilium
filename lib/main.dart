@@ -13,14 +13,15 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+     final prefs = preferencesUtil();
+   await prefs.initPrefs();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prefs = preferencesUtil();
-    prefs.initPrefs();
+ 
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: 'AdoptionPage',
+        initialRoute: 'CreateBusiness',
         routes: {
           '/': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
