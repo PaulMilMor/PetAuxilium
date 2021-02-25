@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
+import 'package:pet_auxilium/widgets/appbar_widget.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class SignupPage extends StatefulWidget {
@@ -21,24 +22,25 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
-      //FIXME: El contenido de este widget hace overflow en una pantalla de 1280p
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(75),
-        child: AppBar(
-            elevation: 0,
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              child: new IconButton(
-                icon: new Icon(
-                  Icons.arrow_back_ios,
-                  color: Color.fromRGBO(49, 232, 93, 1),
+        child:
+            //EmptyAppBar(),
+            AppBar(
+                elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  child: new IconButton(
+                    icon: new Icon(
+                      Icons.arrow_back_ios,
+                      color: Color.fromRGBO(49, 232, 93, 1),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    iconSize: 32,
+                  ),
                 ),
-                onPressed: () => Navigator.of(context).pop(),
-                iconSize: 32,
-              ),
-            ),
-            backgroundColor: Colors.white,
-            actions: [
+                backgroundColor: Colors.white,
+                actions: [
               Image.asset(
                 'assets/logo_asset.png',
                 //width: 120,
