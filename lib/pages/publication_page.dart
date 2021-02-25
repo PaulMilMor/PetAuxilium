@@ -12,12 +12,12 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
-class Adoptionpage extends StatefulWidget {
+class PublicationPage extends StatefulWidget {
   @override
-  Adoption_page createState() => Adoption_page();
+  PublicationPageState createState() => PublicationPageState();
 }
 
-class Adoption_page extends State {
+class PublicationPageState extends State<PublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
@@ -57,7 +57,20 @@ class Adoption_page extends State {
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);*/
   }
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    _markers = ModalRoute.of(context).settings.arguments;
+    _locations = mapsUtil.getLocations(_markers);
+    getDir(_locations);
+    return Scaffold(
+      body: _publicationForm(context),
 
+      /*appBar: AppBar(
+          title: Text('Adopcion'),
+        ),*/
+    );
+  }
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -248,27 +261,14 @@ class Adoption_page extends State {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-    return Scaffold(
-      body: _publicationForm(context),
 
-      /*appBar: AppBar(
-          title: Text('Adopcion'),
-        ),*/
-    );
-  }
 
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 18),
+          //SizedBox(height: 18),
           Center(
             child: Text(
               'CREAR PUBLICACIÓN',
@@ -290,8 +290,8 @@ class Adoption_page extends State {
 
   Widget _category() {
     return Container(
-      height: 100.0,
-      margin: const EdgeInsets.only(left: 40.0, top: 20),
+     // height: 100.0,
+      margin: const EdgeInsets.only(left: 40.0, top:10),
       child: Center(
           child: Row(children: [
         Container(
@@ -453,7 +453,7 @@ class Adoption_page extends State {
       child: RaisedButton(
           onPressed: () async {
             //print(mapsUtil.locationtoString(_locations));
-            AddAdoption ad = AddAdoption(
+            PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
                 name: _name,
                 //location: mapsUtil.locationtoString(_locations),
