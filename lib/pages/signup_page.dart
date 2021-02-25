@@ -18,6 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +79,7 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: 'Nombre',
                         textCapitalization: TextCapitalization.words,
                         controller: _nameController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           return value.trim().isEmpty
                               ? 'Introduce tu nombre'
@@ -91,6 +93,7 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: 'Apellido',
                         textCapitalization: TextCapitalization.words,
                         controller: _lastNameController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           return value.trim().isEmpty
                               ? 'Introduce tu Apellido'
@@ -104,6 +107,7 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: 'E-mail',
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (value.trim().isEmpty) {
                             return 'Introduce tu correo electrónico';
@@ -120,10 +124,19 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: 'Contraseña',
                         obscureText: true,
                         controller: _passwordController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
+                          String pattern =
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])';
+                          RegExp regExp = new RegExp(pattern);
                           if (value.trim().isEmpty) {
                             return 'Ingresa una contraseña';
+                          } else if (value.trim().length < 6) {
+                            return 'La contraseña debe tener al menos 6 caracteres';
+                          } else if (!regExp.hasMatch(value)) {
+                            return 'Incluye mayúsculas, minúsculas, y números';
                           }
+
                           return null;
                         },
                       ),
@@ -134,6 +147,7 @@ class _SignupPageState extends State<SignupPage> {
                         hintText: 'Confirmar contraseña',
                         obscureText: true,
                         controller: _confirmController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (value.trim().isEmpty) {
                             return 'Ingresa confirmación de contraseña';
@@ -148,20 +162,32 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          child: Text('Registrarse',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(49, 232, 93, 1))),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              _signUp(context);
-                            }
-                            ;
-                          },
-                        ),
+                        child: _isLoading
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6.0, horizontal: 25.0),
+                                child: CircularProgressIndicator(
+                                  backgroundColor:
+                                      Color.fromRGBO(49, 232, 93, 1),
+                                ),
+                              )
+                            : ElevatedButton(
+                                child: Text('Registrarse',
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(49, 232, 93, 1))),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    _signUp(context);
+                                  }
+                                  ;
+                                },
+                              ),
                       ),
                     ),
                     Padding(
@@ -208,9 +234,11 @@ class _SignupPageState extends State<SignupPage> {
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
     if (_result == 'Ingresó') {
+      _isLoading = false;
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
+      _isLoading = false;
       Scaffold.of(context2)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));

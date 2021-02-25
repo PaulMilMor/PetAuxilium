@@ -2,17 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final db = dbUtil();
+
   final auth = AuthUtil();
+  final preferencesUtil _prefs = preferencesUtil();
   UserModel user = UserModel(
       name: "fafafa",
       birthday: "16/02/99",
       pass: "adadadadad",
       email: "fafaf@hotmail.com",
       imgRef: "Fgafaf");
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //print('USER ID');
+    //print(_prefs.userID);
+    /*if (_prefs.userID != ' ' && _prefs.userID != null) {
+      Navigator.pushNamed(context, 'navigation');
+    }*/
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

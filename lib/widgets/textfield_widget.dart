@@ -16,6 +16,7 @@ class GrayTextFormField extends StatelessWidget {
     this.focusNode,
     this.suffixIcon,
     this.toolbarOptions,
+    this.autovalidateMode,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -31,6 +32,7 @@ class GrayTextFormField extends StatelessWidget {
   final FocusNode focusNode;
   final Widget suffixIcon;
   final ToolbarOptions toolbarOptions;
+  final AutovalidateMode autovalidateMode;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -46,6 +48,7 @@ class GrayTextFormField extends StatelessWidget {
       onTap: this.onTap,
       focusNode: this.focusNode,
       toolbarOptions: this.toolbarOptions,
+      autovalidateMode: this.autovalidateMode,
       decoration: InputDecoration(
         filled: true,
         fillColor: Color.fromRGBO(235, 235, 235, 1),

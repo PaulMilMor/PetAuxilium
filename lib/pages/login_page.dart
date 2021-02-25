@@ -14,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final auth = AuthUtil();
   final preferencesUtil prefs = preferencesUtil();
+  bool _isLoading = false;
   //UserModel user;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _pswdController = TextEditingController();
@@ -99,18 +100,30 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            child: Text('Continuar',
-                                style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromRGBO(49, 232, 93, 1),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                _login(context);
-                              }
-                            },
-                          ),
+                          child: _isLoading
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6.0, horizontal: 25.0),
+                                  child: CircularProgressIndicator(
+                                    backgroundColor:
+                                        Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  child: Text('Continuar',
+                                      style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+                                      _login(context);
+                                    }
+                                  },
+                                ),
                         ),
                       ),
                       Padding(
@@ -152,9 +165,15 @@ class _LoginPageState extends State<LoginPage> {
     print('LOGIN');
     print(prefs.userName);
     if (_result == 'Ingresó') {
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       Scaffold.of(context2)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));

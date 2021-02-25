@@ -285,10 +285,10 @@ class Adoption_page extends State {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          _category(),
+          /* _category(),
           _nameTxt(),
           _dirTxt(),
-          _descTxt(),
+          _descTxt(),*/
           //_images(),
           buildGridView(),
           //_boton(),

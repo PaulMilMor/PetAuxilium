@@ -61,6 +61,9 @@ class AuthUtil {
         case 'invalid-email':
           return 'El correo electrónico no es válido.';
           break;
+        case 'too-many-requests':
+          return 'Se bloquearon las solicitudes del dispositivo por actividad inusual. Intentalo más tarde';
+          break;
         default:
           return 'Algo salió mal. Error [${e.code}]';
           break;
