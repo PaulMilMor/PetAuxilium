@@ -323,6 +323,7 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
         height: 100.0,
         child: Center(
           child: Column(children: [
+          
             Container(
                 width: 300.0,
                 child: TextField(
@@ -354,6 +355,7 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
         child: Center(
             child: TextField(
           controller: _dirTxtController,
+          readOnly: true,
           decoration: InputDecoration(
               labelText: 'Dirección',
               suffixIcon: IconButton(
@@ -401,10 +403,19 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
   }*/
 
   Widget _buttons() {
+<<<<<<< HEAD:lib/pages/publication_page.dart
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [_CancelBtn(), _saveBtn()],
+=======
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [_CancelBtn(), _saveBtn()],
+      ),
+>>>>>>> 9e8f4959dfb3e46ef1a4e30335ced2bf3ec6ec98:lib/pages/adoption_page.dart
     );
   }
 
