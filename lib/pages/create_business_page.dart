@@ -139,11 +139,10 @@ Widget _cancelBtn(){
     return Container(
       child: RaisedButton(
           onPressed: () async {
-            print(mapsUtil.locationtoString(_locations));
+           // print(mapsUtil.locationtoString(_locations));
             BusinessModel business = BusinessModel(
                 name: _name,
-                location: mapsUtil.locationtoString(_locations),
-                 //TODO:poner aqui el id del usuario
+                //location: mapsUtil.locationtoString(_locations),
                 userID: 'miidxd',
                 description: _desc);
             _db.addBusiness(business);

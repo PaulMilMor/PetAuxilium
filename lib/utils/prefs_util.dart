@@ -35,4 +35,16 @@ class preferencesUtil{
   set userID(String userID){
     _prefs.setString('userID', userID);
   }
+   get adoptionName{
+    return _prefs.getString('aname') ?? '';
+  }
+  set adoptionName(String name){
+    _prefs.setString('aname', name);
+  }
+   get adoptionDescription{
+    return _prefs.getString('adescription') ?? '';
+  }
+  set adoptionDescription(String desc){
+    _prefs.setString('adescription', desc);
+  }
 }
