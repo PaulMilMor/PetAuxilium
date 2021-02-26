@@ -56,7 +56,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.popAndPushNamed(context, 'AdoptionPage',
+                Navigator.popAndPushNamed(context, 'PublicationPage',
                     arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;

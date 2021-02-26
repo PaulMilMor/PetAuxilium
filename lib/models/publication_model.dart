@@ -5,7 +5,8 @@ String category;
 String name;
 String description;
 List<String> location;
-String imgRef;
-PublicationModel({this.id,this.category,this.name,this.description, this.location, this.imgRef});
+List<String> imgRef;
+String userID;
+PublicationModel({this.id,this.category,this.name,this.description, this.location, this.imgRef, this.userID});
 
 }

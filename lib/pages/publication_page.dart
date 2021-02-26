@@ -11,6 +11,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/storage_util.dart';
 
 class PublicationPage extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class PublicationPageState extends State<PublicationPage> {
   //TextEditingController _nameTxtController;
   var _dirTxtController = TextEditingController();
   var _descTxtController = TextEditingController();
-
+    final StorageUtil _storage=StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
   String _selectedCategory;
@@ -34,10 +35,10 @@ class PublicationPageState extends State<PublicationPage> {
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
-
+ List<String> imagesRef=List<String>();
   List<Object> images = List<Object>();
   Future<File> _imageFile;
-
+List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
@@ -62,13 +63,12 @@ class PublicationPageState extends State<PublicationPage> {
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
+
     getDir(_locations);
     return Scaffold(
-      body: _publicationForm(context),
+      body: SingleChildScrollView(child: _publicationForm(context)),
 
-      /*appBar: AppBar(
-          title: Text('Adopcion'),
-        ),*/
+     
     );
   }
   Widget buildGridView() {
@@ -80,6 +80,7 @@ class PublicationPageState extends State<PublicationPage> {
       children: List.generate(images.length, (index) {
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
+          print(uploadModel.imageUrl);
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -100,6 +101,7 @@ class PublicationPageState extends State<PublicationPage> {
                     ),
                     onTap: () {
                       setState(() {
+                       _imgsFiles.remove(index);
                         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
@@ -125,10 +127,11 @@ class PublicationPageState extends State<PublicationPage> {
 
   Future _onAddImageClick(int index) async {
     setState(() {
-      
+      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         getFileImage(index);
+        print("xd"+ _imageFile.toString());
       }else{
         print("faros");
       }
@@ -140,15 +143,19 @@ class PublicationPageState extends State<PublicationPage> {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      imagesRef.add( await _storage.uploadFile(file, 'PublicationImages'));
+      
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
         imageUpload.uploading = false;
         imageUpload.imageFile = file;
-        imageUpload.imageUrl = '';
+        imageUpload.imageUrl ='';
+      // _imgsFiles.add(imageUpload);
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
+
   }
 
   Future getImage() async {
@@ -216,45 +223,6 @@ class PublicationPageState extends State<PublicationPage> {
         });
   }
 
-  /*List<Widget> renderImages() {
-    var temp = <Widget>[];
-    print(imagefile);
-    for (var i = 0; i < _listImages.length; i++) {
-      print(imagefile);
-      _addImages();
-      //imagefile =null;
-      print(_listImages);
-      // add some conditional logic here
-      // we only add more Item if it matches certain condition
-      temp.add(Image.file(imagefile, width: 100, height: 100));
-      print("fuckyou");
-      print(temp.length);
-    }
-    return temp;
-  }*/
-
-  /*Widget _decideImageView() {
-    
-    if (imagefile == null) {
-      return Text("");
-    } else {
-      print("dentro del decide");
-      print(imagefile);
-      _addImages();
-      imagefile =null;
-      print(_listImages);
-      //Uploader(file: imagefile);
-      print(_listImages.length);
-      for (var i = 0; i < _listImages.length; i++) {
-        print("faros en vinagre");
-        print(i);
-      //return Image.file(_listImages[i],fit: BoxFit.cover, width: 100, height: 100);
-      
-      }
-      return Image.file(_listImages[1], width: 100, height: 100);
-      
-    }
-  }*/
   void _addImages() {
     setState(() {
       _listImages.add(imagefile);
@@ -264,27 +232,25 @@ class PublicationPageState extends State<PublicationPage> {
 
 
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //SizedBox(height: 18),
-          Center(
-            child: Text(
-              'CREAR PUBLICACIÓN',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 18),
+        Center(
+          child: Text(
+            'CREAR PUBLICACIÓN',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          _category(),
-          _nameTxt(),
-          _dirTxt(),
-          _descTxt(),
-          //_images(),
-          buildGridView(),
-          //_boton(),
-          _buttons()
-        ],
-      ),
+        ),
+        _category(),
+       if(_selectedCategory!="Situacion de calle") _nameTxt(),
+        _dirTxt(),
+        _descTxt(),
+        //_images(),
+        buildGridView(),
+        //_boton(),
+      _buttons()
+      ],
     );
   }
 
@@ -304,6 +270,7 @@ class PublicationPageState extends State<PublicationPage> {
         DropdownButton(
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
+          
           onChanged: (newValue) {
             setState(() {
               _selectedCategory = newValue;
@@ -396,6 +363,7 @@ class PublicationPageState extends State<PublicationPage> {
               )),
               maxLines: null,
           onTap: () {
+            
             Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
         )));
@@ -433,12 +401,10 @@ class PublicationPageState extends State<PublicationPage> {
   }*/
 
   Widget _buttons() {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _saveBtn()],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [_CancelBtn(), _saveBtn()],
     );
   }
 
@@ -454,21 +420,23 @@ class PublicationPageState extends State<PublicationPage> {
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
           onPressed: () async {
+            print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
                 name: _name,
-                location: mapsUtil.locationtoString(_locations),
-                id: 'miidxd',
-                description: _desc);
-            _db.addAdoption(ad);
+                location: mapsUtil.locationtoString(_locations), 
+                 userID: '1441414',
+                description: _desc,
+                imgRef: imagesRef
+                );
+            _db.addPublication(ad);
             print(_name);
           },
           child: Text('Publicar')),
     );
   }
-
-  void getDir(List<LatLng> locations) {
+void getDir(List<LatLng> locations) {
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";
@@ -489,4 +457,7 @@ class PublicationPageState extends State<PublicationPage> {
       });
     }
   }
+
+
+
 }
