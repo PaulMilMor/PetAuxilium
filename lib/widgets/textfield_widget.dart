@@ -35,54 +35,59 @@ class GrayTextFormField extends StatelessWidget {
   final AutovalidateMode autovalidateMode;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: this.keyboardType,
-      textCapitalization: this.textCapitalization,
-      obscureText: this.obscureText,
-      enableSuggestions: this.enableSuggestions,
-      autocorrect: this.autocorrect,
-      enableInteractiveSelection: this.enableInteractiveSelection,
-      controller: this.controller,
-      validator: this.validator,
-      onChanged: this.onChanged,
-      onTap: this.onTap,
-      focusNode: this.focusNode,
-      toolbarOptions: this.toolbarOptions,
-      autovalidateMode: this.autovalidateMode,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Color.fromRGBO(235, 235, 235, 1),
-        hintText: this.hintText,
-        hintStyle: TextStyle(
-          color: Color.fromRGBO(202, 202, 202, 1),
-        ),
-        labelText: this.hintText,
-        labelStyle: TextStyle(
-//          color: Color.fromRGBO(202, 202, 202, 1),
-          color: Color.fromRGBO(49, 232, 93, 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          borderSide: BorderSide(
-            color: Color.fromRGBO(235, 235, 235, 1),
+    return Theme(
+      data: ThemeData(
+        primaryColor: Color.fromRGBO(49, 232, 93, 1),
+      ),
+      child: TextFormField(
+        keyboardType: this.keyboardType,
+        textCapitalization: this.textCapitalization,
+        obscureText: this.obscureText,
+        enableSuggestions: this.enableSuggestions,
+        autocorrect: this.autocorrect,
+        enableInteractiveSelection: this.enableInteractiveSelection,
+        controller: this.controller,
+        validator: this.validator,
+        onChanged: this.onChanged,
+        onTap: this.onTap,
+        focusNode: this.focusNode,
+        toolbarOptions: this.toolbarOptions,
+        autovalidateMode: this.autovalidateMode,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Color.fromRGBO(235, 235, 235, 1),
+          hintText: this.hintText,
+          hintStyle: TextStyle(
+            color: Color.fromRGBO(202, 202, 202, 1),
           ),
+          labelText: this.hintText,
+          labelStyle: TextStyle(
+//          color: Color.fromRGBO(202, 202, 202, 1),
+              // color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(
+              color: Color.fromRGBO(235, 235, 235, 1),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderSide: BorderSide(
+                color: Color.fromRGBO(49, 232, 93, 1),
+              )),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderSide: BorderSide(
+                color: Color.fromRGBO(232, 49, 93, 1),
+              )),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderSide: BorderSide(
+                color: Color.fromRGBO(232, 49, 93, 1),
+              )),
+          suffixIcon: this.suffixIcon,
         ),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: Color.fromRGBO(49, 232, 93, 1),
-            )),
-        errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: Color.fromRGBO(232, 49, 93, 1),
-            )),
-        focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(
-              color: Color.fromRGBO(232, 49, 93, 1),
-            )),
-        suffixIcon: this.suffixIcon,
       ),
     );
   }

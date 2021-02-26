@@ -40,59 +40,67 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        title: _selectedIndex == 4
-            ? Center(
-                child: Text(
-                  _titles[_selectedIndex],
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  _titles[_selectedIndex],
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-      ),
+      appBar: _appBar(),
       body: _tabs[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        iconSize: 35,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
-            label: 'Nuevo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notificaciones',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Cuenta',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        backgroundColor: Colors.white,
-        unselectedItemColor: Color.fromRGBO(210, 210, 210, 1),
-        selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: _bottomBar(),
+    );
+  }
+
+  Widget _appBar() {
+    return AppBar(
+      elevation: 0,
+      title: _selectedIndex == 4
+          ? Center(
+              child: Text(
+                _titles[_selectedIndex],
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                _titles[_selectedIndex],
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+    );
+  }
+
+  Widget _bottomBar() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      iconSize: 35,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Inicio',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'Chat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_box),
+          label: 'Nuevo',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.notifications),
+          label: 'Notificaciones',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: 'Cuenta',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      backgroundColor: Colors.white,
+      unselectedItemColor: Color.fromRGBO(210, 210, 210, 1),
+      selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
+      onTap: _onItemTapped,
     );
   }
 }

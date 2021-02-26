@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       imgRef: "Fgafaf");
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement session management
     super.initState();
     //print('USER ID');
     //print(_prefs.userID);
@@ -44,79 +44,11 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Image.asset(
-                  'assets/whitelogo_asset.png',
-                  width: 120,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Text(
-                  'PetAuxilium',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium®. ',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      child: Text(
-                        'Registrarse',
-                        style: TextStyle(
-                          color: Color.fromRGBO(49, 232, 93, 1),
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'signup');
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text('Iniciar Sesión',
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(49, 232, 93, 1),
-                        elevation: 0,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'login');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, 'Feed');
-                  },
-                  child: new Text(
-                    'Registrarme en otro momento',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
+              _image(),
+              _title(),
+              _summary(),
+              _buttons(),
+              _anonymousLog(),
             ],
           ),
         ),
@@ -130,6 +62,101 @@ class _HomePageState extends State<HomePage> {
      body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithEmailAndPassword(user.email,user.pass ),))
     //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))
     */
+    );
+  }
+
+  Widget _image() {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Image.asset(
+        'assets/whitelogo_asset.png',
+        width: 120,
+      ),
+    );
+  }
+
+  Widget _title() {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Text(
+        'PetAuxilium',
+        style: TextStyle(
+          fontSize: 36,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _summary() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Text(
+        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium®. ',
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buttons() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _signUpButton(),
+          _loginButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _signUpButton() {
+    return ElevatedButton(
+      child: Text(
+        'Registrarse',
+        style: TextStyle(
+          color: Color.fromRGBO(49, 232, 93, 1),
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.white,
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, 'signup');
+      },
+    );
+  }
+
+  Widget _loginButton() {
+    return ElevatedButton(
+      child: Text('Iniciar Sesión', style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        primary: Color.fromRGBO(49, 232, 93, 1),
+        elevation: 0,
+      ),
+      onPressed: () {
+        Navigator.pushNamed(context, 'login');
+      },
+    );
+  }
+
+  Widget _anonymousLog() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, 'Feed');
+        },
+        child: new Text(
+          'Registrarme en otro momento',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 }

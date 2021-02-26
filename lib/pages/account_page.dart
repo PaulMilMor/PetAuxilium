@@ -38,25 +38,18 @@ class _AccountPageState extends State<AccountPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileInfo(_user.name, _user.email, _user.imgRef),
+          _userInfo(),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text('Mi Cuenta'),
           ),
-          ButtonColumn(),
+          _buttonColumn(),
         ],
       ),
     );
   }
-}
 
-class ProfileInfo extends StatelessWidget {
-  ProfileInfo(this._name, this._email, this._imgRef);
-  final String _name;
-  final String _email;
-  final String _imgRef;
-  @override
-  Widget build(BuildContext context) {
+  Widget _userInfo() {
     return IntrinsicHeight(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -64,7 +57,7 @@ class ProfileInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(this._imgRef),
+              backgroundImage: NetworkImage(this._user.imgRef),
               backgroundColor: Color.fromRGBO(210, 210, 210, 1),
               radius: 50,
             ),
@@ -76,15 +69,15 @@ class ProfileInfo extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 11.0),
                   child: Text(
-                    this._name,
+                    this._user.name,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 12.0),
-                  child: Text(this._email),
-                )
+                  child: Text(this._user.email),
+                ),
               ],
             ),
           ],
@@ -92,112 +85,132 @@ class ProfileInfo extends StatelessWidget {
       ),
     );
   }
-}
 
-class ButtonColumn extends StatelessWidget {
-  final preferencesUtil _prefs = preferencesUtil();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buttonColumn() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Editar perfil',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Mis publicaciones',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Publicar mi negocio',
-              icon: Icons.navigate_next,
-              onPressed: () {
-                Navigator.pushNamed(context, 'CreateBusiness');
-              },
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Anunciarme como cuidador',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-                text: 'Crear Publicación',
-                icon: Icons.navigate_next,
-                onPressed: () {
-                  Navigator.pushNamed(context, 'AdoptionPage');
-                }),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Publicaciones seguidas',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-            child: GrayFlatButton(
-              text: 'Ajustes',
-              icon: Icons.navigate_next,
-              onPressed: () {},
-            ),
-          ),
-          GrayFlatButton(
-            text: 'Cerrar sesión',
-            icon: Icons.navigate_next,
-            onPressed: () {
-              _prefs.userID = null;
-              _prefs.userName = null;
-              _prefs.userImg = null;
-              _prefs.userEmail = null;
-
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-            },
-          ),
+          //_editProfileBtn(),
+          _myPostsButton(),
+          _postBusinessButton(),
+          _caretakerButton(),
+          _createPostButton(),
+          //_followedButton(),
+          // _settingsButton(),
+          _logoutButton(),
         ],
       ),
+    );
+  }
+
+  Widget _editProfileBtn() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Editar perfil',
+        icon: Icons.navigate_next,
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _myPostsButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Mis publicaciones',
+        icon: Icons.navigate_next,
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _postBusinessButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Publicar mi negocio',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'CreateBusiness');
+        },
+      ),
+    );
+  }
+
+  Widget _caretakerButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Anunciarme como cuidador',
+        icon: Icons.navigate_next,
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _createPostButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+          text: 'Crear Publicación',
+          icon: Icons.navigate_next,
+          onPressed: () {
+            Navigator.pushNamed(context, 'AdoptionPage');
+          }),
+    );
+  }
+
+  Widget _followedButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Publicaciones seguidas',
+        icon: Icons.navigate_next,
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _settingsButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Ajustes',
+        icon: Icons.navigate_next,
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _logoutButton() {
+    return GrayFlatButton(
+      text: 'Cerrar sesión',
+      icon: Icons.navigate_next,
+      onPressed: () {
+        _prefs.userID = null;
+        _prefs.userName = null;
+        _prefs.userImg = null;
+        _prefs.userEmail = null;
+
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      },
     );
   }
 }

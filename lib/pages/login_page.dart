@@ -52,106 +52,118 @@ class _LoginPageState extends State<LoginPage> {
           child: Padding(
               padding: EdgeInsets.all(36.0),
               child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 12),
-                        child: Text(
-                          'Iniciar Sesión',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(49, 232, 93, 1),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
-                        child: GrayTextFormField(
-                          hintText: 'Correo Electrónico',
-                          controller: _emailController,
-                          validator: (value) {
-                            return value.trim().isEmpty
-                                ? 'Introduce el correo'
-                                : null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
-                        child: GrayTextFormField(
-                          hintText: 'Contraseña',
-                          controller: _pswdController,
-                          obscureText: true,
-                          validator: (value) {
-                            return value.trim().isEmpty
-                                ? 'Introduce la contraseña'
-                                : null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: _isLoading
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 25.0),
-                                  child: CircularProgressIndicator(
-                                    backgroundColor:
-                                        Color.fromRGBO(49, 232, 93, 1),
-                                  ),
-                                )
-                              : ElevatedButton(
-                                  child: Text('Continuar',
-                                      style: TextStyle(color: Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color.fromRGBO(49, 232, 93, 1),
-                                  ),
-                                  onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      setState(() {
-                                        _isLoading = true;
-                                      });
-                                      _login(context);
-                                    }
-                                  },
-                                ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 72, 12, 6),
-                        child: Row(
-                          children: [
-                            Expanded(child: Divider()),
-                            Text('O ingresa con Google®'),
-                            Expanded(
-                              child: Divider(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 12),
-                          child: GoogleSignInButton(
-                            onPressed: () {},
-                            text: 'Ingresar con Google',
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                child: _loginForm(),
               )),
+        ),
+      ),
+    );
+  }
+
+  Widget _loginForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+            child: Text(
+              'Iniciar Sesión',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+            ),
+          ),
+          _emailTxt(),
+          _passwordTxt(),
+          _loginButton(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 72, 12, 6),
+            child: Row(
+              children: [
+                Expanded(child: Divider()),
+                Text('O ingresa con Google®'),
+                Expanded(
+                  child: Divider(),
+                ),
+              ],
+            ),
+          ),
+          _googleLoginButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _emailTxt() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      child: GrayTextFormField(
+        hintText: 'Correo Electrónico',
+        controller: _emailController,
+        validator: (value) {
+          return value.trim().isEmpty ? 'Introduce el correo' : null;
+        },
+      ),
+    );
+  }
+
+  Widget _passwordTxt() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      child: GrayTextFormField(
+        hintText: 'Contraseña',
+        controller: _pswdController,
+        obscureText: true,
+        validator: (value) {
+          return value.trim().isEmpty ? 'Introduce la contraseña' : null;
+        },
+      ),
+    );
+  }
+
+  Widget _loginButton() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: _isLoading
+            ? Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+                child: CircularProgressIndicator(
+                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                ),
+              )
+            : ElevatedButton(
+                child: Text('Continuar', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    _login(context);
+                  }
+                },
+              ),
+      ),
+    );
+  }
+
+  Widget _googleLoginButton() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        child: GoogleSignInButton(
+          onPressed: () {},
+          text: 'Ingresar con Google',
         ),
       ),
     );
