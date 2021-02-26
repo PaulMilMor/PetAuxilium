@@ -8,7 +8,7 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final preferencesUtil prefs=preferencesUtil();
+  final preferencesUtil prefs = preferencesUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -24,22 +24,50 @@ class AuthUtil {
   }
 
   //Obtiene email y password para ingresar
-  
+
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
- signInWithEmailAndPassword(String email, String password) async {
+  /*Future signInWithEmailAndPassword(String email, String password) async {
+    print('SIGN IN');
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-          print(result);
-      UserModel userModel =  await _db.getUser(result.user.uid);
-       prefs.userID=result.user.uid;
-       prefs.userName=userModel.name;
-      
-    } catch (error) {
-      print(error.toString());
-   
+      Future<UserModel> user = _db.getUser(result.user.uid);
+      print('SIGN IN TRY');
+      print(user);
+      return user;*/
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      var result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print(result);
+
+      UserModel userModel = await _db.getUser(result.user.uid);
+      print('SIGN IN');
+      print(result.user.uid);
+
+      prefs.userID = result.user.uid;
+      //FIXME: The getter 'name' was called on null
+      return 'Ingresó';
+      prefs.userName = userModel.name;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          return 'No se encontró el usuario.';
+          break;
+        case 'wrong-password':
+          return 'La contraseña es incorrecta.';
+          break;
+        case 'invalid-email':
+          return 'El correo electrónico no es válido.';
+          break;
+        default:
+          return 'Algo salió mal. Error [${e.code}]';
+          break;
+      }
     }
   }
+
   //Retorna un usuario con nombre 'anonimo' y con una id generada automaticamente
   Future<UserModel> signInAnon() async {
     try {
@@ -52,7 +80,7 @@ class AuthUtil {
       return null;
     }
   }
-   
+
   //Cerrar Sesion
   Future signOut() async {
     try {
@@ -62,27 +90,27 @@ class AuthUtil {
       return null;
     }
   }
-  
+
   Future<UserModel> signInWithGoogle() async {
-  final GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-  final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final GoogleSignInAccount googleSignInAccount =
+        await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
 
-  final AuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleSignInAuthentication.idToken,
-      accessToken: googleSignInAuthentication.accessToken);
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken);
 
-  final authResult = await _auth.signInWithCredential(credential);
-  final  user = authResult.user;
-print(user);
-  // assert(!user.isAnonymous);
-  // assert(await user.getIdToken() != null);
+    final authResult = await _auth.signInWithCredential(credential);
+    final user = authResult.user;
+    print(user);
+    // assert(!user.isAnonymous);
+    // assert(await user.getIdToken() != null);
 
+    //return user;
+  }
 
-
-  //return user;
-}
-
-void signOutGoogle() async {
-  await _googleSignIn.signOut();
-}
+  void signOutGoogle() async {
+    await _googleSignIn.signOut();
+  }
 }

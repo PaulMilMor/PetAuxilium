@@ -1,50 +1,77 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class preferencesUtil{
-  static final preferencesUtil _instance =preferencesUtil._internal();
-  factory preferencesUtil(){
+class preferencesUtil {
+  static final preferencesUtil _instance = preferencesUtil._internal();
+  factory preferencesUtil() {
     return _instance;
   }
   preferencesUtil._internal();
   SharedPreferences _prefs;
-  initPrefs()async{
-    this._prefs=await SharedPreferences.getInstance();
+  initPrefs() async {
+    this._prefs = await SharedPreferences.getInstance();
   }
 
-  get businessName{
+  get businessName {
     return _prefs.getString('name') ?? '';
   }
-  set businessName(String name){
+
+  set businessName(String name) {
     _prefs.setString('name', name);
   }
-   get businessDescription{
+
+  get businessDescription {
     return _prefs.getString('description') ?? '';
   }
-  set businessDescription(String desc){
+
+  set businessDescription(String desc) {
     _prefs.setString('description', desc);
   }
-  get userName{
-  return _prefs.getString('userName') ?? null;
+
+  get userName {
+    return _prefs.getString('userName') ?? null;
   }
-  set userName(String userName){
+
+  set userName(String userName) {
     _prefs.setString('userName', userName);
   }
-    get userID{
-  return _prefs.getString('userID') ?? ' ';
+
+  get userID {
+    return _prefs.getString('userID') ?? ' ';
   }
-  set userID(String userID){
+
+  set userID(String userID) {
     _prefs.setString('userID', userID);
   }
-   get adoptionName{
-    return _prefs.getString('aname') ?? '';
+
+  get userImg {
+    return _prefs.getString('userImg') ?? ' ';
   }
-  set adoptionName(String name){
-    _prefs.setString('aname', name);
+
+  set userImg(String userImg) {
+    _prefs.setString('userImg', userImg);
   }
-   get adoptionDescription{
-    return _prefs.getString('adescription') ?? '';
+
+  get userEmail {
+    return _prefs.getString('userEmail') ?? ' ';
   }
-  set adoptionDescription(String desc){
-    _prefs.setString('adescription', desc);
+
+  set userEmail(String userEmail) {
+    _prefs.setString('userEmail', userEmail);
+  }
+
+  get adoptionName {
+    return _prefs.getString('name') ?? '';
+  }
+
+  set adoptionName(String name) {
+    _prefs.setString('name', name);
+  }
+
+  get adoptionDescription {
+    return _prefs.getString('description') ?? '';
+  }
+
+  set adoptionDescription(String desc) {
+    _prefs.setString('description', desc);
   }
 }

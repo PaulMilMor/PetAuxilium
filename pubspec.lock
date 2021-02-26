@@ -42,21 +42,21 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.16.0+1"
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0+1"
+    version: "0.3.0+2"
   collection:
     dependency: transitive
     description:
@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  email_validator:
+    dependency: "direct main"
+    description:
+      name: email_validator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   fake_async:
     dependency: transitive
     description:
@@ -112,21 +119,21 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.20.0+1"
+    version: "0.20.1"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.1.0"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2+6"
+    version: "0.3.3"
   firebase_core:
     dependency: "direct main"
     description:
@@ -148,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1+3"
+  firebase_database:
+    dependency: "direct main"
+    description:
+      name: firebase_database
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.0"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -345,8 +359,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0-nullsafety.3"
-  path:
+  nested:
     dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  path:
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -401,6 +422,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.13"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.3"
   quiver:
     dependency: transitive
     description:
@@ -553,6 +581,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.1+3"
+  uuid:
+    dependency: "direct main"
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:

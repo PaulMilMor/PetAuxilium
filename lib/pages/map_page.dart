@@ -22,13 +22,16 @@ class _MapPageState extends State<MapPage> {
   final prefs = preferencesUtil();
 
   Set<Marker> _markers = new Set<Marker>();
- // BusinessModel business = BusinessModel(location: 'geo:29,-111');
+  // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     getLoc();
    
   
+=======
+>>>>>>> Pool
   }
   void _onMapCreated(GoogleMapController _cntlr)
   {
@@ -54,8 +57,8 @@ class _MapPageState extends State<MapPage> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-              
-                Navigator.popAndPushNamed(context, 'CreateBusiness',
+                Navigator.popAndPushNamed(
+                    context, 'CreateBusiness',
                     arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;
@@ -77,6 +80,7 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
     setState(() {

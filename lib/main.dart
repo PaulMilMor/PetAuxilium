@@ -11,7 +11,12 @@ import 'package:pet_auxilium/pages/map_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
+import 'src/app.dart';
+import 'package:pet_auxilium/src/pages/feed.dart';
+
 Future<void> main() async {
+//import 'package:flutter/cloud_firestore/cloud_firestore.dart';
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
      final prefs = preferencesUtil();
@@ -32,8 +37,7 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: 'CreateBusiness',
-      
+        initialRoute: '/',
         routes: {
           '/': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),

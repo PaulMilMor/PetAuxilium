@@ -1,25 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/account_page.dart';
+import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/adoption_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/src/pages/feed.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
   _NavigationPageState createState() => _NavigationPageState();
-   
 }
 
 class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
-   final _prefs = new preferencesUtil();
+  final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  final List<String> _titles = [
+    'INICIO',
+    'CHAT',
+    'CREAR PUBLICACIÓN',
+    'NOTIFICACIONES',
+    'PERFIL'
+  ];
+  final List<Widget> _tabs = [
+    Feed(),
+    null,
+    Adoptionpage(),
+    CreateBusinessPage(),
+    AccountPage()
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text(_prefs.userName),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        title: _selectedIndex == 4
+            ? Center(
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
@@ -28,7 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '',
+            label: 'Inicio',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),

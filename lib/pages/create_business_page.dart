@@ -53,19 +53,20 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 15),
-          Text(
-            'PUBLICAR NEGOCIO',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+            child: Text(
+              'PUBLICAR NEGOCIO',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
           ),
-              SizedBox(height:10),
+          _selectService(),
           Text('Completa los siguientes campos'),
           _nameTxt(),
-          SizedBox(height:10),
           _dirTxt(),
-              SizedBox(height:10),
           Text('Describa los servicios que ofrece'),
-           SizedBox(height:10),
-           _descriptionTxt(),
+          _descriptionTxt(),
+          _addBtn(),
           _buttons()
         ],
       ),
@@ -74,7 +75,17 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _nameTxt() {
     return Container(
-        child: GrayTextFormField(
+      child: GrayTextFormField(
+          controller: _nameTxtController,
+          hintText: 'Nombre',
+          onChanged: (value) {
+            setState(() {
+              prefs.businessName = value;
+              _name = value;
+            });
+          }),
+
+      /*TextField(
       controller: _nameTxtController,
       hintText: 'Nombre',
       onChanged: (value) {
@@ -83,18 +94,28 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           _name = value;
         });
       },
-    ));
+    )*/
+    );
   }
 
   Widget _dirTxt() {
     return Container(
-        child:  GrayTextFormField(
+        child: GrayTextFormField(
+            controller: _dirTxtController,
+            hintText: 'Direccion',
+            //Esto es para que no se pueda editar manualmente el texta de la ubicación
+            focusNode: AlwaysDisabledFocusNode(),
+            onTap: () {
+              Navigator.pushNamed(context, 'map', arguments: _markers);
+            })
+        /*TextField(
       controller: _dirTxtController,
     hintText: 'Direccion',
       onTap: () {
         Navigator.pushNamed(context, 'map', arguments: _markers);
       },
-    ));
+    )*/
+        );
   }
 
   Widget _buttons() {
@@ -102,18 +123,20 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_cancelBtn(),
-        SizedBox(width: 5,),
-        _saveBtn()],
+        children: [_cancelBtn(), _saveBtn()],
       ),
     );
   }
 
   Widget _descriptionTxt() {
-    return GrayTextFormField(
-      maxLines: 6,
+    return TextField(
+      maxLength: 500,
+      maxLines: 8,
       controller: _descTxtController,
-      hintText:'Descripcion',
+      decoration: InputDecoration(
+          hintText: "Descripcion",
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
       onChanged: (value) {
         setState(() {
           prefs.businessDescription = value;
@@ -122,18 +145,18 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       },
     );
   }
-Widget _cancelBtn(){
- return Container(
-      child: FlatButton(
-         color: Colors.white,
-         textColor: Colors.grey,
-          onPressed: () async {
-           Navigator.pop(context);
-            //print(_dir);
-          },
-          child: Text('Cancelar')),
-    );  
-}
+
+  Widget _cancelBtn() {
+    return Container(
+      child: TextButton(
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
 //TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
     return Container(
@@ -148,7 +171,40 @@ Widget _cancelBtn(){
             _db.addBusiness(business);
             //print(_dir);
           },
-          child: Text('Guardar')),
+          child: Text('Publicar')),
+    );
+  }
+
+  Widget _addBtn() {
+    return FlatButton(
+      onPressed: () {},
+      color: Colors.grey[200],
+      height: 85,
+      child: Column(
+        children: [
+          Icon(
+            Icons.add,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _selectService() {
+    return Row(
+      children: [
+        Text('Servicios que ofrece:'),
+        /*DropdownButton(
+          isExpanded: true,
+          items: [
+            DropdownMenuItem(child: Text('Veterinaria')),
+            DropdownMenuItem(child: Text('???')),
+            DropdownMenuItem(child: Text('Tráfico de personas')),
+          ],
+        ),*/
+      ],
     );
   }
 
@@ -174,4 +230,10 @@ Widget _cancelBtn(){
       });
     }
   }
+}
+
+//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }
