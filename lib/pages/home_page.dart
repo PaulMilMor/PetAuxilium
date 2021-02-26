@@ -109,8 +109,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(12.0),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, 'navigation', (Route<dynamic> route) => false);
+                    Navigator.pushNamed(context, 'Feed');
                   },
                   child: new Text(
                     'Registrarme en otro momento',

@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
           'AdoptionPage': (BuildContext context) => Adoptionpage(),
+          'Feed': (BuildContext context) => Feed(),
         },
       ),
     );

@@ -14,9 +14,11 @@ class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index != 1 && index != 3) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   final List<String> _titles = [
