@@ -255,7 +255,13 @@ class Adoption_page extends State {
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
     return Scaffold(
-      body: _publicationForm(context),
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: _publicationForm(context)
+      )
+      
+      
+      
 
       /*appBar: AppBar(
           title: Text('Adopcion'),
@@ -265,7 +271,9 @@ class Adoption_page extends State {
 
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
+      //child: SingleChildScrollView(
       child: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 18),
@@ -282,7 +290,9 @@ class Adoption_page extends State {
           //_images(),
           buildGridView(),
           //_boton(),
-          _buttons()
+          _buttons(),
+          
+          
         ],
       ),
     );
@@ -290,6 +300,7 @@ class Adoption_page extends State {
 
   Widget _category() {
     return Container(
+      
       height: 100.0,
       margin: const EdgeInsets.only(left: 40.0, top: 20),
       child: Center(
@@ -356,6 +367,7 @@ class Adoption_page extends State {
         height: 100.0,
         child: Center(
           child: Column(children: [
+          
             Container(
                 width: 300.0,
                 child: TextField(
@@ -387,6 +399,7 @@ class Adoption_page extends State {
         child: Center(
             child: TextField(
           controller: _dirTxtController,
+          readOnly: true,
           decoration: InputDecoration(
               labelText: 'Dirección',
               suffixIcon: IconButton(
@@ -433,7 +446,7 @@ class Adoption_page extends State {
   }*/
 
   Widget _buttons() {
-    return Expanded(
+    return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
