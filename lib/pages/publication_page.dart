@@ -403,19 +403,12 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
   }*/
 
   Widget _buttons() {
-<<<<<<< HEAD:lib/pages/publication_page.dart
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [_CancelBtn(), _saveBtn()],
-=======
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [_CancelBtn(), _saveBtn()],
       ),
->>>>>>> 9e8f4959dfb3e46ef1a4e30335ced2bf3ec6ec98:lib/pages/adoption_page.dart
     );
   }
 
