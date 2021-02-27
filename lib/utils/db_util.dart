@@ -56,8 +56,14 @@ class dbUtil {
     return locations;
   }
 
+<<<<<<< HEAD
   Future<void> addPublication(PublicationModel ad) async {
     await _firestoreInstance.collection("publications").add({
+=======
+  Future<void> addAdoption(AddAdoption ad) async {
+    await _firestoreInstance.collection("adoption").add({
+      'id': ad.id,
+>>>>>>> origin/Alfaro1
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,
@@ -65,5 +71,15 @@ class dbUtil {
       'imgRef': ad.imgRef,
       'userID':ad.userID
     });
+  }
+
+  Future<List<AddAdoption>> getAllImages() async {
+    List<AddAdoption> images = List<AddAdoption>();
+    await _firestoreInstance.collection('publications').get().then((value) {
+      value.docs.forEach((element) {
+        images.add(AddAdoption.fromJsonMap(element.data()));
+      });
+    });
+    return images;
   }
 }

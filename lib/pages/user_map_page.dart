@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+
 class UserMapPage extends StatefulWidget {
-  
   @override
   _UserMapPageState createState() => _UserMapPageState();
 }
@@ -23,7 +23,7 @@ class _UserMapPageState extends State<UserMapPage> {
  getMarkers();
   
     //TODO: Tambien aqui poner lo de la geolocalisacion
-      final CameraPosition puntoInicial = CameraPosition(
+    final CameraPosition puntoInicial = CameraPosition(
       target: tempLocation,
       zoom: 17.5,
     );
@@ -31,10 +31,9 @@ class _UserMapPageState extends State<UserMapPage> {
       mapType: MapType.normal,
       markers: _markers,
       initialCameraPosition: puntoInicial,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
     );
   }
   void getMarkers() async{
@@ -68,8 +67,5 @@ setState(() {
 
   
     //element[]
-
-    
-
   }
 }
