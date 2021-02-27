@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
-import 'package:pet_auxilium/pages/adoption_page.dart';
+
+import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/src/pages/feed.dart';
 
@@ -29,7 +30,8 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<Widget> _tabs = [
     Feed(),
     null,
-    Adoptionpage(),
+    //Adoptionpage(),
+    PublicationPage(),
     CreateBusinessPage(),
     AccountPage()
   ];

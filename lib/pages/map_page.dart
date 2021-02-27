@@ -26,12 +26,9 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
     getLoc();
    
   
-=======
->>>>>>> Pool
   }
   void _onMapCreated(GoogleMapController _cntlr)
   {

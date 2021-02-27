@@ -17,6 +17,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
+    AuthUtil _auth = AuthUtil();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +182,9 @@ class _SignupPageState extends State<SignupPage> {
                         child: GoogleSignInButton(
                           text: 'Registrarse con Google',
                           darkMode: true,
-                          onPressed: () {},
+                          onPressed: () {
+                            _signUpGoogle(context);
+                          },
                         ),
                       ),
                     )
@@ -201,7 +204,7 @@ class _SignupPageState extends State<SignupPage> {
       //imgRef??
       //birthday??
     );
-    AuthUtil _auth = AuthUtil();
+  
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
@@ -213,5 +216,18 @@ class _SignupPageState extends State<SignupPage> {
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }
+  }
+   _signUpGoogle(BuildContext context2) async{
+String _result = await _auth.signInWithGoogle();
+    
+    if (_result == 'Ingresó') {
+      Navigator.pushNamedAndRemoveUntil(
+          context, 'navigation', (Route<dynamic> route) => false);
+    } else {
+      Scaffold.of(context2)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_result)));
+    }
+
   }
 }
