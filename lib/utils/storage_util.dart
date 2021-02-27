@@ -10,7 +10,7 @@ class StorageUtil {
     String url;
  //TODO: agregar que tambien el userid al nombre del archivo para evitar problemas
     Reference reference =
-        _storage.ref().child("$folder/" + DateTime.now().toString());
+        _storage.ref().child("$folder/" + DateTime.now().toString()+prefs.userID);
 
     UploadTask uploadTask = reference.putFile(file);
     await uploadTask.whenComplete(() {});

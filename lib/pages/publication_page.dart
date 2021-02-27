@@ -430,7 +430,7 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
                 category: _selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations), 
-                 userID: '1441414',
+                 userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef
                 );
