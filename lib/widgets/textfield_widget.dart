@@ -17,6 +17,9 @@ class GrayTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.toolbarOptions,
     this.autovalidateMode,
+    this.maxLines = 1,
+    this.maxLength,
+    this.readOnly = false,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -33,6 +36,9 @@ class GrayTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final ToolbarOptions toolbarOptions;
   final AutovalidateMode autovalidateMode;
+  final int maxLines;
+  final int maxLength;
+  final bool readOnly;
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -53,6 +59,9 @@ class GrayTextFormField extends StatelessWidget {
         focusNode: this.focusNode,
         toolbarOptions: this.toolbarOptions,
         autovalidateMode: this.autovalidateMode,
+        maxLines: this.maxLines,
+        maxLength: this.maxLength,
+        readOnly: this.readOnly,
         decoration: InputDecoration(
           filled: true,
           fillColor: Color.fromRGBO(235, 235, 235, 1),

@@ -4,7 +4,7 @@ import 'package:pet_auxilium/pages/create_business_page.dart';
 
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/src/pages/feed.dart';
+import 'package:pet_auxilium/pages/feed_page.dart';
 
 class NavigationPage extends StatefulWidget {
   @override

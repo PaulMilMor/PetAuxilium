@@ -63,7 +63,17 @@ class dbUtil {
       'description': ad.description,
       'location': ad.location,
       'imgRef': ad.imgRef,
-      'userID':ad.userID
+      'userID': ad.userID
     });
+  }
+
+  Future<List<AddAdoption>> getAllImages() async {
+    List<AddAdoption> images = List<AddAdoption>();
+    await _firestoreInstance.collection('publications').get().then((value) {
+      value.docs.forEach((element) {
+        images.add(AddAdoption.fromJsonMap(element.data()));
+      });
+    });
+    return images;
   }
 }

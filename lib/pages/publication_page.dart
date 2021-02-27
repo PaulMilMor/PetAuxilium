@@ -360,15 +360,14 @@ class PublicationPageState extends State<PublicationPage> {
         width: 300.0,
         margin: const EdgeInsets.only(left: 55.0, bottom: 20),
         child: Center(
-            child: TextField(
+            child: GrayTextFormField(
           controller: _dirTxtController,
           readOnly: true,
-          decoration: InputDecoration(
-              labelText: 'Dirección',
-              suffixIcon: IconButton(
-                onPressed: () => _dirTxtController.clear(),
-                icon: Icon(Icons.clear),
-              )),
+          hintText: 'Dirección',
+          suffixIcon: IconButton(
+            onPressed: () => _dirTxtController.clear(),
+            icon: Icon(Icons.clear),
+          ),
           maxLines: null,
           onTap: () {
             Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
