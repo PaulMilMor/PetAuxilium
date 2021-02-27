@@ -162,7 +162,9 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         child: GoogleSignInButton(
-          onPressed: () {},
+          onPressed: () {
+            _loginGoogle(context);
+          },
           text: 'Ingresar con Google',
         ),
       ),
@@ -186,6 +188,20 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
       });
+      Scaffold.of(context2)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_result)));
+    }
+  }
+
+  _loginGoogle(BuildContext context2) async {
+    String _result = await auth.signInWithGoogle();
+    print('LOGIN');
+    print(prefs.userName);
+    if (_result == 'Ingresó') {
+      Navigator.pushNamedAndRemoveUntil(
+          context, 'navigation', (Route<dynamic> route) => false);
+    } else {
       Scaffold.of(context2)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));

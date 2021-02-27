@@ -8,7 +8,7 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final preferencesUtil prefs = preferencesUtil();
+  final preferencesUtil _prefs = preferencesUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -46,10 +46,10 @@ class AuthUtil {
       print('SIGN IN');
       print(result.user.uid);
 
-      prefs.userID = result.user.uid;
-      //FIXME: The getter 'name' was called on null
+      _prefs.userID = result.user.uid;
+    
       return 'Ingresó';
-      prefs.userName = userModel.name;
+      _prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -94,8 +94,12 @@ class AuthUtil {
     }
   }
 
-  Future<UserModel> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount =
+  Future<String> signInWithGoogle() async {
+
+  
+   try {
+     
+        final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -106,7 +110,30 @@ class AuthUtil {
 
     final authResult = await _auth.signInWithCredential(credential);
     final user = authResult.user;
+    UserModel userModel=UserModel(id:user.uid,name: user.displayName, email: user.email, imgRef: user.photoURL);
     print(user);
+      _db.addUser(userModel);
+      _prefs.userName = userModel.name;
+      _prefs.userID = userModel.id;
+      _prefs.userImg = userModel.imgRef;
+      _prefs.userEmail = userModel.email;
+      return 'Ingresó';
+      
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          return 'No se encontró el usuario.';
+          break;
+        case 'wrong-password':
+          return 'La contraseña es incorrecta.';
+          break;
+        case 'invalid-email':
+          return 'El correo electrónico no es válido.';
+          break;
+        default:
+          return 'Algo salió mal. Error [${e.code}]';
+          break;
+      }
     // assert(!user.isAnonymous);
     // assert(await user.getIdToken() != null);
 
@@ -116,4 +143,5 @@ class AuthUtil {
   void signOutGoogle() async {
     await _googleSignIn.signOut();
   }
+}
 }

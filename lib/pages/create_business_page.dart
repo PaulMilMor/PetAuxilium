@@ -28,7 +28,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   @override
   void initState() {
     super.initState();
-
+//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _name = prefs.businessName ?? ' ';
     _desc = prefs.businessDescription;
     _nameTxtController = TextEditingController(text: _name);
@@ -87,7 +87,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
       /*TextField(
       controller: _nameTxtController,
-      decoration: InputDecoration(labelText: 'Nombre'),
+      hintText: 'Nombre',
       onChanged: (value) {
         setState(() {
           prefs.businessName = value;
@@ -110,7 +110,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             })
         /*TextField(
       controller: _dirTxtController,
-      decoration: InputDecoration(labelText: 'Direccion'),
+    hintText: 'Direccion',
       onTap: () {
         Navigator.pushNamed(context, 'map', arguments: _markers);
       },
@@ -162,7 +162,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     return Container(
       child: RaisedButton(
           onPressed: () async {
-            print(mapsUtil.locationtoString(_locations));
+           // print(mapsUtil.locationtoString(_locations));
             BusinessModel business = BusinessModel(
                 name: _name,
                 //location: mapsUtil.locationtoString(_locations),
@@ -216,13 +216,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
         placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
+          place = place  +
               element.street +
               " " +
               element.subLocality +
               ", " +
-              element.locality;
+              element.locality+
+              "\n";
         });
         setState(() {
           _dirTxtController.text = place;

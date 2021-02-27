@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 
@@ -11,14 +12,15 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
-class Adoptionpage extends StatefulWidget {
+class PublicationPage extends StatefulWidget {
   @override
-  Adoption_page createState() => Adoption_page();
+  PublicationPageState createState() => PublicationPageState();
 }
 
-class Adoption_page extends State {
+class PublicationPageState extends State<PublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
@@ -26,7 +28,7 @@ class Adoption_page extends State {
   //TextEditingController _nameTxtController;
   var _dirTxtController = TextEditingController();
   var _descTxtController = TextEditingController();
-
+  final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
   String _selectedCategory;
@@ -35,10 +37,10 @@ class Adoption_page extends State {
   String _desc;
   List<String> _dir;
   List<LatLng> _locations;
-
+  List<String> imagesRef = List<String>();
   List<Object> images = List<Object>();
   Future<File> _imageFile;
-
+  List<ImageUploadModel> _imgsFiles = List<ImageUploadModel>();
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
@@ -52,11 +54,23 @@ class Adoption_page extends State {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    /*_name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
+    //_name = prefs.adoptionName ?? ' ';
+    //_desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
-    _descTxtController = TextEditingController(text: _desc);*/
+    _descTxtController = TextEditingController(text: _desc);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    _markers = ModalRoute.of(context).settings.arguments;
+    _locations = mapsUtil.getLocations(_markers);
+
+    getDir(_locations);
+    return Scaffold(
+      body: SingleChildScrollView(child: _publicationForm(context)),
+    );
   }
 
   Widget buildGridView() {
@@ -68,6 +82,7 @@ class Adoption_page extends State {
       children: List.generate(images.length, (index) {
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
+          print(uploadModel.imageUrl);
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -90,6 +105,8 @@ class Adoption_page extends State {
                       setState(() {
                         images.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
+                        _imgsFiles.remove(index);
+                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -116,13 +133,15 @@ class Adoption_page extends State {
 
   Future _onAddImageClick(int index) async {
     setState(() {
+      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         getFileImage(index);
+        print("xd" + _imageFile.toString());
       } else {
         print("faros");
       }
-      images.length < 6 ? images.add("Add Image") : null;
+      if (images.length < 6) images.add("Add Image");
     });
   }
 
@@ -137,12 +156,15 @@ class Adoption_page extends State {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
+
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
         imageUpload.uploading = false;
         imageUpload.imageFile = file;
         imageUpload.imageUrl = '';
+        // _imgsFiles.add(imageUpload);
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
@@ -213,96 +235,39 @@ class Adoption_page extends State {
         });
   }
 
-  /*List<Widget> renderImages() {
-    var temp = <Widget>[];
-    print(imagefile);
-    for (var i = 0; i < _listImages.length; i++) {
-      print(imagefile);
-      _addImages();
-      //imagefile =null;
-      print(_listImages);
-      // add some conditional logic here
-      // we only add more Item if it matches certain condition
-      temp.add(Image.file(imagefile, width: 100, height: 100));
-      print("fuckyou");
-      print(temp.length);
-    }
-    return temp;
-  }*/
-
-  /*Widget _decideImageView() {
-    
-    if (imagefile == null) {
-      return Text("");
-    } else {
-      print("dentro del decide");
-      print(imagefile);
-      _addImages();
-      imagefile =null;
-      print(_listImages);
-      //Uploader(file: imagefile);
-      print(_listImages.length);
-      for (var i = 0; i < _listImages.length; i++) {
-        print("faros en vinagre");
-        print(i);
-      //return Image.file(_listImages[i],fit: BoxFit.cover, width: 100, height: 100);
-      
-      }
-      return Image.file(_listImages[1], width: 100, height: 100);
-      
-    }
-  }*/
   void _addImages() {
     setState(() {
       _listImages.add(imagefile);
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-    return Scaffold(
-      body: _publicationForm(context),
-
-      /*appBar: AppBar(
-          title: Text('Adopcion'),
-        ),*/
-    );
-  }
-
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 18),
-          Center(
-            child: Text(
-              'CREAR PUBLICACIÓN',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 18),
+        Center(
+          child: Text(
+            'CREAR PUBLICACIÓN',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          //TODO: Remove comments
-          _category(),
-          _nameTxt(),
-          _dirTxt(),
-          _descTxt(),
-          //_images(),
-          buildGridView(),
-          //_boton(),
-          _buttons()
-        ],
-      ),
+        ),
+        _category(),
+        if (_selectedCategory != "Situacion de calle") _nameTxt(),
+        _dirTxt(),
+        _descTxt(),
+        //_images(),
+        buildGridView(),
+        //_boton(),
+        _buttons()
+      ],
     );
   }
 
   Widget _category() {
     return Container(
-      height: 100.0,
-      margin: const EdgeInsets.only(left: 40.0, top: 20),
+      // height: 100.0,
+      margin: const EdgeInsets.only(left: 40.0, top: 10),
       child: Center(
           child: Row(children: [
         Container(
@@ -395,16 +360,18 @@ class Adoption_page extends State {
         width: 300.0,
         margin: const EdgeInsets.only(left: 55.0, bottom: 20),
         child: Center(
-            child: GrayTextFormField(
+            child: TextField(
           controller: _dirTxtController,
-          hintText: 'Dirección',
-          suffixIcon: IconButton(
-            onPressed: () => _dirTxtController.clear(),
-            icon: Icon(Icons.clear),
-          ),
-          focusNode: AlwaysDisabledFocusNode(),
+          readOnly: true,
+          decoration: InputDecoration(
+              labelText: 'Dirección',
+              suffixIcon: IconButton(
+                onPressed: () => _dirTxtController.clear(),
+                icon: Icon(Icons.clear),
+              )),
+          maxLines: null,
           onTap: () {
-            Navigator.pushNamed(context, 'map', arguments: _markers);
+            Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
         )));
   }
@@ -441,7 +408,7 @@ class Adoption_page extends State {
   }*/
 
   Widget _buttons() {
-    return Expanded(
+    return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -462,14 +429,16 @@ class Adoption_page extends State {
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
           onPressed: () async {
+            print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
-            AddAdoption ad = AddAdoption(
+            PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
                 name: _name,
-                //location: mapsUtil.locationtoString(_locations),
-                id: 'miidxd',
-                description: _desc);
-            _db.addAdoption(ad);
+                location: mapsUtil.locationtoString(_locations),
+                userID: '1441414',
+                description: _desc,
+                imgRef: imagesRef);
+            _db.addPublication(ad);
             print(_name);
           },
           child: Text('Publicar')),
@@ -497,11 +466,4 @@ class Adoption_page extends State {
       });
     }
   }
-}
-
-//TODO: Esto debería estar en un archivo aparte?
-//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
 }

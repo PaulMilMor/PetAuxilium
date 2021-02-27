@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_auxilium/pages/adoption_page.dart';
+import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
+import 'package:pet_auxilium/pages/map_publication_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
 import 'package:pet_auxilium/pages/map_page.dart';
@@ -18,14 +19,14 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final prefs = preferencesUtil();
+  await prefs.initPrefs();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prefs = preferencesUtil();
-    prefs.initPrefs();
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);
@@ -44,8 +45,10 @@ class MyApp extends StatelessWidget {
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
-          'AdoptionPage': (BuildContext context) => Adoptionpage(),
+          //'AdoptionPage': (BuildContext context) => Adoptionpage(),
           'Feed': (BuildContext context) => Feed(),
+          'PublicationPage': (BuildContext context) => PublicationPage(),
+          'mapPublication': (BuildContext context) => MapPagePublication(),
         },
       ),
     );

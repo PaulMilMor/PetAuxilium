@@ -56,13 +56,14 @@ class dbUtil {
     return locations;
   }
 
-  Future<void> addAdoption(AddAdoption ad) async {
+  Future<void> addPublication(PublicationModel ad) async {
     await _firestoreInstance.collection("publications").add({
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,
       'location': ad.location,
-      'imgRef': ad.imgRef
+      'imgRef': ad.imgRef,
+      'userID':ad.userID
     });
   }
 }

@@ -60,18 +60,18 @@ class preferencesUtil {
   }
 
   get adoptionName {
-    return _prefs.getString('name') ?? '';
+    return _prefs.getString('aname') ?? '';
   }
 
   set adoptionName(String name) {
-    _prefs.setString('name', name);
+    _prefs.setString('aname', name);
   }
 
   get adoptionDescription {
-    return _prefs.getString('description') ?? '';
+    return _prefs.getString('pdescription') ?? '';
   }
 
   set adoptionDescription(String desc) {
-    _prefs.setString('description', desc);
+    _prefs.setString('pdescription', desc);
   }
 }
