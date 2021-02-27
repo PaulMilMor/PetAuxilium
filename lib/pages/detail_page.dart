@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -24,12 +25,13 @@ class DetailPage extends StatelessWidget {
   DetailPage(this.detailDocument);
 //}
 //class DetailPageState extends State<DetailPage> {
-  List<AddAdoption> ad = List<AddAdoption>();
+  List<PublicationModel> ad = List<PublicationModel>();
   final db = dbUtil();
 
   @override
   Widget build(BuildContext context) {
     getImages();
+   
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -149,16 +151,21 @@ class DetailPage extends StatelessWidget {
   }
 
   void getImages() async {
-    ad = await db.getAllImages();
-    ad.forEach((AddAdoption ad) {
-      ad.imgRef.forEach((element) {
-        // if (detailDocument['imgRef'].contains(element)) {
-        _lista.add(element);
-        // } else {
-        // _lista = [];
-        // }
-      });
-    });
-    // setState(() {});
-  }
+// detailDocument['imgRef'].toString().split(',').forEach((element) {
+// final newValue =element.replaceAll('[http', 'http').replaceAll(']', '');
+
+//  _lista.add(newValue);
+//  });
+print(detailDocument.id);
+_lista=await db.getAllImages(detailDocument.id);
+  //     ad.imgRef.forEach((element) {
+  //       // if (detailDocument['imgRef'].contains(element)) {
+  //       _lista.add(element);
+  //       // } else {
+  //       // _lista = [];
+  //       // }
+
+  //   // setState(() {});
+   }
+ 
 }

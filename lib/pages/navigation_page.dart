@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/feed_page.dart';
 
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/src/pages/feed.dart';
+
 
 class NavigationPage extends StatefulWidget {
   @override

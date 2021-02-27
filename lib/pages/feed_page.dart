@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 
 class Feed extends StatefulWidget {
@@ -26,6 +27,7 @@ class _FeedState extends State<Feed> {
                     //Obtencion de la primera imagen de la lista para el feed
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
+                    
                     return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -104,5 +106,21 @@ class _FeedState extends State<Feed> {
             }
           }),
     ));
+  }
+     Future<void> getDir(Location) async {
+    String place;
+   
+        // List<Placemark> placemarks = await placemarkFromCoordinates(latitude,longitude);
+        // placemarks.forEach((Placemark element) {
+        //   place = place  +
+        //       element.street +
+        //       " " +
+        //       element.subLocality +
+        //       ", " +
+        //       element.locality+
+        //       "\n";
+        // });
+    
+    return place;
   }
 }
