@@ -7,7 +7,7 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
-  final preferencesUtil _prefs=preferencesUtil();
+  final preferencesUtil _prefs = preferencesUtil();
 //Guarda usuario
   Future<void> addUser(UserModel user) async {
     await _firestoreInstance.collection("users").doc(user.id).set({
@@ -20,8 +20,8 @@ class dbUtil {
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
-   _prefs.userName=value.get("name");
-   _prefs.userID=id;
+      _prefs.userName = value.get("name");
+      _prefs.userID = id;
       return UserModel(
           name: value.get("name"),
           birthday: value.get("birthday"),
@@ -40,13 +40,10 @@ class dbUtil {
   }
 
   Future<List<BusinessModel>> getAllLocations() async {
-          List <BusinessModel> locations=List<BusinessModel>();
+    List<BusinessModel> locations = List<BusinessModel>();
     await _firestoreInstance.collection('business').get().then((value) {
-
       value.docs.forEach((element) {
-    
-      locations.add(BusinessModel.fromJsonMap(element.data()));
-    
+        locations.add(BusinessModel.fromJsonMap(element.data()));
       });
     });
     return locations;
@@ -54,11 +51,22 @@ class dbUtil {
 
   Future<void> addAdoption(AddAdoption ad) async {
     await _firestoreInstance.collection("adoption").add({
+      'id': ad.id,
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,
       'location': ad.location,
       'imgRef': ad.imgRef
     });
+  }
+
+  Future<List<AddAdoption>> getAllImages() async {
+    List<AddAdoption> images = List<AddAdoption>();
+    await _firestoreInstance.collection('publications').get().then((value) {
+      value.docs.forEach((element) {
+        images.add(AddAdoption.fromJsonMap(element.data()));
+      });
+    });
+    return images;
   }
 }

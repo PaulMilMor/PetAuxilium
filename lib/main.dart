@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
           'signup': (BuildContext context) => SignupPage(),
           'navigation': (BuildContext context) => NavigationPage(),
           'Feed': (BuildContext context) => Feed(),
-          'DetailPage': (BuildContext context) => DetailPage(),
           'CreateBusiness': (BuildContext context) => CreateBusinessPage(),
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
