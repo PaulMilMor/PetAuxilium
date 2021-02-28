@@ -23,7 +23,8 @@ class _FeedState extends State<Feed> {
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (BuildContext context, index) {
                     DocumentSnapshot publications = documents[index];
-                    //Obtencion de la primera imagen de la lista para el feed
+
+                    //Obtencion de la primera imagen de la lista para el feed.
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
                     return GestureDetector(
