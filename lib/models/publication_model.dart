@@ -26,7 +26,7 @@ PublicationModel({this.id,this.category,this.name,this.description, this.locatio
 
  PublicationModel.fromJsonMap(Map<String, dynamic> json) {
     id = json['id'];
-    description = json['category'];
+    category = json['category'];
     name = json['name'];
     description = json['description'];
     location = json['location'];
