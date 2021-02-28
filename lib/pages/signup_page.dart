@@ -1,6 +1,14 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/widgets/appbar_widget.dart';
@@ -20,6 +28,10 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _confirmController = TextEditingController();
   bool _isLoading = false;
   AuthUtil _auth = AuthUtil();
+  final StorageUtil _storage = StorageUtil();
+  Future<File> _imageFile;
+  String _imgRef;
+  ImageUploadModel _image = null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +92,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
+          _photo(),
           _nameTxt(),
           _lastNameTxt(),
           _emailTxt(),
@@ -102,6 +115,129 @@ class _SignupPageState extends State<SignupPage> {
         ],
       ),
     );
+  }
+
+  Widget _photo() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      child: Row(
+        children: [
+          _image == null ? _addPhoto() : _removePhoto(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Foto de Perfil'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _addPhoto() {
+    return FlatButton(
+      onPressed: () {
+        _onAddImageClick();
+      },
+      color: Colors.grey[200],
+      height: 85,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+      child: Column(
+        children: [
+          Icon(
+            Icons.add_a_photo,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _removePhoto() {
+    print('JALO');
+    print(_image);
+    print(_image.imageFile);
+    return Stack(
+      children: <Widget>[
+        CircleAvatar(
+          child: ClipOval(
+            child: Image.file(
+              _image.imageFile,
+              width: 100,
+              height: 300,
+              fit: BoxFit.cover,
+            ),
+          ),
+          backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+          radius: 42.5,
+        ),
+        Positioned(
+          right: -3,
+          bottom: -3,
+          child: InkWell(
+            child: Icon(
+              Icons.edit,
+              size: 20,
+              color: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            onTap: () {
+              /* setState(() {
+                images.removeAt(index);
+                // images.replaceRange(index, index + 1, ['Add Image']);
+                _imgsFiles.remove(index);
+                //         images.replaceRange(index, index + 1, ['Add Image']);
+              });*/
+            },
+          ),
+        ),
+        /*Positioned(
+          bottom: -11,
+          right: 20,
+          child: FlatButton(
+            onPressed: () {
+              _onAddImageClick();
+            },
+            color: Color.fromRGBO(49, 232, 93, 1),
+            height: 30,
+            minWidth: 0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0)),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.add_a_photo,
+                  size: 15,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ),*/
+      ],
+    );
+  }
+
+  Future _onAddImageClick() async {
+    setState(() {
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      if (_imageFile != null) {
+        getFileImage();
+      }
+    });
+  }
+
+  void getFileImage() async {
+    _imageFile.then((file) async {
+      //  _imgRef = await _storage.uploadFile(file, 'usuarios');
+
+      setState(() {
+        ImageUploadModel imageUpload = new ImageUploadModel();
+        imageUpload.isUploaded = false;
+        imageUpload.uploading = false;
+        imageUpload.imageFile = file;
+        imageUpload.imageUrl = '';
+        _image = imageUpload;
+      });
+    });
   }
 
   Widget _nameTxt() {
