@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:geocoding/geocoding.dart';
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -17,11 +18,13 @@ final List<String> imgList = [
 ];
 //lista
 List<String> _lista = new List<String>();
+String _address = "";
 
 class DetailPage extends StatelessWidget {
   //DetailPageState createState() => DetailPageState();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
+
 //}
 //class DetailPageState extends State<DetailPage> {
   List<AddAdoption> ad = List<AddAdoption>();
@@ -30,6 +33,26 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getImages();
+    List<dynamic> locations = detailDocument['location'];
+    String location = locations.first;
+    final tagName = location;
+    final split = tagName.split(',');
+    final Map<int, String> values = {
+      for (int i = 0; i < split.length; i++) i: split[i]
+    };
+    print(values);
+
+    final latitude = values[0];
+    final longitude = values[1];
+    final value3 = values[2];
+    final latitude2 = latitude.replaceAll(RegExp(','), '');
+    var lat = num.tryParse(latitude2)?.toDouble();
+    var long = num.tryParse(longitude)?.toDouble();
+
+    print(latitude2);
+
+    getAddress(lat, long, _address);
+
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -122,9 +145,9 @@ class DetailPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    detailDocument['location'].toString(),
+                    _address,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       color: Colors.grey[700],
                     ),
                   ),
@@ -160,5 +183,28 @@ class DetailPage extends StatelessWidget {
       });
     });
     // setState(() {});
+  }
+
+  void getAddress(
+    lat,
+    long,
+    _address,
+  ) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+    Placemark placeMark = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    String address =
+        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
+
+    print(address);
+
+    //setState(() {
+    _address = address; // update _address
+    //});
   }
 }
