@@ -185,65 +185,9 @@ class PublicationPageState extends State<PublicationPage> {
     });
   }
 
-  _openGallery(BuildContext context) async {
-    // ignore: deprecated_member_use
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Navigator.of(context).pop();
-    setState(() {
-      print("chingadamadre");
-      print(picture);
 
-      imagefile = picture;
-      print(imagefile);
-    });
-  }
 
-  _openCamera(BuildContext context) async {
-    // ignore: deprecated_member_use
-    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
-    Navigator.of(context).pop();
-    setState(() {
-      print(picture);
-      imagefile = picture;
-    });
-  }
-
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Selecciona una opción"),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: Text("Galeria"),
-                    onTap: () {
-                      print("ostia puta");
-                      print(context);
-                      _openGallery(context);
-                    },
-                  ),
-                  Padding(padding: EdgeInsets.all(8.0)),
-                  GestureDetector(
-                      child: Text("Cámara"),
-                      onTap: () {
-                        _openCamera(context);
-                      })
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void _addImages() {
-    setState(() {
-      _listImages.add(imagefile);
-    });
-  }
-
+  
   Widget _publicationForm(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +260,10 @@ class PublicationPageState extends State<PublicationPage> {
               controller: _nameTxtController,
               hintText: 'Nombre',
               suffixIcon: IconButton(
-                onPressed: () => _nameTxtController.clear(),
+                onPressed: ()  {
+                  _nameTxtController.clear();
+                  prefs.adoptionName='';
+                },
                 icon: Icon(Icons.clear),
               ),
               onChanged: (value) {
@@ -342,7 +289,11 @@ class PublicationPageState extends State<PublicationPage> {
                   decoration: InputDecoration(
                       labelText: 'Descripción',
                       suffixIcon: IconButton(
-                        onPressed: () => _descTxtController.clear(),
+                        onPressed: ()  {
+                  _descTxtController.clear();
+                  prefs.adoptionDescription='';
+
+                },
                         icon: Icon(Icons.clear),
                       )),
                   maxLength: 500,
@@ -369,11 +320,12 @@ class PublicationPageState extends State<PublicationPage> {
           readOnly: true,
           hintText: 'Dirección',
           suffixIcon: IconButton(
-            onPressed: () => _dirTxtController.clear(),
-            icon: Icon(Icons.clear),
+            onPressed:  _cleanDir,
+            icon: Icon(Icons.clear) ,
           ),
           maxLines: null,
           onTap: () {
+            
             Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
         )));
@@ -388,7 +340,11 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
+ void _cleanDir(){
+  _dirTxtController.clear();
+                  _markers.clear();
 
+ }
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
