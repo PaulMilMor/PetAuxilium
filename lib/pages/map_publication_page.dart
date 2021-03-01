@@ -48,6 +48,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
       target: tempLocation,
       zoom: 17.5,
     );*/
+    print(ModalRoute.of(context).settings.name);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,8 +57,13 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.popAndPushNamed(context, 'navigation''PublicationPage',
+                print("en el mapa");
+                    print(_markers);
+                    Navigator.pop(context);
+                Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
+                //Navigator.pop(context);
+                   
                 // final GoogleMapController controller =
                 //     await _controller.future;
                 // controller.animateCamera(CameraUpdate.newCameraPosition(

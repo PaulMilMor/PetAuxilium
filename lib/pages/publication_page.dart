@@ -44,7 +44,7 @@ class PublicationPageState extends State<PublicationPage> {
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-
+  
   void initState() {
     super.initState();
     setState(() {
@@ -54,8 +54,8 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    _name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
+    //_name = prefs.adoptionName ?? ' ';
+    //_desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -66,7 +66,7 @@ class PublicationPageState extends State<PublicationPage> {
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-
+    print(ModalRoute.of(context).settings.name);
     getDir(_locations);
     print("mm");
     print(_locations);

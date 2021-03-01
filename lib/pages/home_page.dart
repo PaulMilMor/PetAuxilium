@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+        print(ModalRoute.of(context).settings.name);
     return Scaffold(
       body: Container(
         color: Color.fromRGBO(49, 232, 93, 1),

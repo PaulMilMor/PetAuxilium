@@ -10,6 +10,7 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
+        print(ModalRoute.of(context).settings.name);
     return Scaffold(
         body: Container(
       child: FutureBuilder(
