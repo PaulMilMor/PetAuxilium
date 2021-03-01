@@ -448,14 +448,16 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  _signUpGoogle(BuildContext context2) async {
+  _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-
+      print(context);
+      print("dentro del registro google");
     if (_result == 'Ingresó') {
       Navigator.pushNamedAndRemoveUntil(
+        
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
-      Scaffold.of(context2)
+      Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }

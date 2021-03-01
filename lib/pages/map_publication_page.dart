@@ -51,12 +51,12 @@ class _MapPagePublicationState extends State<MapPagePublication> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mapa1'),
+        title: Text('Mapa'),
         actions: [
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.popAndPushNamed(context, 'PublicationPage',
+                Navigator.popAndPushNamed(context, 'navigation''PublicationPage',
                     arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;

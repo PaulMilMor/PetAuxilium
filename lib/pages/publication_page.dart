@@ -55,7 +55,6 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");*/
     });
     _name = prefs.adoptionName ?? ' ';
-    _selectedCategory = prefs.adoptionCategory;
     _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
@@ -69,6 +68,8 @@ class PublicationPageState extends State<PublicationPage> {
     _locations = mapsUtil.getLocations(_markers);
 
     getDir(_locations);
+    print("mm");
+    print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
     );
@@ -377,19 +378,6 @@ class PublicationPageState extends State<PublicationPage> {
         )));
   }
 
-  Widget _boton() {
-    return Container(
-      width: 300.0,
-      margin: const EdgeInsets.only(left: 40, top: 20),
-      child: RaisedButton(
-        onPressed: () {
-          _showChoiceDialog(context);
-        },
-        child: Text("+"),
-      ),
-    );
-  }
-
   Widget _buttons() {
     return Container(
       child: Row(
@@ -403,7 +391,14 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
-      child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
+      child: TextButton(
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        onPressed: () {
+          //Navigator.pop(context);
+          _name = null;
+          _desc = null;
+        },
+      ),
     );
   }
 
@@ -429,6 +424,8 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
+    print("fucking");
+    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";
@@ -438,6 +435,8 @@ class PublicationPageState extends State<PublicationPage> {
             placemarks.first.street + " " + placemarks.first.locality + "\n";
 
         setState(() {
+          print("chingadamadre");
+          print(place);
           _dirTxtController.text = place;
         });
       });

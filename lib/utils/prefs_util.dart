@@ -12,6 +12,7 @@ class preferencesUtil {
   }
 
   get businessName {
+    
     return _prefs.getString('name') ?? '';
   }
 
