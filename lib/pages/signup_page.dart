@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
@@ -27,11 +28,14 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
   bool _isLoading = false;
+  bool _imageSelected = true;
   AuthUtil _auth = AuthUtil();
   final StorageUtil _storage = StorageUtil();
+  final _db = dbUtil();
+  final preferencesUtil _prefs = preferencesUtil();
   Future<File> _imageFile;
-  String _imgRef;
   ImageUploadModel _image = null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,9 +127,16 @@ class _SignupPageState extends State<SignupPage> {
       child: Row(
         children: [
           _image == null ? _addPhoto() : _removePhoto(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Foto de Perfil'),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _imageSelected
+                  ? Text('Foto de Perfil')
+                  : Text('Selecciona una foto de perfil',
+                      style: TextStyle(
+                        color: Color.fromRGBO(232, 49, 93, 1),
+                      )),
+            ),
           ),
         ],
       ),
@@ -180,6 +191,7 @@ class _SignupPageState extends State<SignupPage> {
               color: Color.fromRGBO(49, 232, 93, 1),
             ),
             onTap: () {
+              _onAddImageClick();
               /* setState(() {
                 images.removeAt(index);
                 // images.replaceRange(index, index + 1, ['Add Image']);
@@ -220,6 +232,8 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
+        print('NOT NULL');
+        print(_imageFile);
         getFileImage();
       }
     });
@@ -228,15 +242,24 @@ class _SignupPageState extends State<SignupPage> {
   void getFileImage() async {
     _imageFile.then((file) async {
       //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = file;
-        imageUpload.imageUrl = '';
-        _image = imageUpload;
-      });
+      if (file != null) {
+        setState(() {
+          ImageUploadModel imageUpload = new ImageUploadModel();
+          imageUpload.isUploaded = false;
+          imageUpload.uploading = false;
+          imageUpload.imageFile = file;
+          imageUpload.imageUrl = '';
+          print('Image UPLOAD');
+          _image = imageUpload;
+          _imageSelected = true;
+        });
+      } else {
+        setState(() {
+          if (_image == null) {
+            _imageSelected = false;
+          }
+        });
+      }
     });
   }
 
@@ -355,12 +378,23 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
+                    print('VALIDATE');
+                    print(_imageFile);
+                    if (_image == null) {
+                      setState(() {
+                        _imageSelected = false;
+                      });
+                    } else {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      _signUp(context);
+                    }
+                  } else if (_image == null) {
                     setState(() {
-                      _isLoading = true;
+                      _imageSelected = false;
                     });
-                    _signUp(context);
                   }
-                  ;
                 },
               ),
       ),
@@ -394,6 +428,14 @@ class _SignupPageState extends State<SignupPage> {
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
+    await _imageFile.then((file) async {
+      _user.imgRef = await _storage.uploadFile(file, 'usuarios');
+      _prefs.userImg = _user.imgRef;
+      print('IMGREF');
+      print(_user.imgRef);
+      _db.addUser(_user);
+    });
+
     if (_result == 'Ingresó') {
       _isLoading = false;
       Navigator.pushNamedAndRemoveUntil(
