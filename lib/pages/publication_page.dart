@@ -386,23 +386,6 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
     );
   }
 
-  /*Widget _images() {
-    return Container(
-        width: 300.0,
-        margin: const EdgeInsets.only(left: 40, top: 20),
-        child: Row(
-          children: renderImages(),
-
-          //mainAxisAlignment: MainAxisAligment.spaceAround,
-
-          /*child: RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Text("+"),
-              ),*/
-        ));
-  }*/
 
   Widget _buttons() {
     return Container(

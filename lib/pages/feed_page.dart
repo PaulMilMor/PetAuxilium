@@ -122,6 +122,10 @@ getDir();
           }),
     ));
   }
+   
+  
+   
+   
      Future<void> getDir() async {
      String place = "";
    FirebaseFirestore.instance.collection('publications').get().then((value) {

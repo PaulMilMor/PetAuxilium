@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
-import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/startup_page.dart';
 
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -29,7 +29,8 @@ class _NavigationPageState extends State<NavigationPage> {
     'PERFIL'
   ];
   final List<Widget> _tabs = [
-    Feed(),
+   // Feed(),
+   StartupPage(),
     null,
     //Adoptionpage(),
     PublicationPage(),
@@ -41,25 +42,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        title: _selectedIndex == 4
-            ? Center(
-                child: Text(
-                  _titles[_selectedIndex],
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  _titles[_selectedIndex],
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-      ),
+  appBar: getAppbar(),
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -95,5 +78,37 @@ class _NavigationPageState extends State<NavigationPage> {
         onTap: _onItemTapped,
       ),
     );
+  }
+  Widget getAppbar(){
+    if(_selectedIndex==0){
+ return PreferredSize(
+   preferredSize: Size.fromHeight(1.0),
+    child: AppBar(
+     
+   ),
+ );
+    }else{
+return AppBar(
+        elevation: 0,
+        title: _selectedIndex == 4
+            ? Center(
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  _titles[_selectedIndex],
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      );
+
+    }
+   
   }
 }

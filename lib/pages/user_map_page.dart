@@ -77,7 +77,7 @@ business.location.forEach((element) {
 
 });
 
-setState(() {
+setStateIfMounted(() {
   
 });
 
@@ -108,7 +108,7 @@ setState(() {
     _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
     location.onLocationChanged.listen((LocationData currentLocation) {
       print("${currentLocation.longitude} : ${currentLocation.longitude}");
-      setState(() {
+      setStateIfMounted(() {
         _currentPosition = currentLocation;
         _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
 
@@ -116,5 +116,7 @@ setState(() {
       });
     });
   }
-
+void setStateIfMounted(f) {
+  if (mounted) setState(f);
+}
 }
