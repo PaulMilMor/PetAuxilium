@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: '/',
+        initialRoute: 'userMap',
         routes: {
           '/': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
