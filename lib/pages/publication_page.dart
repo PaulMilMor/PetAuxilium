@@ -54,8 +54,8 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    //_name = prefs.adoptionName ?? ' ';
-    //_desc = prefs.adoptionDescription;
+    _name = prefs.adoptionName ?? ' ';
+    _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -68,6 +68,8 @@ class PublicationPageState extends State<PublicationPage> {
     _locations = mapsUtil.getLocations(_markers);
 
     getDir(_locations);
+    print("mm");
+    print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
     );
@@ -314,6 +316,7 @@ class PublicationPageState extends State<PublicationPage> {
               suffixIcon: IconButton(
                 onPressed: () => _nameTxtController.clear(),
                 icon: Icon(Icons.clear),
+                
               ),
               onChanged: (value) {
                 setState(() {
@@ -375,36 +378,6 @@ class PublicationPageState extends State<PublicationPage> {
         )));
   }
 
-  Widget _boton() {
-    return Container(
-      width: 300.0,
-      margin: const EdgeInsets.only(left: 40, top: 20),
-      child: RaisedButton(
-        onPressed: () {
-          _showChoiceDialog(context);
-        },
-        child: Text("+"),
-      ),
-    );
-  }
-
-  /*Widget _images() {
-    return Container(
-        width: 300.0,
-        margin: const EdgeInsets.only(left: 40, top: 20),
-        child: Row(
-          children: renderImages(),
-
-          //mainAxisAlignment: MainAxisAligment.spaceAround,
-
-          /*child: RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Text("+"),
-              ),*/
-        ));
-  }*/
 
   Widget _buttons() {
     return Container(
@@ -419,7 +392,14 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
-      child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
+      child: TextButton(
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        onPressed: () {
+          //Navigator.pop(context);
+          _name=null;
+          _desc=null;
+        },
+      ),
     );
   }
 
@@ -445,6 +425,8 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
+    print("fucking");
+    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";
@@ -460,6 +442,8 @@ class PublicationPageState extends State<PublicationPage> {
               element.locality;
         });
         setState(() {
+          print("chingadamadre");
+          print(place);
           _dirTxtController.text = place;
         });
       });

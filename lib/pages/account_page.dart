@@ -96,7 +96,7 @@ class _AccountPageState extends State<AccountPage> {
           _myPostsButton(),
           _postBusinessButton(),
           _caretakerButton(),
-          _createPostButton(),
+          //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
           _logoutButton(),
@@ -159,20 +159,7 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _createPostButton() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-          text: 'Crear Publicación',
-          icon: Icons.navigate_next,
-          onPressed: () {
-            Navigator.pushNamed(context, 'AdoptionPage');
-          }),
-    );
-  }
-
+  
   Widget _followedButton() {
     return Container(
       decoration: BoxDecoration(
