@@ -20,8 +20,7 @@ final List<String> imgList = [
 List<String> _lista = new List<String>();
 String _address = "";
 
-
-class  DetailPage extends StatelessWidget {
+class DetailPage extends StatelessWidget {
   List<PublicationModel> ad = List<PublicationModel>();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
@@ -46,8 +45,6 @@ class  DetailPage extends StatelessWidget {
     var long = num.tryParse(longitude)?.toDouble();
 
     print(latitude2);
-
-    getAddress(lat, long, _address);
 
     return Container(
         child: Material(
@@ -83,28 +80,28 @@ class  DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 25,
                   ),
-                      FutureBuilder(
-       future: getImages(),
-      
-       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        return CarouselSlider(
-                    options: CarouselOptions(
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: false,
-                      initialPage: 0,
-                      autoPlay: false,
-                    ),
-                    items: snapshot.data
-                        .map((element) => Container(
-                              child: Center(
-                                  child: Image.network(element,
-                                      fit: BoxFit.cover, width: 1000)),
-                            ))
-                        .toList(),
-                  );
-       },
-     ),
+                  FutureBuilder(
+                    future: getImages(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<String>> snapshot) {
+                      return CarouselSlider(
+                        options: CarouselOptions(
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          initialPage: 0,
+                          autoPlay: false,
+                        ),
+                        items: snapshot.data
+                            .map((element) => Container(
+                                  child: Center(
+                                      child: Image.network(element,
+                                          fit: BoxFit.cover, width: 1000)),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -120,7 +117,7 @@ class  DetailPage extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                   detailDocument['category'],
+                    detailDocument['category'],
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.green,
@@ -146,13 +143,36 @@ class  DetailPage extends StatelessWidget {
                       color: Colors.grey[700],
                     ),
                   ),
-                  Text(
-                   _address,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[700],
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: getAddress(lat, long),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Placemark>> snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            width: 150,
+                            child: Text(
+                              snapshot.data.first.street +
+                                  " " +
+                                  snapshot.data.first.locality,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container(
+                            width: 150,
+                            child: Text(
+                              'Direccion',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        }
+                      }),
                   SizedBox(
                     height: 17,
                   ),
@@ -173,44 +193,30 @@ class  DetailPage extends StatelessWidget {
             )));
   }
 
- Future<List<String>> getImages() async {
+  Future<List<String>> getImages() async {
 // detailDocument['imgRef'].toString().split(',').forEach((element) {
 // final newValue =element.replaceAll('[http', 'http').replaceAll(']', '');
 
 //  _lista.add(newValue);
 //  });
-print(detailDocument.id);
-return _lista=await db.getAllImages(detailDocument.id);
-  //     ad.imgRef.forEach((element) {
-  //       // if (detailDocument['imgRef'].contains(element)) {
-  //       _lista.add(element);
-  //       // } else {
-  //       // _lista = [];
-  //       // }
+    print(detailDocument.id);
+    return _lista = await db.getAllImages(detailDocument.id);
+    //     ad.imgRef.forEach((element) {
+    //       // if (detailDocument['imgRef'].contains(element)) {
+    //       _lista.add(element);
+    //       // } else {
+    //       // _lista = [];
+    //       // }
 
-  //   // setState(() {});
-   }
- 
-  void getAddress(
+    //   // setState(() {});
+  }
+
+  Future<List<Placemark>> getAddress(
     lat,
     long,
-    _address,
   ) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
-    Placemark placeMark = newPlace[0];
-    String name = placeMark.name;
-    String subLocality = placeMark.subLocality;
-    String locality = placeMark.locality;
-    String administrativeArea = placeMark.administrativeArea;
-    String postalCode = placeMark.postalCode;
-    String country = placeMark.country;
-    String address =
-        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
 
-    print(address);
-
-    //setState(() {
-    _address = address; // update _address
-    //});
+    return newPlace;
   }
 }

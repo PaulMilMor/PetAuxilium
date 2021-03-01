@@ -12,10 +12,9 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   List<String> location;
-  String tempLocation;       
-  dbUtil _db=dbUtil();   
-    String _address = "";        
- 
+  String tempLocation;
+  dbUtil _db = dbUtil();
+  String _address = "";
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +26,17 @@ class _FeedState extends State<Feed> {
             if (snapshot.hasData) {
               //Retrieve `List<DocumentSnapshot>` from snapshot
               final List<DocumentSnapshot> documents = snapshot.data.docs;
-             location=List<String>();
+              location = List<String>();
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (BuildContext context, index) {
-                   
                     DocumentSnapshot publications = documents[index];
                     //Obtencion de la primera imagen de la lista para el feed
-                   // getDir(publications['location']);
-                   print(publications['location']);
+                    // getDir(publications['location']);
+                    print(publications['location']);
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
-                  
+
                     List<dynamic> locations = publications['location'];
                     String location = locations.first;
                     final tagName = location;
@@ -57,13 +55,13 @@ class _FeedState extends State<Feed> {
 
                     print(latitude2);
 
-                    getAddress(lat, long, _address);
-                    
                     return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  DetailPage(publications)),);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DetailPage(publications)),
+                          );
                         },
                         child: Card(
                           child: Row(
@@ -110,16 +108,38 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Text(
-                                        _address,
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
+                                    FutureBuilder(
+                                        future: getAddress(lat, long),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<List<Placemark>>
+                                                snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                snapshot.data.first.street +
+                                                    " " +
+                                                    snapshot
+                                                        .data.first.locality,
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                'Direccion',
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -138,30 +158,13 @@ class _FeedState extends State<Feed> {
           }),
     ));
   }
-   
-  
-   
-    void getAddress(
+
+  Future<List<Placemark>> getAddress(
     lat,
     long,
-    _address,
   ) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
-    Placemark placeMark = newPlace[0];
-    String name = placeMark.name;
-    String subLocality = placeMark.subLocality;
-    String locality = placeMark.locality;
-    String administrativeArea = placeMark.administrativeArea;
-    String postalCode = placeMark.postalCode;
-    String country = placeMark.country;
-    String address =
-        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
 
-    print(address);
-
-    //setState(() {
-    _address = address; // update _address
-    //});
+    return newPlace;
   }
 }
-
