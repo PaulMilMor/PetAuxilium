@@ -56,6 +56,7 @@ class PublicationPageState extends State<PublicationPage> {
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
+    _selectedCategory = 'Adopción';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -248,12 +249,12 @@ class PublicationPageState extends State<PublicationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 18),
-        Center(
+        /*Center(
           child: Text(
             'CREAR PUBLICACIÓN',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-        ),
+        ),*/
         _category(),
         if (_selectedCategory != "Situacion de calle") _nameTxt(),
         _dirTxt(),
@@ -361,7 +362,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(left: 55.0, bottom: 20),
+        margin: const EdgeInsets.only( left:30, bottom: 20),
         child: Center(
             child: GrayTextFormField(
           controller: _dirTxtController,
@@ -406,8 +407,19 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
-          onPressed: () async {
-            print(_imgsFiles.toString());
+          onPressed:(){
+    if(_selectedCategory=='Situacion de calle') {
+_name= 'Animal Callejero';
+prefs.adoptionName='Animal Callejero';
+
+    }
+    if(_name.isEmpty || _desc.isEmpty || imagesRef.isEmpty || _locations.isEmpty){
+ Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
+    }else {
+
+  print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
@@ -416,8 +428,15 @@ class PublicationPageState extends State<PublicationPage> {
                 userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
-            _db.addPublication(ad);
+            _db.addPublication(ad).then((value) {
+              prefs.adoptionCategory = 'Adopción';
+              prefs.adoptionDescription = '';
+              prefs.adoptionName = '';
+              Navigator.popAndPushNamed(context, 'navigation');
+            });
             print(_name);
+    }
+    
           },
           child: Text('Publicar')),
     );
@@ -442,4 +461,8 @@ class PublicationPageState extends State<PublicationPage> {
       });
     }
   }
+  void _savePublication(BuildContext context2) async{
+
+  }
+
 }
