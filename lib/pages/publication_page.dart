@@ -14,6 +14,7 @@ import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
+import 'package:pet_auxilium/widgets/button_widget.dart';
 
 class PublicationPage extends StatefulWidget {
   @override
@@ -78,7 +79,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
-      padding: EdgeInsets.only(left: 48, right: 48),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
@@ -244,42 +245,45 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 18),
-        Center(
-          child: Text(
-            'CREAR PUBLICACIÓN',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-        ),
-        _category(),
-        if (_selectedCategory != "Situacion de calle") _nameTxt(),
-        _dirTxt(),
-        _descTxt(),
-        //_images(),
-        buildGridView(),
-        //_boton(),
-        _buttons()
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(36.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 18),
+          /*Center(
+            child: Text(
+              'CREAR PUBLICACIÓN',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),*/
+          _category(),
+          if (_selectedCategory != "Situacion de calle") _nameTxt(),
+          _dirTxt(),
+          _descTxt(),
+          //_images(),
+          buildGridView(),
+          //_boton(),
+          _buttons()
+        ],
+      ),
     );
   }
 
   Widget _category() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.only(left: 40.0, top: 10),
+      margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
       child: Center(
           child: Row(children: [
         Container(
-          margin: const EdgeInsets.only(right: 30.0),
+          margin: const EdgeInsets.only(right: 4.5),
           child: Text(
             'Categoría:',
             style: TextStyle(fontSize: 18),
           ),
         ),
-        DropdownButton(
+        GrayDropdownButton(
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
           onChanged: (newValue) {
@@ -302,68 +306,66 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _nameTxt() {
     return Container(
         //height: 100.0,
-        child: Center(
-      child: Column(children: [
-        Text(
+
+        child: Column(children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: Text(
           'Completa los siguientes campos',
           style: TextStyle(fontSize: 18),
         ),
-        Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 10),
-            width: 300.0,
-            child: GrayTextFormField(
-              controller: _nameTxtController,
-              hintText: 'Nombre',
-              suffixIcon: IconButton(
-                onPressed: () => _nameTxtController.clear(),
-                icon: Icon(Icons.clear),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  prefs.adoptionName = value;
-                  _name = value;
-                });
-              },
-            )),
-      ]),
-    ));
+      ),
+      Container(
+          margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          //width: 300.0,
+          child: GrayTextFormField(
+            controller: _nameTxtController,
+            hintText: 'Nombre',
+            suffixIcon: IconButton(
+              onPressed: () => _nameTxtController.clear(),
+              icon: Icon(Icons.clear),
+            ),
+            onChanged: (value) {
+              setState(() {
+                prefs.adoptionName = value;
+                _name = value;
+              });
+            },
+          )),
+    ]));
   }
 
   Widget _descTxt() {
     return Container(
-        height: 100.0,
-        child: Center(
-          child: Column(children: [
-            Container(
-                width: 300.0,
-                child: TextField(
-                  controller: _descTxtController,
-                  decoration: InputDecoration(
-                      labelText: 'Descripción',
-                      suffixIcon: IconButton(
-                        onPressed: () => _descTxtController.clear(),
-                        icon: Icon(Icons.clear),
-                      )),
-                  maxLength: 500,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (value) {
-                    setState(() {
-                      prefs.adoptionDescription = value;
-                      _desc = value;
-                    });
-                  },
+        //height: 100.0,
+        child: Column(children: [
+      Container(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          child: TextField(
+            controller: _descTxtController,
+            decoration: InputDecoration(
+                labelText: 'Descripción',
+                suffixIcon: IconButton(
+                  onPressed: () => _descTxtController.clear(),
+                  icon: Icon(Icons.clear),
                 )),
-          ]),
-        ));
+            maxLength: 500,
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+            onChanged: (value) {
+              setState(() {
+                prefs.adoptionDescription = value;
+                _desc = value;
+              });
+            },
+          )),
+    ]));
   }
 
   Widget _dirTxt() {
     return Container(
-        width: 300.0,
-        margin: const EdgeInsets.only(left: 55.0, bottom: 20),
-        child: Center(
-            child: GrayTextFormField(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: GrayTextFormField(
           controller: _dirTxtController,
           readOnly: true,
           hintText: 'Dirección',
@@ -375,7 +377,7 @@ class PublicationPageState extends State<PublicationPage> {
           onTap: () {
             Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
-        )));
+        ));
   }
 
   Widget _buttons() {
@@ -404,7 +406,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _saveBtn() {
     return Container(
-      margin: const EdgeInsets.only(right: 40.0, bottom: 50),
+      margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
           onPressed: () async {
             print(_imgsFiles.toString());

@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Text(
-        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium®. ',
+        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium. ',
         style: TextStyle(
           fontSize: 18,
           color: Colors.white,
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, 'Feed');
+          Navigator.pushNamed(context, 'startupPage');
         },
         child: new Text(
           'Registrarme en otro momento',

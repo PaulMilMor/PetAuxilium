@@ -22,7 +22,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final _db = dbUtil();
   String _name = " ";
   String _desc;
-  
+
   List<String> _dir;
   List<LatLng> _locations;
   final MapsUtil mapsUtil = MapsUtil();
@@ -35,7 +35,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
-   
   }
 
   @override
@@ -45,38 +44,48 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     getDir(_locations);
     //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
-      body: _businessForm(context),
+      body: SingleChildScrollView(child: _businessForm(context)),
     );
   }
 
   Widget _businessForm(BuildContext context) {
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
-            child: Text(
-              'PUBLICAR NEGOCIO',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.all(36.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+              child: Text(
+                'PUBLICAR NEGOCIO',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          _selectService(),
-          Text('Completa los siguientes campos'),
-          _nameTxt(),
-          _dirTxt(),
-          Text('Describa los servicios que ofrece'),
-          _descriptionTxt(),
-          _addBtn(),
-          _buttons()
-        ],
+            _selectService(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+              child: Text('Completa los siguientes campos'),
+            ),
+            _nameTxt(),
+            _dirTxt(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+              child: Text('Describa los servicios que ofrece'),
+            ),
+            _descriptionTxt(),
+            _addBtn(),
+            _buttons()
+          ],
+        ),
       ),
     );
   }
 
   Widget _nameTxt() {
     return Container(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
           controller: _nameTxtController,
           hintText: 'Nombre',
@@ -102,6 +111,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _dirTxt() {
     return Container(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
         child: GrayTextFormField(
             controller: _dirTxtController,
             hintText: 'Direccion',
@@ -121,30 +131,31 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Widget _buttons() {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [_cancelBtn(), _saveBtn()],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [_cancelBtn(), _saveBtn()],
     );
   }
 
   Widget _descriptionTxt() {
-    return TextField(
-      maxLength: 500,
-      maxLines: 8,
-      controller: _descTxtController,
-      decoration: InputDecoration(
-          hintText: "Descripcion",
-          focusedBorder:
-              UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
-      onChanged: (value) {
-        setState(() {
-          prefs.businessDescription = value;
-          _desc = value;
-        });
-      },
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      child: TextField(
+        maxLength: 500,
+        maxLines: 8,
+        controller: _descTxtController,
+        decoration: InputDecoration(
+            hintText: "Descripción",
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey))),
+        onChanged: (value) {
+          setState(() {
+            prefs.businessDescription = value;
+            _desc = value;
+          });
+        },
+      ),
     );
   }
 
@@ -165,7 +176,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     return Container(
       child: RaisedButton(
           onPressed: () async {
-           // print(mapsUtil.locationtoString(_locations));
+            // print(mapsUtil.locationtoString(_locations));
             BusinessModel business = BusinessModel(
                 name: _name,
                 //location: mapsUtil.locationtoString(_locations),
@@ -218,7 +229,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-         place=placemarks.first.street+" "+placemarks.first.locality+ "\n";
+        place =
+            placemarks.first.street + " " + placemarks.first.locality + "\n";
         setState(() {
           _dirTxtController.text = place;
         });
