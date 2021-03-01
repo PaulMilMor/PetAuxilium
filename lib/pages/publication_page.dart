@@ -52,8 +52,9 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
       images.add("Add Image");
       images.add("Add Image");
     });
-    //_name = prefs.adoptionName ?? ' ';
-    //_desc = prefs.adoptionDescription;
+    _name = prefs.adoptionName ?? ' ';
+     _selectedCategory=prefs.adoptionCategory;
+    _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -272,6 +273,7 @@ List< ImageUploadModel > _imgsFiles=List< ImageUploadModel >();
           value: _selectedCategory,
           
           onChanged: (newValue) {
+            prefs.adoptionCategory=newValue;
             setState(() {
               _selectedCategory = newValue;
             });
@@ -446,15 +448,8 @@ void getDir(List<LatLng> locations) {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality;
-        });
+             place=placemarks.first.street+" "+placemarks.first.locality+ "\n";
+         
         setState(() {
           _dirTxtController.text = place;
         });
