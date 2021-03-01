@@ -78,16 +78,23 @@ class _MapPageState extends State<MapPage> {
 
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
-    setState(() {
+    if (_markers.length<5){
+
+   setState(() {
       _markers.add(Marker(
         markerId: MarkerId(point.toString()),
         position: point,
+        onTap: (){
+          _markers.remove(_markers.firstWhere((Marker marker) => marker.position == point));
+        },
         infoWindow: InfoWindow(
           title: prefs.businessName,
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       ));
     });
+    }
+ 
   }
 
   getLoc() async {

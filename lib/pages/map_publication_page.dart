@@ -88,16 +88,22 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   }
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
-    setState(() {
+    if(_markers.length<1){
+       setState(() {
       _markers.add(Marker(
         markerId: MarkerId(point.toString()),
         position: point,
+          onTap: (){
+          _markers.remove(_markers.firstWhere((Marker marker) => marker.position == point));
+        },
         infoWindow: InfoWindow(
           title: prefs.adoptionName,
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       ));
     });
+    }
+   
   }
 getLoc() async{
     bool _serviceEnabled;

@@ -283,6 +283,7 @@ class PublicationPageState extends State<PublicationPage> {
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
           onChanged: (newValue) {
+            prefs.adoptionCategory = newValue;
             setState(() {
               _selectedCategory = newValue;
             });
@@ -316,7 +317,6 @@ class PublicationPageState extends State<PublicationPage> {
               suffixIcon: IconButton(
                 onPressed: () => _nameTxtController.clear(),
                 icon: Icon(Icons.clear),
-                
               ),
               onChanged: (value) {
                 setState(() {
@@ -378,7 +378,6 @@ class PublicationPageState extends State<PublicationPage> {
         )));
   }
 
-
   Widget _buttons() {
     return Container(
       child: Row(
@@ -396,8 +395,8 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         onPressed: () {
           //Navigator.pop(context);
-          _name=null;
-          _desc=null;
+          _name = null;
+          _desc = null;
         },
       ),
     );
@@ -414,7 +413,7 @@ class PublicationPageState extends State<PublicationPage> {
                 category: _selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
-                userID: '1441414',
+                userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
             _db.addPublication(ad);
@@ -432,15 +431,9 @@ class PublicationPageState extends State<PublicationPage> {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality;
-        });
+        place =
+            placemarks.first.street + " " + placemarks.first.locality + "\n";
+
         setState(() {
           print("chingadamadre");
           print(place);
