@@ -57,6 +57,7 @@ class PublicationPageState extends State<PublicationPage> {
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
+    _selectedCategory = 'Adopción';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -73,6 +74,7 @@ class PublicationPageState extends State<PublicationPage> {
     print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
+      backgroundColor: Colors.white,
     );
   }
 
@@ -322,7 +324,14 @@ class PublicationPageState extends State<PublicationPage> {
             controller: _nameTxtController,
             hintText: 'Nombre',
             suffixIcon: IconButton(
-              onPressed: () => _nameTxtController.clear(),
+              onPressed: () {
+                setState(() {
+                  _nameTxtController.clear();
+                  _name = _nameTxtController.text;
+                  print('NAME');
+                  print(_name);
+                });
+              },
               icon: Icon(Icons.clear),
             ),
             onChanged: (value) {
@@ -365,19 +374,39 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _dirTxt() {
     return Container(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: GrayTextFormField(
-          controller: _dirTxtController,
-          readOnly: true,
-          hintText: 'Dirección',
-          suffixIcon: IconButton(
-            onPressed: () => _dirTxtController.clear(),
-            icon: Icon(Icons.clear),
-          ),
-          maxLines: null,
-          onTap: () {
-            Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
-          },
+        child: Stack(
+          children: [
+            GrayTextFormField(
+              controller: _dirTxtController,
+              readOnly: true,
+              hintText: 'Dirección',
+              focusNode: AlwaysDisabledFocusNode(),
+              /* suffixIcon: IconButton(
+              onPressed: () => _dirTxtController.clear(),
+              icon: Icon(Icons.clear),
+            ),*/
+              maxLines: null,
+              onTap: () {
+                Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);
+              },
+            ),
+            Positioned(
+              right: 1,
+              top: 1,
+              child: IconButton(
+                color: Colors.grey[500],
+                onPressed: _cleanDir,
+                icon: Icon(Icons.clear),
+              ),
+            ),
+          ],
         ));
+  }
+
+  void _cleanDir() {
+    _dirTxtController.clear();
+    _markers.clear();
   }
 
   Widget _buttons() {
@@ -408,18 +437,37 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
-          onPressed: () async {
-            print(_imgsFiles.toString());
-            //print(mapsUtil.locationtoString(_locations));
-            PublicationModel ad = PublicationModel(
-                category: _selectedCategory,
-                name: _name,
-                location: mapsUtil.locationtoString(_locations),
-                userID: prefs.userID,
-                description: _desc,
-                imgRef: imagesRef);
-            _db.addPublication(ad);
-            print(_name);
+          onPressed: () {
+            if (_selectedCategory == 'Situacion de calle') {
+              _name = 'Animal Callejero';
+              prefs.adoptionName = 'Animal Callejero';
+            }
+            if (_name.isEmpty ||
+                _desc.isEmpty ||
+                imagesRef.isEmpty ||
+                _locations.isEmpty) {
+              Scaffold.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text('Es necesario llenar todos los campos')));
+            } else {
+              print(_imgsFiles.toString());
+              //print(mapsUtil.locationtoString(_locations));
+              PublicationModel ad = PublicationModel(
+                  category: _selectedCategory,
+                  name: _name,
+                  location: mapsUtil.locationtoString(_locations),
+                  userID: prefs.userID,
+                  description: _desc,
+                  imgRef: imagesRef);
+              _db.addPublication(ad).then((value) {
+                prefs.adoptionCategory = 'Adopción';
+                prefs.adoptionDescription = '';
+                prefs.adoptionName = '';
+                Navigator.popAndPushNamed(context, 'navigation');
+              });
+              print(_name);
+            }
           },
           child: Text('Publicar')),
     );
@@ -444,4 +492,12 @@ class PublicationPageState extends State<PublicationPage> {
       });
     }
   }
+
+  void _savePublication(BuildContext context2) async {}
+}
+
+//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

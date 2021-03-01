@@ -34,6 +34,7 @@ class _StartupPageState extends State<StartupPage> {
               Feed(),
               UserMapPage(),
             ],
+            physics: NeverScrollableScrollPhysics(),
           ),
         ),
       ),

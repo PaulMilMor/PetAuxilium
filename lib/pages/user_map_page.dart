@@ -59,6 +59,7 @@ class _UserMapPageState extends State<UserMapPage> {
         String location = element.toString();
         print(element.toString().split(','));
         _markers.add(Marker(
+          
           markerId: MarkerId(element),
           position: LatLng(
               double.parse(location.substring(0, location.indexOf(',')).trim()),

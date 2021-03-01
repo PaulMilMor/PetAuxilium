@@ -18,30 +18,37 @@ final List<String> imgList = [
 ];
 //lista
 List<String> _lista = new List<String>();
+String _address = "";
 
-class DetailPage extends StatefulWidget {
-  //DetailPageState createState() => DetailPageState();
+
+class  DetailPage extends StatelessWidget {
+  List<PublicationModel> ad = List<PublicationModel>();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
-
-  @override
-  _DetailPageState createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  List<PublicationModel> ad = List<PublicationModel>();
-
   final db = dbUtil();
-@override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    
-  }
+
   @override
   Widget build(BuildContext context) {
-    getImages();
-   
+    //getImages();
+    List<dynamic> locations = detailDocument['location'];
+    String location = locations.first;
+    final tagName = location;
+    final split = tagName.split(',');
+    final Map<int, String> values = {
+      for (int i = 0; i < split.length; i++) i: split[i]
+    };
+    print(values);
+    final latitude = values[0];
+    final longitude = values[1];
+    final value3 = values[2];
+    final latitude2 = latitude.replaceAll(RegExp(','), '');
+    var lat = num.tryParse(latitude2)?.toDouble();
+    var long = num.tryParse(longitude)?.toDouble();
+
+    print(latitude2);
+
+    getAddress(lat, long, _address);
+
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -85,7 +92,7 @@ class _DetailPageState extends State<DetailPage> {
                       aspectRatio: 2.0,
                       enlargeCenterPage: true,
                       enableInfiniteScroll: false,
-                      initialPage: 2,
+                      initialPage: 0,
                       autoPlay: false,
                     ),
                     items: snapshot.data
@@ -102,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
                     height: 20,
                   ),
                   Text(
-                    widget.detailDocument['name'],
+                    detailDocument['name'],
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.black,
@@ -113,7 +120,7 @@ class _DetailPageState extends State<DetailPage> {
                     height: 4,
                   ),
                   Text(
-                    widget.detailDocument['category'],
+                   detailDocument['category'],
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.green,
@@ -133,14 +140,14 @@ class _DetailPageState extends State<DetailPage> {
                     height: 10,
                   ),
                   Text(
-                    widget.detailDocument['pricing'],
+                    detailDocument['pricing'],
                     style: TextStyle(
                       fontSize: 17,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    widget.detailDocument['location'].toString(),
+                   _address,
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey[700],
@@ -154,7 +161,7 @@ class _DetailPageState extends State<DetailPage> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        widget.detailDocument['description'],
+                        detailDocument['description'],
                         //maxLines: 3,
                         style: TextStyle(fontSize: 15, color: Colors.grey[500]),
                         textAlign: TextAlign.center,
@@ -172,8 +179,8 @@ class _DetailPageState extends State<DetailPage> {
 
 //  _lista.add(newValue);
 //  });
-print(widget.detailDocument.id);
-return _lista=await db.getAllImages(widget.detailDocument.id);
+print(detailDocument.id);
+return _lista=await db.getAllImages(detailDocument.id);
   //     ad.imgRef.forEach((element) {
   //       // if (detailDocument['imgRef'].contains(element)) {
   //       _lista.add(element);
@@ -183,29 +190,27 @@ return _lista=await db.getAllImages(widget.detailDocument.id);
 
   //   // setState(() {});
    }
-   Widget getCarousel(){
-     FutureBuilder(
-       future: getImages(),
-      
-       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        return CarouselSlider(
-                    options: CarouselOptions(
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: false,
-                      initialPage: 2,
-                      autoPlay: false,
-                    ),
-                    items: snapshot.data
-                        .map((element) => Container(
-                              child: Center(
-                                  child: Image.network(element,
-                                      fit: BoxFit.cover, width: 1000)),
-                            ))
-                        .toList(),
-                  );
-       },
-     );
-     
-   }
+ 
+  void getAddress(
+    lat,
+    long,
+    _address,
+  ) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+    Placemark placeMark = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    String address =
+        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
+
+    print(address);
+
+    //setState(() {
+    _address = address; // update _address
+    //});
+  }
 }

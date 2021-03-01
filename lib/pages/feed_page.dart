@@ -13,12 +13,9 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;       
-  dbUtil _db=dbUtil();           
-   @override
-  void initState() {
-    super.initState();
-getDir();
-  }
+  dbUtil _db=dbUtil();   
+    String _address = "";        
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +38,26 @@ getDir();
                    print(publications['location']);
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
+                  
+                    List<dynamic> locations = publications['location'];
+                    String location = locations.first;
+                    final tagName = location;
+                    final split = tagName.split(',');
+                    final Map<int, String> values = {
+                      for (int i = 0; i < split.length; i++) i: split[i]
+                    };
+                    print(values);
+
+                    final latitude = values[0];
+                    final longitude = values[1];
+                    final value3 = values[2];
+                    final latitude2 = latitude.replaceAll(RegExp(','), '');
+                    var lat = num.tryParse(latitude2)?.toDouble();
+                    var long = num.tryParse(longitude)?.toDouble();
+
+                    print(latitude2);
+
+                    getAddress(lat, long, _address);
                     
                     return GestureDetector(
                         onTap: () {
@@ -96,10 +113,9 @@ getDir();
                                     Container(
                                       width: 150,
                                       child: Text(
-                                        publications['location'].toString(),
-                                        //location[index+1]??'',
+                                        _address,
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 9,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -125,30 +141,27 @@ getDir();
    
   
    
-   
-     Future<void> getDir() async {
-     String place = "";
-   FirebaseFirestore.instance.collection('publications').get().then((value) {
-      
-      value.docs.forEach((element) { 
+    void getAddress(
+    lat,
+    long,
+    _address,
+  ) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+    Placemark placeMark = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    String address =
+        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
 
-         PublicationModel publication=PublicationModel.fromJsonMap(element.data());
-        
-         publication.location.forEach((element) async { 
+    print(address);
 
-              // ESTO LO probe tambien con publications['location']
-        double latitude=double.parse(element.substring(0,element.indexOf(',')).trim());
-        double longitude=double.parse(element.substring(element.indexOf(',')+1).trim());
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(latitude, longitude);
-            place=place+placemarks.first.street+" "+placemarks.first.locality+"\n";
-       print(place);
-         });
-          location.add(place);
-          print(location);
-      });
-       
-    });
+    //setState(() {
+    _address = address; // update _address
+    //});
   }
 }
 
