@@ -1,3 +1,4 @@
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class preferencesUtil {
@@ -82,4 +83,5 @@ class preferencesUtil {
   set adoptionCategory(String desc) {
     _prefs.setString('pcategory', desc);
   }
+  
 }

@@ -14,6 +14,7 @@ import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PublicationPage extends StatefulWidget {
   @override
@@ -28,6 +29,7 @@ class PublicationPageState extends State<PublicationPage> {
   //TextEditingController _nameTxtController;
   var _dirTxtController = TextEditingController();
   var _descTxtController = TextEditingController();
+  var _catController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
@@ -54,8 +56,8 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    //_name = prefs.adoptionName ?? ' ';
-    //_desc = prefs.adoptionDescription;
+    _name = prefs.adoptionName ?? ' ';
+    _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -63,6 +65,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
@@ -331,6 +334,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _descTxt() {
     return Container(
+      
         height: 100.0,
         child: Center(
           child: Column(children: [
@@ -395,8 +399,12 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         onPressed: () {
           //Navigator.pop(context);
-          _name = null;
-          _desc = null;
+          //_name = null;
+          //_desc = null;
+          DeletePref();
+          _nameTxtController.clear();
+          _descTxtController.clear();
+          _dirTxtController.clear();
         },
       ),
     );
@@ -418,6 +426,10 @@ class PublicationPageState extends State<PublicationPage> {
                 imgRef: imagesRef);
             _db.addPublication(ad);
             print(_name);
+            _nameTxtController.clear();
+          _descTxtController.clear();
+          _dirTxtController.clear();
+            DeletePref();
           },
           child: Text('Publicar')),
     );
@@ -441,5 +453,9 @@ class PublicationPageState extends State<PublicationPage> {
         });
       });
     }
+  }
+  void DeletePref() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
   }
 }
