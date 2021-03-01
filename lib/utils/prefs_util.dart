@@ -74,4 +74,11 @@ class preferencesUtil {
   set adoptionDescription(String desc) {
     _prefs.setString('pdescription', desc);
   }
+    get adoptionCategory {
+    return _prefs.getString('pcategory') ?? 'Adopción';
+  }
+
+  set adoptionCategory(String desc) {
+    _prefs.setString('pcategory', desc);
+  }
 }

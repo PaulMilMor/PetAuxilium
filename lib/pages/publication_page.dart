@@ -54,8 +54,9 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    //_name = prefs.adoptionName ?? ' ';
-    //_desc = prefs.adoptionDescription;
+    _name = prefs.adoptionName ?? ' ';
+    _selectedCategory = prefs.adoptionCategory;
+    _desc = prefs.adoptionDescription;
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -281,6 +282,7 @@ class PublicationPageState extends State<PublicationPage> {
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
           onChanged: (newValue) {
+            prefs.adoptionCategory = newValue;
             setState(() {
               _selectedCategory = newValue;
             });
@@ -388,24 +390,6 @@ class PublicationPageState extends State<PublicationPage> {
     );
   }
 
-  /*Widget _images() {
-    return Container(
-        width: 300.0,
-        margin: const EdgeInsets.only(left: 40, top: 20),
-        child: Row(
-          children: renderImages(),
-
-          //mainAxisAlignment: MainAxisAligment.spaceAround,
-
-          /*child: RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Text("+"),
-              ),*/
-        ));
-  }*/
-
   Widget _buttons() {
     return Container(
       child: Row(
@@ -434,7 +418,7 @@ class PublicationPageState extends State<PublicationPage> {
                 category: _selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
-                userID: '1441414',
+                userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
             _db.addPublication(ad);
@@ -450,15 +434,9 @@ class PublicationPageState extends State<PublicationPage> {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality;
-        });
+        place =
+            placemarks.first.street + " " + placemarks.first.locality + "\n";
+
         setState(() {
           _dirTxtController.text = place;
         });

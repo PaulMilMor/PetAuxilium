@@ -22,6 +22,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final _db = dbUtil();
   String _name = " ";
   String _desc;
+  
   List<String> _dir;
   List<LatLng> _locations;
   final MapsUtil mapsUtil = MapsUtil();
@@ -34,6 +35,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
+   
   }
 
   @override
@@ -216,15 +218,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place  +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality+
-              "\n";
-        });
+         place=placemarks.first.street+" "+placemarks.first.locality+ "\n";
         setState(() {
           _dirTxtController.text = place;
         });
