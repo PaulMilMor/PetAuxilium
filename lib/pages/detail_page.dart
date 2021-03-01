@@ -19,15 +19,25 @@ final List<String> imgList = [
 //lista
 List<String> _lista = new List<String>();
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   //DetailPageState createState() => DetailPageState();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
-//}
-//class DetailPageState extends State<DetailPage> {
-  List<PublicationModel> ad = List<PublicationModel>();
-  final db = dbUtil();
 
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  List<PublicationModel> ad = List<PublicationModel>();
+
+  final db = dbUtil();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
   @override
   Widget build(BuildContext context) {
     getImages();
@@ -66,7 +76,11 @@ class DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 25,
                   ),
-                  CarouselSlider(
+                      FutureBuilder(
+       future: getImages(),
+      
+       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        return CarouselSlider(
                     options: CarouselOptions(
                       aspectRatio: 2.0,
                       enlargeCenterPage: true,
@@ -74,19 +88,21 @@ class DetailPage extends StatelessWidget {
                       initialPage: 2,
                       autoPlay: false,
                     ),
-                    items: _lista
+                    items: snapshot.data
                         .map((element) => Container(
                               child: Center(
                                   child: Image.network(element,
                                       fit: BoxFit.cover, width: 1000)),
                             ))
                         .toList(),
-                  ),
+                  );
+       },
+     ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    detailDocument['name'],
+                    widget.detailDocument['name'],
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.black,
@@ -97,7 +113,7 @@ class DetailPage extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    detailDocument['category'],
+                    widget.detailDocument['category'],
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.green,
@@ -117,14 +133,14 @@ class DetailPage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    detailDocument['pricing'],
+                    widget.detailDocument['pricing'],
                     style: TextStyle(
                       fontSize: 17,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    detailDocument['location'].toString(),
+                    widget.detailDocument['location'].toString(),
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey[700],
@@ -138,7 +154,7 @@ class DetailPage extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        detailDocument['description'],
+                        widget.detailDocument['description'],
                         //maxLines: 3,
                         style: TextStyle(fontSize: 15, color: Colors.grey[500]),
                         textAlign: TextAlign.center,
@@ -150,14 +166,14 @@ class DetailPage extends StatelessWidget {
             )));
   }
 
-  void getImages() async {
+ Future<List<String>> getImages() async {
 // detailDocument['imgRef'].toString().split(',').forEach((element) {
 // final newValue =element.replaceAll('[http', 'http').replaceAll(']', '');
 
 //  _lista.add(newValue);
 //  });
-print(detailDocument.id);
-_lista=await db.getAllImages(detailDocument.id);
+print(widget.detailDocument.id);
+return _lista=await db.getAllImages(widget.detailDocument.id);
   //     ad.imgRef.forEach((element) {
   //       // if (detailDocument['imgRef'].contains(element)) {
   //       _lista.add(element);
@@ -167,5 +183,29 @@ _lista=await db.getAllImages(detailDocument.id);
 
   //   // setState(() {});
    }
- 
+   Widget getCarousel(){
+     FutureBuilder(
+       future: getImages(),
+      
+       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        return CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: 2.0,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: false,
+                      initialPage: 2,
+                      autoPlay: false,
+                    ),
+                    items: snapshot.data
+                        .map((element) => Container(
+                              child: Center(
+                                  child: Image.network(element,
+                                      fit: BoxFit.cover, width: 1000)),
+                            ))
+                        .toList(),
+                  );
+       },
+     );
+     
+   }
 }

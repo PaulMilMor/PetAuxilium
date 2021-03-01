@@ -46,7 +46,7 @@ getDir();
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  DetailPage(publications)));
+                                  DetailPage(publications)),);
                         },
                         child: Card(
                           child: Row(
