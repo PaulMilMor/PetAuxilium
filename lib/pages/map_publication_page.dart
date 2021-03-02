@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
+
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class MapPagePublication extends StatefulWidget {
@@ -15,41 +15,37 @@ class MapPagePublication extends StatefulWidget {
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-  String _dateTime;
+ 
   final prefs = preferencesUtil();
   LocationData _currentPosition;
-    Location location = Location();
-      GoogleMapController _controller;
+  Location location = Location();
+  GoogleMapController _controller;
   //Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = new Set<Marker>();
- // BusinessModel business = BusinessModel(location: 'geo:29,-111');
+  // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
     super.initState();
     getLoc();
   }
-  
-  void _onMapCreated(GoogleMapController _cntlr)
-  {
+
+  void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _controller;
     location.onLocationChanged.listen((l) {
       _controller.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(l.latitude, l.longitude),zoom: 15),
+          CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
         ),
       );
     });
   }
+
   @override
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
-    if ( ModalRoute.of(context).settings.arguments != null) _markers =ModalRoute.of(context).settings.arguments;
-    /*final CameraPosition puntoInicial = CameraPosition(
-      target: tempLocation,
-      zoom: 17.5,
-    );*/
-    print(ModalRoute.of(context).settings.name);
-
+    if (ModalRoute.of(context).settings.arguments != null)
+      _markers = ModalRoute.of(context).settings.arguments;
+  
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),
@@ -57,15 +53,9 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                 Navigator.pop(context);
+                
                 Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
-                //Navigator.pop(context);
-                   
-                // final GoogleMapController controller =
-                //     await _controller.future;
-                // controller.animateCamera(CameraUpdate.newCameraPosition(
-                //     CameraPosition(target:tempLocation)));
               })
         ],
       ),
@@ -73,9 +63,9 @@ class _MapPagePublicationState extends State<MapPagePublication> {
         mapType: MapType.normal,
         markers: _markers,
         onTap: _addMarker,
-        initialCameraPosition:  CameraPosition(
-        target:_initialcameraposition,
-        zoom: 17.5,
+        initialCameraPosition: CameraPosition(
+          target: _initialcameraposition,
+          zoom: 17.5,
         ),
         /*initialCameraPosition: puntoInicial,
         onMapCreated: (GoogleMapController controller) {
@@ -84,26 +74,29 @@ class _MapPagePublicationState extends State<MapPagePublication> {
       ),
     );
   }
+
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
-    if(_markers.length<1){
-       setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId(point.toString()),
-        position: point,
-          onTap: (){
-          _markers.remove(_markers.firstWhere((Marker marker) => marker.position == point));
-        },
-        infoWindow: InfoWindow(
-          title: prefs.adoptionName,
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-      ));
-    });
+    if (_markers.length < 1) {
+      setState(() {
+        _markers.add(Marker(
+          markerId: MarkerId(point.toString()),
+          position: point,
+          onTap: () {
+            _markers.remove(_markers
+                .firstWhere((Marker marker) => marker.position == point));
+          },
+          infoWindow: InfoWindow(
+            title: prefs.adoptionName,
+          ),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        ));
+      });
     }
-   
   }
-getLoc() async{
+
+  getLoc() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -124,16 +117,15 @@ getLoc() async{
     }
 
     _currentPosition = await location.getLocation();
-    _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
+    _initialcameraposition =
+        LatLng(_currentPosition.latitude, _currentPosition.longitude);
     location.onLocationChanged.listen((LocationData currentLocation) {
       print("${currentLocation.longitude} : ${currentLocation.longitude}");
       setState(() {
         _currentPosition = currentLocation;
-        _initialcameraposition = LatLng(_currentPosition.latitude,_currentPosition.longitude);
-
-   
+        _initialcameraposition =
+            LatLng(_currentPosition.latitude, _currentPosition.longitude);
       });
     });
   }
- 
 }

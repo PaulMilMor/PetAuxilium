@@ -48,14 +48,12 @@ class _LoginPageState extends State<LoginPage> {
             ]),
       ),
       body: Builder(
-        builder: (context) => Container(
-          color: Colors.white,
-          width: double.infinity,
-          child: Padding(
-              padding: EdgeInsets.all(36.0),
-              child: SingleChildScrollView(
-                child: _loginForm(),
-              )),
+        builder: (context) => SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            width: double.infinity,
+            child: Padding(padding: EdgeInsets.all(36.0), child: _loginForm()),
+          ),
         ),
       ),
     );
@@ -107,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       child: GrayTextFormField(
         hintText: 'Correo Electrónico',
         controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce el correo' : null;
         },

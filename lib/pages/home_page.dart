@@ -4,6 +4,7 @@ import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/pages/startup_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Text(
-        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium®. ',
+        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium. ',
         style: TextStyle(
           fontSize: 18,
           color: Colors.white,
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, 'Feed');
+          Navigator.pushNamed(context, 'startupPage');
         },
         child: new Text(
           'Registrarme en otro momento',

@@ -155,12 +155,14 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () {
+
+           Navigator.pushNamed(context, 'caretakerPage');
+        },
       ),
     );
   }
 
-  
   Widget _followedButton() {
     return Container(
       decoration: BoxDecoration(
@@ -196,6 +198,7 @@ class _AccountPageState extends State<AccountPage> {
         _prefs.userName = null;
         _prefs.userImg = null;
         _prefs.userEmail = null;
+        _prefs.selectedIndex = 0;
 
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       },
