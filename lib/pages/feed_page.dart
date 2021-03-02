@@ -110,16 +110,38 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Text(
-                                        _address,
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
+                                    FutureBuilder(
+                                        future: getAddress(lat, long),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<List<Placemark>>
+                                                snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                snapshot.data.first.street +
+                                                    " " +
+                                                    snapshot
+                                                        .data.first.locality,
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                'Direccion',
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -139,25 +161,12 @@ class _FeedState extends State<Feed> {
     ));
   }
 
-  void getAddress(
+  Future<List<Placemark>> getAddress(
     lat,
     long,
   ) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
-    Placemark placeMark = newPlace[0];
-    String name = placeMark.name;
-    String subLocality = placeMark.subLocality;
-    String locality = placeMark.locality;
-    String administrativeArea = placeMark.administrativeArea;
-    String postalCode = placeMark.postalCode;
-    String country = placeMark.country;
-    String address =
-        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
 
-    print(address);
-
-    //setState(() {
-    _address = address; // update _address
-    //});
+    return newPlace;
   }
 }

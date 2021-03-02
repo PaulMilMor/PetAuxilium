@@ -38,3 +38,31 @@ class GrayFlatButton extends StatelessWidget {
     );
   }
 }
+
+class GrayDropdownButton extends StatelessWidget {
+  GrayDropdownButton({
+    this.hint,
+    this.value,
+    this.onChanged,
+    this.items,
+  });
+  final Widget hint;
+  final dynamic value;
+  final void Function(dynamic) onChanged;
+  final List<DropdownMenuItem<dynamic>> items;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color.fromRGBO(235, 235, 235, 1),
+      padding: const EdgeInsets.all(2.0),
+      //decoration: new BoxDecoration(),
+      child: DropdownButton(
+        hint: this.hint,
+        value: this.value,
+        onChanged: this.onChanged,
+        items: this.items,
+        //iconEnabledColor: Colors.green,
+      ),
+    );
+  }
+}

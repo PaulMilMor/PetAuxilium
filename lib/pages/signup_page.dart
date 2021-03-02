@@ -65,14 +65,12 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ]),
       ),
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        child: Padding(
-            padding: EdgeInsets.all(36.0),
-            child: SingleChildScrollView(
-              child: _signUpForm(),
-            )),
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          width: double.infinity,
+          child: Padding(padding: EdgeInsets.all(36.0), child: _signUpForm()),
+        ),
       ),
     );
   }
@@ -450,11 +448,10 @@ class _SignupPageState extends State<SignupPage> {
 
   _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-      print(context);
-      print("dentro del registro google");
+    print(context);
+    print("dentro del registro google");
     if (_result == 'Ingresó') {
       Navigator.pushNamedAndRemoveUntil(
-        
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
       Scaffold.of(context)

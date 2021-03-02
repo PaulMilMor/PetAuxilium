@@ -159,7 +159,6 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  
   Widget _followedButton() {
     return Container(
       decoration: BoxDecoration(
@@ -195,6 +194,7 @@ class _AccountPageState extends State<AccountPage> {
         _prefs.userName = null;
         _prefs.userImg = null;
         _prefs.userEmail = null;
+        _prefs.selectedIndex = 0;
 
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       },

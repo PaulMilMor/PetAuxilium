@@ -39,8 +39,6 @@ class DetailPage extends StatelessWidget {
 
     print(latitude2);
 
-    getAddress(lat, long);
-
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -90,12 +88,8 @@ class DetailPage extends StatelessWidget {
                         items: snapshot.data
                             .map((element) => Container(
                                   child: Center(
-                                      child: Image.network(
-                                    element,
-                                    fit: BoxFit.cover,
-                                    width: 1000,
-                                    height: 900,
-                                  )),
+                                      child: Image.network(element,
+                                          fit: BoxFit.cover, width: 1000)),
                                 ))
                             .toList(),
                       );
@@ -142,13 +136,36 @@ class DetailPage extends StatelessWidget {
                       color: Colors.grey[700],
                     ),
                   ),
-                  Text(
-                    _address,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: getAddress(lat, long),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Placemark>> snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            width: 150,
+                            child: Text(
+                              snapshot.data.first.street +
+                                  " " +
+                                  snapshot.data.first.locality,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container(
+                            width: 150,
+                            child: Text(
+                              'Direccion',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        }
+                      }),
                   SizedBox(
                     height: 17,
                   ),
@@ -187,25 +204,12 @@ class DetailPage extends StatelessWidget {
     //   // setState(() {});
   }
 
-  void getAddress(
+  Future<List<Placemark>> getAddress(
     lat,
     long,
   ) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
-    Placemark placeMark = newPlace[0];
-    String name = placeMark.name;
-    String subLocality = placeMark.subLocality;
-    String locality = placeMark.locality;
-    String administrativeArea = placeMark.administrativeArea;
-    String postalCode = placeMark.postalCode;
-    String country = placeMark.country;
-    String address =
-        "$name, $subLocality, $locality, $administrativeArea, $postalCode";
 
-    print(address);
-
-    //setState(() {
-    _address = address; // update _address
-    //});
+    return newPlace;
   }
 }

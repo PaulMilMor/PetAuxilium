@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
-import 'package:pet_auxilium/pages/home_page.dart';
 
 class StartupPage extends StatefulWidget {
   @override
@@ -26,6 +25,8 @@ class _StartupPageState extends State<StartupPage> {
                   text: 'Explorar',
                 ),
               ],
+              labelColor: Color.fromRGBO(49, 232, 93, 1),
+              unselectedLabelColor: Colors.black,
             ),
           ),
           body: TabBarView(
@@ -33,6 +34,7 @@ class _StartupPageState extends State<StartupPage> {
               Feed(),
               UserMapPage(),
             ],
+            physics: NeverScrollableScrollPhysics(),
           ),
         ),
       ),

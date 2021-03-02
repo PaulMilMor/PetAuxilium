@@ -12,7 +12,6 @@ class preferencesUtil {
   }
 
   get businessName {
-    
     return _prefs.getString('name') ?? '';
   }
 
@@ -75,11 +74,20 @@ class preferencesUtil {
   set adoptionDescription(String desc) {
     _prefs.setString('pdescription', desc);
   }
-    get adoptionCategory {
+
+  get adoptionCategory {
     return _prefs.getString('pcategory') ?? 'Adopción';
   }
 
   set adoptionCategory(String desc) {
     _prefs.setString('pcategory', desc);
+  }
+
+  get selectedIndex {
+    return _prefs.getInt('selectedIndex') ?? 0;
+  }
+
+  set selectedIndex(int selectedIndex) {
+    _prefs.setInt('selectedIndex', selectedIndex);
   }
 }
