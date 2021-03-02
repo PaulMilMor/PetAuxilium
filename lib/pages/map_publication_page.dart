@@ -51,12 +51,13 @@ class _MapPagePublicationState extends State<MapPagePublication> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mapa1'),
+        title: Text('Mapa'),
         actions: [
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.popAndPushNamed(context, 'PublicationPage',
+                 Navigator.pop(context);
+                Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
                 // final GoogleMapController controller =
                 //     await _controller.future;
@@ -82,16 +83,22 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   }
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
-    setState(() {
+    if(_markers.length<1){
+       setState(() {
       _markers.add(Marker(
         markerId: MarkerId(point.toString()),
         position: point,
+          onTap: (){
+          _markers.remove(_markers.firstWhere((Marker marker) => marker.position == point));
+        },
         infoWindow: InfoWindow(
           title: prefs.adoptionName,
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       ));
     });
+    }
+   
   }
 getLoc() async{
     bool _serviceEnabled;

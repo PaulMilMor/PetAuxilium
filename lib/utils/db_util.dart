@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -63,17 +64,47 @@ class dbUtil {
       'description': ad.description,
       'location': ad.location,
       'imgRef': ad.imgRef,
-      'userID': ad.userID
+      'userID': ad.userID,
+      'pricing':''
     });
   }
-
-  Future<List<AddAdoption>> getAllImages() async {
-    List<AddAdoption> images = List<AddAdoption>();
+  Future<List<String>> getLocations() async {
+    List<String> lista=List<String>();
+     String place = "";
     await _firestoreInstance.collection('publications').get().then((value) {
-      value.docs.forEach((element) {
-        images.add(AddAdoption.fromJsonMap(element.data()));
+      
+      value.docs.forEach((element) { 
+
+         PublicationModel publication=PublicationModel.fromJsonMap(element.data());
+        
+         publication.location.forEach((element) async { 
+
+              
+        double latitude=double.parse(element.substring(0,element.indexOf(',')).trim());
+        double longitude=double.parse(element.substring(element.indexOf(',')+1).trim());
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(latitude, longitude);
+            place=place+placemarks.first.street+" "+placemarks.first.locality+"\n";
+       print(place);
+         });
+          
+          print(lista.toString());
       });
+       
     });
+return lista;
+  }
+  Future<List<String>> getAllImages(String id) async {
+    List<String> images = List<String>();
+ await _firestoreInstance.collection("publications").doc(id).get().then((value) {
+   
+ PublicationModel publication=PublicationModel.fromJsonMap(value.data());
+
+ publication.imgRef.forEach((element) { 
+
+   images.add(element);
+ });
+ } );
     return images;
   }
 }

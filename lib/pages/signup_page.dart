@@ -1,6 +1,15 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/widgets/appbar_widget.dart';
@@ -19,7 +28,14 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
   bool _isLoading = false;
+  bool _imageSelected = true;
   AuthUtil _auth = AuthUtil();
+  final StorageUtil _storage = StorageUtil();
+  final _db = dbUtil();
+  final preferencesUtil _prefs = preferencesUtil();
+  Future<File> _imageFile;
+  ImageUploadModel _image = null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +96,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
+          _photo(),
           _nameTxt(),
           _lastNameTxt(),
           _emailTxt(),
@@ -102,6 +119,148 @@ class _SignupPageState extends State<SignupPage> {
         ],
       ),
     );
+  }
+
+  Widget _photo() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      child: Row(
+        children: [
+          _image == null ? _addPhoto() : _removePhoto(),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _imageSelected
+                  ? Text('Foto de Perfil')
+                  : Text('Selecciona una foto de perfil',
+                      style: TextStyle(
+                        color: Color.fromRGBO(232, 49, 93, 1),
+                      )),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _addPhoto() {
+    return FlatButton(
+      onPressed: () {
+        _onAddImageClick();
+      },
+      color: Colors.grey[200],
+      height: 85,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+      child: Column(
+        children: [
+          Icon(
+            Icons.add_a_photo,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _removePhoto() {
+    print('JALO');
+    print(_image);
+    print(_image.imageFile);
+    return Stack(
+      children: <Widget>[
+        CircleAvatar(
+          child: ClipOval(
+            child: Image.file(
+              _image.imageFile,
+              width: 100,
+              height: 300,
+              fit: BoxFit.cover,
+            ),
+          ),
+          backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+          radius: 42.5,
+        ),
+        Positioned(
+          right: -3,
+          bottom: -3,
+          child: InkWell(
+            child: Icon(
+              Icons.edit,
+              size: 20,
+              color: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            onTap: () {
+              _onAddImageClick();
+              /* setState(() {
+                images.removeAt(index);
+                // images.replaceRange(index, index + 1, ['Add Image']);
+                _imgsFiles.remove(index);
+                //         images.replaceRange(index, index + 1, ['Add Image']);
+              });*/
+            },
+          ),
+        ),
+        /*Positioned(
+          bottom: -11,
+          right: 20,
+          child: FlatButton(
+            onPressed: () {
+              _onAddImageClick();
+            },
+            color: Color.fromRGBO(49, 232, 93, 1),
+            height: 30,
+            minWidth: 0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.0)),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.add_a_photo,
+                  size: 15,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ),*/
+      ],
+    );
+  }
+
+  Future _onAddImageClick() async {
+    setState(() {
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      if (_imageFile != null) {
+        print('NOT NULL');
+        print(_imageFile);
+        getFileImage();
+      }
+    });
+  }
+
+  void getFileImage() async {
+    _imageFile.then((file) async {
+      //  _imgRef = await _storage.uploadFile(file, 'usuarios');
+      if (file != null) {
+        setState(() {
+          ImageUploadModel imageUpload = new ImageUploadModel();
+          imageUpload.isUploaded = false;
+          imageUpload.uploading = false;
+          imageUpload.imageFile = file;
+          imageUpload.imageUrl = '';
+          print('Image UPLOAD');
+          _image = imageUpload;
+          _imageSelected = true;
+        });
+      } else {
+        setState(() {
+          if (_image == null) {
+            _imageSelected = false;
+          }
+        });
+      }
+    });
   }
 
   Widget _nameTxt() {
@@ -219,12 +378,23 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
+                    print('VALIDATE');
+                    print(_imageFile);
+                    if (_image == null) {
+                      setState(() {
+                        _imageSelected = false;
+                      });
+                    } else {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      _signUp(context);
+                    }
+                  } else if (_image == null) {
                     setState(() {
-                      _isLoading = true;
+                      _imageSelected = false;
                     });
-                    _signUp(context);
                   }
-                  ;
                 },
               ),
       ),
@@ -258,6 +428,14 @@ class _SignupPageState extends State<SignupPage> {
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
+    await _imageFile.then((file) async {
+      _user.imgRef = await _storage.uploadFile(file, 'usuarios');
+      _prefs.userImg = _user.imgRef;
+      print('IMGREF');
+      print(_user.imgRef);
+      _db.addUser(_user);
+    });
+
     if (_result == 'Ingresó') {
       _isLoading = false;
       Navigator.pushNamedAndRemoveUntil(
@@ -270,14 +448,16 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  _signUpGoogle(BuildContext context2) async {
+  _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-
+      print(context);
+      print("dentro del registro google");
     if (_result == 'Ingresó') {
       Navigator.pushNamedAndRemoveUntil(
+        
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
-      Scaffold.of(context2)
+      Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }

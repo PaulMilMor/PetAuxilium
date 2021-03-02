@@ -22,6 +22,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   final _db = dbUtil();
   String _name = " ";
   String _desc;
+  
   List<String> _dir;
   List<LatLng> _locations;
   final MapsUtil mapsUtil = MapsUtil();
@@ -34,6 +35,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
+   
   }
 
   @override
@@ -164,12 +166,24 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: RaisedButton(
           onPressed: () async {
            // print(mapsUtil.locationtoString(_locations));
-            BusinessModel business = BusinessModel(
+           if(_name.isEmpty || _locations.isEmpty ||_desc.isEmpty){
+         Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
+           }else{
+  BusinessModel business = BusinessModel(
                 name: _name,
-                //location: mapsUtil.locationtoString(_locations),
-                userID: 'miidxd',
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
                 description: _desc);
-            _db.addBusiness(business);
+            _db.addBusiness(business).then((value) {
+              prefs.businessName='';
+              prefs.businessDescription='';
+               Navigator.popAndPushNamed(context, 'navigation');
+            });
+
+           }
+          
             //print(_dir);
           },
           child: Text('Publicar')),
@@ -216,15 +230,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place  +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality+
-              "\n";
-        });
+         place=placemarks.first.street+" "+placemarks.first.locality+ "\n";
         setState(() {
           _dirTxtController.text = place;
         });

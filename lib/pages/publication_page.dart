@@ -54,8 +54,9 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    //_name = prefs.adoptionName ?? ' ';
-    //_desc = prefs.adoptionDescription;
+    _name = prefs.adoptionName ?? ' ';
+    _desc = prefs.adoptionDescription;
+    _selectedCategory = 'Adopción';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -68,6 +69,8 @@ class PublicationPageState extends State<PublicationPage> {
     _locations = mapsUtil.getLocations(_markers);
 
     getDir(_locations);
+    print("mm");
+    print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
     );
@@ -246,12 +249,12 @@ class PublicationPageState extends State<PublicationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 18),
-        Center(
+        /*Center(
           child: Text(
             'CREAR PUBLICACIÓN',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-        ),
+        ),*/
         _category(),
         if (_selectedCategory != "Situacion de calle") _nameTxt(),
         _dirTxt(),
@@ -281,6 +284,7 @@ class PublicationPageState extends State<PublicationPage> {
           hint: Text("Selecciona una categoria"),
           value: _selectedCategory,
           onChanged: (newValue) {
+            prefs.adoptionCategory = newValue;
             setState(() {
               _selectedCategory = newValue;
             });
@@ -358,7 +362,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(left: 55.0, bottom: 20),
+        margin: const EdgeInsets.only( left:30, bottom: 20),
         child: Center(
             child: GrayTextFormField(
           controller: _dirTxtController,
@@ -375,37 +379,6 @@ class PublicationPageState extends State<PublicationPage> {
         )));
   }
 
-  Widget _boton() {
-    return Container(
-      width: 300.0,
-      margin: const EdgeInsets.only(left: 40, top: 20),
-      child: RaisedButton(
-        onPressed: () {
-          _showChoiceDialog(context);
-        },
-        child: Text("+"),
-      ),
-    );
-  }
-
-  /*Widget _images() {
-    return Container(
-        width: 300.0,
-        margin: const EdgeInsets.only(left: 40, top: 20),
-        child: Row(
-          children: renderImages(),
-
-          //mainAxisAlignment: MainAxisAligment.spaceAround,
-
-          /*child: RaisedButton(
-                onPressed: () {
-                  _showChoiceDialog(context);
-                },
-                child: Text("+"),
-              ),*/
-        ));
-  }*/
-
   Widget _buttons() {
     return Container(
       child: Row(
@@ -419,7 +392,14 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
-      child: RaisedButton(onPressed: () async {}, child: Text('Cancelar')),
+      child: TextButton(
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        onPressed: () {
+          //Navigator.pop(context);
+          _name = null;
+          _desc = null;
+        },
+      ),
     );
   }
 
@@ -427,42 +407,62 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
-          onPressed: () async {
-            print(_imgsFiles.toString());
+          onPressed:(){
+    if(_selectedCategory=='Situacion de calle') {
+_name= 'Animal Callejero';
+prefs.adoptionName='Animal Callejero';
+
+    }
+    if(_name.isEmpty || _desc.isEmpty || imagesRef.isEmpty || _locations.isEmpty){
+ Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
+    }else {
+
+  print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
                 name: _name,
                 location: mapsUtil.locationtoString(_locations),
-                userID: '1441414',
+                userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
-            _db.addPublication(ad);
+            _db.addPublication(ad).then((value) {
+              prefs.adoptionCategory = 'Adopción';
+              prefs.adoptionDescription = '';
+              prefs.adoptionName = '';
+              Navigator.popAndPushNamed(context, 'navigation');
+            });
             print(_name);
+    }
+    
           },
           child: Text('Publicar')),
     );
   }
 
   void getDir(List<LatLng> locations) {
+    print("fucking");
+    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";
         List<Placemark> placemarks =
             await placemarkFromCoordinates(element.latitude, element.longitude);
-        placemarks.forEach((Placemark element) {
-          place = place +
-              "\n" +
-              element.street +
-              " " +
-              element.subLocality +
-              ", " +
-              element.locality;
-        });
+        place =
+            placemarks.first.street + " " + placemarks.first.locality + "\n";
+
         setState(() {
+          print("chingadamadre");
+          print(place);
           _dirTxtController.text = place;
         });
       });
     }
   }
+  void _savePublication(BuildContext context2) async{
+
+  }
+
 }

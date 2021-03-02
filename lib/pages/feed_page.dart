@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/pages/detail_page.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -9,7 +11,11 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+  List<String> location;
+  String tempLocation;
+  dbUtil _db = dbUtil();
   String _address = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,39 +26,44 @@ class _FeedState extends State<Feed> {
             if (snapshot.hasData) {
               //Retrieve `List<DocumentSnapshot>` from snapshot
               final List<DocumentSnapshot> documents = snapshot.data.docs;
-
-              //Obtencion de la primera imagen de la lista para el feed.
+              location = List<String>();
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (BuildContext context, index) {
                     DocumentSnapshot publications = documents[index];
+                    //Obtencion de la primera imagen de la lista para el feed
+                    // getDir(publications['location']);
+                    print(publications['location']);
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
+
                     List<dynamic> locations = publications['location'];
                     String location = locations.first;
-                    final tagName = location;
-                    final split = tagName.split(',');
-                    final Map<int, String> values = {
+                    String tagName = location;
+                    List<String> split = tagName.split(',');
+                    Map<int, String> values = {
                       for (int i = 0; i < split.length; i++) i: split[i]
                     };
                     print(values);
 
-                    final latitude = values[0];
-                    final longitude = values[1];
-                    final value3 = values[2];
-                    final latitude2 = latitude.replaceAll(RegExp(','), '');
+                    String latitude = values[0];
+                    String longitude = values[1];
+                    String value3 = values[2];
+                    String latitude2 = latitude.replaceAll(RegExp(','), '');
                     var lat = num.tryParse(latitude2)?.toDouble();
                     var long = num.tryParse(longitude)?.toDouble();
 
-                    print(latitude2);
+                    print(lat);
 
-                    getAddress(lat, long, _address);
+                    getAddress(lat, long);
 
                     return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  DetailPage(publications)));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DetailPage(publications)),
+                          );
                         },
                         child: Card(
                           child: Row(
@@ -131,7 +142,6 @@ class _FeedState extends State<Feed> {
   void getAddress(
     lat,
     long,
-    _address,
   ) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
     Placemark placeMark = newPlace[0];
