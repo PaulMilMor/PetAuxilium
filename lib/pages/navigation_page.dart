@@ -13,14 +13,18 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  int _selectedIndex = 0;
   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
     if (index != 1 && index != 3) {
       setState(() {
-        _selectedIndex = index;
+        _prefs.selectedIndex = index;
       });
     }
+  }
+
+  initState() {
+    super.initState();
+    // _prefs.selectedIndex =0;
   }
 
   final List<String> _titles = [
@@ -45,7 +49,7 @@ class _NavigationPageState extends State<NavigationPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: getAppbar(),
-      body: _tabs[_selectedIndex],
+      body: _tabs[_prefs.selectedIndex],
       bottomNavigationBar: _bottomBar(),
     );
   }
@@ -53,17 +57,17 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget _appBar() {
     return AppBar(
       elevation: 0,
-      title: _selectedIndex == 4
+      title: _prefs.selectedIndex == 4
           ? Center(
               child: Text(
-                _titles[_selectedIndex],
+                _titles[_prefs.selectedIndex],
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             )
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                _titles[_selectedIndex],
+                _titles[_prefs.selectedIndex],
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
@@ -100,7 +104,7 @@ class _NavigationPageState extends State<NavigationPage> {
           label: 'Cuenta',
         ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: _prefs.selectedIndex,
       backgroundColor: Colors.white,
       unselectedItemColor: Color.fromRGBO(210, 210, 210, 1),
       selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
@@ -109,7 +113,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   Widget getAppbar() {
-    if (_selectedIndex == 0) {
+    if (_prefs.selectedIndex == 0) {
       return PreferredSize(
         preferredSize: Size.fromHeight(1.0),
         child: AppBar(),
@@ -117,17 +121,17 @@ class _NavigationPageState extends State<NavigationPage> {
     } else {
       return AppBar(
         elevation: 0,
-        title: _selectedIndex == 4
+        title: _prefs.selectedIndex == 4
             ? Center(
                 child: Text(
-                  _titles[_selectedIndex],
+                  _titles[_prefs.selectedIndex],
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               )
             : Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  _titles[_selectedIndex],
+                  _titles[_prefs.selectedIndex],
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
