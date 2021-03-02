@@ -7,6 +7,8 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/models/ImageUploadModel.dart';
 
 class CreateBusinessPage extends StatefulWidget {
   @override
@@ -72,7 +74,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             _dirTxt(),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              child: Text('Describa los servicios que ofrece'),
+              //child: Text('Describa los servicios que ofrece'),
             ),
             _descriptionTxt(),
             _addBtn(),
@@ -146,7 +148,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         maxLines: 8,
         controller: _descTxtController,
         decoration: InputDecoration(
-            hintText: "Descripción",
+            hintText: "Describa los servicios que ofrece",
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
@@ -221,7 +223,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _selectService() {
     return Row(
       children: [
-        Text('Servicios que ofrece:'),
+        //Text('Servicios que ofrece:'),
         /*DropdownButton(
           isExpanded: true,
           items: [

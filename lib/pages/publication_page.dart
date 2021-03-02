@@ -33,7 +33,7 @@ class PublicationPageState extends State<PublicationPage> {
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
   String _selectedCategory;
-  List listItems = ['Adopción', 'Animales perdidos', 'Situacion de calle'];
+  List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   String _name;
   String _desc;
   List<String> _dir;
@@ -57,7 +57,7 @@ class PublicationPageState extends State<PublicationPage> {
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
-    _selectedCategory = 'Adopción';
+    _selectedCategory = 'ADOPCIÓN';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -187,9 +187,6 @@ class PublicationPageState extends State<PublicationPage> {
     });
   }
 
-
-
-  
   Widget _publicationForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(36.0),
@@ -204,7 +201,7 @@ class PublicationPageState extends State<PublicationPage> {
             ),
           ),*/
           _category(),
-          if (_selectedCategory != "Situacion de calle") _nameTxt(),
+          if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
           _dirTxt(),
           _descTxt(),
           //_images(),
@@ -261,7 +258,7 @@ class PublicationPageState extends State<PublicationPage> {
           style: TextStyle(fontSize: 18),
         )),
         Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 10),
+           margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
             width: 300.0,
             child: GrayTextFormField(
               controller: _nameTxtController,
@@ -299,11 +296,10 @@ class PublicationPageState extends State<PublicationPage> {
                   decoration: InputDecoration(
                       labelText: 'Descripción',
                       suffixIcon: IconButton(
-                        onPressed: ()  {
-                  _descTxtController.clear();
-                  prefs.adoptionDescription='';
-
-                },
+                        onPressed: () {
+                          _descTxtController.clear();
+                          prefs.adoptionDescription = '';
+                        },
                         icon: Icon(Icons.clear),
                       )),
                   maxLength: 500,
@@ -387,7 +383,7 @@ class PublicationPageState extends State<PublicationPage> {
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
           onPressed: () {
-            if (_selectedCategory == 'Situacion de calle') {
+            if (_selectedCategory == 'SITUACIÓN DE CALLE') {
               _name = 'Animal Callejero';
               prefs.adoptionName = 'Animal Callejero';
             }
@@ -410,7 +406,7 @@ class PublicationPageState extends State<PublicationPage> {
                   description: _desc,
                   imgRef: imagesRef);
               _db.addPublication(ad).then((value) {
-                prefs.adoptionCategory = 'Adopción';
+                prefs.adoptionCategory = 'ADOPCIÓN';
                 prefs.adoptionDescription = '';
                 prefs.adoptionName = '';
                 Navigator.popAndPushNamed(context, 'navigation');
@@ -423,7 +419,6 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
-    print("fucking");
     print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
@@ -434,7 +429,6 @@ class PublicationPageState extends State<PublicationPage> {
             placemarks.first.street + " " + placemarks.first.locality + "\n";
 
         setState(() {
-          print("chingadamadre");
           print(place);
           _dirTxtController.text = place;
         });

@@ -16,6 +16,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+      padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
           future: FirebaseFirestore.instance.collection('publications').get(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -35,21 +36,23 @@ class _FeedState extends State<Feed> {
 
                     List<dynamic> locations = publications['location'];
                     String location = locations.first;
-                    final tagName = location;
-                    final split = tagName.split(',');
-                    final Map<int, String> values = {
+                    String tagName = location;
+                    List<String> split = tagName.split(',');
+                    Map<int, String> values = {
                       for (int i = 0; i < split.length; i++) i: split[i]
                     };
                     print(values);
 
-                    final latitude = values[0];
-                    final longitude = values[1];
-                    final value3 = values[2];
-                    final latitude2 = latitude.replaceAll(RegExp(','), '');
+                    String latitude = values[0];
+                    String longitude = values[1];
+                    String value3 = values[2];
+                    String latitude2 = latitude.replaceAll(RegExp(','), '');
                     var lat = num.tryParse(latitude2)?.toDouble();
                     var long = num.tryParse(longitude)?.toDouble();
 
-                    print(latitude2);
+                    print(lat);
+
+                    getAddress(lat, long);
 
                     return GestureDetector(
                         onTap: () {

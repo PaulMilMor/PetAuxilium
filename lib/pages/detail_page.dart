@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:geocoding/geocoding.dart';
 
 //lista
 List<String> _lista = new List<String>();
@@ -95,22 +96,22 @@ class DetailPage extends StatelessWidget {
                     detailDocument['pricing'],
                     style: TextStyle(
                       fontSize: 17,
-                      color: Colors.grey[700],
+                      color: Colors.grey[600],
                     ),
                   ),
                   _setLocationText(lat, long),
                   SizedBox(
-                    height: 17,
+                    height: 24,
                   ),
                   Container(
                     // width: 200,
                     child: Align(
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         detailDocument['description'],
                         //maxLines: 3,
-                        style: TextStyle(fontSize: 15, color: Colors.grey[500]),
-                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
