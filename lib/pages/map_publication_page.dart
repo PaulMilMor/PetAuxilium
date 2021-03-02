@@ -57,9 +57,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                print("en el mapa");
-                    print(_markers);
-                    Navigator.pop(context);
+                 Navigator.pop(context);
                 Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
                 //Navigator.pop(context);

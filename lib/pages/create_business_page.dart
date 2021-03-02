@@ -166,12 +166,24 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: RaisedButton(
           onPressed: () async {
            // print(mapsUtil.locationtoString(_locations));
-            BusinessModel business = BusinessModel(
+           if(_name.isEmpty || _locations.isEmpty ||_desc.isEmpty){
+         Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
+           }else{
+  BusinessModel business = BusinessModel(
                 name: _name,
-                //location: mapsUtil.locationtoString(_locations),
-                userID: 'miidxd',
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
                 description: _desc);
-            _db.addBusiness(business);
+            _db.addBusiness(business).then((value) {
+              prefs.businessName='';
+              prefs.businessDescription='';
+               Navigator.popAndPushNamed(context, 'navigation');
+            });
+
+           }
+          
             //print(_dir);
           },
           child: Text('Publicar')),

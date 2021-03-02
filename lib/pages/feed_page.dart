@@ -12,13 +12,9 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   List<String> location;
-  String tempLocation;       
-  dbUtil _db=dbUtil();           
-   @override
-  void initState() {
-    super.initState();
-getDir();
-  }
+  String tempLocation;
+  dbUtil _db = dbUtil();
+  String _address = "";
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +27,42 @@ getDir();
             if (snapshot.hasData) {
               //Retrieve `List<DocumentSnapshot>` from snapshot
               final List<DocumentSnapshot> documents = snapshot.data.docs;
-             location=List<String>();
+              location = List<String>();
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (BuildContext context, index) {
-                   
                     DocumentSnapshot publications = documents[index];
                     //Obtencion de la primera imagen de la lista para el feed
-                   // getDir(publications['location']);
-                   print(publications['location']);
+                    // getDir(publications['location']);
+                    print(publications['location']);
                     List<dynamic> fotos = publications['imgRef'];
                     String foto = fotos.first;
-                    
+
+                    List<dynamic> locations = publications['location'];
+                    String location = locations.first;
+                    final tagName = location;
+                    final split = tagName.split(',');
+                    final Map<int, String> values = {
+                      for (int i = 0; i < split.length; i++) i: split[i]
+                    };
+                    print(values);
+
+                    final latitude = values[0];
+                    final longitude = values[1];
+                    final value3 = values[2];
+                    final latitude2 = latitude.replaceAll(RegExp(','), '');
+                    var lat = num.tryParse(latitude2)?.toDouble();
+                    var long = num.tryParse(longitude)?.toDouble();
+
+                    print(latitude2);
+
                     return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  DetailPage(publications)),);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DetailPage(publications)),
+                          );
                         },
                         child: Card(
                           child: Row(
@@ -94,17 +109,38 @@ getDir();
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Text(
-                                        publications['location'].toString(),
-                                        //location[index+1]??'',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
+                                    FutureBuilder(
+                                        future: getAddress(lat, long),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<List<Placemark>>
+                                                snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                snapshot.data.first.street +
+                                                    " " +
+                                                    snapshot
+                                                        .data.first.locality,
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return Container(
+                                              width: 150,
+                                              child: Text(
+                                                'Direccion',
+                                                style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -123,33 +159,13 @@ getDir();
           }),
     ));
   }
-   
-  
-   
-   
-     Future<void> getDir() async {
-     String place = "";
-   FirebaseFirestore.instance.collection('publications').get().then((value) {
-      
-      value.docs.forEach((element) { 
 
-         PublicationModel publication=PublicationModel.fromJsonMap(element.data());
-        
-         publication.location.forEach((element) async { 
+  Future<List<Placemark>> getAddress(
+    lat,
+    long,
+  ) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 
-              // ESTO LO probe tambien con publications['location']
-        double latitude=double.parse(element.substring(0,element.indexOf(',')).trim());
-        double longitude=double.parse(element.substring(element.indexOf(',')+1).trim());
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(latitude, longitude);
-            place=place+placemarks.first.street+" "+placemarks.first.locality+"\n";
-       print(place);
-         });
-          location.add(place);
-          print(location);
-      });
-       
-    });
+    return newPlace;
   }
 }
-

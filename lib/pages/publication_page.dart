@@ -58,6 +58,7 @@ class PublicationPageState extends State<PublicationPage> {
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
+    _selectedCategory = 'Adopción';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -137,19 +138,33 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    setState(() {
+    setState(()  {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
-      if (_imageFile != null) {
-        getFileImage(index);
+      _imageFile =  ImagePicker.pickImage(source: ImageSource.gallery);
+      print("La maldita imagen");
+      print(_imageFile);
+      if (_imageFile!= null) {
+        
         print("xd" + _imageFile.toString());
+        if (images.length < 6) images.add("Add Image");
+        getFileImage(index);
       } else {
         print("faros");
       }
-      if (images.length < 6) images.add("Add Image");
+      
     });
   }
+Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
+    setState(() {
+      if (pickedFile != null) {
+        imagefile = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
+  }
   _limitImages(BuildContext context) {
     Scaffold.of(context)
       ..removeCurrentSnackBar()
@@ -161,8 +176,17 @@ class PublicationPageState extends State<PublicationPage> {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      print(file);
+      print(images.length);
+      setState(() {
+        if(file== null){
+          images.remove("Add Image");
+        }
+      });
+      
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
-
+        
+        
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
@@ -170,93 +194,28 @@ class PublicationPageState extends State<PublicationPage> {
         imageUpload.imageFile = file;
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
+        print("en el file");
+        
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
   }
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
-        imagefile = File(pickedFile.path);
-      } else {
-        print('No image selected');
-      }
-    });
-  }
 
-  _openGallery(BuildContext context) async {
-    // ignore: deprecated_member_use
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Navigator.of(context).pop();
-    setState(() {
-      print("chingadamadre");
-      print(picture);
 
-      imagefile = picture;
-      print(imagefile);
-    });
-  }
-
-  _openCamera(BuildContext context) async {
-    // ignore: deprecated_member_use
-    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
-    Navigator.of(context).pop();
-    setState(() {
-      print(picture);
-      imagefile = picture;
-    });
-  }
-
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Selecciona una opción"),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: Text("Galeria"),
-                    onTap: () {
-                      print("ostia puta");
-                      print(context);
-                      _openGallery(context);
-                    },
-                  ),
-                  Padding(padding: EdgeInsets.all(8.0)),
-                  GestureDetector(
-                      child: Text("Cámara"),
-                      onTap: () {
-                        _openCamera(context);
-                      })
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void _addImages() {
-    setState(() {
-      _listImages.add(imagefile);
-    });
-  }
-
+  
   Widget _publicationForm(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 18),
-        Center(
+        /*Center(
           child: Text(
             'CREAR PUBLICACIÓN',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-        ),
+        ),*/
         _category(),
         if (_selectedCategory != "Situacion de calle") _nameTxt(),
         _dirTxt(),
@@ -318,7 +277,10 @@ class PublicationPageState extends State<PublicationPage> {
               controller: _nameTxtController,
               hintText: 'Nombre',
               suffixIcon: IconButton(
-                onPressed: () => _nameTxtController.clear(),
+                onPressed: ()  {
+                  _nameTxtController.clear();
+                  prefs.adoptionName='';
+                },
                 icon: Icon(Icons.clear),
               ),
               onChanged: (value) {
@@ -345,7 +307,11 @@ class PublicationPageState extends State<PublicationPage> {
                   decoration: InputDecoration(
                       labelText: 'Descripción',
                       suffixIcon: IconButton(
-                        onPressed: () => _descTxtController.clear(),
+                        onPressed: ()  {
+                  _descTxtController.clear();
+                  prefs.adoptionDescription='';
+
+                },
                         icon: Icon(Icons.clear),
                       )),
                   maxLength: 500,
@@ -365,18 +331,19 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only(left: 55.0, bottom: 20),
+        margin: const EdgeInsets.only( left:30, bottom: 20),
         child: Center(
             child: GrayTextFormField(
           controller: _dirTxtController,
           readOnly: true,
           hintText: 'Dirección',
           suffixIcon: IconButton(
-            onPressed: () => _dirTxtController.clear(),
-            icon: Icon(Icons.clear),
+            onPressed:  _cleanDir,
+            icon: Icon(Icons.clear) ,
           ),
           maxLines: null,
           onTap: () {
+            
             Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
           },
         )));
@@ -391,7 +358,11 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
+ void _cleanDir(){
+  _dirTxtController.clear();
+                  _markers.clear();
 
+ }
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
@@ -414,8 +385,19 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
-          onPressed: () async {
-            print(_imgsFiles.toString());
+          onPressed:(){
+    if(_selectedCategory=='Situacion de calle') {
+_name= 'Animal Callejero';
+prefs.adoptionName='Animal Callejero';
+
+    }
+    if(_name.isEmpty || _desc.isEmpty || imagesRef.isEmpty || _locations.isEmpty){
+ Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
+    }else {
+
+  print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 category: _selectedCategory,
@@ -424,12 +406,15 @@ class PublicationPageState extends State<PublicationPage> {
                 userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
-            _db.addPublication(ad);
+            _db.addPublication(ad).then((value) {
+              prefs.adoptionCategory = 'Adopción';
+              prefs.adoptionDescription = '';
+              prefs.adoptionName = '';
+              Navigator.popAndPushNamed(context, 'navigation');
+            });
             print(_name);
-            _nameTxtController.clear();
-          _descTxtController.clear();
-          _dirTxtController.clear();
-            DeletePref();
+    }
+    
           },
           child: Text('Publicar')),
     );

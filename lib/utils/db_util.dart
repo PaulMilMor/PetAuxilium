@@ -64,7 +64,8 @@ class dbUtil {
       'description': ad.description,
       'location': ad.location,
       'imgRef': ad.imgRef,
-      'userID': ad.userID
+      'userID': ad.userID,
+      'pricing':''
     });
   }
   Future<List<String>> getLocations() async {
