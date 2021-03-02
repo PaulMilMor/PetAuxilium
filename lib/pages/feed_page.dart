@@ -20,6 +20,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+      padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
           future: FirebaseFirestore.instance.collection('publications').get(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -110,6 +111,9 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     FutureBuilder(
                                         future: getAddress(lat, long),
                                         builder: (BuildContext context,
@@ -117,14 +121,14 @@ class _FeedState extends State<Feed> {
                                                 snapshot) {
                                           if (snapshot.hasData) {
                                             return Container(
-                                              width: 150,
+                                              width: 190,
                                               child: Text(
                                                 snapshot.data.first.street +
-                                                    " " +
+                                                    ", " +
                                                     snapshot
                                                         .data.first.locality,
                                                 style: TextStyle(
-                                                  fontSize: 9,
+                                                  fontSize: 14,
                                                   color: Colors.grey,
                                                 ),
                                               ),

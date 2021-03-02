@@ -133,8 +133,11 @@ class DetailPage extends StatelessWidget {
                     detailDocument['pricing'],
                     style: TextStyle(
                       fontSize: 17,
-                      color: Colors.grey[700],
+                      color: Colors.grey[600],
                     ),
+                  ),
+                  SizedBox(
+                    height: 7,
                   ),
                   FutureBuilder(
                       future: getAddress(lat, long),
@@ -142,42 +145,45 @@ class DetailPage extends StatelessWidget {
                           AsyncSnapshot<List<Placemark>> snapshot) {
                         if (snapshot.hasData) {
                           return Container(
-                            width: 150,
-                            child: Text(
-                              snapshot.data.first.street +
-                                  " " +
-                                  snapshot.data.first.locality,
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          );
+                              width: 320,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Zona: ' +
+                                      snapshot.data.first.street +
+                                      ", " +
+                                      snapshot.data.first.locality,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ));
                         } else {
                           return Container(
-                            width: 150,
+                            width: 250,
                             child: Text(
                               'Direccion',
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Colors.grey,
+                                color: Colors.grey[700],
                               ),
                             ),
                           );
                         }
                       }),
                   SizedBox(
-                    height: 17,
+                    height: 24,
                   ),
                   Container(
                     // width: 200,
                     child: Align(
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         detailDocument['description'],
                         //maxLines: 3,
-                        style: TextStyle(fontSize: 15, color: Colors.grey[500]),
-                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ),

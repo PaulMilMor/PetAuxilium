@@ -187,9 +187,6 @@ class PublicationPageState extends State<PublicationPage> {
     });
   }
 
-
-
-  
   Widget _publicationForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(36.0),
@@ -300,11 +297,10 @@ class PublicationPageState extends State<PublicationPage> {
                   decoration: InputDecoration(
                       labelText: 'Descripción',
                       suffixIcon: IconButton(
-                        onPressed: ()  {
-                  _descTxtController.clear();
-                  prefs.adoptionDescription='';
-
-                },
+                        onPressed: () {
+                          _descTxtController.clear();
+                          prefs.adoptionDescription = '';
+                        },
                         icon: Icon(Icons.clear),
                       )),
                   maxLength: 500,
@@ -317,17 +313,17 @@ class PublicationPageState extends State<PublicationPage> {
                     });
                   },
                 )),
-            maxLength: 500,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            onChanged: (value) {
-              setState(() {
-                prefs.adoptionDescription = value;
-                _desc = value;
-              });
-            },
-          )),
-    ]));
+            // maxLength: 500,
+            // maxLines: null,
+            // keyboardType: TextInputType.multiline,
+            // onChanged: (value) {
+            //   setState(() {
+            //     prefs.adoptionDescription = value;
+            //     _desc = value;
+            //   });
+            // },
+          ]),
+        ));
   }
 
   Widget _dirTxt() {
@@ -377,11 +373,11 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
- void _cleanDir(){
-  _dirTxtController.clear();
-                  _markers.clear();
+//  void _cleanDir(){
+//   _dirTxtController.clear();
+//                   _markers.clear();
 
- }
+//  }
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
@@ -437,7 +433,6 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
-    print("fucking");
     print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
@@ -448,7 +443,6 @@ class PublicationPageState extends State<PublicationPage> {
             placemarks.first.street + " " + placemarks.first.locality + "\n";
 
         setState(() {
-          print("chingadamadre");
           print(place);
           _dirTxtController.text = place;
         });
