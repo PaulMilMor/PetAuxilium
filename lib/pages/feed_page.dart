@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
-import 'package:pet_auxilium/utils/db_util.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -13,13 +11,12 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
-  dbUtil _db = dbUtil();
-  String _address = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+      padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
           future: FirebaseFirestore.instance.collection('publications').get(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -39,21 +36,23 @@ class _FeedState extends State<Feed> {
 
                     List<dynamic> locations = publications['location'];
                     String location = locations.first;
-                    final tagName = location;
-                    final split = tagName.split(',');
-                    final Map<int, String> values = {
+                    String tagName = location;
+                    List<String> split = tagName.split(',');
+                    Map<int, String> values = {
                       for (int i = 0; i < split.length; i++) i: split[i]
                     };
                     print(values);
 
-                    final latitude = values[0];
-                    final longitude = values[1];
-                    final value3 = values[2];
-                    final latitude2 = latitude.replaceAll(RegExp(','), '');
+                    String latitude = values[0];
+                    String longitude = values[1];
+                    String value3 = values[2];
+                    String latitude2 = latitude.replaceAll(RegExp(','), '');
                     var lat = num.tryParse(latitude2)?.toDouble();
                     var long = num.tryParse(longitude)?.toDouble();
 
-                    print(latitude2);
+                    print(lat);
+
+                    getAddress(lat, long);
 
                     return GestureDetector(
                         onTap: () {
@@ -108,38 +107,7 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                                    FutureBuilder(
-                                        future: getAddress(lat, long),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<List<Placemark>>
-                                                snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Container(
-                                              width: 150,
-                                              child: Text(
-                                                snapshot.data.first.street +
-                                                    " " +
-                                                    snapshot
-                                                        .data.first.locality,
-                                                style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            return Container(
-                                              width: 150,
-                                              child: Text(
-                                                'Direccion',
-                                                style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        }),
+                 _getLocationText(lat, long),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -159,12 +127,55 @@ class _FeedState extends State<Feed> {
     ));
   }
 
-  Future<List<Placemark>> getAddress(
-    lat,
-    long,
-  ) async {
+  Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 
     return newPlace;
+  }
+
+  Widget _getLocationText(double lat, double long) {
+    if(lat==29.115967 && long==-111.025490){
+      print('debio entrar aqui');
+   return Container(
+              width: 150,
+              child: Text(
+                ' ',
+                style: TextStyle(
+                  fontSize: 9,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+    }else{
+      print('no aqui' +lat.toString()+'  '+long.toString());
+    return FutureBuilder( future: getAddress(lat, long),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              width: 150,
+              child: Text(
+                snapshot.data.first.street + " " + snapshot.data.first.locality,
+                style: TextStyle(
+                  fontSize: 9,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              width: 150,
+              child: Text(
+                ' ',
+                style: TextStyle(
+                  fontSize: 9,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          }
+        });
+    }
+
   }
 }

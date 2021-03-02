@@ -16,28 +16,27 @@ import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 
-class PublicationPage extends StatefulWidget {
+class KeeperPage extends StatefulWidget {
   @override
-  PublicationPageState createState() => PublicationPageState();
+KeeperPageState createState() => KeeperPageState();
 }
 
-class PublicationPageState extends State<PublicationPage> {
+class KeeperPageState extends State<KeeperPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-  var _nameTxtController = TextEditingController();
+  var _pricingTxtController = TextEditingController();
   //TextEditingController _nameTxtController;
-  var _dirTxtController = TextEditingController();
+
   var _descTxtController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
-  Set<Marker> _markers = new Set<Marker>();
+
   String _selectedCategory;
-  List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
-  String _name;
+  List listItems = ['ENTRENAMIENTO'];
+  String _pricing;
   String _desc;
-  List<String> _dir;
-  List<LatLng> _locations;
+
   List<String> imagesRef = List<String>();
   List<Object> images = List<Object>();
   Future<File> _imageFile;
@@ -55,26 +54,23 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    _name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
-    _selectedCategory = 'ADOPCIÓN';
-    _nameTxtController = TextEditingController(text: _name);
-    _dirTxtController = TextEditingController();
+    _pricing = prefs.keeperPricing?? ' ';
+    _desc = prefs.keeperDescription;
+    _selectedCategory = 'ENTRENAMIENTO';
+    _pricingTxtController = TextEditingController(text: _pricing);
+ 
     _descTxtController = TextEditingController(text: _desc);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
 
-    getDir(_locations);
-    print("mm");
-    print(_locations);
+
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
+      
     );
   }
 
@@ -120,26 +116,15 @@ class PublicationPageState extends State<PublicationPage> {
             ),
           );
         } else {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
+          return Card(
+            child: IconButton(
+              icon: Icon(Icons.add),
               onPressed: () {
+                //_showChoiceDialog(context);
                 images.length < 6
                     ? _onAddImageClick(index)
                     : _limitImages(context);
               },
-              color: Colors.grey[200],
-              height: 85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    size: 48,
-                    color: Color.fromRGBO(210, 210, 210, 1),
-                  ),
-                ],
-              ),
             ),
           );
         }
@@ -205,15 +190,15 @@ class PublicationPageState extends State<PublicationPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 18),
-          /*Center(
+          Center(
             child: Text(
-              'CREAR PUBLICACIÓN',
+              'CREAR Perfil de cuidador',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-          ),*/
+          ),
           _category(),
-          if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
-          _dirTxt(),
+          _pricingTxt(),
+         
           _descTxt(),
           //_images(),
           buildGridView(),
@@ -229,137 +214,107 @@ class PublicationPageState extends State<PublicationPage> {
       // height: 100.0,
       margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
       child: Center(
-          child: Row(children: [
+          child: Column(children: [
         Container(
           margin: const EdgeInsets.only(right: 4.5),
           child: Text(
-            'Categoría:',
+            'Servicios que ofrece:',
             style: TextStyle(fontSize: 18),
           ),
         ),
-        GrayDropdownButton(
-          hint: Text("Selecciona una categoria"),
-          value: _selectedCategory,
-          onChanged: (newValue) {
-            prefs.adoptionCategory = newValue;
-            setState(() {
-              _selectedCategory = newValue;
-            });
-          },
-          items: listItems.map((valueItem) {
-            return DropdownMenuItem(
-              value: valueItem,
-              child: Text(valueItem),
-            );
-          }).toList(),
+        Container(
+          child: GrayDropdownButton(
+            hint: Text("Selecciona una categoria"),
+            value: _selectedCategory,
+            onChanged: (newValue) {
+              prefs.adoptionCategory = newValue;
+              setState(() {
+                _selectedCategory = newValue;
+              });
+            },
+            items: listItems.map((valueItem) {
+              return DropdownMenuItem(
+                value: valueItem,
+                child: Text(valueItem),
+              );
+            }).toList(),
+          ),
         )
       ])),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _pricingTxt() {
     return Container(
         //height: 100.0,
 
         child: Column(children: [
       Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-          child: Text(
-            'Completa los siguientes campos',
-            style: TextStyle(fontSize: 18),
-          )),
-      Container(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
-          child: GrayTextFormField(
-            controller: _nameTxtController,
-            hintText: 'Nombre',
-            suffixIcon: IconButton(
-              onPressed: () {
-                _nameTxtController.clear();
-                prefs.adoptionName = '';
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: Text(
+          'Completa los siguientes campos',
+          style: TextStyle(fontSize: 18),
+        )),
+        Container(
+           margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+            width: 300.0,
+            child: GrayTextFormField(
+              controller: _pricingTxtController,
+              hintText: 'Tarifa por hora',
+              suffixIcon: IconButton(
+                onPressed: ()  {
+                  _pricingTxtController.clear();
+                  prefs.keeperPricing='';
+                },
+                icon: Icon(Icons.clear),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  //_pricingTxtController.clear();
+                  _pricing = value;
+                  prefs.keeperPricing=value;
+                });
               },
-              icon: Icon(Icons.clear),
-            ),
-            onChanged: (value) {
-              setState(() {
-                _nameTxtController.clear();
-                _name = _nameTxtController.text;
-                print('NAME');
-                print(_name);
-              });
-            },
-          ))
-    ]));
+            
+           
+          
+        ))]));
   }
 
   Widget _descTxt() {
     return Container(
         height: 100.0,
         child: Center(
-            child: Column(children: [
-          Container(
-              width: 300.0,
-              child: TextField(
-                controller: _descTxtController,
-                decoration: InputDecoration(
-                    labelText: 'Descripción',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _descTxtController.clear();
-                        prefs.adoptionDescription = '';
-                      },
-                      icon: Icon(Icons.clear),
-                    )),
-                maxLength: 500,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                onChanged: (value) {
-                  setState(() {
-                    prefs.adoptionDescription = value;
-                    _desc = value;
-                  });
-                },
-              )),
-        ])));
+          child: Column(children: [
+            Container(
+                width: 300.0,
+                child: TextField(
+                  controller: _descTxtController,
+                  decoration: InputDecoration(
+                      labelText: 'Descripción',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          _descTxtController.clear();
+                          prefs.keeperDescription = '';
+                        },
+                        icon: Icon(Icons.clear),
+                      )),
+                  maxLength: 500,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  onChanged: (value) {
+                    setState(() {
+                      prefs.keeperDescription = value;
+                      _desc = value;
+                    });
+                  },
+                )),
+           
+    ])));
   }
 
-  Widget _dirTxt() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: Stack(
-          children: [
-            GrayTextFormField(
-              controller: _dirTxtController,
-              readOnly: true,
-              hintText: 'Dirección',
-              focusNode: AlwaysDisabledFocusNode(),
-              /* suffixIcon: IconButton(
-              onPressed: () => _dirTxtController.clear(),
-              icon: Icon(Icons.clear),
-            ),*/
-              maxLines: null,
-              onTap: () {
-                Navigator.pushNamed(context, 'mapPublication',
-                    arguments: _markers);
-              },
-            ),
-            Positioned(
-              right: 1,
-              top: 5,
-              child: IconButton(
-                color: Colors.grey[600],
-                onPressed: _cleanDir,
-                icon: Icon(Icons.clear),
-              ),
-            ),
-          ],
-        ));
-  }
 
-  void _cleanDir() {
-    _dirTxtController.clear();
-    _markers.clear();
-  }
+
 
   Widget _buttons() {
     return Container(
@@ -370,15 +325,15 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
-
+ 
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
       child: TextButton(
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         onPressed: () {
-          //Navigator.pop(context);
-          _name = null;
+          Navigator.pop(context);
+          _pricing = null;
           _desc = null;
         },
       ),
@@ -390,60 +345,42 @@ class PublicationPageState extends State<PublicationPage> {
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
           onPressed: () {
-            if (_selectedCategory == 'SITUACIÓN DE CALLE') {
-              _name = 'Animal Callejero';
-              prefs.adoptionName = 'Animal Callejero';
-            }
-            if (_name.isEmpty ||
-                _desc.isEmpty ||
-                imagesRef.isEmpty ||
-                _locations.isEmpty) {
-              Scaffold.of(context)
-                ..removeCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text('Es necesario llenar todos los campos')));
-            } else {
+          
+             if (_pricing.isEmpty ||
+                 _desc.isEmpty ||
+                 imagesRef.isEmpty 
+                 ) {
+               Scaffold.of(context)
+                 ..removeCurrentSnackBar()
+                 ..showSnackBar(SnackBar(
+                     content: Text('Es necesario llenar todos los campos')));
+             } else {
               print(_imgsFiles.toString());
-              //print(mapsUtil.locationtoString(_locations));
+            
               PublicationModel ad = PublicationModel(
                   category: _selectedCategory,
-                  name: _name,
-                  location: mapsUtil.locationtoString(_locations),
+                  name: prefs.userName,
+                  location:['29.115967, -111.025490'],
                   userID: prefs.userID,
                   description: _desc,
+                  pricing: _pricing,
                   imgRef: imagesRef);
-              _db.addPublication(ad).then((value) {
-                prefs.adoptionCategory = 'ADOPCIÓN';
-                prefs.adoptionDescription = '';
-                prefs.adoptionName = '';
+              _db.addKeeper(ad).then((value) {
+               prefs.keeperPricing='';
+               prefs.keeperDescription='';
+               prefs.keeperCategory='ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
               });
-              print(_name);
+              
             }
           },
           child: Text('Publicar')),
     );
   }
 
-  void getDir(List<LatLng> locations) {
-    print(locations);
-    if (locations != null) {
-      locations.forEach((LatLng element) async {
-        String place = "";
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(element.latitude, element.longitude);
-        place =
-            placemarks.first.street + " " + placemarks.first.locality + "\n";
+  
 
-        setState(() {
-          print(place);
-          _dirTxtController.text = place;
-        });
-      });
-    }
-  }
-
-  void _savePublication(BuildContext context2) async {}
+  //void _savePublication(BuildContext context2) async {}
 }
 
 //Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección

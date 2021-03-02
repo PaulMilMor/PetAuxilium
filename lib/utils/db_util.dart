@@ -70,6 +70,18 @@ class dbUtil {
     });
   }
 
+  Future<void> addKeeper(PublicationModel ad) async {
+    await _firestoreInstance.collection("publications").add({
+      'category': ad.category,
+      'name': ad.name,
+      'description': ad.description,
+      'location': ad.location,
+      'imgRef': ad.imgRef,
+      'userID': ad.userID,
+      'pricing': ad.pricing
+    });
+  }
+
   Future<List<String>> getLocations() async {
     List<String> lista = List<String>();
     String place = "";

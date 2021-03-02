@@ -8,6 +8,7 @@ class PublicationModel {
   List<dynamic> location;
   List<dynamic> imgRef;
   String userID;
+  String pricing;
   PublicationModel(
       {this.id,
       this.category,
@@ -15,7 +16,9 @@ class PublicationModel {
       this.description,
       this.location,
       this.imgRef,
-      this.userID});
+      this.userID,
+      this.pricing
+      });
 
 // class AddAdoption {
 //   String id;
@@ -39,5 +42,6 @@ class PublicationModel {
     description = json['description'];
     location = json['location'];
     imgRef = json['imgRef'];
+       pricing = json['pricing'];
   }
 }

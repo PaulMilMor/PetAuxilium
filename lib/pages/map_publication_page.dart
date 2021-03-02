@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
+
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class MapPagePublication extends StatefulWidget {
@@ -15,7 +15,7 @@ class MapPagePublication extends StatefulWidget {
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-  String _dateTime;
+ 
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -45,11 +45,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
     //_name=ModalRoute.of(context).settings.arguments;
     if (ModalRoute.of(context).settings.arguments != null)
       _markers = ModalRoute.of(context).settings.arguments;
-    /*final CameraPosition puntoInicial = CameraPosition(
-      target: tempLocation,
-      zoom: 17.5,
-    );*/
-
+  
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),
@@ -57,13 +53,10 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                //  Navigator.pop(context);
+                
                 Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
-                // final GoogleMapController controller =
-                //     await _controller.future;
-                // controller.animateCamera(CameraUpdate.newCameraPosition(
-                //     CameraPosition(target:tempLocation)));
+
               })
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
@@ -47,10 +48,11 @@ class MyApp extends StatelessWidget {
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
           //'AdoptionPage': (BuildContext context) => Adoptionpage(),
-         // 'Feed': (BuildContext context) => Feed(),
+          // 'Feed': (BuildContext context) => Feed(),
           'PublicationPage': (BuildContext context) => PublicationPage(),
           'mapPublication': (BuildContext context) => MapPagePublication(),
           'startupPage': (BuildContext context) => StartupPage(),
+          'caretakerPage':(BuildContext context)=>KeeperPage()
         },
       ),
     );

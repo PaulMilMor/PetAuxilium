@@ -90,4 +90,26 @@ class preferencesUtil {
   set selectedIndex(int selectedIndex) {
     _prefs.setInt('selectedIndex', selectedIndex);
   }
+  get keeperDescription {
+    return _prefs.getString('kdescription') ?? '';
+  }
+
+  set keeperDescription(String desc) {
+    _prefs.setString('kdescription', desc);
+  }
+
+  get keeperCategory {
+    return _prefs.getString('kcategory') ?? 'ENTRENAMIENTO';
+  }
+
+  set keeperCategory(String desc) {
+    _prefs.setString('kcategory', desc);
+  }
+  get keeperPricing {
+    return _prefs.getString('kpricing') ?? '';
+  }
+
+  set keeperPricing(String desc) {
+    _prefs.setString('kpricing', desc);
+  }
 }
