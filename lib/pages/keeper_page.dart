@@ -192,7 +192,7 @@ class KeeperPageState extends State<KeeperPage> {
           SizedBox(height: 18),
           Center(
             child: Text(
-              'CREAR Perfil de cuidador',
+              'CREAR PERFIL DE CUIDADOR',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
@@ -227,7 +227,7 @@ class KeeperPageState extends State<KeeperPage> {
             hint: Text("Selecciona una categoria"),
             value: _selectedCategory,
             onChanged: (newValue) {
-              prefs.adoptionCategory = newValue;
+              prefs.keeperCategory = newValue;
               setState(() {
                 _selectedCategory = newValue;
               });
