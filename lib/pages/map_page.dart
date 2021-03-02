@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:pet_auxilium/models/business_model.dart';
+
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class MapPage extends StatefulWidget {
