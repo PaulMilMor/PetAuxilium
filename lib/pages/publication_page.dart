@@ -120,15 +120,26 @@ class PublicationPageState extends State<PublicationPage> {
             ),
           );
         } else {
-          return Card(
-            child: IconButton(
-              icon: Icon(Icons.add),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FlatButton(
               onPressed: () {
-                //_showChoiceDialog(context);
                 images.length < 6
                     ? _onAddImageClick(index)
                     : _limitImages(context);
               },
+              color: Colors.grey[200],
+              height: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add,
+                    size: 48,
+                    color: Color.fromRGBO(210, 210, 210, 1),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -252,68 +263,64 @@ class PublicationPageState extends State<PublicationPage> {
 
         child: Column(children: [
       Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: Text(
-          'Completa los siguientes campos',
-          style: TextStyle(fontSize: 18),
-        )),
-        Container(
-           margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-            width: 300.0,
-            child: GrayTextFormField(
-              controller: _nameTxtController,
-              hintText: 'Nombre',
-              suffixIcon: IconButton(
-                onPressed: ()  {
-                  _nameTxtController.clear();
-                  prefs.adoptionName='';
-                },
-                icon: Icon(Icons.clear),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _nameTxtController.clear();
-                  _name = _nameTxtController.text;
-                  print('NAME');
-                  print(_name);
-                });
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          child: Text(
+            'Completa los siguientes campos',
+            style: TextStyle(fontSize: 18),
+          )),
+      Container(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+          child: GrayTextFormField(
+            controller: _nameTxtController,
+            hintText: 'Nombre',
+            suffixIcon: IconButton(
+              onPressed: () {
+                _nameTxtController.clear();
+                prefs.adoptionName = '';
               },
-            
-           
-          
-        ))]));
+              icon: Icon(Icons.clear),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _nameTxtController.clear();
+                _name = _nameTxtController.text;
+                print('NAME');
+                print(_name);
+              });
+            },
+          ))
+    ]));
   }
 
   Widget _descTxt() {
     return Container(
         height: 100.0,
         child: Center(
-          child: Column(children: [
-            Container(
-                width: 300.0,
-                child: TextField(
-                  controller: _descTxtController,
-                  decoration: InputDecoration(
-                      labelText: 'Descripción',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          _descTxtController.clear();
-                          prefs.adoptionDescription = '';
-                        },
-                        icon: Icon(Icons.clear),
-                      )),
-                  maxLength: 500,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (value) {
-                    setState(() {
-                      prefs.adoptionDescription = value;
-                      _desc = value;
-                    });
-                  },
-                )),
-           
-    ])));
+            child: Column(children: [
+          Container(
+              width: 300.0,
+              child: TextField(
+                controller: _descTxtController,
+                decoration: InputDecoration(
+                    labelText: 'Descripción',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _descTxtController.clear();
+                        prefs.adoptionDescription = '';
+                      },
+                      icon: Icon(Icons.clear),
+                    )),
+                maxLength: 500,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                onChanged: (value) {
+                  setState(() {
+                    prefs.adoptionDescription = value;
+                    _desc = value;
+                  });
+                },
+              )),
+        ])));
   }
 
   Widget _dirTxt() {
@@ -338,9 +345,9 @@ class PublicationPageState extends State<PublicationPage> {
             ),
             Positioned(
               right: 1,
-              top: 1,
+              top: 5,
               child: IconButton(
-                color: Colors.grey[500],
+                color: Colors.grey[600],
                 onPressed: _cleanDir,
                 icon: Icon(Icons.clear),
               ),
@@ -363,7 +370,7 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
- 
+
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),

@@ -43,7 +43,8 @@ class dbUtil {
       'name': business.name,
       'location': business.location,
       'description': business.description,
-      'userID': business.userID
+      'userID': business.userID,
+      'imgRef': business.imgRef,
     });
   }
 
@@ -65,7 +66,7 @@ class dbUtil {
       'location': ad.location,
       'imgRef': ad.imgRef,
       'userID': ad.userID,
-      'pricing':''
+      'pricing': ''
     });
   }
     Future<void> addKeeper(PublicationModel ad) async {
@@ -80,42 +81,47 @@ class dbUtil {
     });
   }
   Future<List<String>> getLocations() async {
-    List<String> lista=List<String>();
-     String place = "";
+    List<String> lista = List<String>();
+    String place = "";
     await _firestoreInstance.collection('publications').get().then((value) {
-      
-      value.docs.forEach((element) { 
+      value.docs.forEach((element) {
+        PublicationModel publication =
+            PublicationModel.fromJsonMap(element.data());
 
-         PublicationModel publication=PublicationModel.fromJsonMap(element.data());
-        
-         publication.location.forEach((element) async { 
+        publication.location.forEach((element) async {
+          double latitude =
+              double.parse(element.substring(0, element.indexOf(',')).trim());
+          double longitude =
+              double.parse(element.substring(element.indexOf(',') + 1).trim());
+          List<Placemark> placemarks =
+              await placemarkFromCoordinates(latitude, longitude);
+          place = place +
+              placemarks.first.street +
+              " " +
+              placemarks.first.locality +
+              "\n";
+          print(place);
+        });
 
-              
-        double latitude=double.parse(element.substring(0,element.indexOf(',')).trim());
-        double longitude=double.parse(element.substring(element.indexOf(',')+1).trim());
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(latitude, longitude);
-            place=place+placemarks.first.street+" "+placemarks.first.locality+"\n";
-       print(place);
-         });
-          
-          print(lista.toString());
+        print(lista.toString());
       });
-       
     });
-return lista;
+    return lista;
   }
+
   Future<List<String>> getAllImages(String id) async {
     List<String> images = List<String>();
- await _firestoreInstance.collection("publications").doc(id).get().then((value) {
-   
- PublicationModel publication=PublicationModel.fromJsonMap(value.data());
+    await _firestoreInstance
+        .collection("publications")
+        .doc(id)
+        .get()
+        .then((value) {
+      PublicationModel publication = PublicationModel.fromJsonMap(value.data());
 
- publication.imgRef.forEach((element) { 
-
-   images.add(element);
- });
- } );
+      publication.imgRef.forEach((element) {
+        images.add(element);
+      });
+    });
     return images;
   }
 }
