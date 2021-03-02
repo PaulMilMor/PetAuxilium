@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
-import 'package:pet_auxilium/utils/db_util.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -13,8 +11,6 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
-  dbUtil _db = dbUtil();
-  String _address = "";
 
   @override
   Widget build(BuildContext context) {
@@ -108,38 +104,7 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                                    FutureBuilder(
-                                        future: getAddress(lat, long),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<List<Placemark>>
-                                                snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Container(
-                                              width: 150,
-                                              child: Text(
-                                                snapshot.data.first.street +
-                                                    " " +
-                                                    snapshot
-                                                        .data.first.locality,
-                                                style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            return Container(
-                                              width: 150,
-                                              child: Text(
-                                                'Direccion',
-                                                style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        }),
+                                    _getLocationText(lat, long),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -159,12 +124,40 @@ class _FeedState extends State<Feed> {
     ));
   }
 
-  Future<List<Placemark>> getAddress(
-    lat,
-    long,
-  ) async {
+  Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 
     return newPlace;
+  }
+
+  Widget _getLocationText(lat, long) {
+    return FutureBuilder(
+        future: getAddress(lat, long),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              width: 150,
+              child: Text(
+                snapshot.data.first.street + " " + snapshot.data.first.locality,
+                style: TextStyle(
+                  fontSize: 9,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              width: 150,
+              child: Text(
+                'Direccion',
+                style: TextStyle(
+                  fontSize: 9,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          }
+        });
   }
 }
