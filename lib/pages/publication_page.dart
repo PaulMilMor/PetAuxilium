@@ -32,7 +32,7 @@ class PublicationPageState extends State<PublicationPage> {
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
   String _selectedCategory;
-  List listItems = ['Adopción', 'Animales perdidos', 'Situacion de calle'];
+  List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   String _name;
   String _desc;
   List<String> _dir;
@@ -56,7 +56,7 @@ class PublicationPageState extends State<PublicationPage> {
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
-    _selectedCategory = 'Adopción';
+    _selectedCategory = 'ADOPCIÓN';
     _nameTxtController = TextEditingController(text: _name);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
@@ -256,7 +256,7 @@ class PublicationPageState extends State<PublicationPage> {
           ),
         ),*/
         _category(),
-        if (_selectedCategory != "Situacion de calle") _nameTxt(),
+        if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
         _dirTxt(),
         _descTxt(),
         //_images(),
@@ -362,7 +362,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _dirTxt() {
     return Container(
         width: 300.0,
-        margin: const EdgeInsets.only( left:30, bottom: 20),
+        margin: const EdgeInsets.only(left: 30, bottom: 20),
         child: Center(
             child: GrayTextFormField(
           controller: _dirTxtController,
@@ -407,36 +407,37 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 40.0, bottom: 50),
       child: RaisedButton(
-          onPressed:(){
-    if(_selectedCategory=='Situacion de calle') {
-_name= 'Animal Callejero';
-prefs.adoptionName='Animal Callejero';
-
-    }
-    if(_name.isEmpty || _desc.isEmpty || imagesRef.isEmpty || _locations.isEmpty){
- Scaffold.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('Es necesario llenar todos los campos')));
-    }else {
-
-  print(_imgsFiles.toString());
-            //print(mapsUtil.locationtoString(_locations));
-            PublicationModel ad = PublicationModel(
-                category: _selectedCategory,
-                name: _name,
-                location: mapsUtil.locationtoString(_locations),
-                userID: prefs.userID,
-                description: _desc,
-                imgRef: imagesRef);
-            _db.addPublication(ad).then((value) {
-              prefs.adoptionCategory = 'Adopción';
-              prefs.adoptionDescription = '';
-              prefs.adoptionName = '';
-              Navigator.popAndPushNamed(context, 'navigation');
-            });
-            print(_name);
-    }
-    
+          onPressed: () {
+            if (_selectedCategory == 'SITUACIÓN DE CALLE') {
+              _name = 'Animal Callejero';
+              prefs.adoptionName = 'Animal Callejero';
+            }
+            if (_name.isEmpty ||
+                _desc.isEmpty ||
+                imagesRef.isEmpty ||
+                _locations.isEmpty) {
+              Scaffold.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text('Es necesario llenar todos los campos')));
+            } else {
+              print(_imgsFiles.toString());
+              //print(mapsUtil.locationtoString(_locations));
+              PublicationModel ad = PublicationModel(
+                  category: _selectedCategory,
+                  name: _name,
+                  location: mapsUtil.locationtoString(_locations),
+                  userID: prefs.userID,
+                  description: _desc,
+                  imgRef: imagesRef);
+              _db.addPublication(ad).then((value) {
+                prefs.adoptionCategory = 'ADOPCIÓN';
+                prefs.adoptionDescription = '';
+                prefs.adoptionName = '';
+                Navigator.popAndPushNamed(context, 'navigation');
+              });
+              print(_name);
+            }
           },
           child: Text('Publicar')),
     );
@@ -461,8 +462,6 @@ prefs.adoptionName='Animal Callejero';
       });
     }
   }
-  void _savePublication(BuildContext context2) async{
 
-  }
-
+  void _savePublication(BuildContext context2) async {}
 }
