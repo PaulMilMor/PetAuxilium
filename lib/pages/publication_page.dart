@@ -259,8 +259,7 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text(
           'Completa los siguientes campos',
           style: TextStyle(fontSize: 18),
-        ),
-<<<<<<< HEAD
+        )),
         Container(
             margin: const EdgeInsets.only(top: 20, bottom: 10),
             width: 300.0,
@@ -275,17 +274,6 @@ class PublicationPageState extends State<PublicationPage> {
                 icon: Icon(Icons.clear),
               ),
               onChanged: (value) {
-=======
-      ),
-      Container(
-          margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-          //width: 300.0,
-          child: GrayTextFormField(
-            controller: _nameTxtController,
-            hintText: 'Nombre',
-            suffixIcon: IconButton(
-              onPressed: () {
->>>>>>> origin/Pool
                 setState(() {
                   _nameTxtController.clear();
                   _name = _nameTxtController.text;
@@ -293,16 +281,10 @@ class PublicationPageState extends State<PublicationPage> {
                   print(_name);
                 });
               },
-              icon: Icon(Icons.clear),
-            ),
-            onChanged: (value) {
-              setState(() {
-                prefs.adoptionName = value;
-                _name = value;
-              });
-            },
-          )),
-    ]));
+            
+           
+          
+        ))]));
   }
 
   Widget _descTxt() {
@@ -334,40 +316,12 @@ class PublicationPageState extends State<PublicationPage> {
                     });
                   },
                 )),
-            maxLength: 500,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            onChanged: (value) {
-              setState(() {
-                prefs.adoptionDescription = value;
-                _desc = value;
-              });
-            },
-          )),
-    ]));
+           
+    ])));
   }
 
   Widget _dirTxt() {
     return Container(
-<<<<<<< HEAD
-        width: 300.0,
-        margin: const EdgeInsets.only( left:30, bottom: 20),
-        child: Center(
-            child: GrayTextFormField(
-          controller: _dirTxtController,
-          readOnly: true,
-          hintText: 'Dirección',
-          suffixIcon: IconButton(
-            onPressed:  _cleanDir,
-            icon: Icon(Icons.clear) ,
-          ),
-          maxLines: null,
-          onTap: () {
-            
-            Navigator.pushNamed(context, 'mapPublication', arguments: _markers);
-          },
-        )));
-=======
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
         child: Stack(
           children: [
@@ -402,7 +356,6 @@ class PublicationPageState extends State<PublicationPage> {
   void _cleanDir() {
     _dirTxtController.clear();
     _markers.clear();
->>>>>>> origin/Pool
   }
 
   Widget _buttons() {
@@ -414,11 +367,7 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
- void _cleanDir(){
-  _dirTxtController.clear();
-                  _markers.clear();
-
- }
+ 
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
