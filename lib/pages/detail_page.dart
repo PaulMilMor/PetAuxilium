@@ -194,7 +194,7 @@ class DetailPage extends StatelessWidget {
             return Container(
               width: 150,
               child: Text(
-                'Direccion',
+                ' ',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.grey,

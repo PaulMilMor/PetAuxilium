@@ -154,7 +154,10 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () {
+
+           Navigator.pushNamed(context, 'caretakerPage');
+        },
       ),
     );
   }
