@@ -26,7 +26,7 @@ class ServicesMenuPage extends StatelessWidget {
    children: [
      TableRow(
        children:[
-        _btnService('Servicio 1', context),
+        _btnService('ADOPCIÓN', context),
         _btnService('Servicio 2', context)
        ]
      ),
