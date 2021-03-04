@@ -229,7 +229,7 @@ class PublicationPageState extends State<PublicationPage> {
       // height: 100.0,
       margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
       child: Center(
-          child: Row(children: [
+          child: Column(children: [
         Container(
           margin: const EdgeInsets.only(right: 4.5),
           child: Text(
@@ -282,8 +282,9 @@ class PublicationPageState extends State<PublicationPage> {
             ),
             onChanged: (value) {
               setState(() {
-                _nameTxtController.clear();
-                _name = _nameTxtController.text;
+               // _nameTxtController.clear();
+                _name = value;
+                prefs.adoptionName=value;
                 print('NAME');
                 print(_name);
               });

@@ -192,11 +192,11 @@ class KeeperPageState extends State<KeeperPage> {
           SizedBox(height: 18),
           Center(
             child: Text(
-              'CREAR Perfil de cuidador',
+              'CREAR PERFIL DE CUIDADOR',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          _category(),
+         // _category(),
           _pricingTxt(),
          
           _descTxt(),
@@ -227,7 +227,7 @@ class KeeperPageState extends State<KeeperPage> {
             hint: Text("Selecciona una categoria"),
             value: _selectedCategory,
             onChanged: (newValue) {
-              prefs.adoptionCategory = newValue;
+              prefs.keeperCategory = newValue;
               setState(() {
                 _selectedCategory = newValue;
               });
@@ -358,12 +358,12 @@ class KeeperPageState extends State<KeeperPage> {
               print(_imgsFiles.toString());
             
               PublicationModel ad = PublicationModel(
-                  category: _selectedCategory,
+                  category: 'CUIDADOR',
                   name: prefs.userName,
                   location:['29.115967, -111.025490'],
                   userID: prefs.userID,
                   description: _desc,
-                  pricing: _pricing,
+                  pricing: '\$$_pricing por hora',
                   imgRef: imagesRef);
               _db.addKeeper(ad).then((value) {
                prefs.keeperPricing='';
