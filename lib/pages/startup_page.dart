@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/services_menu_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 
 class StartupPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _StartupPageState extends State<StartupPage> {
     return PreferredSize(
       preferredSize: Size.fromHeight(50.0),
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 49.0,
@@ -23,6 +24,10 @@ class _StartupPageState extends State<StartupPage> {
                 Container(
                   height: 47.0,
                   child: new Tab(text: 'Inicio'),
+                ),
+                Container(
+                  height: 47.0,
+                  child: new Tab(text: 'Servicios'),
                 ),
                 Container(
                   height: 47.0,
@@ -40,6 +45,7 @@ class _StartupPageState extends State<StartupPage> {
           body: TabBarView(
             children: [
               Feed(),
+              ServicesMenuPage(),
               UserMapPage(),
             ],
             physics: NeverScrollableScrollPhysics(),

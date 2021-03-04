@@ -6,6 +6,8 @@ import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/map_publication_page.dart';
+import 'package:pet_auxilium/pages/service_page.dart';
+import 'package:pet_auxilium/pages/services_menu_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
@@ -52,7 +54,8 @@ class MyApp extends StatelessWidget {
           'PublicationPage': (BuildContext context) => PublicationPage(),
           'mapPublication': (BuildContext context) => MapPagePublication(),
           'startupPage': (BuildContext context) => StartupPage(),
-          'caretakerPage':(BuildContext context)=>KeeperPage()
+          'caretakerPage':(BuildContext context)=>KeeperPage(),
+          'service':(BuildContext context)=>ServicePage(),
         },
       ),
     );
