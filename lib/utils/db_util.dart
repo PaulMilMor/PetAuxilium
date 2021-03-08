@@ -126,4 +126,14 @@ class dbUtil {
     });
     return images;
   }
+    Future<List<PublicationModel>> getPublications(String category) async {
+    List<PublicationModel> publications = List<PublicationModel>();
+    await _firestoreInstance.collection('business').where('category', isEqualTo:category ).get().then((value) {
+      value.docs.forEach((element) {
+        publications.add(PublicationModel.fromJsonMap(element.data()));
+      });
+    });
+    return publications;
+  }
+
 }
