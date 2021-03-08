@@ -33,6 +33,9 @@ class MyApp extends StatelessWidget {
   final _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
+    print('MAIN');
+    print(_prefs.userID);
+    print(_prefs.userID.toString().length > 0);
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);
@@ -42,10 +45,13 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
+//        initialRoute:
+//            _prefs.userID.toString().length > 0 ? 'navigation' : 'home',
+
         //      initialRoute: '/',
         initialRoute: _prefs.userID != ' ' && _prefs.userID != null
-            ? 'home'
-            : 'navigation',
+            ? 'navigation'
+            : 'home',
         routes: {
           'home': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
