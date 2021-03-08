@@ -56,7 +56,6 @@ class _MapPagePublicationState extends State<MapPagePublication> {
                 
                 Navigator.popAndPushNamed(context, 'navigation',
                     arguments: _markers);
-
               })
         ],
       ),

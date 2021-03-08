@@ -29,6 +29,7 @@ class PublicationPageState extends State<PublicationPage> {
   //TextEditingController _nameTxtController;
   var _dirTxtController = TextEditingController();
   var _descTxtController = TextEditingController();
+  var _catController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
@@ -45,7 +46,7 @@ class PublicationPageState extends State<PublicationPage> {
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-
+  
   void initState() {
     super.initState();
     setState(() {
@@ -65,10 +66,11 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-
+    print(ModalRoute.of(context).settings.name);
     getDir(_locations);
     print("mm");
     print(_locations);
@@ -148,19 +150,33 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    setState(() {
+    setState(()  {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
-      if (_imageFile != null) {
-        getFileImage(index);
+      _imageFile =  ImagePicker.pickImage(source: ImageSource.gallery);
+      print("La maldita imagen");
+      print(_imageFile);
+      if (_imageFile!= null) {
+        
         print("xd" + _imageFile.toString());
+        if (images.length < 6) images.add("Add Image");
+        getFileImage(index);
       } else {
         print("faros");
       }
-      if (images.length < 6) images.add("Add Image");
+      
     });
   }
+Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
+    setState(() {
+      if (pickedFile != null) {
+        imagefile = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
+  }
   _limitImages(BuildContext context) {
     Scaffold.of(context)
       ..removeCurrentSnackBar()
@@ -172,8 +188,17 @@ class PublicationPageState extends State<PublicationPage> {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      print(file);
+      print(images.length);
+      setState(() {
+        if(file== null){
+          images.remove("Add Image");
+        }
+      });
+      
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
-
+        
+        
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
@@ -181,22 +206,13 @@ class PublicationPageState extends State<PublicationPage> {
         imageUpload.imageFile = file;
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
+        print("en el file");
+        
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
   }
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        imagefile = File(pickedFile.path);
-      } else {
-        print('No image selected');
-      }
-    });
-  }
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
@@ -295,6 +311,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _descTxt() {
     return Container(
+      
         height: 100.0,
         child: Center(
             child: Column(children: [
@@ -379,8 +396,11 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         onPressed: () {
           //Navigator.pop(context);
-          _name = null;
-          _desc = null;
+          //_name = null;
+          //_desc = null;
+          _nameTxtController.clear();
+          _descTxtController.clear();
+          _dirTxtController.clear();
         },
       ),
     );

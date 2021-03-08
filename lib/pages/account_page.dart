@@ -33,6 +33,7 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+        print(ModalRoute.of(context).settings.name);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +93,7 @@ class _AccountPageState extends State<AccountPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          //_editProfileBtn(),
+          _editProfileBtn(),
           _myPostsButton(),
           _postBusinessButton(),
           _caretakerButton(),
@@ -113,7 +114,9 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Editar perfil',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, 'edit_account_page');
+        },
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
@@ -16,6 +17,7 @@ import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
+import 'package:pet_auxilium/pages/edit_account_page.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
           'startupPage': (BuildContext context) => StartupPage(),
           'caretakerPage': (BuildContext context) => KeeperPage(),
           'service': (BuildContext context) => ServicePage(),
+          'edit_account_page': (BuildContext context) => Edit_account_page(),
         },
       ),
     );
