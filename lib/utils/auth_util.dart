@@ -99,6 +99,7 @@ class AuthUtil {
   
    try {
      
+     
         final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =

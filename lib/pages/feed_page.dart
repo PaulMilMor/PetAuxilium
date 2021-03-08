@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
 }
-
+  final preferencesUtil _prefs = preferencesUtil();
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
-
+  
+  List<String> follows=List();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +67,8 @@ class _FeedState extends State<Feed> {
                         },
                         child: Card(
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -79,6 +84,8 @@ class _FeedState extends State<Feed> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
+                                  
+            
                                     Text(
                                       publications['name'],
                                       style: TextStyle(
@@ -113,8 +120,20 @@ class _FeedState extends State<Feed> {
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
+                              ),
+                              SizedBox(height: 20,),
+                          DropdownButton(
+                            
+                            items: [DropdownMenuItem(
+                              child:  _isFollowed(publications.id), 
+                              onTap: (){
+
+                                _addFollow(publications.id);
+                              },)].toList(),
+                            onChanged: (_){},
+                          )
+                           
+                  ],
                           ),
                         ));
                   });
@@ -132,7 +151,32 @@ class _FeedState extends State<Feed> {
 
     return newPlace;
   }
+ _addFollow(String id){
+   
+   if(follows.contains(id)){
 
+      follows.remove(id);
+   }else{
+follows.add(id);
+
+   }
+ dbUtil().updateFollows(follows);
+    setState(() {
+      
+    });
+ }
+
+ Widget _isFollowed(String id){
+   print(_prefs.follows);
+     if(follows.contains(id)){
+      return Text('No seguir', style: TextStyle(fontSize: 9),);
+
+     }else{
+
+       return Text('Seguir',style: TextStyle(fontSize: 9));
+     }
+
+ }
   Widget _getLocationText(double lat, double long) {
     if(lat==29.115967 && long==-111.025490){
       print('debio entrar aqui');
