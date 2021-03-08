@@ -155,8 +155,7 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
         onPressed: () {
-
-           Navigator.pushNamed(context, 'caretakerPage');
+          Navigator.pushNamed(context, 'caretakerPage');
         },
       ),
     );
@@ -193,13 +192,14 @@ class _AccountPageState extends State<AccountPage> {
       text: 'Cerrar sesión',
       icon: Icons.navigate_next,
       onPressed: () {
-        _prefs.userID = null;
+        _prefs.userID = ' ';
         _prefs.userName = null;
         _prefs.userImg = null;
         _prefs.userEmail = null;
         _prefs.selectedIndex = 0;
-
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        print('USER ID');
+        print(_prefs.userID);
+        Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       },
     );
   }

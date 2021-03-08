@@ -28,6 +28,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,9 +40,12 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: '/',
+        //      initialRoute: '/',
+        initialRoute: _prefs.userID != ' ' && _prefs.userID != null
+            ? 'home'
+            : 'navigation',
         routes: {
-          '/': (BuildContext context) => HomePage(),
+          'home': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
           'signup': (BuildContext context) => SignupPage(),
           'navigation': (BuildContext context) => NavigationPage(),
@@ -54,8 +58,8 @@ class MyApp extends StatelessWidget {
           'PublicationPage': (BuildContext context) => PublicationPage(),
           'mapPublication': (BuildContext context) => MapPagePublication(),
           'startupPage': (BuildContext context) => StartupPage(),
-          'caretakerPage':(BuildContext context)=>KeeperPage(),
-          'service':(BuildContext context)=>ServicePage(),
+          'caretakerPage': (BuildContext context) => KeeperPage(),
+          'service': (BuildContext context) => ServicePage(),
         },
       ),
     );

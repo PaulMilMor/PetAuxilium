@@ -13,8 +13,6 @@ class _ServicePageState extends State<ServicePage> {
   TextEditingController _searchTxtController;
   String _query;
 
-  List<BusinessModel> _results;
-
   /*  void initState() {
     super.initState();
     _search('');
@@ -30,7 +28,6 @@ class _ServicePageState extends State<ServicePage> {
   }
 
   Widget _searchArea() {
-    print(_results);
     //_search('');
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

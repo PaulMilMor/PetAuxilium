@@ -17,13 +17,14 @@ class _StartupPageState extends State<StartupPage> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 49.0,
             title: TabBar(
               indicatorColor: Colors.lightGreenAccent[700],
               tabs: [
                 Container(
                   height: 47.0,
-                  child: new Tab(text: 'Inicio'),
+                  child: new Tab(text: 'Inicios'),
                 ),
                 Container(
                   height: 47.0,

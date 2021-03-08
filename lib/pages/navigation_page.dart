@@ -116,7 +116,9 @@ class _NavigationPageState extends State<NavigationPage> {
     if (_prefs.selectedIndex == 0) {
       return PreferredSize(
         preferredSize: Size.fromHeight(1.0),
-        child: AppBar(),
+        child: AppBar(
+          elevation: 0,
+        ),
       );
     } else {
       return AppBar(
