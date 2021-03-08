@@ -54,7 +54,7 @@ class GrayDropdownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //color: Color.fromRGBO(235, 235, 235, 1),
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
       decoration: new BoxDecoration(
         color: Color.fromRGBO(235, 235, 235, 1),
         borderRadius: new BorderRadius.all(Radius.circular(10.0)),

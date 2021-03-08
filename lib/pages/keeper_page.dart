@@ -18,7 +18,7 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 
 class KeeperPage extends StatefulWidget {
   @override
-KeeperPageState createState() => KeeperPageState();
+  KeeperPageState createState() => KeeperPageState();
 }
 
 class KeeperPageState extends State<KeeperPage> {
@@ -54,11 +54,11 @@ class KeeperPageState extends State<KeeperPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    _pricing = prefs.keeperPricing?? ' ';
+    _pricing = prefs.keeperPricing ?? ' ';
     _desc = prefs.keeperDescription;
     _selectedCategory = 'ENTRENAMIENTO';
     _pricingTxtController = TextEditingController(text: _pricing);
- 
+
     _descTxtController = TextEditingController(text: _desc);
   }
 
@@ -66,11 +66,9 @@ class KeeperPageState extends State<KeeperPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
 
-
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
-      
     );
   }
 
@@ -116,15 +114,26 @@ class KeeperPageState extends State<KeeperPage> {
             ),
           );
         } else {
-          return Card(
-            child: IconButton(
-              icon: Icon(Icons.add),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FlatButton(
               onPressed: () {
-                //_showChoiceDialog(context);
                 images.length < 6
                     ? _onAddImageClick(index)
                     : _limitImages(context);
               },
+              color: Colors.grey[200],
+              height: 85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add,
+                    size: 48,
+                    color: Color.fromRGBO(210, 210, 210, 1),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -196,9 +205,9 @@ class KeeperPageState extends State<KeeperPage> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-         // _category(),
+          // _category(),
           _pricingTxt(),
-         
+
           _descTxt(),
           //_images(),
           buildGridView(),
@@ -250,71 +259,65 @@ class KeeperPageState extends State<KeeperPage> {
 
         child: Column(children: [
       Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: Text(
-          'Completa los siguientes campos',
-          style: TextStyle(fontSize: 18),
-        )),
-        Container(
-           margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-            width: 300.0,
-            child: GrayTextFormField(
-              controller: _pricingTxtController,
-              hintText: 'Tarifa por hora',
-              suffixIcon: IconButton(
-                onPressed: ()  {
-                  _pricingTxtController.clear();
-                  prefs.keeperPricing='';
-                },
-                icon: Icon(Icons.clear),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  //_pricingTxtController.clear();
-                  _pricing = value;
-                  prefs.keeperPricing=value;
-                });
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          child: Text(
+            'Completa los siguientes campos',
+            style: TextStyle(fontSize: 18),
+          )),
+      Container(
+          margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          width: 300.0,
+          child: GrayTextFormField(
+            controller: _pricingTxtController,
+            hintText: 'Tarifa por hora',
+            suffixIcon: IconButton(
+              onPressed: () {
+                _pricingTxtController.clear();
+                prefs.keeperPricing = '';
               },
-            
-           
-          
-        ))]));
+              icon: Icon(Icons.clear),
+            ),
+            onChanged: (value) {
+              setState(() {
+                //_pricingTxtController.clear();
+                _pricing = value;
+                prefs.keeperPricing = value;
+              });
+            },
+          ))
+    ]));
   }
 
   Widget _descTxt() {
     return Container(
         height: 100.0,
         child: Center(
-          child: Column(children: [
-            Container(
-                width: 300.0,
-                child: TextField(
-                  controller: _descTxtController,
-                  decoration: InputDecoration(
-                      labelText: 'Descripción',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          _descTxtController.clear();
-                          prefs.keeperDescription = '';
-                        },
-                        icon: Icon(Icons.clear),
-                      )),
-                  maxLength: 500,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (value) {
-                    setState(() {
-                      prefs.keeperDescription = value;
-                      _desc = value;
-                    });
-                  },
-                )),
-           
-    ])));
+            child: Column(children: [
+          Container(
+              width: 300.0,
+              child: TextField(
+                controller: _descTxtController,
+                decoration: InputDecoration(
+                    labelText: 'Descripción',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _descTxtController.clear();
+                        prefs.keeperDescription = '';
+                      },
+                      icon: Icon(Icons.clear),
+                    )),
+                maxLength: 500,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                onChanged: (value) {
+                  setState(() {
+                    prefs.keeperDescription = value;
+                    _desc = value;
+                  });
+                },
+              )),
+        ])));
   }
-
-
-
 
   Widget _buttons() {
     return Container(
@@ -325,7 +328,7 @@ class KeeperPageState extends State<KeeperPage> {
       ),
     );
   }
- 
+
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
@@ -345,40 +348,33 @@ class KeeperPageState extends State<KeeperPage> {
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
           onPressed: () {
-          
-             if (_pricing.isEmpty ||
-                 _desc.isEmpty ||
-                 imagesRef.isEmpty 
-                 ) {
-               Scaffold.of(context)
-                 ..removeCurrentSnackBar()
-                 ..showSnackBar(SnackBar(
-                     content: Text('Es necesario llenar todos los campos')));
-             } else {
+            if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
+              Scaffold.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text('Es necesario llenar todos los campos')));
+            } else {
               print(_imgsFiles.toString());
-            
+
               PublicationModel ad = PublicationModel(
                   category: 'CUIDADOR',
                   name: prefs.userName,
-                  location:['29.115967, -111.025490'],
+                  location: ['29.115967, -111.025490'],
                   userID: prefs.userID,
                   description: _desc,
                   pricing: '\$$_pricing por hora',
                   imgRef: imagesRef);
               _db.addKeeper(ad).then((value) {
-               prefs.keeperPricing='';
-               prefs.keeperDescription='';
-               prefs.keeperCategory='ENTRENAMIENTO';
+                prefs.keeperPricing = '';
+                prefs.keeperDescription = '';
+                prefs.keeperCategory = 'ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
               });
-              
             }
           },
           child: Text('Publicar')),
     );
   }
-
-  
 
   //void _savePublication(BuildContext context2) async {}
 }

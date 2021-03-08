@@ -33,13 +33,17 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _userInfo(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+            child: Divider(),
+          ),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text('Mi Cuenta'),
