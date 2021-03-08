@@ -18,13 +18,16 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     return Scaffold(
       body: Stack(children: [
         SingleChildScrollView(
-          child: Column(
-            children: [
-              _searchBar(),
-              _query == null || _query == ''
-                  ? _table(context)
-                  : _searchResults(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              children: [
+                _searchBar(),
+                _query == null || _query == ''
+                    ? _table(context)
+                    : _searchResults(),
+              ],
+            ),
           ),
         )
       ]),
@@ -32,15 +35,18 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
   }
 
   Widget _searchBar() {
-    return GrayTextFormField(
-      prefixIcon: Icon(Icons.search),
-      hintText: 'Buscar',
-      controller: _searchTxtController,
-      onChanged: (value) {
-        setState(() {
-          _query = value;
-        });
-      },
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(6, 16, 6, 28),
+      child: GrayTextFormField(
+        prefixIcon: Icon(Icons.search),
+        hintText: 'Buscar',
+        controller: _searchTxtController,
+        onChanged: (value) {
+          setState(() {
+            _query = value;
+          });
+        },
+      ),
     );
   }
 
@@ -112,26 +118,29 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
       },
       child: Container(
         height: 70,
-        margin: EdgeInsets.all(15),
+        //margin: EdgeInsets.all(15),
         decoration: BoxDecoration(
             //color:Colors.grey[200],
             //borderRadius: BorderRadius.circular(20)
             ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // SizedBox(height:5.0),
             CircleAvatar(
-                radius: 35.0,
-                backgroundColor: Colors.white,
+                radius: 25.0,
+                backgroundColor: Color.fromRGBO(49, 232, 93, 1),
                 child: Icon(
                   Icons.pets,
                   color: Colors.black,
                   size: 30.0,
                 )),
-            Text(
-              service,
-              style: TextStyle(color: Colors.black),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text(
+                service,
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             //SizedBox(height:5.0)
           ],
