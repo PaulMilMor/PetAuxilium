@@ -20,6 +20,8 @@ class GrayTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.maxLength,
     this.readOnly = false,
+    this.prefixIcon,
+    this.labelText,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -39,6 +41,8 @@ class GrayTextFormField extends StatelessWidget {
   final int maxLines;
   final int maxLength;
   final bool readOnly;
+  final Widget prefixIcon;
+  final String labelText;
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -63,13 +67,17 @@ class GrayTextFormField extends StatelessWidget {
         maxLength: this.maxLength,
         readOnly: this.readOnly,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 18,
+            horizontal: 20,
+          ),
           filled: true,
           fillColor: Color.fromRGBO(235, 235, 235, 1),
           hintText: this.hintText,
           hintStyle: TextStyle(
             color: Color.fromRGBO(202, 202, 202, 1),
           ),
-          labelText: this.hintText,
+          labelText: this.labelText == null ? this.hintText : this.labelText,
           labelStyle: TextStyle(
 //          color: Color.fromRGBO(202, 202, 202, 1),
               // color: Color.fromRGBO(49, 232, 93, 1),
@@ -96,6 +104,7 @@ class GrayTextFormField extends StatelessWidget {
                 color: Color.fromRGBO(232, 49, 93, 1),
               )),
           suffixIcon: this.suffixIcon,
+          prefixIcon: this.prefixIcon,
         ),
       ),
     );
