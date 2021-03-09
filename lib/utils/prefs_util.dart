@@ -114,10 +114,5 @@ class preferencesUtil {
     _prefs.setString('kpricing', desc);
   }
 
-  get follows{
-    return _prefs.getStringList('follows');
-  }
-  set follows(List follows){
-    _prefs.setStringList('follows', follows);
-  }
+ 
 }
