@@ -33,7 +33,7 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -107,18 +107,24 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _editProfileBtn() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Editar perfil',
-        icon: Icons.navigate_next,
-        onPressed: () {
-          Navigator.pushNamed(context, 'edit_account_page');
-        },
-      ),
-    );
+    if (this._user.imgRef.contains('googleusercontent')) {
+      return Container(
+        decoration: BoxDecoration(border: Border()),
+      );
+    } else {
+      return Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+        child: GrayFlatButton(
+          text: 'Editar perfil',
+          icon: Icons.navigate_next,
+          onPressed: () {
+            Navigator.pushNamed(context, 'edit_account_page');
+          },
+        ),
+      );
+    }
   }
 
   Widget _myPostsButton() {
@@ -158,8 +164,7 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
         onPressed: () {
-
-           Navigator.pushNamed(context, 'caretakerPage');
+          Navigator.pushNamed(context, 'caretakerPage');
         },
       ),
     );
