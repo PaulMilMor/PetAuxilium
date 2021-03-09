@@ -18,7 +18,15 @@ class dbUtil {
       "email": user.email,
     }).then((value) {});
   }
-
+/*Future<void> editUser(UserModel user) async {
+    await _firestoreInstance.collection("users").doc(user.id).update({
+      "name": user.name,
+      "birthday": user.birthday,
+      "imgRef": user.imgRef,
+      "email": user.email,
+      "password": user.pass,
+    }).then((value) {});
+  }*/
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     await _firestoreInstance.collection("users").doc(id).get().then((value) {

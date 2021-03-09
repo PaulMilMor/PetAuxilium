@@ -4,7 +4,6 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -22,7 +21,20 @@ class AuthUtil {
       return null;
     }
   }
-
+  Future <void> updateEmail(String email) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updateEmail(email);
+    print(email);
+    
+  }
+  
+  Future <void> updatePassword(String password) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updatePassword(password);
+    print(_auth.currentUser);
+    
+  }
+  
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
