@@ -15,6 +15,7 @@ class GrayFlatButton extends StatelessWidget {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       splashColor: Color.fromRGBO(49, 232, 93, 1),
       minWidth: 376,
+      height: 40,
       onPressed: this.onPressed,
       color: Color.fromRGBO(235, 235, 235, 1),
       child: Row(

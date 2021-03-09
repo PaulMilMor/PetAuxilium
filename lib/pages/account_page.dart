@@ -99,6 +99,7 @@ class _AccountPageState extends State<AccountPage> {
         children: [
           _editProfileBtn(),
           _myPostsButton(),
+          _followListButton(),
           _postBusinessButton(),
           _caretakerButton(),
           //_createPostButton(),
@@ -134,6 +135,21 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Mis publicaciones',
         icon: Icons.navigate_next,
         onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _followListButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Lista de seguimiento',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'followingPage');
+        },
       ),
     );
   }

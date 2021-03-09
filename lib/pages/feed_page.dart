@@ -9,15 +9,17 @@ class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
 }
-  final preferencesUtil _prefs = preferencesUtil();
+
+final preferencesUtil _prefs = preferencesUtil();
+
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
-  
-  List<String> follows=List();
+
+  List<String> follows = List();
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
@@ -85,8 +87,6 @@ class _FeedState extends State<Feed> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                  
-            
                                     Text(
                                       publications['name'],
                                       style: TextStyle(
@@ -115,26 +115,28 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                 _getLocationText(lat, long),
+                                    _getLocationText(lat, long),
                                     SizedBox(
                                       height: 34,
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 20,),
-                          DropdownButton(
-                            
-                            items: [DropdownMenuItem(
-                              child:  _isFollowed(publications.id), 
-                              onTap: (){
-
-                                _addFollow(publications.id);
-                              },)].toList(),
-                            onChanged: (_){},
-                          )
-                           
-                  ],
+                              SizedBox(
+                                height: 20,
+                              ),
+                              DropdownButton(
+                                items: [
+                                  DropdownMenuItem(
+                                    child: _isFollowed(publications.id),
+                                    onTap: () {
+                                      _addFollow(publications.id);
+                                    },
+                                  )
+                                ].toList(),
+                                onChanged: (_) {},
+                              )
+                            ],
                           ),
                         ));
                   });
@@ -152,75 +154,74 @@ class _FeedState extends State<Feed> {
 
     return newPlace;
   }
- _addFollow(String id){
-   
-   if(follows.contains(id)){
 
+  _addFollow(String id) {
+    if (follows.contains(id)) {
       follows.remove(id);
-   }else{
-follows.add(id);
-
-   }
- dbUtil().updateFollows(follows);
-    setState(() {
-      
-    });
- }
-
- Widget _isFollowed(String id){
-   print(_prefs.follows);
-     if(follows.contains(id)){
-      return Text('No seguir', style: TextStyle(fontSize: 9),);
-
-     }else{
-
-       return Text('Seguir',style: TextStyle(fontSize: 9));
-     }
-
- }
-  Widget _getLocationText(double lat, double long) {
-    if(lat==29.115967 && long==-111.025490){
-      print('debio entrar aqui');
-   return Container(
-              width: 150,
-              child: Text(
-                ' ',
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
-                ),
-              ),
-            );
-    }else{
-      print('no aqui' +lat.toString()+'  '+long.toString());
-    return FutureBuilder( future: getAddress(lat, long),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
-          if (snapshot.hasData) {
-            return Container(
-              width: 150,
-              child: Text(
-                snapshot.data.first.street + " " + snapshot.data.first.locality,
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
-                ),
-              ),
-            );
-          } else {
-            return Container(
-              width: 150,
-              child: Text(
-                ' ',
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
-                ),
-              ),
-            );
-          }
-        });
+    } else {
+      follows.add(id);
     }
+    dbUtil().updateFollows(follows);
+    setState(() {});
+  }
 
+  Widget _isFollowed(String id) {
+    print(_prefs.follows);
+    if (follows.contains(id)) {
+      return Text(
+        'No seguir',
+        style: TextStyle(fontSize: 9),
+      );
+    } else {
+      return Text('Seguir', style: TextStyle(fontSize: 9));
+    }
+  }
+
+  Widget _getLocationText(double lat, double long) {
+    if (lat == 29.115967 && long == -111.025490) {
+      print('debio entrar aqui');
+      return Container(
+        width: 150,
+        child: Text(
+          ' ',
+          style: TextStyle(
+            fontSize: 9,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    } else {
+      print('no aqui' + lat.toString() + '  ' + long.toString());
+      return FutureBuilder(
+          future: getAddress(lat, long),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                width: 150,
+                child: Text(
+                  snapshot.data.first.street +
+                      " " +
+                      snapshot.data.first.locality,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                width: 150,
+                child: Text(
+                  ' ',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            }
+          });
+    }
   }
 }

@@ -24,7 +24,7 @@ class _StartupPageState extends State<StartupPage> {
               tabs: [
                 Container(
                   height: 47.0,
-                  child: new Tab(text: 'Inicios'),
+                  child: new Tab(text: 'Inicio'),
                 ),
                 Container(
                   height: 47.0,

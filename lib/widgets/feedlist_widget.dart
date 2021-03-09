@@ -18,8 +18,8 @@ class ListFeed extends StatelessWidget {
         itemCount: this.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.snapshot.data.docs[index];
-          //List<dynamic> _fotos = _data['imgRef'];
-          //String _foto = _fotos.first;
+          List<dynamic> _fotos = _data['imgRef'];
+          String _foto = _fotos.first;
           List<dynamic> _locations = _data['location'];
           String _location = _locations.first;
           String _tagName = _location;
@@ -45,7 +45,7 @@ class ListFeed extends StatelessWidget {
             child: Card(
               child: Row(
                 children: <Widget>[
-                  /*ClipRRect(
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
                     child: Image.network(
                       _foto,
@@ -53,7 +53,7 @@ class ListFeed extends StatelessWidget {
                       height: 150,
                       fit: BoxFit.fitWidth,
                     ),
-                  ),*/
+                  ),
                   Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -67,17 +67,17 @@ class ListFeed extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          /*Text(
+                          Text(
                             _data['category'],
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.green,
                             ),
-                          ),*/
+                          ),
                           SizedBox(
                             height: 5,
                           ),
-                          /*Container(
+                          Container(
                             width: 150,
                             child: Text(
                               _data['pricing'],
@@ -86,13 +86,26 @@ class ListFeed extends StatelessWidget {
                                 color: Colors.grey[700],
                               ),
                             ),
-                          ),*/
+                          ),
                           _getLocationText(_lat, _long),
                           SizedBox(
                             height: 34,
                           ),
                         ],
-                      ))
+                      )),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: PopupMenuButton<String>(
+                        onSelected: (value) {},
+                        itemBuilder: (BuildContext context) {
+                          return {'No seguir'}.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        }),
+                  )
                 ],
               ),
             ),
