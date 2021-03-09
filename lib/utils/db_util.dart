@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
@@ -26,14 +28,19 @@ class dbUtil {
       _prefs.userID = id;
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
+      _prefs.follows=value.get("follows")??List();
       print('IMG');
       print(_prefs.userImg);
       print(value.get("imgRef"));
       print(value.get("birthday"));
+     
       return UserModel(
           name: value.get("name"),
           birthday: value.get("birthday"),
-          imgRef: value.get("imgRef"));
+          imgRef: value.get("imgRef"),
+          
+          
+          );
     });
   }
 
@@ -135,5 +142,18 @@ class dbUtil {
     });
     return publications;
   }
+void updateFollows(List follows)async{
 
+await _firestoreInstance.collection('users').doc(_prefs.userID).update({
+  'follows':follows
+});
+}
+
+Future<List> getFollows() async{
+  List follows=List();
+  await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value){
+    follows=value.get("follows");
+  } );
+  return follows;
+}
 }

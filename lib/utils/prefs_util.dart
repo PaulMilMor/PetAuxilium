@@ -86,6 +86,7 @@ class preferencesUtil {
 
   get selectedIndex {
     return _prefs.getInt('selectedIndex') ?? 0;
+    
   }
 
   set selectedIndex(int selectedIndex) {
@@ -112,5 +113,12 @@ class preferencesUtil {
 
   set keeperPricing(String desc) {
     _prefs.setString('kpricing', desc);
+  }
+
+  get follows{
+    return _prefs.getStringList('follows');
+  }
+  set follows(List follows){
+    _prefs.setStringList('follows', follows);
   }
 }

@@ -118,7 +118,6 @@ class AuthUtil {
       _prefs.userID = userModel.id;
       _prefs.userImg = userModel.imgRef;
       _prefs.userEmail = userModel.email;
-      _prefs.selectedIndex = 0;
       return 'Ingresó';
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
