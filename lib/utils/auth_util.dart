@@ -38,15 +38,7 @@ class AuthUtil {
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
-  /*Future signInWithEmailAndPassword(String email, String password) async {
-    print('SIGN IN');
-    try {
-      var result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      Future<UserModel> user = _db.getUser(result.user.uid);
-      print('SIGN IN TRY');
-      print(user);
-      return user;*/
+ 
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -61,7 +53,7 @@ class AuthUtil {
       _prefs.userID = result.user.uid;
     
       return 'Ingresó';
-      _prefs.userName = userModel.name;
+      //_prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':

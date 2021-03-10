@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -18,15 +19,7 @@ class dbUtil {
       "email": user.email,
     }).then((value) {});
   }
-/*Future<void> editUser(UserModel user) async {
-    await _firestoreInstance.collection("users").doc(user.id).update({
-      "name": user.name,
-      "birthday": user.birthday,
-      "imgRef": user.imgRef,
-      "email": user.email,
-      "password": user.pass,
-    }).then((value) {});
-  }*/
+
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
@@ -86,6 +79,13 @@ class dbUtil {
       'imgRef': ad.imgRef,
       'userID': ad.userID,
       'pricing':ad.pricing
+    });
+  }
+  Future<void> addEvaluations(EvaluationModel evaluation) async {
+    await _firestoreInstance.collection("evaluations").add({
+      'userID': evaluation.userID,
+      'score': evaluation.score,
+      'comment': evaluation.comment
     });
   }
   Future<List<String>> getLocations() async {

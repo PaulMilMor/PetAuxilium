@@ -107,6 +107,11 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _editProfileBtn() {
+     if (this._user.imgRef.contains('googleusercontent')) {
+      return Container(
+        decoration: BoxDecoration(border: Border()),
+      );
+    } else {
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -119,6 +124,7 @@ class _AccountPageState extends State<AccountPage> {
         },
       ),
     );
+    }
   }
 
   Widget _myPostsButton() {
