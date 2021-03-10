@@ -48,12 +48,12 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   void initState() {
     super.initState();
     //if (_prefs.userID != ' ') {
-      _user = UserModel(
-        name: _prefs.userName,
-        //birthday: "16/02/99",
-        email: _prefs.userEmail,
-        imgRef: _prefs.userImg,
-      );
+    _user = UserModel(
+      name: _prefs.userName,
+      //birthday: "16/02/99",
+      email: _prefs.userEmail,
+      imgRef: _prefs.userImg,
+    );
     //}
     var fullname = this._user.name;
     var separate = fullname.split(" ");
@@ -67,6 +67,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     
     print(this._user.pass);
 
+    print(this._user.imgRef);
   }
 
   @override
@@ -135,7 +136,6 @@ class _Edit_account_pageState extends State<Edit_account_page> {
           _confirmPasswordTxt(),
           //_signUpButton(),
           _buttons(),
-          
         ],
       ),
     );
@@ -146,7 +146,6 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: Row(
         children: [
-
           _image == null ? _addPhoto() : _removePhoto(),
           Flexible(
             child: Padding(
@@ -176,29 +175,24 @@ class _Edit_account_pageState extends State<Edit_account_page> {
         children: [
           /*Image.network(this._user.imgRef,height: 85),*/
           CircleAvatar(
-              backgroundImage: NetworkImage(this._user.imgRef),
-              backgroundColor: Color.fromRGBO(210, 210, 210, 1),
-              radius: 40,
-            ),
-            Padding(
-            padding: const EdgeInsets.only(top: 60,left: 0),
-            child: InkWell(
-            child: Icon(
-              Icons.edit,
-              size: 20,
-              color: Color.fromRGBO(49, 232, 93, 1)
-            ),
-            onTap: () {
-              _onAddImageClick();
-            },
-          )
-            )
+            backgroundImage: NetworkImage(this._user.imgRef),
+            backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+            radius: 40,
+          ),
+          Padding(
+              padding: const EdgeInsets.only(top: 60, left: 0),
+              child: InkWell(
+                child: Icon(Icons.edit,
+                    size: 20, color: Color.fromRGBO(49, 232, 93, 1)),
+                onTap: () {
+                  _onAddImageClick();
+                },
+              ))
           /*Icon(
             Icons.edit,
               size: 20,
               color: Color.fromRGBO(49, 232, 93, 1),
           ),*/
-        
         ],
       ),
     );
@@ -424,7 +418,6 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     );
   }
 
-
   _signUp(BuildContext context2) async {
     UserModel _user = UserModel(
       id: _prefs.userID,
@@ -478,6 +471,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       ),
     );
   }
+
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 5.0, bottom: 7.0),

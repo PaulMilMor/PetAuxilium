@@ -33,7 +33,7 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,8 +114,7 @@ class _AccountPageState extends State<AccountPage> {
     } else {
     return Container(
       decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+          border: Border(bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
       child: GrayFlatButton(
         text: 'Editar perfil',
         icon: Icons.navigate_next,
@@ -124,9 +123,9 @@ class _AccountPageState extends State<AccountPage> {
         },
       ),
     );
+      
     }
   }
-
   Widget _myPostsButton() {
     return Container(
       decoration: BoxDecoration(
@@ -139,7 +138,6 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
-
   Widget _postBusinessButton() {
     return Container(
       decoration: BoxDecoration(
@@ -164,8 +162,7 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
         onPressed: () {
-
-           Navigator.pushNamed(context, 'caretakerPage');
+          Navigator.pushNamed(context, 'caretakerPage');
         },
       ),
     );
