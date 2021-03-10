@@ -10,16 +10,19 @@ class Feed extends StatefulWidget {
   _FeedState createState() => _FeedState();
 }
 
-final preferencesUtil _prefs = preferencesUtil();
+List<String> follows;
 
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
+  @override
+  void initState() {
+    super.initState();
+    getFollows();
+  }
 
-  List<String> follows = List();
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context).settings.name);
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
@@ -69,72 +72,83 @@ class _FeedState extends State<Feed> {
                           );
                         },
                         child: Card(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
-                                child: Image.network(
-                                  foto,
-                                  width: 145,
-                                  height: 150,
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      publications['name'],
-                                      style: TextStyle(
-                                        fontSize: 21,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          child: Stack(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: Image.network(
+                                      foto,
+                                      width: 145,
+                                      height: 150,
+                                      fit: BoxFit.fitWidth,
                                     ),
-                                    Text(
-                                      publications['category'],
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: 150,
-                                      child: Text(
-                                        publications['pricing'],
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.grey[700],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          publications['name'],
+                                          style: TextStyle(
+                                            fontSize: 21,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
+                                        Text(
+                                          publications['category'],
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          child: Text(
+                                            publications['pricing'],
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey[700],
+                                            ),
+                                          ),
+                                        ),
+                                        _getLocationText(lat, long),
+                                        SizedBox(
+                                          height: 34,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  DropdownButton(
+                                    items: [
+                                      DropdownMenuItem(
+                                        child: _isFollowed(publications.id),
+                                        onTap: () {
+                                          _addFollow(publications.id);
+                                        },
                                       ),
-                                    ),
-                                    _getLocationText(lat, long),
-                                    SizedBox(
-                                      height: 34,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              DropdownButton(
-                                items: [
-                                  DropdownMenuItem(
-                                    child: _isFollowed(publications.id),
-                                    onTap: () {
-                                      _addFollow(publications.id);
-                                    },
-                                  )
-                                ].toList(),
-                                onChanged: (_) {},
+                                    ].toList(),
+                                    onChanged: (_) {},
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -155,7 +169,7 @@ class _FeedState extends State<Feed> {
     return newPlace;
   }
 
-  _addFollow(String id) {
+  _addFollow(String id) async {
     if (follows.contains(id)) {
       follows.remove(id);
     } else {
@@ -165,15 +179,28 @@ class _FeedState extends State<Feed> {
     setState(() {});
   }
 
+  getFollows() async {
+    follows = await dbUtil().getFollows();
+  }
+
   Widget _isFollowed(String id) {
-    print(_prefs.follows);
     if (follows.contains(id)) {
-      return Text(
-        'No seguir',
-        style: TextStyle(fontSize: 9),
+      return Row(
+        children: [
+          Icon(Icons.remove_circle),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 11),
+          ),
+        ],
       );
     } else {
-      return Text('Seguir', style: TextStyle(fontSize: 9));
+      return Row(
+        children: [
+          Icon(Icons.add_box),
+          Text('Seguir', style: TextStyle(fontSize: 11)),
+        ],
+      );
     }
   }
 

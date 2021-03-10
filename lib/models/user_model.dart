@@ -5,6 +5,13 @@ String pass;
 String birthday;
 String imgRef;
 String id;
- UserModel({this.id,this.email,this.pass, this.name, this.birthday, this.imgRef});
- 
+List follows;
+ UserModel({this.id,this.email,this.pass, this.name, this.birthday, this.imgRef, this.follows});
+   UserModel.fromJsonMap(Map<String, dynamic> json) {
+    name = json['name'];
+   
+    follows = json['follows'];
+   
+  }
 }
+

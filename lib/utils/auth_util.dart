@@ -45,7 +45,7 @@ class AuthUtil {
       UserModel userModel = await _db.getUser(result.user.uid);
       print('SIGN IN');
       print(result.user.uid);
-
+ 
       _prefs.userID = result.user.uid;
       _prefs.selectedIndex = 0;
       return 'Ingresó';
