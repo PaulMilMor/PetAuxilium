@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:path/path.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:geocoding/geocoding.dart';
@@ -37,87 +37,196 @@ class DetailPage extends StatelessWidget {
     var long = num.tryParse(longitude)?.toDouble();
 
     print(latitude2);
-
-    return Container(
-        child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(30),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 25,
-                  ),
-                  _setBackIcon(context),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  _setCarousel(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    detailDocument['name'],
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+            child: Material(
+                type: MaterialType.transparency,
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                     ),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    detailDocument['category'],
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.green,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    height: 5,
-                    thickness: 1,
-                    indent: 1,
-                    endIndent: 1,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    detailDocument['pricing'],
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  _setLocationText(lat, long),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Container(
-                    // width: 200,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        detailDocument['description'],
-                        //maxLines: 3,
-                        style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )));
+                    padding: EdgeInsets.all(30),
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _setBackIcon(context),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _setCarousel(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          detailDocument['name'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          detailDocument['category'],
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 1,
+                          endIndent: 1,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          detailDocument['pricing'],
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        _setLocationText(lat, long),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Container(
+                          // width: 200,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              detailDocument['description'],
+                              //maxLines: 3,
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.grey[500]),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 44,
+                        ),
+                        Container(
+                          // width: 200,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '0 ' + 'Opiniones',
+                              //maxLines: 3,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        TextFormField(
+                          cursorColor: Theme.of(context).cursorColor,
+                          maxLength: 140,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.favorite),
+                            labelText: 'Label text',
+                            labelStyle: TextStyle(
+                              color: Color(0xFF6200EE),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6200EE)),
+                            ),
+                            hintText: "Escribe una opinión...",
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Container(
+                          child: Align(
+                            alignment: Alignment(-0.7, -1.0),
+                            child: RatingBar.builder(
+                              initialRating: 2.5,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 24,
+                              itemPadding: EdgeInsets.symmetric(horizontal: .1),
+                              itemBuilder: (context, _) => Icon(
+                                  Icons.star_rounded,
+                                  color: Colors.greenAccent[400]),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: GestureDetector(
+                            onTap: () {
+                              print('PUBLICAR');
+                            },
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'PUBLICAR',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Container(
+                          child: ListTile(
+                            title: Text('Usuario'),
+                            subtitle: Text('comentario'),
+                          ),
+                        ),
+                        Container(
+                          child: ListTile(
+                            title: Text('Usuario'),
+                            subtitle: Text('comentario'),
+                          ),
+                        ),
+                        Container(
+                          child: ListTile(
+                            title: Text('Usuario'),
+                            subtitle: Text('comentario'),
+                          ),
+                        ),
+                        Container(
+                          child: ListTile(
+                            title: Text('Usuario'),
+                            subtitle: Text('comentario'),
+                          ),
+                        ),
+                        Container(
+                          child: ListTile(
+                            title: Text('Usuario'),
+                            subtitle: Text('comentario'),
+                          ),
+                        ),
+                      ],
+                    ))))));
   }
 
   Future<List<String>> getImages() async {
@@ -203,5 +312,25 @@ class DetailPage extends StatelessWidget {
             );
           }
         });
+  }
+
+  Widget _opinionSection() {
+    //if (detailDocument['category'].toString().contains('CUIDADOR')) {
+    // return ListView.builder(
+    //itemCount: detailDocument.length,
+    // itemBuilder: (BuildContext context, index) {
+    Container(
+      child: ListTile(
+        title: Text('Cuidador'),
+        subtitle: Text('data'),
+      ),
+    );
+    //} else {
+    Container(
+      child: ListTile(
+        title: Text('Otro'),
+        subtitle: Text('data'),
+      ),
+    );
   }
 }
