@@ -14,18 +14,22 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
- @override
- void initState()  { 
-   super.initState();
-    getFollows(); 
- } 
- 
+
+ final preferencesUtil _prefs = preferencesUtil(); 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
-      child: FutureBuilder(
+      child: 
+      FutureBuilder(
+        future:dbUtil().getFollows(_prefs.userID),
+        
+        builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
+          print('affaf');
+          print(follow.data);
+          return   FutureBuilder(
           future: FirebaseFirestore.instance.collection('publications').get(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData) {
@@ -136,19 +140,7 @@ class _FeedState extends State<Feed> {
                               ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    DropdownButton(
-                                  
-                                    items: [DropdownMenuItem(
-                                      
-                                      child:  _isFollowed(publications.id), 
-                                      onTap: (){
-
-                                        _addFollow(publications.id);
-                                      },),].toList(),
-                                    onChanged: (_){},
-                                      
-                              ),
+                                  children:[_dropdownOptions(publications.id, follow.data)
                                   ],
                                   
                                 )
@@ -161,7 +153,10 @@ class _FeedState extends State<Feed> {
                 child: CircularProgressIndicator(),
               );
             }
-          }),
+          });
+        },
+      ),
+    
     ));
   }
 
@@ -171,31 +166,44 @@ class _FeedState extends State<Feed> {
 
     return newPlace;
   }
- _addFollow(String id) async{
-  
-   if(follows.contains(id)){
+ Widget _dropdownOptions(id, follow){
+   return  
+                                    DropdownButton(
+                               // itemHeight: kMinInteractiveDimension,
+                                    items: [DropdownMenuItem(
+                                      
+                                      child:  _isFollowed(id,follow), 
+                                      onTap: (){
 
-      follows.remove(id);
+                                        _addFollow(id, follow);
+                                      },),].toList(),
+                                    onChanged: (_){},
+                                      
+                              );
+ }
+ 
+ _addFollow(String id, List<String> follow) async{
+  
+   if(follow.contains(id)){
+
+      follow.remove(id);
    }else{
-follows.add(id);
+follow.add(id);
 
    }
- dbUtil().updateFollows(follows);
+ dbUtil().updateFollows(follow);
     setState(() {
       
     });
  }
-getFollows() async{
- follows= await dbUtil().getFollows();
 
-}
- Widget _isFollowed(String id){
+ Widget _isFollowed(String id, List<String> follow){
  
-     if(follows.contains(id)){
+     if(follow.contains(id)){
       return Row(
         children: [
-         Icon(Icons.remove_circle),    
-          Text('Dejar de seguir ', style: TextStyle(fontSize: 11),),
+         Icon(Icons.remove_circle, size: 11, color: Colors.grey,),    
+          Text('Dejar de seguir ', style: TextStyle(fontSize: 9),),
         ],
       );
 
@@ -203,8 +211,8 @@ getFollows() async{
 
        return Row(
          children: [
-           Icon(Icons.add_box),
-           Text('Seguir',style: TextStyle(fontSize: 11)),
+           Icon(Icons.add_box, size: 11, color: Colors.grey,),
+             Text('Seguir ', style: TextStyle(fontSize: 9),),
          ],
        );
      }
