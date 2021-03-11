@@ -84,10 +84,13 @@ class dbUtil {
   Future<void> addEvaluations(EvaluationModel evaluation) async {
     await _firestoreInstance.collection("evaluations").add({
       'userID': evaluation.userID,
+      'publicationID': evaluation.publicationID,
+      'username': evaluation.username,
       'score': evaluation.score,
       'comment': evaluation.comment
     });
   }
+  
   Future<List<String>> getLocations() async {
     List<String> lista = List<String>();
     String place = "";
