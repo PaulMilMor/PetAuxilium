@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
 
 class FollowingPage extends StatefulWidget {
@@ -11,6 +12,7 @@ class FollowingPage extends StatefulWidget {
 }
 
 class _FollowingPageState extends State<FollowingPage> {
+  final preferencesUtil _prefs = preferencesUtil();
   List<String>
       _follows/*= [
     '830Yobc6R1CxsoGsrrrG',
@@ -24,10 +26,10 @@ class _FollowingPageState extends State<FollowingPage> {
   @override
   void initState() {
     super.initState();
-    getFollows();
+    //getFollows();
     //print('INIT STATE');
     //print(_follows[1]);
-    _listFeed = ListFeed(callback: this.callback);
+    //_listFeed = ListFeed(callback: this.callback);
   }
 
   void callback() {
@@ -63,188 +65,204 @@ class _FollowingPageState extends State<FollowingPage> {
   }*/
 
   Widget _followedList() {
-    return _follows == null
+    return /*_follows == null
         ? Center(
             child: CircularProgressIndicator(
             backgroundColor: Color.fromRGBO(49, 232, 93, 1),
           ))
-        : StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('publications')
-                .where(FieldPath.documentId, whereIn: _follows)
-                .snapshots(),
-            builder: (context, snapshot) {
-              //_listFeed.snapshot = snapshot;
-              // _listFeed.follows = _follows;
-              return (snapshot.connectionState == ConnectionState.waiting)
-                  ? Center(child: CircularProgressIndicator())
-                  : //_listFeed;
-                  ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (BuildContext context, index) {
-                        DocumentSnapshot _publications =
-                            snapshot.data.docs[index];
-                        List<dynamic> _fotos = _publications['imgRef'];
-                        String _foto = _fotos.first;
-                        List<dynamic> _locations = _publications['location'];
-                        String _location = _locations.first;
-                        String _tagName = _location;
-                        List<String> _split = _tagName.split(',');
-                        Map<int, String> _values = {
-                          for (int i = 0; i < _split.length; i++) i: _split[i]
-                        };
-                        String _latitude = _values[0];
-                        String _longtitude = _values[1];
-                        String _latitude2 =
-                            _latitude.replaceAll(RegExp(','), '');
-                        var _lat = num.tryParse(_latitude2)?.toDouble();
-                        var _long = num.tryParse(_longtitude)?.toDouble();
-                        getAddress(_lat, _long);
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      DetailPage(_publications)),
-                            );
-                          },
-                          child: Card(
-                            child: Stack(
-                              children: [
-                                Row(
-                                  children: <Widget>[
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      child: Image.network(
-                                        _foto,
-                                        width: 145,
-                                        height: 150,
-                                        fit: BoxFit.fitWidth,
-                                      ),
+        :*/
+        FutureBuilder(
+      future: dbUtil().getFollows(_prefs.userID),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
+        return FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('publications')
+              .where(FieldPath.documentId, whereIn: follow.data)
+              .get(),
+          builder: (context, snapshot) {
+            //_listFeed.snapshot = snapshot;
+            // _listFeed.follows = _follows;
+            return (snapshot.connectionState == ConnectionState.waiting)
+                ? Center(child: CircularProgressIndicator())
+                : //_listFeed;
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (BuildContext context, index) {
+                      DocumentSnapshot _publications =
+                          snapshot.data.docs[index];
+                      List<dynamic> _fotos = _publications['imgRef'];
+                      String _foto = _fotos.first;
+                      List<dynamic> _locations = _publications['location'];
+                      String _location = _locations.first;
+                      String _tagName = _location;
+                      List<String> _split = _tagName.split(',');
+                      Map<int, String> _values = {
+                        for (int i = 0; i < _split.length; i++) i: _split[i]
+                      };
+                      String _latitude = _values[0];
+                      String _longtitude = _values[1];
+                      String _latitude2 = _latitude.replaceAll(RegExp(','), '');
+                      var _lat = num.tryParse(_latitude2)?.toDouble();
+                      var _long = num.tryParse(_longtitude)?.toDouble();
+                      getAddress(_lat, _long);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DetailPage(_publications)),
+                          );
+                        },
+                        child: Card(
+                          child: Stack(
+                            children: [
+                              Row(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: Image.network(
+                                      _foto,
+                                      width: 145,
+                                      height: 150,
+                                      fit: BoxFit.fitWidth,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            _publications['name'],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          _publications['name'],
+                                          style: TextStyle(
+                                            fontSize: 21,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          _publications['category'],
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          child: Text(
+                                            _publications['pricing'],
                                             style: TextStyle(
-                                              fontSize: 21,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: Colors.grey[700],
                                             ),
                                           ),
-                                          Text(
-                                            _publications['category'],
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: Text(
-                                              _publications['pricing'],
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey[700],
-                                              ),
-                                            ),
-                                          ),
-                                          _getLocationText(_lat, _long),
-                                          SizedBox(
-                                            height: 34,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        _getLocationText(_lat, _long),
+                                        SizedBox(
+                                          height: 34,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      height: 20,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  PopupMenuButton<String>(
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      color: Color.fromRGBO(210, 210, 210, 1),
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    PopupMenuButton<String>(
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: Color.fromRGBO(210, 210, 210, 1),
-                                      ),
-                                      //color: Color.fromRGBO(210, 210, 210, 1),
-                                      //onSelected: (value) {},
-                                      itemBuilder: (BuildContext context) {
-                                        return {'No seguir'}
-                                            .map((String choice) {
-                                          return PopupMenuItem<String>(
-                                            value: choice,
-                                            child:
-                                                /*Row(
-                                  children: [
-                                    Icon(Icons.remove_circle),
-                                    Text(choice),
-                                  ],
-                                ),*/
-                                                _isFollowed(_publications.id),
-                                          );
-                                        }).toList();
-                                      },
-                                      onSelected: (value) {
-                                        _addFollow(_publications.id);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                    //color: Color.fromRGBO(210, 210, 210, 1),
+                                    //onSelected: (value) {},
+                                    itemBuilder: (BuildContext context) {
+                                      return {'No seguir'}.map((String choice) {
+                                        return PopupMenuItem<String>(
+                                          value: choice,
+                                          child:
+                                              /*Row(
+                                    children: [
+                                      Icon(Icons.remove_circle),
+                                      Text(choice),
+                                    ],
+                                  ),*/
+                                              _isFollowed(_publications.id,
+                                                  follow.data),
+                                        );
+                                      }).toList();
+                                    },
+                                    onSelected: (value) {
+                                      _addFollow(_publications.id, follow.data);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        );
-                      });
-            },
-          );
+                        ),
+                      );
+                    });
+          },
+        );
+      },
+    );
   }
 
-  getFollows() async {
+  /*getFollows() async {
     _follows = await dbUtil().getFollows();
+    setState(() {});
+  }*/
+
+  _addFollow(String id, List<String> follow) async {
+    if (follow.contains(id)) {
+      follow.remove(id);
+    } else {
+      follow.add(id);
+    }
+    dbUtil().updateFollows(follow);
     setState(() {});
   }
 
-  Widget _isFollowed(String id) {
-    if (_follows.contains(id)) {
+  Widget _isFollowed(String id, List<String> follow) {
+    if (follow.contains(id)) {
       return Row(
         children: [
-          Icon(Icons.remove_circle),
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
           Text(
             'Dejar de seguir ',
-            style: TextStyle(fontSize: 11),
+            style: TextStyle(fontSize: 9),
           ),
         ],
       );
     } else {
       return Row(
         children: [
-          Icon(Icons.add_box),
-          Text('Seguir', style: TextStyle(fontSize: 11)),
+          Icon(
+            Icons.add_box,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
         ],
       );
     }
-  }
-
-  _addFollow(String id) async {
-    if (_follows.contains(id)) {
-      _follows.remove(id);
-    } else {
-      _follows.add(id);
-    }
-    dbUtil().updateFollows(_follows);
-    setState(() {});
   }
 
   Future<List<Placemark>> getAddress(lat, long) async {

@@ -50,7 +50,7 @@ class _NavigationPageState extends State<NavigationPage> {
       backgroundColor: Colors.white,
       appBar: getAppbar(),
       body: _tabs[_prefs.selectedIndex],
-      bottomNavigationBar: _bottomBar(),
+      bottomNavigationBar: _getBottomBar(),
     );
   }
 
@@ -75,7 +75,14 @@ class _NavigationPageState extends State<NavigationPage> {
       automaticallyImplyLeading: false,
     );
   }
+ Widget _getBottomBar(){
 
+   if(_prefs.userID=='CpHufbC6AAQFxUWJbT6BienFv0D3'){
+        return _bottomBarAdmin();
+   }else{
+     return _bottomBar();
+   }
+ }
   Widget _bottomBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
@@ -110,6 +117,31 @@ class _NavigationPageState extends State<NavigationPage> {
       selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
       onTap: _onItemTapped,
     );
+  }
+  Widget _bottomBarAdmin(){
+ return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      iconSize: 35,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Inicio',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.assignment),
+          label: 'Reportes',
+        ),
+        
+      ],
+      currentIndex: _prefs.selectedIndex,
+      backgroundColor: Colors.white,
+      unselectedItemColor: Color.fromRGBO(210, 210, 210, 1),
+      selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
+      onTap: _onItemTapped,
+    );
+
   }
 
   Widget getAppbar() {

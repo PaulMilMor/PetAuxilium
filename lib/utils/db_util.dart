@@ -18,6 +18,7 @@ class dbUtil {
       "birthday": user.birthday,
       "imgRef": user.imgRef,
       "email": user.email,
+      "follows": user.follows
     }).then((value) {});
   }
 
@@ -38,7 +39,7 @@ class dbUtil {
           name: value.get("name"),
           birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
-          follows: value.get("follows"));
+          follows: value.get("follows") ?? List());
     });
   }
 
@@ -153,13 +154,9 @@ class dbUtil {
         .update({'follows': follows});
   }
 
-  Future<List<String>> getFollows() async {
+  Future<List<String>> getFollows(id) async {
     List<String> follows = List<String>();
-    await _firestoreInstance
-        .collection('users')
-        .doc(_prefs.userID)
-        .get()
-        .then((value) {
+    await _firestoreInstance.collection('users').doc(id).get().then((value) {
       UserModel user = UserModel.fromJsonMap(value.data());
       if (user.follows != null) {
         user.follows.forEach((element) {
