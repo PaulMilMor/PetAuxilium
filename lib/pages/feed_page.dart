@@ -135,21 +135,37 @@ class _FeedState extends State<Feed> {
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  DropdownButton(
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: _isFollowed(publications.id),
-                                        onTap: () {
-                                          _addFollow(publications.id);
-                                        },
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PopupMenuButton<String>(
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        color: Color.fromRGBO(210, 210, 210, 1),
                                       ),
-                                    ].toList(),
-                                    onChanged: (_) {},
-                                  ),
-                                ],
-                              )
+                                      //color: Color.fromRGBO(210, 210, 210, 1),
+                                      //onSelected: (value) {},
+                                      itemBuilder: (BuildContext context) {
+                                        return {'No seguir'}
+                                            .map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child:
+                                                /*Row(
+                                  children: [
+                                    Icon(Icons.remove_circle),
+                                    Text(choice),
+                                  ],
+                                ),*/
+                                                _isFollowed(publications.id),
+                                          );
+                                        }).toList();
+                                      },
+                                      onSelected: (value) {
+                                        _addFollow(publications.id);
+                                      },
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ));

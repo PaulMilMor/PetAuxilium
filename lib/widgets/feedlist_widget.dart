@@ -1,23 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
-class ListFeed extends StatelessWidget {
+class ListFeed extends StatefulWidget {
   ListFeed({
     //this.itemCount,
     this.snapshot,
+    this.follows,
+    this.callback,
   });
+  Function callback;
+  //ListFeed(this.callback);
   //int itemCount;
   AsyncSnapshot<QuerySnapshot> snapshot;
+  List<String> follows;
+
+  @override
+  _ListFeedState createState() => _ListFeedState();
+}
+
+class _ListFeedState extends State<ListFeed> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: this.snapshot.data.docs.length,
+        itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
-          DocumentSnapshot _data = this.snapshot.data.docs[index];
+          DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
           List<dynamic> _locations = _data['location'];
@@ -93,24 +105,68 @@ class ListFeed extends StatelessWidget {
                           ),
                         ],
                       )),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: PopupMenuButton<String>(
-                        onSelected: (value) {},
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      PopupMenuButton<String>(
+                        //onSelected: (value) {},
                         itemBuilder: (BuildContext context) {
                           return {'No seguir'}.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
-                              child: Text(choice),
+                              child:
+                                  /*Row(
+                                  children: [
+                                    Icon(Icons.remove_circle),
+                                    Text(choice),
+                                  ],
+                                ),*/
+                                  _isFollowed(_data.id),
                             );
                           }).toList();
-                        }),
+                        },
+                        onSelected: (value) {
+                          _addFollow(_data.id);
+                        },
+                      ),
+                    ],
                   )
                 ],
               ),
             ),
           );
         });
+  }
+
+  Widget _isFollowed(String id) {
+    if (widget.follows.contains(id)) {
+      return Row(
+        children: [
+          Icon(Icons.remove_circle),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 11),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(Icons.add_box),
+          Text('Seguir', style: TextStyle(fontSize: 11)),
+        ],
+      );
+    }
+  }
+
+  _addFollow(String id) async {
+    if (widget.follows.contains(id)) {
+      widget.follows.remove(id);
+    } else {
+      widget.follows.add(id);
+    }
+    dbUtil().updateFollows(widget.follows);
+    setState(() {});
   }
 
   Future<List<Placemark>> getAddress(lat, long) async {

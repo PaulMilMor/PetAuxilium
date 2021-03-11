@@ -54,7 +54,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     return StreamBuilder<QuerySnapshot>(
         stream: (_query != "" && _query != null)
             ? FirebaseFirestore.instance
-                .collection('business')
+                .collection('publications')
                 //estas dos condiciones son para buscar cualquier string que contenga la query
                 //TODO: Hacer que la búsqueda sea insensible a Case (Mayus, minus)
                 .where('name', isGreaterThanOrEqualTo: _query)

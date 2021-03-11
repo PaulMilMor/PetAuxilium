@@ -28,19 +28,17 @@ class dbUtil {
       _prefs.userID = id;
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
-      
+
       print('IMG');
       print(_prefs.userImg);
       print(value.get("imgRef"));
       print(value.get("birthday"));
-     
+
       return UserModel(
           name: value.get("name"),
           birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
-          follows: value.get("follows")
-          
-          );
+          follows: value.get("follows"));
     });
   }
 
@@ -52,7 +50,6 @@ class dbUtil {
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
-      
     });
   }
 
@@ -134,38 +131,42 @@ class dbUtil {
     });
     return images;
   }
-    Future<List<PublicationModel>> getPublications(String category) async {
+
+  Future<List<PublicationModel>> getPublications(String category) async {
     List<PublicationModel> publications = List<PublicationModel>();
-    await _firestoreInstance.collection('business').where('category', isEqualTo:category ).get().then((value) {
+    await _firestoreInstance
+        .collection('business')
+        .where('category', isEqualTo: category)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
         publications.add(PublicationModel.fromJsonMap(element.data()));
       });
     });
     return publications;
   }
-void updateFollows(List follows)async{
 
-await _firestoreInstance.collection('users').doc(_prefs.userID).update({
-  'follows':follows
-});
-}
+  void updateFollows(List follows) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(_prefs.userID)
+        .update({'follows': follows});
+  }
 
-Future<List<String>> getFollows() async{
-  List<String> follows=List<String>();
-  await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value){
-   
-    UserModel user=UserModel.fromJsonMap(value.data());
-     if(user.follows!=null){
-  user.follows.forEach((element) { 
-
-      follows.add(element);
-
+  Future<List<String>> getFollows() async {
+    List<String> follows = List<String>();
+    await _firestoreInstance
+        .collection('users')
+        .doc(_prefs.userID)
+        .get()
+        .then((value) {
+      UserModel user = UserModel.fromJsonMap(value.data());
+      if (user.follows != null) {
+        user.follows.forEach((element) {
+          follows.add(element);
+        });
+      }
     });
-
-     }
-  
-
-  } );
-  return follows;
-}
+    return follows;
+  }
 }
