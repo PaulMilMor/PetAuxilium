@@ -222,7 +222,6 @@ class DetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _makeOpinion(),
-
             //_opinionList(),
           ],
         ),
@@ -325,36 +324,18 @@ class DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
-                  Container(
-                    child: ListTile(
-                      title: Text('Usuario'),
-                      subtitle: Text('comentario'),
-                    ),
-                  ),
-                  Container(
-                    child: ListTile(
-                      title: Text('Usuario'),
-                      subtitle: Text('comentario'),
-                    ),
-                  ),
-                  Container(
-                    child: ListTile(
-                      title: Text('Usuario'),
-                      subtitle: Text('comentario'),
-                    ),
-                  ),
-                  Container(
-                    child: ListTile(
-                      title: Text('Usuario'),
-                      subtitle: Text('comentario'),
-                    ),
-                  ),
-                  Container(
-                    child: ListTile(
-                      title: Text('Usuario'),
-                      subtitle: Text('comentario'),
-                    ),
-                  )
                 ])))));
+  }
+
+  Widget _opinionList() {
+    //return ListView.builder(
+    //itemCount: detailDocument.length,
+    //itemBuilder: (BuildContext context, index) {
+    Container(
+      child: ListTile(
+        title: Text('Usuario'),
+        subtitle: Text('comentario'),
+      ),
+    );
   }
 }
