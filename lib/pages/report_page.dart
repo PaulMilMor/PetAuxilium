@@ -1,83 +1,54 @@
-import 'dart:core';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:pet_auxilium/pages/detail_page.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/utils/prefs_util.dart';
-
-class Feed extends StatefulWidget {
+class ReportPage extends StatefulWidget {
   @override
-  _FeedState createState() => _FeedState();
+  _ReportPageState createState() => _ReportPageState();
 }
-
-    List<String> follows;
-class _FeedState extends State<Feed> {
-  List<String> location;
-  String tempLocation;
-
- final preferencesUtil _prefs = preferencesUtil(); 
+final _db=dbUtil();
+class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      padding: EdgeInsets.only(top: 7),
-      child: 
-      FutureBuilder(
-        future:dbUtil().getFollows(_prefs.userID),
+      body: Container(
+        child:FutureBuilder(
+          future:_db.getreports() ,
         
-        builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-          print('affaf');
-          print(follow.data);
-          return   FutureBuilder(
-          future: FirebaseFirestore.instance.collection('publications').get(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              //Retrieve `List<DocumentSnapshot>` from snapshot
-              final List<DocumentSnapshot> documents = snapshot.data.docs;
-              location = List<String>();
-              return ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (BuildContext context, index) {
-                    DocumentSnapshot publications = documents[index];
-                    //Obtencion de la primera imagen de la lista para el feed
-                    // getDir(publications['location']);
-                    print(publications['location']);
-                    List<dynamic> fotos = publications['imgRef'];
-                    String foto = fotos.first;
-
-                    List<dynamic> locations = publications['location'];
-                    String location = locations.first;
+          builder: (BuildContext context, AsyncSnapshot<List<ReportModel>> reports) {
+            if(reports.hasData){
+   return ListView.builder(
+              itemCount: reports.data.length,
+              itemBuilder: (BuildContext context, index){
+              var report=reports.data[index];
+               var id=report.publicationid;
+               print(id);
+   return FutureBuilder(
+                  future: _db.getPublication(id),
+                  
+                  builder: (BuildContext context, AsyncSnapshot<PublicationModel> snapshot) {
+                    if(snapshot.hasData){
+ PublicationModel publication=snapshot.data;
+                    String foto = publication.imgRef.first;
+                    String location = publication.location.first;
                     String tagName = location;
                     List<String> split = tagName.split(',');
                     Map<int, String> values = {
                       for (int i = 0; i < split.length; i++) i: split[i]
                     };
                     print(values);
-
                     String latitude = values[0];
                     String longitude = values[1];
                     String value3 = values[2];
                     String latitude2 = latitude.replaceAll(RegExp(','), '');
                     var lat = num.tryParse(latitude2)?.toDouble();
                     var long = num.tryParse(longitude)?.toDouble();
+                      getAddress(lat, long);
 
-                    print(lat);
-
-                    getAddress(lat, long);
-
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    DetailPage(publications)),
-                          );
-                        },
-                        child: Card(
+                    return Card(
                           child: Stack(
-                            
+                          
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +71,7 @@ class _FeedState extends State<Feed> {
                                       
             
                                         Text(
-                                          publications['name'],
+                                          publication.name,
                                           style: TextStyle(
                                             fontSize: 21,
                                             color: Colors.black,
@@ -108,7 +79,7 @@ class _FeedState extends State<Feed> {
                                           ),
                                         ),
                                         Text(
-                                          publications['category'],
+                                          publication.category,
                                           style: TextStyle(
                                             fontSize: 11,
                                             color: Colors.green,
@@ -120,7 +91,7 @@ class _FeedState extends State<Feed> {
                                         Container(
                                           width: 150,
                                           child: Text(
-                                            publications['pricing'],
+                                            publication.pricing,
                                             style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.grey[700],
@@ -131,7 +102,17 @@ class _FeedState extends State<Feed> {
                                         SizedBox(
                                           height: 34,
                                         ),
+                                      Row(
+                                       
+                                        children: [
+                                        
+                                        Icon(Icons.comment, size: 15,),
+                                         SizedBox(width:150),
+                                        Icon(Icons.error, color: Colors.red,size: 15,), 
+                                        Text(report.nreports, style: TextStyle(color: Colors.red),)
+                                      ],)
                                       ],
+                                      
                                     ),
                                   ),
                                   SizedBox(height: 20,),
@@ -139,87 +120,32 @@ class _FeedState extends State<Feed> {
                                
                   ],
                               ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children:[_dropdownOptions(publications.id, follow.data)
-                                  ],
-                                  
-                                )
+                             
                             ],
                           ),
-                        ));
-                  });
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
+                        );
+
+                    }else{
+                      return Container();
+                    }
+                   
+                  },
+                );
+             
+            
+              }
+              
               );
             }
-          });
-        },
-      ),
-    
-    ));
+          else{
+               return Container();
+             }
+          },
+        ),
+      )
+    );
   }
-//TODO:Crear codigo externo para getAddres y get location text posiblemente en maps_util
-  Future<List<Placemark>> getAddress(lat, long) async {
 
-    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
-
-    return newPlace;
-  }
- Widget _dropdownOptions(id, follow){
-   return  
-                                    DropdownButton(
-                               // itemHeight: kMinInteractiveDimension,
-                                    items: [DropdownMenuItem(
-                                      
-                                      child:  _isFollowed(id,follow), 
-                                      onTap: (){
-
-                                        _addFollow(id, follow);
-                                      },),].toList(),
-                                    onChanged: (_){},
-                                      
-                              );
- }
- 
- _addFollow(String id, List<String> follow) async{
-  
-   if(follow.contains(id)){
-
-      follow.remove(id);
-   }else{
-follow.add(id);
-
-   }
- dbUtil().updateFollows(follow);
-    setState(() {
-      
-    });
- }
-
- Widget _isFollowed(String id, List<String> follow){
- 
-     if(follow.contains(id)){
-      return Row(
-        children: [
-         Icon(Icons.remove_circle, size: 11, color: Colors.grey,),    
-          Text('Dejar de seguir ', style: TextStyle(fontSize: 9),),
-        ],
-      );
-
-     }else{
-
-       return Row(
-         children: [
-           Icon(Icons.add_box, size: 11, color: Colors.grey,),
-             Text('Seguir ', style: TextStyle(fontSize: 9),),
-         ],
-       );
-     }
-
- }
- 
   Widget _getLocationText(double lat, double long) {
     if(lat==29.115967 && long==-111.025490){
       print('debio entrar aqui');
@@ -264,5 +190,12 @@ follow.add(id);
         });
     }
 
+  }
+  
+  Future<List<Placemark>> getAddress(lat, long) async {
+
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+
+    return newPlace;
   }
 }

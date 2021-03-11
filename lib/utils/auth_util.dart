@@ -49,7 +49,7 @@ class AuthUtil {
       UserModel userModel = await _db.getUser(result.user.uid);
       print('SIGN IN');
       print(result.user.uid);
-
+ 
       _prefs.userID = result.user.uid;
     
       return 'Ingresó';
@@ -103,6 +103,7 @@ class AuthUtil {
   
    try {
      
+     
         final GoogleSignInAccount googleSignInAccount =
         await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
@@ -114,7 +115,9 @@ class AuthUtil {
 
     final authResult = await _auth.signInWithCredential(credential);
     final user = authResult.user;
-    UserModel userModel=UserModel(id:user.uid,name: user.displayName, email: user.email, imgRef: user.photoURL);
+    print(_db.getUser(user.uid));
+    List<String> follows=await _db.getFollows(user.uid);
+    UserModel userModel=UserModel(id:user.uid,name: user.displayName, email: user.email, imgRef: user.photoURL, follows: follows);
     print(user);
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
