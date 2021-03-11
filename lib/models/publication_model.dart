@@ -17,8 +17,7 @@ class PublicationModel {
       this.location,
       this.imgRef,
       this.userID,
-      this.pricing
-      });
+      this.pricing});
 
 // class AddAdoption {
 //   String id;
@@ -42,6 +41,7 @@ class PublicationModel {
     description = json['description'];
     location = json['location'];
     imgRef = json['imgRef'];
-       pricing = json['pricing'];
+    pricing = json['pricing'];
+    userID = json['userID'];
   }
 }

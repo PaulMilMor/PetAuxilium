@@ -65,7 +65,7 @@ class dbUtil {
   }
 
   Future<void> addPublication(PublicationModel ad) async {
-    await _firestoreInstance.collection("publications").add({
+    await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,

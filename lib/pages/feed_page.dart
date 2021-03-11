@@ -232,6 +232,10 @@ class _FeedState extends State<Feed> {
                       ),
                       value: 2,
                     ),
+              PopupMenuItem(
+                child: Text('Placeholder'),
+                value: 3,
+              )
             ],
         onSelected: (value) {
           switch (value) {
@@ -246,6 +250,11 @@ class _FeedState extends State<Feed> {
               selectedPublication.id = id;
               _deletePublication(id, "publications", selectedPublication);
               break;
+            case 3:
+              PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
+
+              print(publications);
           }
         });
   }
