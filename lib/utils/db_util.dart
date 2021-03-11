@@ -76,6 +76,10 @@ class dbUtil {
     });
   }
 
+  Future<void> deleteDocument(String id, String collection) async {
+    await _firestoreInstance.collection(collection).doc(id).delete();
+  }
+
   Future<void> addKeeper(PublicationModel ad) async {
     await _firestoreInstance.collection("publications").add({
       'category': ad.category,
