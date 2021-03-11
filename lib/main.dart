@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
     //gray
     final altColor = Color.fromRGBO(210, 210, 210, 1);
     return ThemeData(
-        iconTheme: IconThemeData(color: accentColor),
+        iconTheme: IconThemeData(color:altColor),
         primaryColor: primaryColor,
         accentColor: primaryColor,
         buttonTheme: ButtonThemeData(
