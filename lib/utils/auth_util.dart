@@ -4,7 +4,6 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -22,19 +21,24 @@ class AuthUtil {
       return null;
     }
   }
-
+  Future <void> updateEmail(String email) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updateEmail(email);
+    print(email);
+    
+  }
+  
+  Future <void> updatePassword(String password) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updatePassword(password);
+    print(_auth.currentUser);
+    
+  }
+  
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
-  /*Future signInWithEmailAndPassword(String email, String password) async {
-    print('SIGN IN');
-    try {
-      var result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      Future<UserModel> user = _db.getUser(result.user.uid);
-      print('SIGN IN TRY');
-      print(user);
-      return user;*/
+ 
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -49,7 +53,7 @@ class AuthUtil {
       _prefs.userID = result.user.uid;
     
       return 'Ingresó';
-      _prefs.userName = userModel.name;
+      //_prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':

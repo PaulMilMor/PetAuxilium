@@ -107,7 +107,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _editProfileBtn() {
-    if (this._user.imgRef.contains('googleusercontent')) {
+     if (this._user.imgRef.contains('googleusercontent')) {
       return Container(
         decoration: BoxDecoration(border: Border()),
       );
