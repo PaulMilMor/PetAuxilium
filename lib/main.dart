@@ -7,6 +7,8 @@ import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/map_publication_page.dart';
+import 'package:pet_auxilium/pages/service_page.dart';
+import 'package:pet_auxilium/pages/services_menu_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
@@ -56,7 +58,7 @@ class MyApp extends StatelessWidget {
           'startupPage': (BuildContext context) => StartupPage(),
           'caretakerPage':(BuildContext context)=>KeeperPage(),
           'edit_account_page': (BuildContext context) => Edit_account_page(),
-
+          'service':(BuildContext context)=>ServicePage(),
         },
       ),
     );
@@ -76,7 +78,7 @@ class MyApp extends StatelessWidget {
     //gray
     final altColor = Color.fromRGBO(210, 210, 210, 1);
     return ThemeData(
-        iconTheme: IconThemeData(color: accentColor),
+        iconTheme: IconThemeData(color:altColor),
         primaryColor: primaryColor,
         accentColor: primaryColor,
         buttonTheme: ButtonThemeData(

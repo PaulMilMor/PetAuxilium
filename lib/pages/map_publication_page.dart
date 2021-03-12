@@ -63,6 +63,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
         mapType: MapType.normal,
         markers: _markers,
         onTap: _addMarker,
+        myLocationEnabled: true,
         initialCameraPosition: CameraPosition(
           target: _initialcameraposition,
           zoom: 17.5,

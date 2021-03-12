@@ -107,26 +107,25 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _editProfileBtn() {
-    if (this._user.imgRef.contains('googleusercontent')) {
+     if (this._user.imgRef.contains('googleusercontent')) {
       return Container(
         decoration: BoxDecoration(border: Border()),
       );
     } else {
-      return Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-        child: GrayFlatButton(
-          text: 'Editar perfil',
-          icon: Icons.navigate_next,
-          onPressed: () {
-            Navigator.pushNamed(context, 'edit_account_page');
-          },
-        ),
-      );
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Editar perfil',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'edit_account_page');
+        },
+      ),
+    );
+      
     }
   }
-
   Widget _myPostsButton() {
     return Container(
       decoration: BoxDecoration(
@@ -139,7 +138,6 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
-
   Widget _postBusinessButton() {
     return Container(
       decoration: BoxDecoration(

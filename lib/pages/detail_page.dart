@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,10 +8,12 @@ import 'package:geocoding/geocoding.dart';
 import 'package:path/path.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
-import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 //lista
 List<String> _lista = new List<String>();
@@ -18,11 +22,11 @@ class DetailPage extends StatelessWidget {
   List<PublicationModel> ad = List<PublicationModel>();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
-  final db = dbUtil();
-  // UserModel _user;
-  // void initState() {
-  //   super.initState();
-  // }
+  final _db = dbUtil();
+  final prefs = new preferencesUtil();
+  double _score;
+  String _comment;
+  var _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +138,7 @@ class DetailPage extends StatelessWidget {
 
   Future<List<String>> getImages() async {
     print(detailDocument.id);
-    return _lista = await db.getAllImages(detailDocument.id);
+    return _lista = await _db.getAllImages(detailDocument.id);
   }
 
   Future<List<Placemark>> getAddress(lat, long) async {
@@ -144,7 +148,7 @@ class DetailPage extends StatelessWidget {
   }
 
   Future<void> addEvaluation() async {
-    await db.addEvaluations(EvaluationModel());
+    await _db.addEvaluations(EvaluationModel());
   }
 
   Widget _setBackIcon(context2) {
@@ -276,7 +280,7 @@ class DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 4,
                   ),
-                  TextFormField(
+                  GrayTextFormField(
                     // cursorColor: Theme.of(context).cursorColor,
                     maxLength: 140,
                     maxLines: 1,
@@ -293,6 +297,7 @@ class DetailPage extends StatelessWidget {
                       ),
                       hintText: "Escribe una opinión...",
                     ),
+                    controller: _commentController,
                   ),
 
                   Container(
@@ -309,7 +314,9 @@ class DetailPage extends StatelessWidget {
                         itemBuilder: (context, _) => Icon(Icons.star_rounded,
                             color: Colors.greenAccent[400]),
                         onRatingUpdate: (rating) {
+                          print("sumadre");
                           print(rating);
+                          _score = rating;
                         },
                       ),
                     ),
@@ -318,6 +325,7 @@ class DetailPage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         print('PUBLICAR');
+                        _evaluacion();
                       },
                       child: Align(
                         alignment: Alignment.topRight,
@@ -336,6 +344,26 @@ class DetailPage extends StatelessWidget {
                   ),
                   //_opinionList(),
                 ])))));
+  }
+
+  _evaluacion() {
+    /*UserModel user = UserModel(
+      evaluationsID: detailDocument.id
+    );
+    _db.addUser(user);*/
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: detailDocument.id,
+      username: prefs.userName,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.addEvaluations(evaluation);
+    //.then((value) {
+
+    //Navigator.popAndPushNamed(context, 'navigation');
+    /*})*/
+    //Navigator.pushNamedAndRemoveUntil(context, 'navigation', (Route<dynamic> route) => false);
   }
 
   Widget _opinionList() {

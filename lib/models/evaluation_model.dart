@@ -1,7 +1,9 @@
 class EvaluationModel{
 String userID;
-String score;
+String publicationID;
+String username;
+double score;
 String comment;
-EvaluationModel({this.userID,this.score, this.comment});
+EvaluationModel({this.userID,this.publicationID,this.username,this.score, this.comment});
  
 }
