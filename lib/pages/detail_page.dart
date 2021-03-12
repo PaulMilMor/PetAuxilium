@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:path/path.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pet_auxilium/models/evaluation_model.dart';
+import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:geocoding/geocoding.dart';
@@ -17,6 +19,10 @@ class DetailPage extends StatelessWidget {
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
   final db = dbUtil();
+  // UserModel _user;
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +143,10 @@ class DetailPage extends StatelessWidget {
     return newPlace;
   }
 
+  Future<void> addEvaluation() async {
+    await db.addEvaluations(EvaluationModel());
+  }
+
   Widget _setBackIcon(context2) {
     return Positioned(
       right: 0.0,
@@ -249,7 +259,7 @@ class DetailPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.all(1),
                 child: SingleChildScrollView(
                     child: Column(children: <Widget>[
                   Container(
@@ -271,20 +281,20 @@ class DetailPage extends StatelessWidget {
                     maxLength: 140,
                     maxLines: 1,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.favorite),
-                      labelText: 'Label text',
+                      icon: Icon(Icons.comment),
                       labelStyle: TextStyle(
-                        color: Color(0xFF6200EE),
+                        color: Colors.black,
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF6200EE)),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      disabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
                       ),
                       hintText: "Escribe una opinión...",
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+
                   Container(
                     child: Align(
                       alignment: Alignment(-0.7, -1.0),
@@ -295,7 +305,7 @@ class DetailPage extends StatelessWidget {
                         allowHalfRating: true,
                         itemCount: 5,
                         itemSize: 24,
-                        itemPadding: EdgeInsets.symmetric(horizontal: .1),
+                        itemPadding: EdgeInsets.symmetric(horizontal: 0),
                         itemBuilder: (context, _) => Icon(Icons.star_rounded,
                             color: Colors.greenAccent[400]),
                         onRatingUpdate: (rating) {
@@ -310,7 +320,7 @@ class DetailPage extends StatelessWidget {
                         print('PUBLICAR');
                       },
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.topRight,
                         child: Text(
                           'PUBLICAR',
                           style: TextStyle(
@@ -324,18 +334,56 @@ class DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
+                  //_opinionList(),
                 ])))));
   }
 
   Widget _opinionList() {
     //return ListView.builder(
-    //itemCount: detailDocument.length,
+    //itemCount: detailDocument,
     //itemBuilder: (BuildContext context, index) {
-    Container(
-      child: ListTile(
-        title: Text('Usuario'),
-        subtitle: Text('comentario'),
-      ),
-    );
+    return FutureBuilder(
+        future: FirebaseFirestore.instance.collection('evaluations').get(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            //Retrieve `List<DocumentSnapshot>` from snapshot
+            final List<DocumentSnapshot> documents = snapshot.data.docs;
+            return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (BuildContext context, index) {
+                  DocumentSnapshot evaluations = documents[index];
+                  print(evaluations['username']);
+                  child:
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          evaluations['username'],
+                          style: TextStyle(
+                            fontSize: 21,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ]);
+                  //body:
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: <Widget>[
+                  //     Card(
+                  //       child: ListTile(
+                  //         title: evaluations['userID'],
+                  //         trailing: evaluations['comment'],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // );
+                });
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }

@@ -14,7 +14,7 @@ class _FeedState extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
@@ -108,7 +108,7 @@ class _FeedState extends State<Feed> {
                                         ),
                                       ),
                                     ),
-                 _getLocationText(lat, long),
+                                    _getLocationText(lat, long),
                                     SizedBox(
                                       height: 34,
                                     ),
@@ -135,48 +135,50 @@ class _FeedState extends State<Feed> {
   }
 
   Widget _getLocationText(double lat, double long) {
-    if(lat==29.115967 && long==-111.025490){
+    if (lat == 29.115967 && long == -111.025490) {
       print('debio entrar aqui');
-   return Container(
-              width: 150,
-              child: Text(
-                ' ',
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
+      return Container(
+        width: 150,
+        child: Text(
+          ' ',
+          style: TextStyle(
+            fontSize: 9,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    } else {
+      print('no aqui' + lat.toString() + '  ' + long.toString());
+      return FutureBuilder(
+          future: getAddress(lat, long),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                width: 150,
+                child: Text(
+                  snapshot.data.first.street +
+                      " " +
+                      snapshot.data.first.locality,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            );
-    }else{
-      print('no aqui' +lat.toString()+'  '+long.toString());
-    return FutureBuilder( future: getAddress(lat, long),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
-          if (snapshot.hasData) {
-            return Container(
-              width: 150,
-              child: Text(
-                snapshot.data.first.street + " " + snapshot.data.first.locality,
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
+              );
+            } else {
+              return Container(
+                width: 150,
+                child: Text(
+                  ' ',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            );
-          } else {
-            return Container(
-              width: 150,
-              child: Text(
-                ' ',
-                style: TextStyle(
-                  fontSize: 9,
-                  color: Colors.grey,
-                ),
-              ),
-            );
-          }
-        });
+              );
+            }
+          });
     }
-
   }
 }
