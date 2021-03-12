@@ -20,7 +20,8 @@ class dbUtil {
       "birthday": user.birthday,
       "imgRef": user.imgRef,
       "email": user.email,
-      "follows":user.follows
+      "follows":user.follows,
+      "evaluationsID": user.evaluationsID,
     }).then((value) {});
   }
 
@@ -41,7 +42,8 @@ class dbUtil {
           name: value.get("name"),
           birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
-          follows: value.get("follows")??List()
+          follows: value.get("follows")??List(),
+          evaluationsID: value.get("evaluationsID")??List()
           
           );
     });
@@ -161,7 +163,12 @@ await _firestoreInstance.collection('users').doc(_prefs.userID).update({
   'follows':follows
 });
 }
+void updateEvaluations(List evaluationsID)async{
 
+await _firestoreInstance.collection('users').doc(_prefs.userID).update({
+  'evaluationsID':evaluationsID
+});
+}
 Future<List<String>> getFollows(id) async{
   List<String> follows=List<String>();
   await _firestoreInstance.collection('users').doc(id).get().then((value){
@@ -180,6 +187,26 @@ Future<List<String>> getFollows(id) async{
   } );
   return follows;
 }
+
+Future<List<String>> getEvaluations(id) async{
+  List<String> evaluationsID=List<String>();
+  await _firestoreInstance.collection('users').doc(id).get().then((value){
+   
+    UserModel user=UserModel.fromJsonMap(value.data());
+     if(user.evaluationsID!=null){
+    user.evaluationsID.forEach((element) { 
+
+      evaluationsID.add(element);
+
+    });
+
+     }
+  
+
+  } );
+  return evaluationsID;
+}
+
 Future<List<ReportModel>> getreports() async{
 List<ReportModel> reports=List<ReportModel>();
 await _firestoreInstance.collection('reports').get().then((value){

@@ -28,7 +28,7 @@ class DetailPage extends StatelessWidget {
   double _score;
   String _comment;
   var _commentController = TextEditingController();
-
+  List<String> evaluations;
   @override
   Widget build(BuildContext context) {
     //getImages();
@@ -51,7 +51,18 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-            child: Material(
+          //child: 
+        /*FutureBuilder(
+        future:dbUtil().getEvaluations(prefs.userID),
+        builder: (BuildContext context, AsyncSnapshot<List<String>> evaluation) {
+          print('affaf');
+          print(evaluation.data);
+            return   FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) { 
+                final List<DocumentSnapshot> documents = snapshot.data.docs; 
+            return Container(*/
+              child: Material(
                 type: MaterialType.transparency,
                 child: Container(
                     decoration: BoxDecoration(
@@ -134,7 +145,16 @@ class DetailPage extends StatelessWidget {
                         ),
                         _opinion(),
                       ],
-                    ))))));
+                    )
+                    )
+                    )
+                    ),
+            )/*;}
+            });*/
+        //}
+        );
+        /*)
+        );*/
   }
 
   Future<List<String>> getImages() async {
@@ -333,7 +353,8 @@ class DetailPage extends StatelessWidget {
                 ])))));
   }
 
-  _evaluacion() {
+  _evaluacion(/*id, evaluations*/) {
+    
     /*UserModel user = UserModel(
       evaluationsID: detailDocument.id
     );
@@ -346,12 +367,24 @@ class DetailPage extends StatelessWidget {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
+    _addevaluation(/*detailDocument.id,*/evaluations);
      //.then((value) {
 
     //Navigator.popAndPushNamed(context, 'navigation');
     /*})*/
     //Navigator.pushNamedAndRemoveUntil(context, 'navigation', (Route<dynamic> route) => false);
   }
+  _addevaluation(/*String id,*/ evaluations) async{
+      //evaluations= _db.getEvaluations(id);
+   if(evaluations.contains(detailDocument.id)){
+
+      evaluations.remove(detailDocument.id);
+   }else{
+      evaluations.add(detailDocument.id);
+
+   }
+    _db.updateEvaluations(evaluations);
+ }
 
   Widget _opinionList() {
     //return ListView.builder(
