@@ -28,7 +28,6 @@ class _FeedState extends State<Feed> {
       child: FutureBuilder(
         future: dbUtil().getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-          print('affaf');
           print(follow.data);
           return FutureBuilder(
               future:
@@ -229,7 +228,6 @@ class _FeedState extends State<Feed> {
 
   Widget _getLocationText(double lat, double long) {
     if (lat == 29.115967 && long == -111.025490) {
-      print('debio entrar aqui');
       return Container(
         width: 150,
         child: Text(

@@ -147,8 +147,8 @@ class DetailPage extends StatelessWidget {
     return newPlace;
   }
 
-  Future<void> addEvaluation() async {
-    await _db.addEvaluations(EvaluationModel());
+  Future<List<EvaluationModel>> getOpinion() async {
+    return await _db.getOpinions();
   }
 
   Widget _setBackIcon(context2) {
@@ -235,8 +235,8 @@ class DetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _makeOpinion(),
-            //_opinionList(),
+            //_makeOpinion(),
+            _opinionList(),
           ],
         ),
       );
@@ -283,6 +283,7 @@ class DetailPage extends StatelessWidget {
                   GrayTextFormField(
                     // cursorColor: Theme.of(context).cursorColor,
                     maxLength: 140,
+
                     maxLines: 1,
                     decoration: InputDecoration(
                       icon: Icon(Icons.comment),
@@ -342,6 +343,7 @@ class DetailPage extends StatelessWidget {
                   SizedBox(
                     height: 24,
                   ),
+
                   //_opinionList(),
                 ])))));
   }
@@ -355,7 +357,7 @@ class DetailPage extends StatelessWidget {
       userID: prefs.userID,
       publicationID: detailDocument.id,
       username: prefs.userName,
-      score: _score,
+      score: _score.toString(),
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
@@ -371,41 +373,29 @@ class DetailPage extends StatelessWidget {
     //itemCount: detailDocument,
     //itemBuilder: (BuildContext context, index) {
     return FutureBuilder(
-        future: FirebaseFirestore.instance.collection('evaluations').get(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
+        future: _db.getOpinions(),
+        //future: getOpinion(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<EvaluationModel>> opinions) {
+          if (opinions.hasData) {
             //Retrieve `List<DocumentSnapshot>` from snapshot
-            final List<DocumentSnapshot> documents = snapshot.data.docs;
+
             return ListView.builder(
-                itemCount: snapshot.data.docs.length,
+                itemCount: opinions.data.length,
                 itemBuilder: (BuildContext context, index) {
-                  DocumentSnapshot evaluations = documents[index];
-                  print(evaluations['username']);
-                  child:
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          evaluations['username'],
-                          style: TextStyle(
-                            fontSize: 21,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ]);
-                  //body:
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: <Widget>[
-                  //     Card(
-                  //       child: ListTile(
-                  //         title: evaluations['userID'],
-                  //         trailing: evaluations['comment'],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // );
+                  var opinion = opinions.data[index];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Card(
+                        child: ListTile(
+                          title: Text(opinion.username),
+                          trailing: Text(opinion.comment),
+                        ),
+                      ),
+                    ],
+                  );
                 });
           } else {
             return Center(

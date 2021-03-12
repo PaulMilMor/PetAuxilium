@@ -20,6 +20,7 @@ class GrayTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.maxLength,
     this.readOnly = false,
+    InputDecoration decoration,
   });
   final String hintText;
   final TextInputType keyboardType;
