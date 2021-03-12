@@ -194,7 +194,7 @@ class _FeedState extends State<Feed> {
       ),
     ));
   }
-
+//TODO:Crear codigo externo para getAddres y get location text posiblemente en maps_util
   Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 

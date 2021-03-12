@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -169,5 +170,33 @@ class dbUtil {
       }
     });
     return follows;
+  }
+
+  Future<List<ReportModel>> getreports() async {
+    List<ReportModel> reports = List<ReportModel>();
+    await _firestoreInstance.collection('reports').get().then((value) {
+      value.docs.forEach((element) {
+        print(element.id);
+        ReportModel report =
+            ReportModel.fromJsonMap(element.data(), element.id);
+        print(report.nreports);
+        reports.add(report);
+      });
+    });
+
+    print(reports.first.id);
+    return reports;
+  }
+
+  Future<PublicationModel> getPublication(String id) async {
+    PublicationModel publication;
+    await _firestoreInstance
+        .collection('publications')
+        .doc(id)
+        .get()
+        .then((value) {
+      publication = PublicationModel.fromJsonMap(value.data());
+    });
+    return publication;
   }
 }
