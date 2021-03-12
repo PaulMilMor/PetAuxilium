@@ -44,7 +44,8 @@ class _NavigationPageState extends State<NavigationPage> {
   ];
     final List<String> _titlesAdmin = [
     'INICIO',
-     'REPORTES'
+     'REPORTES',
+     'PERFIL'
   ];
   final List<Widget> _tabs = [
     // Feed(),
@@ -57,7 +58,8 @@ class _NavigationPageState extends State<NavigationPage> {
   ];
 final List<Widget> _adminTabs=[
   StartupPage(),
-  ReportPage()
+  ReportPage(),
+  AccountPage()
 ];
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ return _adminTabs;
  }
 
  bool isAdmin(){
-  if(_prefs.userID=='CpHufbC6AAQFxUWJbT6BienFv0D3'){
+  if(_prefs.userID=='gmMu6mxOb1RN9D596ToO2nuFMKQ2'){
         return true;
    }else{
      return false;
@@ -163,7 +165,10 @@ return _adminTabs;
           icon: Icon(Icons.assignment),
           label: 'Reportes',
         ),
-        
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: 'Cuenta',
+        ),
       ],
       currentIndex: _prefs.selectedIndex,
       backgroundColor: Colors.white,

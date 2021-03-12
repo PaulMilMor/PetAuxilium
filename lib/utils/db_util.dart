@@ -69,7 +69,7 @@ class dbUtil {
   }
 
   Future<void> addPublication(PublicationModel ad) async {
-    await _firestoreInstance.collection("publications").add({
+      await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,
       'description': ad.description,
@@ -77,6 +77,14 @@ class dbUtil {
       'imgRef': ad.imgRef,
       'userID': ad.userID,
       'pricing': ''
+    });
+  }
+   Future<void> addReport(ReportModel rm) async {
+      await _firestoreInstance.collection("reports").doc(rm.id).set({
+       'publicationid':rm.publicationid,
+       'nreports':rm.nreports,
+       'userid':rm.userid
+  
     });
   }
     Future<void> addKeeper(PublicationModel ad) async {
@@ -169,6 +177,9 @@ Future<List<String>> getFollows(id) async{
   } );
   return follows;
 }
+  Future<void> deleteDocument(String id, String collection) async {
+    await _firestoreInstance.collection(collection).doc(id).delete();
+  }
 Future<List<ReportModel>> getreports() async{
 List<ReportModel> reports=List<ReportModel>();
 await _firestoreInstance.collection('reports').get().then((value){

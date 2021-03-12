@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -138,12 +139,47 @@ class _FeedState extends State<Feed> {
                                
                   ],
                               ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children:[_dropdownOptions(publications.id, follow.data)
+                               Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      _optionsPopup(publications.id,
+                                          follow.data, publications.data())
+                                      /*PopupMenuButton<String>(
+                                        icon: Icon(
+                                          Icons.more_vert,
+                                          color:
+                                              Color.fromRGBO(210, 210, 210, 1),
+                                        ),
+                                        //color: Color.fromRGBO(210, 210, 210, 1),
+                                        //onSelected: (value) {},
+                                        itemBuilder: (BuildContext context) {
+                                          return {'No seguir'}
+                                              .map((String choice) {
+                                            return PopupMenuItem<String>(
+                                              value: choice,
+                                              child:
+                                                  /*Row(
+                                  children: [
+                                    Icon(Icons.remove_circle),
+                                    Text(choice),
                                   ],
-                                  
-                                )
+                                ),*/
+                                                  _prefs.userID ==
+                                                          'CpHufbC6AAQFxUWJbT6BienFv0D3'
+                                                      ? _delete()
+                                                      : _isFollowed(
+                                                          publications.id,
+                                                          follow.data),
+                                            );
+                                          }).toList();
+                                        },
+                                        onSelected: (value) {
+                                          _addFollow(
+                                              publications.id, follow.data);
+                                        },
+                                      ),*/
+                                    ],
+                                  ),
                             ],
                           ),
                         ));
@@ -196,6 +232,82 @@ follow.add(id);
       
     });
  }
+ Widget _optionsPopup(id, follow, publications) {
+    return PopupMenuButton<int>(
+        icon: Icon(
+          Icons.more_vert,
+          color: Color.fromRGBO(210, 210, 210, 1),
+        ),
+        itemBuilder: (BuildContext context) => [
+              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: _isFollowedOption(id, follow),
+                      value: 1,
+                    ),
+              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Eliminar',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 2,
+                    ),
+            ],
+        onSelected: (value) {
+          switch (value) {
+            case 1:
+              _addFollow(id, follow);
+              break;
+            case 2:
+              PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
+
+              print(publications);
+              selectedPublication.id = id;
+              _deletePublication(id, "publications", selectedPublication);
+              break;
+            case 3:
+              PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
+
+              print(publications);
+          }
+        });
+  }
+
+//FIXME: Al eliminar una publicación y darle a deshacer, se cambia el orden,
+// y se pierde la userid y la id original
+  _deletePublication(id, collection, selectedPublication) {
+    dbUtil().deleteDocument(id, collection);
+    setState(() {});
+    Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Se eliminó la publicación'),
+          action: SnackBarAction(
+            label: "DESHACER",
+            textColor: Color.fromRGBO(49, 232, 93, 1),
+            onPressed: () {
+              setState(() {
+                dbUtil().addPublication(selectedPublication);
+              });
+            },
+          ),
+        ),
+      );
+  }
 
  Widget _isFollowed(String id, List<String> follow){
  
@@ -219,6 +331,38 @@ follow.add(id);
 
  }
  
+  Widget _isFollowedOption(String id, List<String> follow) {
+    if (follow.contains(id)) {
+      return Row(
+        children: [
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(
+            Icons.add_box,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
+    }
+  }
+
   Widget _getLocationText(double lat, double long) {
     if(lat==29.115967 && long==-111.025490){
       print('debio entrar aqui');

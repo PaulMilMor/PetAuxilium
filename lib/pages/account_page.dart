@@ -85,7 +85,13 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
-
+ bool isAdmin(){
+  if(_prefs.userID=='gmMu6mxOb1RN9D596ToO2nuFMKQ2'){
+        return true;
+   }else{
+     return false;
+   }
+ }
   Widget _buttonColumn() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
@@ -93,9 +99,10 @@ class _AccountPageState extends State<AccountPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           //_editProfileBtn(),
-          _myPostsButton(),
-          _postBusinessButton(),
-          _caretakerButton(),
+          
+          if(!isAdmin()) _myPostsButton(),
+          if(!isAdmin()) _postBusinessButton(),
+          if(!isAdmin()) _caretakerButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
