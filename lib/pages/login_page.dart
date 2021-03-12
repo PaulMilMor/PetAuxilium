@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _pswdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-        print(ModalRoute.of(context).settings.name);
+    print(ModalRoute.of(context).settings.name);
 
     return Scaffold(
       //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera

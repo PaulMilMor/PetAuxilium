@@ -22,12 +22,11 @@ class _NavigationPageState extends State<NavigationPage> {
       });
     }
   }
-    void _onItemTappedAdmin(int index) {
-    
-      setState(() {
-        _prefs.selectedIndex = index;
-      });
-    
+
+  void _onItemTappedAdmin(int index) {
+    setState(() {
+      _prefs.selectedIndex = index;
+    });
   }
 
   initState() {
@@ -42,23 +41,17 @@ class _NavigationPageState extends State<NavigationPage> {
     'NOTIFICACIONES',
     'PERFIL'
   ];
-    final List<String> _titlesAdmin = [
-    'INICIO',
-     'REPORTES'
-  ];
+  final List<String> _titlesAdmin = ['INICIO', 'REPORTES'];
   final List<Widget> _tabs = [
     // Feed(),
     StartupPage(),
-     null,
+    null,
     //Adoptionpage(),
     PublicationPage(),
     CreateBusinessPage(),
     AccountPage()
   ];
-final List<Widget> _adminTabs=[
-  StartupPage(),
-  ReportPage()
-];
+  final List<Widget> _adminTabs = [StartupPage(), ReportPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +61,15 @@ final List<Widget> _adminTabs=[
       bottomNavigationBar: _getBottomBar(),
     );
   }
-List<Widget> _getTabs(){
-if(isAdmin()){
-return _adminTabs;
-}else{
- return _tabs;
-}
 
-}
+  List<Widget> _getTabs() {
+    if (isAdmin()) {
+      return _adminTabs;
+    } else {
+      return _tabs;
+    }
+  }
+
   Widget _appBar() {
     return AppBar(
       elevation: 0,
@@ -97,22 +91,25 @@ return _adminTabs;
       automaticallyImplyLeading: false,
     );
   }
- Widget _getBottomBar(){
 
-   if(isAdmin()){
-        return _bottomBarAdmin();
-   }else{
-     return _bottomBar();
-   }
- }
+  Widget _getBottomBar() {
+    print('ISADMIN');
+    print(isAdmin());
+    if (isAdmin()) {
+      return _bottomBarAdmin();
+    } else {
+      return _bottomBar();
+    }
+  }
 
- bool isAdmin(){
-  if(_prefs.userID=='CpHufbC6AAQFxUWJbT6BienFv0D3'){
-        return true;
-   }else{
-     return false;
-   }
- }
+  bool isAdmin() {
+    if (_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget _bottomBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
@@ -148,8 +145,9 @@ return _adminTabs;
       onTap: _onItemTapped,
     );
   }
-  Widget _bottomBarAdmin(){
- return BottomNavigationBar(
+
+  Widget _bottomBarAdmin() {
+    return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,
       showUnselectedLabels: false,
@@ -163,7 +161,6 @@ return _adminTabs;
           icon: Icon(Icons.assignment),
           label: 'Reportes',
         ),
-        
       ],
       currentIndex: _prefs.selectedIndex,
       backgroundColor: Colors.white,
@@ -171,7 +168,6 @@ return _adminTabs;
       selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
       onTap: _onItemTappedAdmin,
     );
-
   }
 
   Widget getAppbar() {
@@ -183,7 +179,7 @@ return _adminTabs;
         ),
       );
     } else {
-      var titles=_getTitles();
+      var titles = _getTitles();
       return AppBar(
         elevation: 0,
         title: _prefs.selectedIndex == 4
@@ -205,12 +201,12 @@ return _adminTabs;
       );
     }
   }
-  List<String> _getTitles(){
-   if(isAdmin()){
-        return _titlesAdmin;
-   }else{
-     return _titles;
-   }
 
+  List<String> _getTitles() {
+    if (isAdmin()) {
+      return _titlesAdmin;
+    } else {
+      return _titles;
+    }
   }
 }

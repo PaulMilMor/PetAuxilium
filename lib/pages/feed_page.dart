@@ -24,6 +24,7 @@ class _FeedState extends State<Feed> {
         body: Container(
       padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
+        //TODO: Este método es innecesario cuando eres admin (y da error?)
         future: dbUtil().getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print('affaf');
@@ -194,6 +195,7 @@ class _FeedState extends State<Feed> {
       ),
     ));
   }
+
 //TODO:Crear codigo externo para getAddres y get location text posiblemente en maps_util
   Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
@@ -208,13 +210,13 @@ class _FeedState extends State<Feed> {
           color: Color.fromRGBO(210, 210, 210, 1),
         ),
         itemBuilder: (BuildContext context) => [
-              _prefs.userID == 'CpHufbC6AAQFxUWJbT6BienFv0D3'
+              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
                       child: _isFollowedOption(id, follow),
                       value: 1,
                     ),
-              _prefs.userID != 'CpHufbC6AAQFxUWJbT6BienFv0D3'
+              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
                       child: Row(
@@ -255,6 +257,15 @@ class _FeedState extends State<Feed> {
                   PublicationModel.fromJsonMap(publications);
 
               print(publications);
+              _prefs.userID = ' ';
+              _prefs.userName = null;
+              _prefs.userImg = null;
+              _prefs.userEmail = null;
+              _prefs.selectedIndex = 0;
+              print('USER ID');
+              print(_prefs.userID);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, 'home', (route) => false);
           }
         });
   }
