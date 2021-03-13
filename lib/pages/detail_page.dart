@@ -29,7 +29,7 @@ class DetailPage extends StatelessWidget {
   String _comment;
 
   var _commentController = TextEditingController();
-
+  List<String> evaluations;
   @override
   Widget build(BuildContext context) {
     //getImages();
@@ -52,90 +52,107 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-            child: Material(
-                type: MaterialType.transparency,
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    padding: EdgeInsets.all(30),
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: SingleChildScrollView(
-                        child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 25,
+          //child:
+          /*FutureBuilder(
+        future:dbUtil().getEvaluations(prefs.userID),
+        builder: (BuildContext context, AsyncSnapshot<List<String>> evaluation) {
+          print('affaf');
+          print(evaluation.data);
+            return   FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) { 
+                final List<DocumentSnapshot> documents = snapshot.data.docs; 
+            return Container(*/
+          child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  padding: EdgeInsets.all(30),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
+                      child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 25,
+                      ),
+                      _setBackIcon(context),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      _setCarousel(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        detailDocument['name'],
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                        _setBackIcon(context),
-                        SizedBox(
-                          height: 25,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        detailDocument['category'],
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.green,
                         ),
-                        _setCarousel(),
-                        SizedBox(
-                          height: 20,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      const Divider(
+                        color: Colors.grey,
+                        height: 5,
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        detailDocument['pricing'],
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.grey[600],
                         ),
-                        Text(
-                          detailDocument['name'],
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      _setLocationText(lat, long),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Container(
+                        // width: 200,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            detailDocument['description'],
+                            //maxLines: 3,
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.grey[500]),
+                            textAlign: TextAlign.justify,
                           ),
                         ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          detailDocument['category'],
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.green,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        const Divider(
-                          color: Colors.grey,
-                          height: 5,
-                          thickness: 1,
-                          indent: 1,
-                          endIndent: 1,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          detailDocument['pricing'],
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        _setLocationText(lat, long),
-                        SizedBox(
-                          height: 24,
-                        ),
-                        Container(
-                          // width: 200,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              detailDocument['description'],
-                              //maxLines: 3,
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[500]),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 44,
-                        ),
-                        _opinion(),
-                      ],
-                    ))))));
+                      ),
+                      SizedBox(
+                        height: 44,
+                      ),
+                      _opinion(),
+                    ],
+                  )))),
+        ) /*;}
+            });*/
+        //}
+        );
+    /*)
+        );*/
   }
 
   Future<List<String>> getImages() async {
@@ -284,6 +301,7 @@ class DetailPage extends StatelessWidget {
                   ),
                   //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
                   // Para todo lo demás se usa un TextField o TextFormField normal
+                  //FIXME: No se ve el campo de texto al escribir
                   GrayTextFormField(
                     // cursorColor: Theme.of(context).cursorColor,
                     maxLength: 140,
@@ -352,7 +370,7 @@ class DetailPage extends StatelessWidget {
                 ])))));
   }
 
-  _evaluacion() {
+  _evaluacion(/*id, evaluations*/) {
     /*UserModel user = UserModel(
       evaluationsID: detailDocument.id
     );
@@ -366,10 +384,22 @@ class DetailPage extends StatelessWidget {
     );
     _db.addEvaluations(evaluation);
     //.then((value) {
+    _addevaluation(/*detailDocument.id,*/ evaluations);
+    //.then((value) {
 
     //Navigator.popAndPushNamed(context, 'navigation');
     /*})*/
     //Navigator.pushNamedAndRemoveUntil(context, 'navigation', (Route<dynamic> route) => false);
+  }
+
+  _addevaluation(/*String id,*/ evaluations) async {
+    //evaluations= _db.getEvaluations(id);
+    if (evaluations.contains(detailDocument.id)) {
+      evaluations.remove(detailDocument.id);
+    } else {
+      evaluations.add(detailDocument.id);
+    }
+    _db.updateEvaluations(evaluations);
   }
 
   Widget _opinionList() {

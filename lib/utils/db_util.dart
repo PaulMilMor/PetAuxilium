@@ -20,7 +20,8 @@ class dbUtil {
       "birthday": user.birthday,
       "imgRef": user.imgRef,
       "email": user.email,
-      "follows": user.follows
+      "follows": user.follows,
+      "evaluationsID": user.evaluationsID,
     }).then((value) {});
   }
 
@@ -41,7 +42,8 @@ class dbUtil {
           name: value.get("name"),
           birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
-          follows: value.get("follows") ?? List());
+          follows: value.get("follows") ?? List(),
+          evaluationsID: value.get("evaluationsID") ?? List());
     });
   }
 
@@ -187,6 +189,13 @@ class dbUtil {
     return follows;
   }
 
+  void updateEvaluations(List evaluationsID) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(_prefs.userID)
+        .update({'evaluationsID': evaluationsID});
+  }
+
   Future<void> deleteDocument(String id, String collection) async {
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
@@ -238,5 +247,18 @@ class dbUtil {
       publication = PublicationModel.fromJsonMap(value.data());
     });
     return publication;
+  }
+
+  Future<List<String>> getEvaluations(id) async {
+    List<String> evaluationsID = List<String>();
+    await _firestoreInstance.collection('users').doc(id).get().then((value) {
+      UserModel user = UserModel.fromJsonMap(value.data());
+      if (user.evaluationsID != null) {
+        user.evaluationsID.forEach((element) {
+          evaluationsID.add(element);
+        });
+      }
+    });
+    return evaluationsID;
   }
 }
