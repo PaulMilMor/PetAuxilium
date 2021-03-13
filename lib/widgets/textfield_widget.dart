@@ -22,6 +22,8 @@ class GrayTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.prefixIcon,
     this.labelText,
+    //FIXME: Vease detail_page
+    InputDecoration decoration,
   });
   final String hintText;
   final TextInputType keyboardType;

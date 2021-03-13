@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -94,6 +95,16 @@ class dbUtil {
       'imgRef': ad.imgRef,
       'userID': ad.userID,
       'pricing': ad.pricing
+    });
+  }
+
+  Future<void> addEvaluations(EvaluationModel evaluation) async {
+    await _firestoreInstance.collection("evaluations").add({
+      'userID': evaluation.userID,
+      'publicationID': evaluation.publicationID,
+      'username': evaluation.username,
+      'score': evaluation.score,
+      'comment': evaluation.comment
     });
   }
 
@@ -195,6 +206,27 @@ class dbUtil {
     print(reports.first.id);
     return reports;
   }
+
+  Future<List<EvaluationModel>> getOpinions() async {
+    List<EvaluationModel> opinions = List<EvaluationModel>();
+    await _firestoreInstance.collection('evaluations').get().then((value) {
+      value.docs.forEach((element) {
+        EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
+        opinions.add(opinion);
+      });
+    });
+    return opinions;
+  }
+  // Future<List<EvaluationModel>> getOpinions() async {
+  //   List<EvaluationModel> opinions;
+  //   await _firestoreInstance
+  //       .collection('evaluations')
+  //       .get()
+  //       .then((value) {
+  //     var opinion = EvaluationModel.fromJsonMap(value.data());
+  //   });
+  //   return opinions;
+  // }
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;

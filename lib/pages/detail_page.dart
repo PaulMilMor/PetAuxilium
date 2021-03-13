@@ -1,20 +1,34 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:path/path.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-
+import 'package:geocoding/geocoding.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 //lista
 List<String> _lista = new List<String>();
+List<String> _opinions = new List<String>();
 
 class DetailPage extends StatelessWidget {
   List<PublicationModel> ad = List<PublicationModel>();
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
-  final db = dbUtil();
+  final _db = dbUtil();
+  final prefs = new preferencesUtil();
+  double _score;
+  String _comment;
+
+  var _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,98 +49,108 @@ class DetailPage extends StatelessWidget {
     var long = num.tryParse(longitude)?.toDouble();
 
     print(latitude2);
-
-    return Container(
-        child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(30),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 25,
-                  ),
-                  _setBackIcon(context),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  _setCarousel(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    detailDocument['name'],
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+            child: Material(
+                type: MaterialType.transparency,
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                     ),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    detailDocument['category'],
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.green,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    height: 5,
-                    thickness: 1,
-                    indent: 1,
-                    endIndent: 1,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    detailDocument['pricing'],
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  _setLocationText(lat, long),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Container(
-                    // width: 200,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        detailDocument['description'],
-                        //maxLines: 3,
-                        style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )));
+                    padding: EdgeInsets.all(30),
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _setBackIcon(context),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _setCarousel(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          detailDocument['name'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          detailDocument['category'],
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 1,
+                          endIndent: 1,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          detailDocument['pricing'],
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        _setLocationText(lat, long),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Container(
+                          // width: 200,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              detailDocument['description'],
+                              //maxLines: 3,
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.grey[500]),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 44,
+                        ),
+                        _opinion(),
+                      ],
+                    ))))));
   }
 
   Future<List<String>> getImages() async {
     print(detailDocument.id);
-    return _lista = await db.getAllImages(detailDocument.id);
+    return _lista = await _db.getAllImages(detailDocument.id);
   }
 
   Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 
     return newPlace;
+  }
+
+  Future<List<EvaluationModel>> getOpinion() async {
+    return await _db.getOpinions();
   }
 
   Widget _setBackIcon(context2) {
@@ -198,6 +222,197 @@ class DetailPage extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
+            );
+          }
+        });
+  }
+
+  Widget _opinion() {
+    if (detailDocument['category'].toString().contains('CUIDADOR')) {
+      // return ListView.builder(
+      //itemCount: detailDocument.length,
+      // itemBuilder: (BuildContext context, index) {
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _makeOpinion(),
+            //_opinionList(),
+          ],
+        ),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //_makeOpinion(),
+
+            //_opinionList(),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _makeOpinion() {
+    return Container(
+        child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.all(1),
+                child: SingleChildScrollView(
+                    child: Column(children: <Widget>[
+                  Container(
+                    // width: 200,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '0 ' + 'Opiniones',
+                        //maxLines: 3,
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
+                  // Para todo lo demás se usa un TextField o TextFormField normal
+                  GrayTextFormField(
+                    // cursorColor: Theme.of(context).cursorColor,
+                    maxLength: 140,
+
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.comment),
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      disabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      hintText: "Escribe una opinión...",
+                    ),
+                    controller: _commentController,
+                  ),
+
+                  Container(
+                    child: Align(
+                      alignment: Alignment(-0.7, -1.0),
+                      child: RatingBar.builder(
+                        initialRating: 2.5,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemSize: 24,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                        itemBuilder: (context, _) => Icon(Icons.star_rounded,
+                            color: Colors.greenAccent[400]),
+                        onRatingUpdate: (rating) {
+                          print("sumadre");
+                          print(rating);
+                          _score = rating;
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        print('PUBLICAR');
+                        _evaluacion();
+                      },
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Text(
+                          'PUBLICAR',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+
+                  //_opinionList(),
+                ])))));
+  }
+
+  _evaluacion() {
+    /*UserModel user = UserModel(
+      evaluationsID: detailDocument.id
+    );
+    _db.addUser(user);*/
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: detailDocument.id,
+      username: prefs.userName,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.addEvaluations(evaluation);
+    //.then((value) {
+
+    //Navigator.popAndPushNamed(context, 'navigation');
+    /*})*/
+    //Navigator.pushNamedAndRemoveUntil(context, 'navigation', (Route<dynamic> route) => false);
+  }
+
+  Widget _opinionList() {
+    //return ListView.builder(
+    //itemCount: detailDocument,
+    //itemBuilder: (BuildContext context, index) {
+    return FutureBuilder(
+        future: _db.getOpinions(),
+        //future: getOpinion(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<EvaluationModel>> opinions) {
+          if (opinions.hasData) {
+            //Retrieve `List<DocumentSnapshot>` from snapshot
+            return ListView.builder(
+                itemCount: opinions.data.length,
+                itemBuilder: (BuildContext context, index) {
+                  EvaluationModel opinion = opinions.data[index];
+
+                  print('HOLAAAAAAAAAAAAAA');
+                  return Container(
+                      child: Material(
+                          type: MaterialType.transparency,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(1),
+                              child: SingleChildScrollView(
+                                  child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    child: ListTile(
+                                      title: Text(opinion.username),
+                                      trailing: Text(opinion.comment),
+                                    ),
+                                  ),
+                                ],
+                              )))));
+                });
+          } else {
+            print('HOLAAAAAAAAAAAAAA222');
+            return Center(
+              child: CircularProgressIndicator(),
             );
           }
         });

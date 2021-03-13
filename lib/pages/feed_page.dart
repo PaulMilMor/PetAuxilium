@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -20,13 +22,13 @@ class _FeedState extends State<Feed> {
   final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context).settings.name);
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
         future: dbUtil().getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-          print('affaf');
           print(follow.data);
           return FutureBuilder(
               future:
