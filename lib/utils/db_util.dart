@@ -199,16 +199,22 @@ class dbUtil {
     List<EvaluationModel> opinions = List<EvaluationModel>();
     await _firestoreInstance.collection('evaluations').get().then((value) {
       value.docs.forEach((element) {
-        print(element.id);
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
-
         opinions.add(opinion);
       });
     });
-
-    //print(reports.first.id);
     return opinions;
   }
+  // Future<List<EvaluationModel>> getOpinions() async {
+  //   List<EvaluationModel> opinions;
+  //   await _firestoreInstance
+  //       .collection('evaluations')
+  //       .get()
+  //       .then((value) {
+  //     var opinion = EvaluationModel.fromJsonMap(value.data());
+  //   });
+  //   return opinions;
+  // }
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;

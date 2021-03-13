@@ -2,7 +2,7 @@ class EvaluationModel {
   String userID;
   String publicationID;
   String username;
-  String score;
+  double score;
   String comment;
   EvaluationModel(
       {this.userID,
@@ -12,8 +12,8 @@ class EvaluationModel {
       this.comment});
 
   EvaluationModel.fromJsonMap(Map<String, dynamic> json) {
-    userID = json['userid'];
-    publicationID = json['publicationid'];
+    userID = json['userID'];
+    publicationID = json['publicationID'];
     username = json['username'];
     score = json['score'];
     comment = json['comment'];

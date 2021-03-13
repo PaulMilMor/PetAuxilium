@@ -17,6 +17,7 @@ import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 //lista
 List<String> _lista = new List<String>();
+List<String> _opinions = new List<String>();
 
 class DetailPage extends StatelessWidget {
   List<PublicationModel> ad = List<PublicationModel>();
@@ -26,6 +27,7 @@ class DetailPage extends StatelessWidget {
   final prefs = new preferencesUtil();
   double _score;
   String _comment;
+
   var _commentController = TextEditingController();
 
   @override
@@ -235,8 +237,8 @@ class DetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //_makeOpinion(),
-            _opinionList(),
+            _makeOpinion(),
+            //_opinionList(),
           ],
         ),
       );
@@ -357,7 +359,7 @@ class DetailPage extends StatelessWidget {
       userID: prefs.userID,
       publicationID: detailDocument.id,
       username: prefs.userName,
-      score: _score.toString(),
+      score: _score,
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
@@ -379,25 +381,34 @@ class DetailPage extends StatelessWidget {
             AsyncSnapshot<List<EvaluationModel>> opinions) {
           if (opinions.hasData) {
             //Retrieve `List<DocumentSnapshot>` from snapshot
-
             return ListView.builder(
                 itemCount: opinions.data.length,
                 itemBuilder: (BuildContext context, index) {
-                  var opinion = opinions.data[index];
+                  EvaluationModel opinion = opinions.data[index];
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Card(
-                        child: ListTile(
-                          title: Text(opinion.username),
-                          trailing: Text(opinion.comment),
-                        ),
-                      ),
-                    ],
-                  );
+                  print('HOLAAAAAAAAAAAAAA');
+                  return Container(
+                      child: Material(
+                          type: MaterialType.transparency,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(1),
+                              child: SingleChildScrollView(
+                                  child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    child: ListTile(
+                                      title: Text(opinion.username),
+                                      trailing: Text(opinion.comment),
+                                    ),
+                                  ),
+                                ],
+                              )))));
                 });
           } else {
+            print('HOLAAAAAAAAAAAAAA222');
             return Center(
               child: CircularProgressIndicator(),
             );
