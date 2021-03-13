@@ -16,29 +16,27 @@ import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 
-class PublicationPage extends StatefulWidget {
+class KeeperPage extends StatefulWidget {
   @override
-  PublicationPageState createState() => PublicationPageState();
+  KeeperPageState createState() => KeeperPageState();
 }
 
-class PublicationPageState extends State<PublicationPage> {
+class KeeperPageState extends State<KeeperPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-  var _nameTxtController = TextEditingController();
+  var _pricingTxtController = TextEditingController();
   //TextEditingController _nameTxtController;
-  var _dirTxtController = TextEditingController();
+
   var _descTxtController = TextEditingController();
-  var _catController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
-  Set<Marker> _markers = new Set<Marker>();
+
   String _selectedCategory;
-  List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
-  String _name;
+  List listItems = ['ENTRENAMIENTO'];
+  String _pricing;
   String _desc;
-  List<String> _dir;
-  List<LatLng> _locations;
+
   List<String> imagesRef = List<String>();
   List<Object> images = List<Object>();
   Future<File> _imageFile;
@@ -46,7 +44,7 @@ class PublicationPageState extends State<PublicationPage> {
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-  
+
   void initState() {
     super.initState();
     setState(() {
@@ -56,24 +54,18 @@ class PublicationPageState extends State<PublicationPage> {
       images.add("Add Image");
       images.add("Add Image");*/
     });
-    _name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
-    _selectedCategory = 'ADOPCIÓN';
-    _nameTxtController = TextEditingController(text: _name);
-    _dirTxtController = TextEditingController();
+    _pricing = prefs.keeperPricing ?? ' ';
+    _desc = prefs.keeperDescription;
+    _selectedCategory = 'ENTRENAMIENTO';
+    _pricingTxtController = TextEditingController(text: _pricing);
+
     _descTxtController = TextEditingController(text: _desc);
   }
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    print(ModalRoute.of(context).settings.name);
-    getDir(_locations);
-    print("mm");
-    print(_locations);
+
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -118,7 +110,6 @@ class PublicationPageState extends State<PublicationPage> {
                     },
                   ),
                 ),
-              
               ],
             ),
           );
@@ -151,33 +142,19 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    setState(()  {
+    setState(() {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile =  ImagePicker.pickImage(source: ImageSource.gallery);
-      print("La maldita imagen");
-      print(_imageFile);
-      if (_imageFile!= null) {
-        
-        print("xd" + _imageFile.toString());
-        if (images.length < 6) images.add("Add Image");
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      if (_imageFile != null) {
         getFileImage(index);
+        print("xd" + _imageFile.toString());
       } else {
         print("faros");
       }
-      
+      if (images.length < 6) images.add("Add Image");
     });
   }
-Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
-        imagefile = File(pickedFile.path);
-      } else {
-        print('No image selected');
-      }
-    });
-  }
   _limitImages(BuildContext context) {
     Scaffold.of(context)
       ..removeCurrentSnackBar()
@@ -189,17 +166,8 @@ Future getImage() async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
-      print(file);
-      print(images.length);
-      setState(() {
-        if(file== null){
-          images.remove("Add Image");
-        }
-      });
-      
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
-        
-        
+
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
@@ -207,13 +175,22 @@ Future getImage() async {
         imageUpload.imageFile = file;
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
-        print("en el file");
-        
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
   }
 
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        imagefile = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
+  }
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
@@ -222,15 +199,15 @@ Future getImage() async {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 18),
-          /*Center(
+          Center(
             child: Text(
-              'CREAR PUBLICACIÓN',
+              'CREAR PERFIL DE CUIDADOR',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-          ),*/
-          _category(),
-          if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
-          _dirTxt(),
+          ),
+          // _category(),
+          _pricingTxt(),
+
           _descTxt(),
           //_images(),
           buildGridView(),
@@ -250,31 +227,33 @@ Future getImage() async {
         Container(
           margin: const EdgeInsets.only(right: 4.5),
           child: Text(
-            'Categoría:',
+            'Servicios que ofrece:',
             style: TextStyle(fontSize: 18),
           ),
         ),
-        GrayDropdownButton(
-          hint: Text("Selecciona una categoria"),
-          value: _selectedCategory,
-          onChanged: (newValue) {
-            prefs.adoptionCategory = newValue;
-            setState(() {
-              _selectedCategory = newValue;
-            });
-          },
-          items: listItems.map((valueItem) {
-            return DropdownMenuItem(
-              value: valueItem,
-              child: Text(valueItem),
-            );
-          }).toList(),
+        Container(
+          child: GrayDropdownButton(
+            hint: Text("Selecciona una categoria"),
+            value: _selectedCategory,
+            onChanged: (newValue) {
+              prefs.keeperCategory = newValue;
+              setState(() {
+                _selectedCategory = newValue;
+              });
+            },
+            items: listItems.map((valueItem) {
+              return DropdownMenuItem(
+                value: valueItem,
+                child: Text(valueItem),
+              );
+            }).toList(),
+          ),
         )
       ])),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _pricingTxt() {
     return Container(
         //height: 100.0,
 
@@ -286,24 +265,23 @@ Future getImage() async {
             style: TextStyle(fontSize: 18),
           )),
       Container(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+          margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          width: 300.0,
           child: GrayTextFormField(
-            controller: _nameTxtController,
-            hintText: 'Nombre',
+            controller: _pricingTxtController,
+            hintText: 'Tarifa por hora',
             suffixIcon: IconButton(
               onPressed: () {
-                _nameTxtController.clear();
-                prefs.adoptionName = '';
+                _pricingTxtController.clear();
+                prefs.keeperPricing = '';
               },
               icon: Icon(Icons.clear),
             ),
             onChanged: (value) {
               setState(() {
-               // _nameTxtController.clear();
-                _name = value;
-                prefs.adoptionName=value;
-                print('NAME');
-                print(_name);
+                //_pricingTxtController.clear();
+                _pricing = value;
+                prefs.keeperPricing = value;
               });
             },
           ))
@@ -312,7 +290,6 @@ Future getImage() async {
 
   Widget _descTxt() {
     return Container(
-      
         height: 100.0,
         child: Center(
             child: Column(children: [
@@ -325,7 +302,7 @@ Future getImage() async {
                     suffixIcon: IconButton(
                       onPressed: () {
                         _descTxtController.clear();
-                        prefs.adoptionDescription = '';
+                        prefs.keeperDescription = '';
                       },
                       icon: Icon(Icons.clear),
                     )),
@@ -334,50 +311,12 @@ Future getImage() async {
                 keyboardType: TextInputType.multiline,
                 onChanged: (value) {
                   setState(() {
-                    prefs.adoptionDescription = value;
+                    prefs.keeperDescription = value;
                     _desc = value;
                   });
                 },
               )),
         ])));
-  }
-
-  Widget _dirTxt() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: Stack(
-          children: [
-            GrayTextFormField(
-              controller: _dirTxtController,
-              readOnly: true,
-              hintText: 'Dirección',
-              focusNode: AlwaysDisabledFocusNode(),
-              /* suffixIcon: IconButton(
-              onPressed: () => _dirTxtController.clear(),
-              icon: Icon(Icons.clear),
-            ),*/
-              maxLines: null,
-              onTap: () {
-                Navigator.pushNamed(context, 'mapPublication',
-                    arguments: _markers);
-              },
-            ),
-            Positioned(
-              right: 1,
-              top: 5,
-              child: IconButton(
-                color: Colors.grey[600],
-                onPressed: _cleanDir,
-                icon: Icon(Icons.clear),
-              ),
-            ),
-          ],
-        ));
-  }
-
-  void _cleanDir() {
-    _dirTxtController.clear();
-    _markers.clear();
   }
 
   Widget _buttons() {
@@ -396,12 +335,9 @@ Future getImage() async {
       child: TextButton(
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         onPressed: () {
-          //Navigator.pop(context);
-          //_name = null;
-          //_desc = null;
-          _nameTxtController.clear();
-          _descTxtController.clear();
-          _dirTxtController.clear();
+          Navigator.pop(context);
+          _pricing = null;
+          _desc = null;
         },
       ),
     );
@@ -412,60 +348,35 @@ Future getImage() async {
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: RaisedButton(
           onPressed: () {
-            if (_selectedCategory == 'SITUACIÓN DE CALLE') {
-              _name = 'Animal Callejero';
-              prefs.adoptionName = 'Animal Callejero';
-            }
-            if (_name.isEmpty ||
-                _desc.isEmpty ||
-                imagesRef.isEmpty ||
-                _locations.isEmpty) {
+            if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               print(_imgsFiles.toString());
-              //print(mapsUtil.locationtoString(_locations));
+
               PublicationModel ad = PublicationModel(
-                  category: _selectedCategory,
-                  name: _name,
-                  location: mapsUtil.locationtoString(_locations),
+                  category: 'CUIDADOR',
+                  name: prefs.userName,
+                  location: ['29.115967, -111.025490'],
                   userID: prefs.userID,
                   description: _desc,
+                  pricing: '\$$_pricing por hora',
                   imgRef: imagesRef);
-              _db.addPublication(ad).then((value) {
-                prefs.adoptionCategory = 'ADOPCIÓN';
-                prefs.adoptionDescription = '';
-                prefs.adoptionName = '';
+              _db.addKeeper(ad).then((value) {
+                prefs.keeperPricing = '';
+                prefs.keeperDescription = '';
+                prefs.keeperCategory = 'ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
               });
-              print(_name);
             }
           },
           child: Text('Publicar')),
     );
   }
 
-  void getDir(List<LatLng> locations) {
-    print(locations);
-    if (locations != null) {
-      locations.forEach((LatLng element) async {
-        String place = "";
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(element.latitude, element.longitude);
-        place =
-            placemarks.first.street + " " + placemarks.first.locality + "\n";
-
-        setState(() {
-          print(place);
-          _dirTxtController.text = place;
-        });
-      });
-    }
-  }
-
-  void _savePublication(BuildContext context2) async {}
+  //void _savePublication(BuildContext context2) async {}
 }
 
 //Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección

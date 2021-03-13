@@ -33,12 +33,17 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context).settings.name);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _userInfo(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+            child: Divider(),
+          ),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text('Mi Cuenta'),
@@ -86,16 +91,26 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
+  bool isAdmin() {
+    if (_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget _buttonColumn() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          //_editProfileBtn(),
-          _myPostsButton(),
-          _postBusinessButton(),
-          _caretakerButton(),
+          if (!isAdmin()) _editProfileBtn(),
+
+          if (!isAdmin()) _myPostsButton(),
+          if (!isAdmin()) _followListButton(),
+          if (!isAdmin()) _postBusinessButton(),
+          if (!isAdmin()) _caretakerButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
@@ -106,16 +121,24 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _editProfileBtn() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Editar perfil',
-        icon: Icons.navigate_next,
-        onPressed: () {},
-      ),
-    );
+    if (this._user.imgRef.contains('googleusercontent')) {
+      return Container(
+        decoration: BoxDecoration(border: Border()),
+      );
+    } else {
+      return Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+        child: GrayFlatButton(
+          text: 'Editar perfil',
+          icon: Icons.navigate_next,
+          onPressed: () {
+            Navigator.pushNamed(context, 'edit_account_page');
+          },
+        ),
+      );
+    }
   }
 
   Widget _myPostsButton() {
@@ -127,6 +150,21 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Mis publicaciones',
         icon: Icons.navigate_next,
         onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _followListButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Lista de seguimiento',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'followingPage');
+        },
       ),
     );
   }
@@ -154,7 +192,9 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Anunciarme como cuidador',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, 'caretakerPage');
+        },
       ),
     );
   }
@@ -190,13 +230,14 @@ class _AccountPageState extends State<AccountPage> {
       text: 'Cerrar sesión',
       icon: Icons.navigate_next,
       onPressed: () {
-        _prefs.userID = null;
+        _prefs.userID = ' ';
         _prefs.userName = null;
         _prefs.userImg = null;
         _prefs.userEmail = null;
         _prefs.selectedIndex = 0;
-
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        print('USER ID');
+        print(_prefs.userID);
+        Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       },
     );
   }

@@ -4,7 +4,6 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -22,19 +21,24 @@ class AuthUtil {
       return null;
     }
   }
-
+  Future <void> updateEmail(String email) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updateEmail(email);
+    print(email);
+    
+  }
+  
+  Future <void> updatePassword(String password) async {
+    var firebaseUser = await _auth.currentUser;
+    firebaseUser.updatePassword(password);
+    print(_auth.currentUser);
+    
+  }
+  
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
-  /*Future signInWithEmailAndPassword(String email, String password) async {
-    print('SIGN IN');
-    try {
-      var result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      Future<UserModel> user = _db.getUser(result.user.uid);
-      print('SIGN IN TRY');
-      print(user);
-      return user;*/
+ 
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -47,9 +51,9 @@ class AuthUtil {
       print(result.user.uid);
 
       _prefs.userID = result.user.uid;
-    
+      _prefs.selectedIndex = 0;
       return 'Ingresó';
-      _prefs.userName = userModel.name;
+      //_prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -95,30 +99,33 @@ class AuthUtil {
   }
 
   Future<String> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount googleSignInAccount =
+          await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
-  
-   try {
-     
-        final GoogleSignInAccount googleSignInAccount =
-        await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken);
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication.idToken,
-        accessToken: googleSignInAuthentication.accessToken);
-
-    final authResult = await _auth.signInWithCredential(credential);
-    final user = authResult.user;
-    UserModel userModel=UserModel(id:user.uid,name: user.displayName, email: user.email, imgRef: user.photoURL);
-    print(user);
+      final authResult = await _auth.signInWithCredential(credential);
+      final user = authResult.user;
+      print(_db.getUser(user.uid));
+      List<String> follows = await _db.getFollows(user.uid);
+      UserModel userModel = UserModel(
+          id: user.uid,
+          name: user.displayName,
+          email: user.email,
+          imgRef: user.photoURL,
+          follows: follows);
+      print(user);
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
       _prefs.userID = userModel.id;
       _prefs.userImg = userModel.imgRef;
       _prefs.userEmail = userModel.email;
       return 'Ingresó';
-      
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -134,14 +141,14 @@ class AuthUtil {
           return 'Algo salió mal. Error [${e.code}]';
           break;
       }
-    // assert(!user.isAnonymous);
-    // assert(await user.getIdToken() != null);
+      // assert(!user.isAnonymous);
+      // assert(await user.getIdToken() != null);
 
-    //return user;
-  }
+      //return user;
+    }
 
-  void signOutGoogle() async {
-    await _googleSignIn.signOut();
+    void signOutGoogle() async {
+      await _googleSignIn.signOut();
+    }
   }
-}
 }

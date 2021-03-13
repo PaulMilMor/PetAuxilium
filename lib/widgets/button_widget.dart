@@ -15,6 +15,7 @@ class GrayFlatButton extends StatelessWidget {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       splashColor: Color.fromRGBO(49, 232, 93, 1),
       minWidth: 376,
+      height: 40,
       onPressed: this.onPressed,
       color: Color.fromRGBO(235, 235, 235, 1),
       child: Row(
@@ -53,15 +54,22 @@ class GrayDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(235, 235, 235, 1),
-      padding: const EdgeInsets.all(2.0),
-      //decoration: new BoxDecoration(),
-      child: DropdownButton(
-        hint: this.hint,
-        value: this.value,
-        onChanged: this.onChanged,
-        items: this.items,
-        //iconEnabledColor: Colors.green,
+      //color: Color.fromRGBO(235, 235, 235, 1),
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
+      decoration: new BoxDecoration(
+        color: Color.fromRGBO(235, 235, 235, 1),
+        borderRadius: new BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton(
+          hint: this.hint,
+          value: this.value,
+          onChanged: this.onChanged,
+          items: this.items,
+          underline: null,
+
+          //iconEnabledColor: Colors.green,
+        ),
       ),
     );
   }

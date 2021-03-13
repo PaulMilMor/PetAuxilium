@@ -4,6 +4,7 @@ import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/pages/startup_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,25 +16,21 @@ class _HomePageState extends State<HomePage> {
 
   final auth = AuthUtil();
   final preferencesUtil _prefs = preferencesUtil();
-  UserModel user = UserModel(
-      name: "fafafa",
-      birthday: "16/02/99",
-      pass: "adadadadad",
-      email: "fafaf@hotmail.com",
-      imgRef: "Fgafaf");
   @override
-  void initState() {
+  /*void initState() {
     // TODO: implement session management
     super.initState();
-    //print('USER ID');
-    //print(_prefs.userID);
-    /*if (_prefs.userID != ' ' && _prefs.userID != null) {
+    print('USER ID');
+    print(_prefs.userID);
+    if (_prefs.userID != ' ' && _prefs.userID != null) {
       Navigator.pushNamed(context, 'navigation');
-    }*/
-  }
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    //_checkSession();
+    print(ModalRoute.of(context).settings.name);
     return Scaffold(
       body: Container(
         color: Color.fromRGBO(49, 232, 93, 1),
@@ -63,6 +60,15 @@ class _HomePageState extends State<HomePage> {
     //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))
     */
     );
+  }
+
+  void _checkSession() {
+    print('USER ID');
+    print(_prefs.userID);
+    /*if (_prefs.userID != ' ' && _prefs.userID != null) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, 'navigation', (Route<dynamic> route) => false);
+    }*/
   }
 
   Widget _image() {

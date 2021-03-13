@@ -1,10 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/pages/edit_account_page.dart';
+import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/map_publication_page.dart';
+import 'package:pet_auxilium/pages/service_page.dart';
+import 'package:pet_auxilium/pages/services_menu_page.dart';
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
@@ -13,6 +18,7 @@ import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
+import 'package:pet_auxilium/pages/edit_account_page.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -25,8 +31,12 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
+    print('MAIN');
+    print(_prefs.userID);
+    print(_prefs.userID.toString().length > 0);
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);
@@ -36,9 +46,15 @@ class MyApp extends StatelessWidget {
         title: 'Pet Auxilium',
         debugShowCheckedModeBanner: false,
         theme: myTheme(),
-        initialRoute: '/',
+//        initialRoute:
+//            _prefs.userID.toString().length > 0 ? 'navigation' : 'home',
+
+        //      initialRoute: '/',
+        initialRoute: _prefs.userID != ' ' && _prefs.userID != null
+            ? 'navigation'
+            : 'home',
         routes: {
-          '/': (BuildContext context) => HomePage(),
+          'home': (BuildContext context) => HomePage(),
           'login': (BuildContext context) => LoginPage(),
           'signup': (BuildContext context) => SignupPage(),
           'navigation': (BuildContext context) => NavigationPage(),
@@ -47,10 +63,14 @@ class MyApp extends StatelessWidget {
           'map': (BuildContext context) => MapPage(),
           'userMap': (BuildContext context) => UserMapPage(),
           //'AdoptionPage': (BuildContext context) => Adoptionpage(),
-         // 'Feed': (BuildContext context) => Feed(),
+          // 'Feed': (BuildContext context) => Feed(),
           'PublicationPage': (BuildContext context) => PublicationPage(),
           'mapPublication': (BuildContext context) => MapPagePublication(),
           'startupPage': (BuildContext context) => StartupPage(),
+          'caretakerPage': (BuildContext context) => KeeperPage(),
+          'service': (BuildContext context) => ServicePage(),
+          'edit_account_page': (BuildContext context) => Edit_account_page(),
+          'followingPage': (BuildContext context) => FollowingPage(),
         },
       ),
     );
@@ -70,7 +90,7 @@ class MyApp extends StatelessWidget {
     //gray
     final altColor = Color.fromRGBO(210, 210, 210, 1);
     return ThemeData(
-        iconTheme: IconThemeData(color: accentColor),
+        iconTheme: IconThemeData(color: altColor),
         primaryColor: primaryColor,
         accentColor: primaryColor,
         buttonTheme: ButtonThemeData(
