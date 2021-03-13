@@ -120,7 +120,13 @@ class _ReportPageState extends State<ReportPage> {
                                
                   ],
                               ),
-                             
+                              Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      _optionsPopup(publication.id, publication, report)
+                                 
+                                    ],
+                                  ),
                             ],
                           ),
                         );
@@ -145,7 +151,73 @@ class _ReportPageState extends State<ReportPage> {
       )
     );
   }
+ Widget _optionsPopup(id, publication, report) {
+    return PopupMenuButton<int>(
+        icon: Icon(
+          Icons.more_vert,
+          color: Color.fromRGBO(210, 210, 210, 1),
+        ),
+        itemBuilder: (BuildContext context) => [
+         PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Eliminar',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 1,
+                    ),
+            ],
+        onSelected: (value) {
+          switch (value) {
+            case 1:
+              
 
+              
+              _deletePublication(publication,report);
+              break;
+            case 2:
+              // PublicationModel selectedPublication =
+              //     PublicationModel.fromJsonMap(publications);
+
+              // print(publications);
+          }
+        });
+  }
+
+//FIXME: Al eliminar una publicación y darle a deshacer, se cambia el orden,
+// y se pierde la userid y la id original
+  _deletePublication(publication,report) {
+    dbUtil().deleteDocument(publication.id, "publications");
+    dbUtil().deleteDocument(report.id,'reports');
+    setState(() {});
+    Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Se eliminó la publicación'),
+          action: SnackBarAction(
+            label: "DESHACER",
+            textColor: Color.fromRGBO(49, 232, 93, 1),
+            onPressed: () {
+              setState(() {
+                
+                dbUtil().addPublication(publication);
+                dbUtil().addReport(report);
+              });
+            },
+          ),
+        ),
+      );
+  }
+   
   Widget _getLocationText(double lat, double long) {
     if(lat==29.115967 && long==-111.025490){
       print('debio entrar aqui');

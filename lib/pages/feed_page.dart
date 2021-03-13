@@ -24,7 +24,6 @@ class _FeedState extends State<Feed> {
         body: Container(
       padding: EdgeInsets.only(top: 7),
       child: FutureBuilder(
-        //TODO: Este método es innecesario cuando eres admin (y da error?)
         future: dbUtil().getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print('affaf');
@@ -203,6 +202,31 @@ class _FeedState extends State<Feed> {
     return newPlace;
   }
 
+  Widget _dropdownOptions(id, follow) {
+    return DropdownButton(
+      // itemHeight: kMinInteractiveDimension,
+      items: [
+        DropdownMenuItem(
+          child: _isFollowed(id, follow),
+          onTap: () {
+            _addFollow(id, follow);
+          },
+        ),
+      ].toList(),
+      onChanged: (_) {},
+    );
+  }
+
+  _addFollow(String id, List<String> follow) async {
+    if (follow.contains(id)) {
+      follow.remove(id);
+    } else {
+      follow.add(id);
+    }
+    dbUtil().updateFollows(follow);
+    setState(() {});
+  }
+
   Widget _optionsPopup(id, follow, publications) {
     return PopupMenuButton<int>(
         icon: Icon(
@@ -228,16 +252,12 @@ class _FeedState extends State<Feed> {
                           ),
                           Text(
                             'Eliminar',
-                            style: TextStyle(fontSize: 9),
+                            style: TextStyle(fontSize: 11),
                           ),
                         ],
                       ),
                       value: 2,
                     ),
-              PopupMenuItem(
-                child: Text('Placeholder'),
-                value: 3,
-              )
             ],
         onSelected: (value) {
           switch (value) {
@@ -257,21 +277,10 @@ class _FeedState extends State<Feed> {
                   PublicationModel.fromJsonMap(publications);
 
               print(publications);
-              _prefs.userID = ' ';
-              _prefs.userName = null;
-              _prefs.userImg = null;
-              _prefs.userEmail = null;
-              _prefs.selectedIndex = 0;
-              print('USER ID');
-              print(_prefs.userID);
-              Navigator.pushNamedAndRemoveUntil(
-                  context, 'home', (route) => false);
           }
         });
   }
 
-//FIXME: Al eliminar una publicación y darle a deshacer, se cambia el orden,
-// y se pierde la userid y la id original
   _deletePublication(id, collection, selectedPublication) {
     dbUtil().deleteDocument(id, collection);
     setState(() {});
@@ -293,29 +302,36 @@ class _FeedState extends State<Feed> {
       );
   }
 
-  /*Widget _dropdownOptions(id, follow) {
-    return DropdownButton(
-      // itemHeight: kMinInteractiveDimension,
-      items: [
-        DropdownMenuItem(
-          child: _isFollowed(id, follow),
-          onTap: () {
-            _addFollow(id, follow);
-          },
-        ),
-      ].toList(),
-      onChanged: (_) {},
-    );
-  }*/
-
-  _addFollow(String id, List<String> follow) async {
+  Widget _isFollowed(String id, List<String> follow) {
     if (follow.contains(id)) {
-      follow.remove(id);
+      return Row(
+        children: [
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
     } else {
-      follow.add(id);
+      return Row(
+        children: [
+          Icon(
+            Icons.add_box,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
     }
-    dbUtil().updateFollows(follow);
-    setState(() {});
   }
 
   Widget _isFollowedOption(String id, List<String> follow) {

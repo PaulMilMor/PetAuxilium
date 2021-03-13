@@ -41,7 +41,7 @@ class _NavigationPageState extends State<NavigationPage> {
     'NOTIFICACIONES',
     'PERFIL'
   ];
-  final List<String> _titlesAdmin = ['INICIO', 'REPORTES'];
+  final List<String> _titlesAdmin = ['INICIO', 'REPORTES', 'PERFIL'];
   final List<Widget> _tabs = [
     // Feed(),
     StartupPage(),
@@ -51,7 +51,7 @@ class _NavigationPageState extends State<NavigationPage> {
     CreateBusinessPage(),
     AccountPage()
   ];
-  final List<Widget> _adminTabs = [StartupPage(), ReportPage()];
+  final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,6 +160,10 @@ class _NavigationPageState extends State<NavigationPage> {
         BottomNavigationBarItem(
           icon: Icon(Icons.assignment),
           label: 'Reportes',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: 'Cuenta',
         ),
       ],
       currentIndex: _prefs.selectedIndex,

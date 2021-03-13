@@ -77,8 +77,12 @@ class dbUtil {
     });
   }
 
-  Future<void> deleteDocument(String id, String collection) async {
-    await _firestoreInstance.collection(collection).doc(id).delete();
+  Future<void> addReport(ReportModel rm) async {
+    await _firestoreInstance.collection("reports").doc(rm.id).set({
+      'publicationid': rm.publicationid,
+      'nreports': rm.nreports,
+      'userid': rm.userid
+    });
   }
 
   Future<void> addKeeper(PublicationModel ad) async {
@@ -170,6 +174,10 @@ class dbUtil {
       }
     });
     return follows;
+  }
+
+  Future<void> deleteDocument(String id, String collection) async {
+    await _firestoreInstance.collection(collection).doc(id).delete();
   }
 
   Future<List<ReportModel>> getreports() async {
