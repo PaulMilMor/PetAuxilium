@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pet_auxilium/utils/maps_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class ListFeed extends StatefulWidget {
   ListFeed({
     //this.itemCount,
-    this.snapshot,
+    @required this.snapshot,
     this.follows,
-    this.callback,
+    this.voidCallback
   });
-  Function callback;
-  //ListFeed(this.callback);
-  //int itemCount;
+
+  final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
   List<String> follows;
 
@@ -22,6 +25,9 @@ class ListFeed extends StatefulWidget {
 }
 
 class _ListFeedState extends State<ListFeed> {
+  
+  MapsUtil mapsUtil=MapsUtil();
+   final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -32,21 +38,6 @@ class _ListFeedState extends State<ListFeed> {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
-          List<dynamic> _locations = _data['location'];
-          String _location = _locations.first;
-          String _tagName = _location;
-          List<String> _split = _tagName.split(',');
-          Map<int, String> _values = {
-            for (int i = 0; i < _split.length; i++) i: _split[i]
-          };
-          String _latitude = _values[0];
-          String _longtitude = _values[1];
-          String _value3 = _values[2];
-          String _latitude2 = _latitude.replaceAll(RegExp(','), '');
-          var _lat = num.tryParse(_latitude2)?.toDouble();
-          var _long = num.tryParse(_longtitude)?.toDouble();
-          getAddress(_lat, _long);
-
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -99,7 +90,7 @@ class _ListFeedState extends State<ListFeed> {
                               ),
                             ),
                           ),
-                          _getLocationText(_lat, _long),
+                          mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,
                           ),
@@ -108,27 +99,7 @@ class _ListFeedState extends State<ListFeed> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      PopupMenuButton<String>(
-                        //onSelected: (value) {},
-                        itemBuilder: (BuildContext context) {
-                          return {'No seguir'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child:
-                                  /*Row(
-                                  children: [
-                                    Icon(Icons.remove_circle),
-                                    Text(choice),
-                                  ],
-                                ),*/
-                                  _isFollowed(_data.id),
-                            );
-                          }).toList();
-                        },
-                        onSelected: (value) {
-                          _addFollow(_data.id);
-                        },
-                      ),
+                       _optionsPopup(_data.id, _data.data())
                     ],
                   )
                 ],
@@ -138,86 +109,158 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-  Widget _isFollowed(String id) {
-    if (widget.follows.contains(id)) {
-      return Row(
-        children: [
-          Icon(Icons.remove_circle),
-          Text(
-            'Dejar de seguir ',
-            style: TextStyle(fontSize: 11),
-          ),
-        ],
-      );
+_addFollow(String id,) async {
+    if (this.widget.follows.contains(id)) {
+      this.widget.follows.remove(id);
     } else {
-      return Row(
-        children: [
-          Icon(Icons.add_box),
-          Text('Seguir', style: TextStyle(fontSize: 11)),
-        ],
-      );
+      this.widget.follows.add(id);
     }
-  }
-
-  _addFollow(String id) async {
-    if (widget.follows.contains(id)) {
-      widget.follows.remove(id);
-    } else {
-      widget.follows.add(id);
-    }
-    dbUtil().updateFollows(widget.follows);
+    dbUtil().updateFollows(this.widget.follows);
     setState(() {});
+    if(this.widget.voidCallback!=null){
+     this.widget.voidCallback();
+    }
   }
 
-  Future<List<Placemark>> getAddress(lat, long) async {
-    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+  Widget _optionsPopup(id,  publications) {
+    return PopupMenuButton<int>(
+        icon: Icon(
+          Icons.more_vert,
+          color: Color.fromRGBO(210, 210, 210, 1),
+        ),
+        itemBuilder: (BuildContext context) => [
+              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: _isFollowedOption(id, this.widget.follows),
+                      value: 1,
+                    ),
+              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Eliminar',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 2,
+                    ),
+            ],
+        onSelected: (value) {
+          switch (value) {
+            case 1:
+              _addFollow(id);
+              break;
+            case 2:
+              PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
 
-    return newPlace;
+              print(publications);
+              selectedPublication.id = id;
+              _deletePublication(id, "publications", selectedPublication);
+              break;
+            case 3:
+              PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
+
+              print(publications);
+          }
+        });
   }
 
-  Widget _getLocationText(double lat, double long) {
-    if (lat == 29.115967 && long == -111.025490) {
-      return Container(
-        width: 150,
-        child: Text(
-          ' ',
-          style: TextStyle(
-            fontSize: 9,
-            color: Colors.grey,
+  _deletePublication(id, collection, selectedPublication) {
+    dbUtil().deleteDocument(id, collection);
+    setState(() {});
+    Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Se eliminó la publicación'),
+          action: SnackBarAction(
+            label: "DESHACER",
+            textColor: Color.fromRGBO(49, 232, 93, 1),
+            onPressed: () {
+              setState(() {
+                dbUtil().addPublication(selectedPublication);
+              });
+            },
           ),
         ),
       );
+  }
+
+  Widget _isFollowed(String id, List<String> follow) {
+    if (follow.contains(id)) {
+      return Row(
+        children: [
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
     } else {
-      return FutureBuilder(
-          future: getAddress(lat, long),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                width: 150,
-                child: Text(
-                  snapshot.data.first.street +
-                      " " +
-                      snapshot.data.first.locality,
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.grey,
-                  ),
-                ),
-              );
-            } else {
-              return Container(
-                width: 150,
-                child: Text(
-                  ' ',
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.grey,
-                  ),
-                ),
-              );
-            }
-          });
+      return Row(
+        children: [
+          Icon(
+            Icons.add_box,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
     }
   }
+
+  Widget _isFollowedOption(String id, List<String> follow) {
+    if (follow.contains(id)) {
+      return Row(
+        children: [
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(
+            Icons.add_box,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 9),
+          ),
+        ],
+      );
+    }
+  }
+
+
+  
 }

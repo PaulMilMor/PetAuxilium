@@ -26,7 +26,7 @@ class KeeperPageState extends State<KeeperPage> {
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
   var _pricingTxtController = TextEditingController();
-  //TextEditingController _nameTxtController;
+
 
   var _descTxtController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
@@ -37,10 +37,10 @@ class KeeperPageState extends State<KeeperPage> {
   String _pricing;
   String _desc;
 
-  List<String> imagesRef = List<String>();
-  List<Object> images = List<Object>();
+  List<String> imagesRef = [];
+  List<Object> images = [];
   Future<File> _imageFile;
-  List<ImageUploadModel> _imgsFiles = List<ImageUploadModel>();
+  List<ImageUploadModel> _imgsFiles =[];
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
@@ -103,9 +103,9 @@ class KeeperPageState extends State<KeeperPage> {
                     onTap: () {
                       setState(() {
                         images.removeAt(index);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
+                        
                         _imgsFiles.remove(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
+                        //   
                       });
                     },
                   ),
@@ -163,7 +163,7 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   void getFileImage(int index) async {
-//    var dir = await path_provider.getTemporaryDirectory();
+
 
     _imageFile.then((file) async {
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
@@ -205,13 +205,13 @@ class KeeperPageState extends State<KeeperPage> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          // _category(),
+         
           _pricingTxt(),
 
           _descTxt(),
-          //_images(),
+        
           buildGridView(),
-          //_boton(),
+          
           _buttons()
         ],
       ),
@@ -255,7 +255,7 @@ class KeeperPageState extends State<KeeperPage> {
 
   Widget _pricingTxt() {
     return Container(
-        //height: 100.0,
+    
 
         child: Column(children: [
       Padding(
@@ -279,7 +279,7 @@ class KeeperPageState extends State<KeeperPage> {
             ),
             onChanged: (value) {
               setState(() {
-                //_pricingTxtController.clear();
+             
                 _pricing = value;
                 prefs.keeperPricing = value;
               });
@@ -376,10 +376,10 @@ class KeeperPageState extends State<KeeperPage> {
     );
   }
 
-  //void _savePublication(BuildContext context2) async {}
+
 }
 
-//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
+
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
   bool get hasFocus => false;

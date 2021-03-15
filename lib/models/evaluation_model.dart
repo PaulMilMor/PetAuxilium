@@ -2,7 +2,7 @@ class EvaluationModel {
   String userID;
   String publicationID;
   String username;
-  double score;
+  String score;
   String comment;
   EvaluationModel(
       {this.userID,

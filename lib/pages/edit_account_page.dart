@@ -12,8 +12,6 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
-import 'package:pet_auxilium/widgets/appbar_widget.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class Edit_account_page extends StatefulWidget {
   @override
@@ -64,7 +62,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     _lastNameController = TextEditingController(text: lastname);
     _emailController = TextEditingController(text: this._user.email);
     //_passwordController = TextEditingController(text: this._user.pass);
-    
+
     print(this._user.pass);
 
     print(this._user.imgRef);
@@ -338,14 +336,14 @@ class _Edit_account_pageState extends State<Edit_account_page> {
           RegExp regExp = new RegExp(pattern);
           if (value.trim().isEmpty) {
             return null;
-          } else{
+          } else {
             if (value.trim().length < 6) {
-            return 'La contraseña debe tener al menos 6 caracteres';
-          } else if (!regExp.hasMatch(value)) {
-            return 'Incluye mayúsculas, minúsculas, y números';
+              return 'La contraseña debe tener al menos 6 caracteres';
+            } else if (!regExp.hasMatch(value)) {
+              return 'Incluye mayúsculas, minúsculas, y números';
+            }
           }
-          }
-           
+
           return null;
         },
       ),
@@ -363,9 +361,9 @@ class _Edit_account_pageState extends State<Edit_account_page> {
         validator: (value) {
           if (value.trim().isEmpty) {
             return null;
-          } else{
+          } else {
             if (value != _passwordController.text) {
-            return 'Las contraseñas no coinciden';
+              return 'Las contraseñas no coinciden';
             }
           }
           return null;
@@ -402,10 +400,10 @@ class _Edit_account_pageState extends State<Edit_account_page> {
                         _imageSelected = false;
                       });
                     } else {*/
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      _signUp(context);
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    _signUp(context);
                     //}
                   } else if (_image == null) {
                     setState(() {
@@ -418,7 +416,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     );
   }
 
-  _signUp(BuildContext context2) async {
+  void _signUp(BuildContext context2) async {
     UserModel _user = UserModel(
       id: _prefs.userID,
       imgRef: _prefs.userImg,
@@ -426,40 +424,37 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       email: _emailController.text,
       pass: _passwordController.text,
     );
-     
-    if(_image ==null){
+
+    if (_image == null) {
       _prefs.userImg = _user.imgRef;
       _prefs.userName = _user.name;
       _prefs.userEmail = _user.email;
       print("aqui wey");
       print(_user.email);
       await _auth.updateEmail(_emailController.text);
-      if(_passwordController.text != ""){
+      if (_passwordController.text != "") {
         await _auth.updatePassword(_passwordController.text);
       }
       _db.addUser(_user);
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
-    }else{
-
+    } else {
       await _imageFile.then((file) async {
-      _user.imgRef = await _storage.uploadFile(file, 'usuarios');
-      _prefs.userImg = _user.imgRef;
-      _prefs.userName = _user.name;
-      _prefs.userEmail = _user.email;
-      await _auth.updateEmail(_emailController.text);
-      if(_passwordController.text != ""){
-        await _auth.updatePassword(_passwordController.text);
-      }
-      print('IMGREF');
-      print(_user.imgRef);
-      _db.addUser(_user);
-      Navigator.pushNamedAndRemoveUntil(
-          context, 'navigation', (Route<dynamic> route) => false);
-    });
-
+        _user.imgRef = await _storage.uploadFile(file, 'usuarios');
+        _prefs.userImg = _user.imgRef;
+        _prefs.userName = _user.name;
+        _prefs.userEmail = _user.email;
+        await _auth.updateEmail(_emailController.text);
+        if (_passwordController.text != "") {
+          await _auth.updatePassword(_passwordController.text);
+        }
+        print('IMGREF');
+        print(_user.imgRef);
+        _db.addUser(_user);
+        Navigator.pushNamedAndRemoveUntil(
+            context, 'navigation', (Route<dynamic> route) => false);
+      });
     }
-    
   }
 
   Widget _buttons() {

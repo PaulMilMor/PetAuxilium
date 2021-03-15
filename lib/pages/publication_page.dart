@@ -37,24 +37,20 @@ class PublicationPageState extends State<PublicationPage> {
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   String _name;
   String _desc;
-  List<String> _dir;
+
   List<LatLng> _locations;
-  List<String> imagesRef = List<String>();
-  List<Object> images = List<Object>();
+  List<String> imagesRef = [];
+  List<Object> images = [];
   Future<File> _imageFile;
-  List<ImageUploadModel> _imgsFiles = List<ImageUploadModel>();
+  List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-  
+
   void initState() {
     super.initState();
     setState(() {
       images.add("Add Image");
-      /*images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");*/
     });
     _name = prefs.adoptionName ?? ' ';
     _desc = prefs.adoptionDescription;
@@ -66,7 +62,6 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
@@ -118,7 +113,6 @@ class PublicationPageState extends State<PublicationPage> {
                     },
                   ),
                 ),
-              
               ],
             ),
           );
@@ -151,23 +145,22 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    setState(()  {
+    setState(() {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile =  ImagePicker.pickImage(source: ImageSource.gallery);
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       print("La maldita imagen");
       print(_imageFile);
-      if (_imageFile!= null) {
-        
+      if (_imageFile != null) {
         print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
       } else {
         print("faros");
       }
-      
     });
   }
-Future getImage() async {
+
+  Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
@@ -178,6 +171,7 @@ Future getImage() async {
       }
     });
   }
+
   _limitImages(BuildContext context) {
     Scaffold.of(context)
       ..removeCurrentSnackBar()
@@ -192,14 +186,13 @@ Future getImage() async {
       print(file);
       print(images.length);
       setState(() {
-        if(file== null){
+        if (file == null) {
           images.remove("Add Image");
         }
       });
-      
+
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
-        
-        
+
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
@@ -208,12 +201,11 @@ Future getImage() async {
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
         print("en el file");
-        
+
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
   }
-
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
@@ -299,9 +291,9 @@ Future getImage() async {
             ),
             onChanged: (value) {
               setState(() {
-               // _nameTxtController.clear();
+                // _nameTxtController.clear();
                 _name = value;
-                prefs.adoptionName=value;
+                prefs.adoptionName = value;
                 print('NAME');
                 print(_name);
               });
@@ -312,7 +304,6 @@ Future getImage() async {
 
   Widget _descTxt() {
     return Container(
-      
         height: 100.0,
         child: Center(
             child: Column(children: [

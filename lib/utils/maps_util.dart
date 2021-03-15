@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsUtil {
@@ -23,5 +25,59 @@ class MapsUtil {
     return stringlocations;
   }
 
-  
+  Widget getLocationText(String location) {
+ List<String> loc=location.split(',');
+ double lat= double.parse(loc[0].replaceAll('(', ''));
+ double long=double.parse(loc[1].replaceAll(')', ''));
+    if (lat == 29.115967 && long == -111.025490) {
+      print('debio entrar aqui');
+      return Container(
+        width: 150,
+        child: Text(
+          ' ',
+          style: TextStyle(
+            fontSize: 9,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    } else {
+      print('no aqui' + lat.toString() + '  ' + long.toString());
+      return FutureBuilder(
+          future: getAddress(lat, long),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                width: 150,
+                child: Text(
+                  snapshot.data.first.street +
+                      " " +
+                      snapshot.data.first.locality,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                width: 150,
+                child: Text(
+                  ' ',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            }
+          });
+    }
+  }
+Future<List<Placemark>> getAddress(lat, long) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
+
+    return newPlace;
+  }
 }

@@ -77,7 +77,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   }
 
 //TODO:limitar los markers
-  _addMarker(LatLng point) async {
+  _addMarker(LatLng point,) async {
     if (_markers.length < 1) {
       setState(() {
         _markers.add(Marker(

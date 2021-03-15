@@ -1,7 +1,6 @@
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
@@ -42,8 +41,8 @@ class dbUtil {
           name: value.get("name"),
           birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
-          follows: value.get("follows") ?? List(),
-          evaluationsID: value.get("evaluationsID") ?? List());
+          follows: value.get("follows") ?? [],
+          evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
 
@@ -140,7 +139,7 @@ class dbUtil {
   }
 
   Future<List<String>> getAllImages(String id) async {
-    List<String> images = List<String>();
+    List<String> images = [];
     await _firestoreInstance
         .collection("publications")
         .doc(id)
@@ -155,18 +154,22 @@ class dbUtil {
     return images;
   }
 
-  Future<List<PublicationModel>> getPublications(String category) async {
-    List<PublicationModel> publications = List<PublicationModel>();
-    await _firestoreInstance
-        .collection('business')
-        .where('category', isEqualTo: category)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        publications.add(PublicationModel.fromJsonMap(element.data()));
-      });
-    });
-    return publications;
+  Future <QuerySnapshot> getPublications(String collection,String category) async {
+  
+   return _firestoreInstance.collection(collection).where('category', isEqualTo: category)
+        .get();
+       
+  }
+
+  Future<QuerySnapshot> getAllPublications() {
+    return _firestoreInstance.collection('publications').get();
+  }
+
+  Future<QuerySnapshot> getFollowPublications(data) {
+    return _firestoreInstance
+        .collection('publications')
+        .where(FieldPath.documentId, whereIn: data)
+        .get();
   }
 
   void updateFollows(List follows) async {
@@ -177,7 +180,7 @@ class dbUtil {
   }
 
   Future<List<String>> getFollows(id) async {
-    List<String> follows = List<String>();
+    List<String> follows = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
       UserModel user = UserModel.fromJsonMap(value.data());
       if (user.follows != null) {
@@ -201,7 +204,7 @@ class dbUtil {
   }
 
   Future<List<ReportModel>> getreports() async {
-    List<ReportModel> reports = List<ReportModel>();
+    List<ReportModel> reports = [];
     await _firestoreInstance.collection('reports').get().then((value) {
       value.docs.forEach((element) {
         print(element.id);
@@ -216,9 +219,13 @@ class dbUtil {
     return reports;
   }
 
-  Future<List<EvaluationModel>> getOpinions() async {
-    List<EvaluationModel> opinions = List<EvaluationModel>();
-    await _firestoreInstance.collection('evaluations').get().then((value) {
+  Future<List<EvaluationModel>> getOpinions(String id) async {
+    List<EvaluationModel> opinions = [];
+    await _firestoreInstance
+        .collection('evaluations')
+        .where('publicationID', isEqualTo: id)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
         opinions.add(opinion);
@@ -226,16 +233,6 @@ class dbUtil {
     });
     return opinions;
   }
-  // Future<List<EvaluationModel>> getOpinions() async {
-  //   List<EvaluationModel> opinions;
-  //   await _firestoreInstance
-  //       .collection('evaluations')
-  //       .get()
-  //       .then((value) {
-  //     var opinion = EvaluationModel.fromJsonMap(value.data());
-  //   });
-  //   return opinions;
-  // }
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;
@@ -250,7 +247,7 @@ class dbUtil {
   }
 
   Future<List<String>> getEvaluations(id) async {
-    List<String> evaluationsID = List<String>();
+    List<String> evaluationsID = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
       UserModel user = UserModel.fromJsonMap(value.data());
       if (user.evaluationsID != null) {
