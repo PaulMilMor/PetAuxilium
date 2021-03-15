@@ -20,12 +20,16 @@ class _OpinionsState extends State<Opinions> {
   final prefs = new preferencesUtil();
   List<String> evaluations;
   var _commentController = TextEditingController();
+  EvaluationModel _myEvaluation;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
+          print('POOL SNAPSHOT');
+          print(snapshot.data[0].userID);
+          _checkEvaluations(snapshot);
           if (snapshot.hasData) {
             return _opinion(snapshot);
           } else {
@@ -34,6 +38,9 @@ class _OpinionsState extends State<Opinions> {
         });
   }
 
+//TODO: Darle formato correcto a las evaluaciones
+//FIXME: Así como está, si un comentario tiene más de una linea, el
+//nombre del usuario sale en vertical
   Widget _listEvaluations(snapshot) {
     return ListView.builder(
         shrinkWrap: true,
@@ -78,7 +85,9 @@ class _OpinionsState extends State<Opinions> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        length + ' Opiniones',
+                        length == '1'
+                            ? length + ' Opinión'
+                            : length + ' Opiniones',
                         //maxLines: 3,
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
@@ -187,7 +196,10 @@ class _OpinionsState extends State<Opinions> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _makeOpinion(snapshot.data.length.toString()),
+            //FIXME: Así como está no muestra el número de opiniones
+            _myEvaluation == null
+                ? _makeOpinion(snapshot.data.length.toString())
+                : Text('Ya has evaluado'),
             _listEvaluations(snapshot)
           ],
         ),
@@ -204,6 +216,14 @@ class _OpinionsState extends State<Opinions> {
           ],
         ),
       );
+    }
+  }
+
+  void _checkEvaluations(snapshot) {
+    for (EvaluationModel evaluation in snapshot.data) {
+      if (evaluation.userID == prefs.userID) {
+        _myEvaluation = evaluation;
+      }
     }
   }
 }
