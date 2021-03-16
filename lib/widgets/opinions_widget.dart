@@ -41,6 +41,7 @@ class _OpinionsState extends State<Opinions> {
 //TODO: Darle formato correcto a las evaluaciones
 //FIXME: Así como está, si un comentario tiene más de una linea, el
 //nombre del usuario sale en vertical
+//FIXME: El área donde están los comentarios no se puede hacer scroll
   Widget _listEvaluations(snapshot) {
     return ListView.builder(
         shrinkWrap: true,

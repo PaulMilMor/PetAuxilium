@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,9 +7,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 
-
 List<String> _lista = [];
-
 
 class DetailPage extends StatelessWidget {
   List<PublicationModel> ad = [];
@@ -18,17 +15,15 @@ class DetailPage extends StatelessWidget {
   DetailPage(this.detailDocument);
   final _db = dbUtil();
 
-  final MapsUtil _mapsUtil=MapsUtil();
-
+  final MapsUtil _mapsUtil = MapsUtil();
 
   @override
   Widget build(BuildContext context) {
     //getImages();
-   
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-    
           child: Material(
               type: MaterialType.transparency,
               child: Container(
@@ -90,7 +85,8 @@ class DetailPage extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                       ),
-                      _mapsUtil.getLocationText(detailDocument['location'].first),
+                      _mapsUtil
+                          .getLocationText(detailDocument['location'].first),
                       SizedBox(
                         height: 24,
                       ),
@@ -110,10 +106,11 @@ class DetailPage extends StatelessWidget {
                       SizedBox(
                         height: 44,
                       ),
-                      
 
-                      Opinions(id:detailDocument.id , category: detailDocument['category'])
-                  
+                      //FIXME: Da error en las publicaciones sin comentarios
+                      Opinions(
+                          id: detailDocument.id,
+                          category: detailDocument['category'])
                     ],
                   )))),
         ) /*;}
@@ -128,11 +125,6 @@ class DetailPage extends StatelessWidget {
     print(detailDocument.id);
     return _lista = await _db.getAllImages(detailDocument.id);
   }
-
-
-  
-
-
 
   Widget _setBackIcon(context2) {
     return Positioned(
@@ -176,11 +168,4 @@ class DetailPage extends StatelessWidget {
       },
     );
   }
-
-
-
-
-
-  
-
 }
