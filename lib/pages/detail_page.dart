@@ -13,7 +13,7 @@ List<String> _lista = [];
 
 
 class DetailPage extends StatelessWidget {
-  List<PublicationModel> ad = List<PublicationModel>();
+  List<PublicationModel> ad = [];
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
   final _db = dbUtil();

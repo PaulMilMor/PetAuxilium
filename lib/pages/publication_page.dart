@@ -456,7 +456,7 @@ class PublicationPageState extends State<PublicationPage> {
     }
   }
 
-  void _savePublication(BuildContext context2) async {}
+ 
 }
 
 //Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección

@@ -2,11 +2,7 @@ import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
-import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
 
