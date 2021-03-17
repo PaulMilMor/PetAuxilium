@@ -90,6 +90,23 @@ class _ListFeedState extends State<ListFeed> {
                               ),
                             ),
                           ),
+                          
+                          /*Container(
+                            width: 150,
+                            child: Icon(
+                            Icons.star,
+                            color: Colors.greenAccent[400],
+                            size: 20.0,
+                            ),*/
+                             /*child: Text(
+                              _data['pricing'],
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey[700],
+                              ),
+                            ),*/
+                          //),
+                          
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,

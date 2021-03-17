@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -11,6 +12,7 @@ class Opinions extends StatefulWidget {
   String category;
   @override
   _OpinionsState createState() => _OpinionsState();
+  
 }
 
 class _OpinionsState extends State<Opinions> {
@@ -20,6 +22,11 @@ class _OpinionsState extends State<Opinions> {
   final prefs = new preferencesUtil();
   List<String> evaluations;
   var _commentController = TextEditingController();
+  String promedio = "0.0";
+  double temp = 0.0;
+  double suma = 0.0;
+  double prom;
+  var contador; 
   EvaluationModel _myEvaluation;
   @override
   Widget build(BuildContext context) {
@@ -31,7 +38,9 @@ class _OpinionsState extends State<Opinions> {
           print(snapshot.data[0].userID);
           _checkEvaluations(snapshot);
           if (snapshot.hasData) {
+            
             return _opinion(snapshot);
+            
           } else {
             return _makeOpinion('0');
           }
@@ -48,6 +57,18 @@ class _OpinionsState extends State<Opinions> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
+          //temp = double.parse(opinion.score);
+          //print(temp);
+          //suma = temp + suma;
+          //print(suma);
+          print("La perra suma");
+          print("el pinchi promedio");
+          //prom = suma/snapshot.data.length;
+          //contador++;
+          //print(prom);
+          //promedio = prom.toString();
+
+          //print(promedio);
           return Container(
               child: Material(
                   type: MaterialType.transparency,
@@ -71,6 +92,7 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _makeOpinion(length) {
+
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -81,19 +103,32 @@ class _OpinionsState extends State<Opinions> {
                 padding: EdgeInsets.all(1),
                 child: SingleChildScrollView(
                     child: Column(children: <Widget>[
-                  Container(
-                    // width: 200,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        length == '1'
-                            ? length + ' Opinión'
-                            : length + ' Opiniones',
-                        //maxLines: 3,
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      Row(children: <Widget>[
+                        //Align(alignment: Alignment.centerLeft,
+                      /*child:*/ Icon(
+                        Icons.star,
+                        color: Colors.greenAccent[400],
+                        size: 20.0,
                       ),
+                     
+                        Text(promedio)
+                      //)Text("fack")
+                      ]
+                      ),
+                  Container(
+                      // width: 200,
+                      child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      length == '1'
+                          ? length + ' Opinión'
+                          : length + ' Opiniones',
+                      //maxLines: 3,
+                      style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
+                  )
                   ),
+                  
                   SizedBox(
                     height: 4,
                   ),
@@ -147,6 +182,7 @@ class _OpinionsState extends State<Opinions> {
                       onTap: () {
                         print('PUBLICAR');
                         _evaluacion();
+                        setState(() {});
                       },
                       child: Align(
                         alignment: Alignment.topRight,
@@ -192,6 +228,7 @@ class _OpinionsState extends State<Opinions> {
 
   Widget _opinion(snapshot) {
     if (this.widget.category.toString().contains('CUIDADOR')) {
+      
       return SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -204,6 +241,7 @@ class _OpinionsState extends State<Opinions> {
             _listEvaluations(snapshot)
           ],
         ),
+        
       );
     } else {
       return SingleChildScrollView(
@@ -212,7 +250,7 @@ class _OpinionsState extends State<Opinions> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //_makeOpinion(),
-
+  
             _listEvaluations(snapshot)
           ],
         ),

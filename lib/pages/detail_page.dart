@@ -20,7 +20,7 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //getImages();
-
+    
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
@@ -85,6 +85,7 @@ class DetailPage extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                       ),
+                      
                       _mapsUtil
                           .getLocationText(detailDocument['location'].first),
                       SizedBox(
