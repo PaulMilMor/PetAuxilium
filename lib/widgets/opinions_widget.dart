@@ -1,3 +1,5 @@
+// ignore: avoid_web_libraries_in_flutter
+//import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
@@ -17,6 +19,25 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
+  FocusNode _focusNode;
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _requestFocus() {
+    setState(() {
+      FocusScope.of(context).requestFocus(_focusNode);
+    });
+  }
+
   final prefs = new preferencesUtil();
   List<String> evaluations;
   var _commentController = TextEditingController();
@@ -48,24 +69,47 @@ class _OpinionsState extends State<Opinions> {
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
           return Container(
-              child: Material(
-                  type: MaterialType.transparency,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      padding: EdgeInsets.all(1),
-                      child: SingleChildScrollView(
-                          child: Column(
-                        children: <Widget>[
-                          Container(
-                            child: ListTile(
-                              title: Text(opinion.username),
-                              trailing: Text(opinion.comment),
+              child: SingleChildScrollView(
+                  child: Material(
+                      type: MaterialType.transparency,
+                      child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Column(children: <Widget>[
+                            Container(
+                                height: 20,
+                                width: 400,
+                                child: Text.rich(TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.5,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: opinion.username + "  ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    WidgetSpan(
+                                      child: Icon(
+                                        Icons.star_rate_rounded,
+                                        color: Colors.greenAccent[400],
+                                        size: 17,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: opinion.score,
+                                    ),
+                                  ],
+                                ))),
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(opinion.comment,
+                                  textAlign: TextAlign.justify,
+                                  style: new TextStyle()),
                             ),
-                          ),
-                        ],
-                      )))));
+                            SizedBox(
+                              height: 17,
+                            ),
+                          ])))));
         });
   }
 
@@ -99,20 +143,26 @@ class _OpinionsState extends State<Opinions> {
                   //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
                   // Para todo lo demás se usa un TextField o TextFormField normal
                   //FIXME: No se ve el campo de texto al escribir
-                  GrayTextFormField(
+
+                  TextFormField(
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                     // cursorColor: Theme.of(context).cursorColor,
                     maxLength: 140,
+                    focusNode: _focusNode,
 
+                    onTap: _requestFocus,
                     maxLines: 1,
                     decoration: InputDecoration(
                       icon: Icon(Icons.comment),
                       labelStyle: TextStyle(
                         color: Colors.black,
                       ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
                       ),
-                      disabledBorder: UnderlineInputBorder(
+                      border: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       hintText: "Escribe una opinión...",
