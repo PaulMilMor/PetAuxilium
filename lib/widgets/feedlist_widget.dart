@@ -9,12 +9,12 @@ import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class ListFeed extends StatefulWidget {
-  ListFeed({
-    //this.itemCount,
-    @required this.snapshot,
-    this.follows,
-    this.voidCallback
-  });
+  ListFeed(
+      {
+      //this.itemCount,
+      @required this.snapshot,
+      this.follows,
+      this.voidCallback});
 
   final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
@@ -25,11 +25,12 @@ class ListFeed extends StatefulWidget {
 }
 
 class _ListFeedState extends State<ListFeed> {
-  
-  MapsUtil mapsUtil=MapsUtil();
-   final preferencesUtil _prefs = preferencesUtil();
+  MapsUtil mapsUtil = MapsUtil();
+  final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
+    print('POOL PREFS');
+    print(_prefs.userID.toString().length);
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -47,6 +48,7 @@ class _ListFeedState extends State<ListFeed> {
             },
             child: Card(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
@@ -96,12 +98,10 @@ class _ListFeedState extends State<ListFeed> {
                           ),
                         ],
                       )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                       _optionsPopup(_data.id, _data.data())
-                    ],
-                  )
+                  Spacer(),
+                  _prefs.userID == ' '
+                      ? Text('')
+                      : _optionsPopup(_data.id, _data.data()),
                 ],
               ),
             ),
@@ -109,7 +109,9 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-_addFollow(String id,) async {
+  _addFollow(
+    String id,
+  ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
     } else {
@@ -117,12 +119,12 @@ _addFollow(String id,) async {
     }
     dbUtil().updateFollows(this.widget.follows);
     setState(() {});
-    if(this.widget.voidCallback!=null){
-     this.widget.voidCallback();
+    if (this.widget.voidCallback != null) {
+      this.widget.voidCallback();
     }
   }
 
-  Widget _optionsPopup(id,  publications) {
+  Widget _optionsPopup(id, publications) {
     return PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
@@ -153,6 +155,10 @@ _addFollow(String id,) async {
                       ),
                       value: 2,
                     ),
+              PopupMenuItem(
+                child: Text('a'),
+                value: 3,
+              ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -177,8 +183,14 @@ _addFollow(String id,) async {
   }
 
   _deletePublication(id, collection, selectedPublication) {
+    //FIXME: No se elimina la publicación de la vista
     dbUtil().deleteDocument(id, collection);
-    setState(() {});
+
+    setState(() {
+      if (this.widget.voidCallback != null) {
+        this.widget.voidCallback();
+      }
+    });
     Scaffold.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
@@ -260,7 +272,4 @@ _addFollow(String id,) async {
       );
     }
   }
-
-
-  
 }

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -26,6 +25,8 @@ class dbUtil {
 
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
+    print('POOL ID GET USER');
+    print(id);
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
       _prefs.userName = value.get("name");
       _prefs.userID = id;
@@ -154,11 +155,12 @@ class dbUtil {
     return images;
   }
 
-  Future <QuerySnapshot> getPublications(String collection,String category) async {
-  
-   return _firestoreInstance.collection(collection).where('category', isEqualTo: category)
+  Future<QuerySnapshot> getPublications(
+      String collection, String category) async {
+    return _firestoreInstance
+        .collection(collection)
+        .where('category', isEqualTo: category)
         .get();
-       
   }
 
   Future<QuerySnapshot> getAllPublications() {
@@ -200,6 +202,7 @@ class dbUtil {
   }
 
   Future<void> deleteDocument(String id, String collection) async {
+    print('POOL DELETE');
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 

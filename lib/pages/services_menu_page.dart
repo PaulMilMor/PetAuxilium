@@ -50,6 +50,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     );
   }
 
+//FIXME: Esto no hace scroll al tocar las cards
   Widget _searchResults() {
     return StreamBuilder<QuerySnapshot>(
         stream: (_query != "" && _query != null)
