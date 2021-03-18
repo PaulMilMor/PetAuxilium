@@ -56,6 +56,8 @@ class AuthUtil {
       return 'Ingresó';
       //_prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
+      print('POOL SWITCH');
+      print(e.code);
       switch (e.code) {
         case 'user-not-found':
           return 'No se encontró el usuario.';

@@ -202,7 +202,7 @@ class _ReportPageState extends State<ReportPage> {
     dbUtil().deleteDocument(publication.id, "publications");
     dbUtil().deleteDocument(report.id, 'reports');
     setState(() {});
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
         SnackBar(

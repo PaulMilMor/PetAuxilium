@@ -25,6 +25,7 @@ class dbUtil {
 
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
+    //throw Exception('jiji');
     print('POOL ID GET USER');
     print(id);
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
@@ -36,11 +37,12 @@ class dbUtil {
       print('IMG');
       print(_prefs.userImg);
       print(value.get("imgRef"));
-      print(value.get("birthday"));
+      //TODO: Remover todo rastro del cumpleaños
+      // print(value.get("birthday"));
 
       return UserModel(
           name: value.get("name"),
-          birthday: value.get("birthday"),
+          //birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
           follows: value.get("follows") ?? [],
           evaluationsID: value.get("evaluationsID") ?? []);
@@ -190,8 +192,8 @@ class dbUtil {
           follows.add(element);
         });
       }
-    }).catchError((e){
-follows = [];
+    }).catchError((e) {
+      follows = [];
     });
     return follows;
   }
