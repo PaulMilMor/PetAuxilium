@@ -116,6 +116,7 @@ class _OpinionsState extends State<Opinions> {
                                         color: Colors.greenAccent[400],
                                         size: 17,
                                       ),
+                                      
                                     ),
                                     TextSpan(
                                       text: opinion.score,
@@ -136,7 +137,7 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _makeOpinion(length) {
-
+    
     return Container(
         child: Material(
             type: MaterialType.transparency,
