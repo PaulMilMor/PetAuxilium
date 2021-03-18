@@ -36,6 +36,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
+          
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
           return GestureDetector(
@@ -81,6 +82,7 @@ class _ListFeedState extends State<ListFeed> {
                             height: 5,
                           ),
                           Container(
+                            
                             width: 150,
                             child: Text(
                               _data['pricing'],
@@ -123,6 +125,7 @@ class _ListFeedState extends State<ListFeed> {
               ),
             ),
           );
+          
         });
   }
 
