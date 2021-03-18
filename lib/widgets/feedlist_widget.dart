@@ -13,12 +13,14 @@ class ListFeed extends StatefulWidget {
     //this.itemCount,
     @required this.snapshot,
     this.follows,
-    this.voidCallback
+    this.voidCallback,
+    this.category
   });
 
   final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
   List<String> follows;
+  String category;
 
   @override
   _ListFeedState createState() => _ListFeedState();
