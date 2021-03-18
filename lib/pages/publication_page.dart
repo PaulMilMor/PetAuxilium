@@ -401,7 +401,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _saveBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
-      child: RaisedButton(
+      child: ElevatedButton(
           onPressed: () {
             if (_selectedCategory == 'SITUACIÓN DE CALLE') {
               _name = 'Animal Callejero';

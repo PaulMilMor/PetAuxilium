@@ -178,7 +178,9 @@ _addFollow(String id,) async {
 
   _deletePublication(id, collection, selectedPublication) {
     dbUtil().deleteDocument(id, collection);
-    setState(() {});
+    if(this.widget.voidCallback!=null){
+     this.widget.voidCallback();
+    }
     Scaffold.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
@@ -188,9 +190,11 @@ _addFollow(String id,) async {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              setState(() {
+            
+              
                 dbUtil().addPublication(selectedPublication);
-              });
+                    this.widget.voidCallback();
+             
             },
           ),
         ),
