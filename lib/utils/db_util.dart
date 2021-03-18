@@ -190,6 +190,8 @@ class dbUtil {
           follows.add(element);
         });
       }
+    }).catchError((e){
+follows = [];
     });
     return follows;
   }

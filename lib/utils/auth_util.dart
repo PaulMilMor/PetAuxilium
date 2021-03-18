@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
+
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class AuthUtil {
@@ -120,7 +120,7 @@ class AuthUtil {
 
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
-      print(_db.getUser(user.uid));
+
       List<String> follows = await _db.getFollows(user.uid);
       UserModel userModel = UserModel(
           id: user.uid,

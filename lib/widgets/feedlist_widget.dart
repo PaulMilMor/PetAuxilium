@@ -185,12 +185,9 @@ class _ListFeedState extends State<ListFeed> {
   _deletePublication(id, collection, selectedPublication) {
     //FIXME: No se elimina la publicación de la vista
     dbUtil().deleteDocument(id, collection);
-
-    setState(() {
-      if (this.widget.voidCallback != null) {
-        this.widget.voidCallback();
-      }
-    });
+    if(this.widget.voidCallback!=null){
+     this.widget.voidCallback();
+    }
     Scaffold.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
@@ -200,9 +197,11 @@ class _ListFeedState extends State<ListFeed> {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              setState(() {
+            
+              
                 dbUtil().addPublication(selectedPublication);
-              });
+                    this.widget.voidCallback();
+             
             },
           ),
         ),
