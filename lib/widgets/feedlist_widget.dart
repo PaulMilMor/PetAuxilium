@@ -37,6 +37,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
+          
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
           return GestureDetector(
@@ -83,6 +84,7 @@ class _ListFeedState extends State<ListFeed> {
                             height: 5,
                           ),
                           Container(
+                            
                             width: 150,
                             child: Text(
                               _data['pricing'],
@@ -92,6 +94,23 @@ class _ListFeedState extends State<ListFeed> {
                               ),
                             ),
                           ),
+                          
+                          /*Container(
+                            width: 150,
+                            child: Icon(
+                            Icons.star,
+                            color: Colors.greenAccent[400],
+                            size: 20.0,
+                            ),*/
+                             /*child: Text(
+                              _data['pricing'],
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey[700],
+                              ),
+                            ),*/
+                          //),
+                          
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,
@@ -106,6 +125,7 @@ class _ListFeedState extends State<ListFeed> {
               ),
             ),
           );
+          
         });
   }
 
