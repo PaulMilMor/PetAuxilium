@@ -28,7 +28,8 @@ class _OpinionsState extends State<Opinions> {
   double temp = 0.0;
   double suma = 0.0;
   double prom = 0.0;
-  var contador;
+  int contador1;
+  String contador = "0";
   EvaluationModel _myEvaluation;
 
   @override
@@ -36,6 +37,8 @@ class _OpinionsState extends State<Opinions> {
     super.initState();
     _focusNode = FocusNode();
     promedio = "5";
+    
+    
   }
 
   @override
@@ -65,7 +68,9 @@ class _OpinionsState extends State<Opinions> {
           } else {
             return _makeOpinion('0');
           }
+          
         });
+        
   }
 
 //TODO: Darle formato correcto a las evaluaciones
@@ -91,10 +96,12 @@ class _OpinionsState extends State<Opinions> {
           prom = suma/snapshot.data.length;
           //contador++;
           print(prom);
-          promedio = prom.toString();
-
+          contador1 = snapshot.data.length;
+          promedio = prom.toStringAsFixed(1);
+          contador = contador1.toString();
           //print(promedio);
           return Container(
+            
               child: SingleChildScrollView(
                   child: Material(
                       type: MaterialType.transparency,
@@ -112,6 +119,7 @@ class _OpinionsState extends State<Opinions> {
                                 TextSpan(
                                   text: opinion.username + "  ",
                                   style: TextStyle(fontWeight: FontWeight.bold),
+                                  
                                 ),
                                 WidgetSpan(
                                   child: Icon(
@@ -139,12 +147,7 @@ class _OpinionsState extends State<Opinions> {
                       );
         }); 
   }
-  /*void _promedio(snapshot) {
-        itemCount: snapshot.data.length;
-        //itemBuilder: (BuildContext context, index) {
-          EvaluationModel opinion = snapshot.data.elementAt(index);
-        //}
-  }*/
+  
 
   Widget _makeOpinion(length) {
     return Container(
@@ -171,7 +174,9 @@ class _OpinionsState extends State<Opinions> {
                               color: Colors.greenAccent[400],
                               size: 25,
                             ),
-                            Text(promedio)
+                            
+                            Text(promedio),
+                            Text(" (" + contador +")")
 
                           ]
                           ),
@@ -296,7 +301,9 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _opinion(snapshot) {
+    
     if (this.widget.category.toString().contains('CUIDADOR')) {
+      
       return SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -311,6 +318,7 @@ class _OpinionsState extends State<Opinions> {
           ],
         ),
       );
+      
     } else {
       return SingleChildScrollView(
         child: Column(
