@@ -66,7 +66,7 @@ class DetailPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 11,
+                        height: 7,
                       ),
                       const Divider(
                         color: Colors.black45,

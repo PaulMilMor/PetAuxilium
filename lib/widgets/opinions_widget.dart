@@ -106,7 +106,7 @@ class _OpinionsState extends State<Opinions> {
                   textAlign: TextAlign.justify, style: new TextStyle()),
             ),
             SizedBox(
-              height: 17,
+              height: 11,
             ),
           ])));
         });
@@ -146,18 +146,20 @@ class _OpinionsState extends State<Opinions> {
 
                           TextFormField(
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 15,
                             ),
                             // cursorColor: Theme.of(context).cursorColor,
                             maxLength: 140,
                             focusNode: _focusNode,
                             onTap: _requestFocus,
+
                             maxLines: 1,
                             decoration: InputDecoration(
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   Icons.clear,
                                   color: Colors.grey[400],
+                                  size: 19,
                                 ),
                                 onPressed: () {
                                   _commentController.clear();
@@ -177,6 +179,8 @@ class _OpinionsState extends State<Opinions> {
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                               hintText: "Escribe una opinión...",
+                              contentPadding: EdgeInsets.fromLTRB(
+                                  1, 17, 10, 0), // control yo
                             ),
                             controller: _commentController,
                           ),
@@ -273,7 +277,7 @@ class _OpinionsState extends State<Opinions> {
             //FIXME: Así como está no muestra el número de opiniones
             _myEvaluation == null
                 ? _makeOpinion(snapshot.data.length.toString())
-                : Text('Ya has evaluado'),
+                : Text('YA HAS ESCRITO UNA OPINION'),
             _listEvaluations(snapshot)
           ],
         ),
