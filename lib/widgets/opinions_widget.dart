@@ -288,8 +288,10 @@ class _OpinionsState extends State<Opinions> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //_makeOpinion(),
-
+            //FIXME: Así como está no muestra el número de opiniones
+            _myEvaluation == null
+                ? _makeOpinion(snapshot.data.length.toString())
+                : Text('YA HAS ESCRITO UNA OPINION'),
             _listEvaluations(snapshot)
           ],
         ),
