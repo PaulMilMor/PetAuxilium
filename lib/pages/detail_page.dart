@@ -108,9 +108,12 @@ class DetailPage extends StatelessWidget {
                       const Divider(
                         color: Colors.black12,
                         height: 5,
-                        thickness: 1,
+                        thickness: 2,
                         indent: 1,
                         endIndent: 1,
+                      ),
+                      SizedBox(
+                        height: 14,
                       ),
                       Opinions(
                           id: detailDocument.id,
@@ -132,21 +135,20 @@ class DetailPage extends StatelessWidget {
 
   Widget _setBackIcon(context2) {
     return Positioned(
-      right: 0.0,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context2).pop();
-        },
-        child: Align(
-          alignment: Alignment(-0.9, -0.5),
-          child: CircleAvatar(
-            radius: 14.0,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.arrow_back, color: Colors.green),
+        right: 0.0,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context2).pop();
+          },
+          child: Align(
+            alignment: Alignment(-0.9, -0.5),
+            child: CircleAvatar(
+              radius: 14.0,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.arrow_back, color: Colors.green),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _setCarousel() {

@@ -20,6 +20,7 @@ class _OpinionsState extends State<Opinions> {
   String _score;
   String _comment;
   FocusNode _focusNode;
+
   @override
   void initState() {
     super.initState();
@@ -64,52 +65,50 @@ class _OpinionsState extends State<Opinions> {
 //nombre del usuario sale en vertical
   Widget _listEvaluations(snapshot) {
     return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
           return Container(
               child: SingleChildScrollView(
-                  child: Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                          // alignment: Alignment.topLeft,
-                          child: Column(children: <Widget>[
-                        Container(
-                            height: 17,
-                            width: 330,
-                            child: Text.rich(TextSpan(
-                              style: TextStyle(
-                                fontSize: 13.5,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: opinion.username + "  ",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.star_rate_rounded,
-                                    color: Colors.greenAccent[400],
-                                    size: 17,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: opinion.score,
-                                ),
-                              ],
-                            ))),
-                        Container(
-                          width: 330,
-                          alignment: Alignment.topLeft,
-                          child: Text(opinion.comment,
-                              textAlign: TextAlign.justify,
-                              style: new TextStyle()),
-                        ),
-                        SizedBox(
-                          height: 17,
-                        ),
-                      ])))));
+
+                  // alignment: Alignment.topLeft,
+                  child: Column(children: <Widget>[
+            Container(
+                height: 17,
+                width: 330,
+                child: Text.rich(TextSpan(
+                  style: TextStyle(
+                    fontSize: 13.5,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: opinion.username + "  ",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.star_rate_rounded,
+                        color: Colors.greenAccent[400],
+                        size: 17,
+                      ),
+                    ),
+                    TextSpan(
+                      text: opinion.score,
+                    ),
+                  ],
+                ))),
+            Container(
+              width: 330,
+              alignment: Alignment.topLeft,
+              child: Text(opinion.comment,
+                  textAlign: TextAlign.justify, style: new TextStyle()),
+            ),
+            SizedBox(
+              height: 17,
+            ),
+          ])));
         });
   }
 
@@ -128,99 +127,118 @@ class _OpinionsState extends State<Opinions> {
 
                     //padding: EdgeInsets.all(1),
                     child: SingleChildScrollView(
+                        reverse: true,
                         child: Column(children: <Widget>[
-                      Container(
-                        width: 290,
-                        height: 40,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            length == '1'
-                                ? length + ' Opinión'
-                                : length + ' Opiniones',
-                            //maxLines: 3,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                      ),
-
-                      //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
-                      // Para todo lo demás se usa un TextField o TextFormField normal
-                      //FIXME: No se ve el campo de texto al escribir
-                      TextFormField(
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                        // cursorColor: Theme.of(context).cursorColor,
-                        maxLength: 140,
-                        focusNode: _focusNode,
-                        onTap: _requestFocus,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.comment,
-                            color: Colors.white,
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.black,
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          hintText: "Escribe una opinión...",
-                        ),
-                        controller: _commentController,
-                      ),
-
-                      Container(
-                        child: Align(
-                          alignment: Alignment(-0.7, -1.0),
-                          child: RatingBar.builder(
-                            initialRating: 2.5,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 20,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                            itemBuilder: (context, _) => Icon(
-                                Icons.star_rounded,
-                                color: Colors.greenAccent[400]),
-                            onRatingUpdate: (rating) {
-                              print("sumadre");
-                              print(rating);
-                              _score = rating.toString();
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: GestureDetector(
-                          onTap: () {
-                            print('PUBLICAR');
-                            _evaluacion();
-                          },
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              'PUBLICAR',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
+                          Container(
+                            width: 290,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                length == '1'
+                                    ? length + ' Opinión'
+                                    : length + ' Opiniones',
+                                //maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 11,
-                      ),
 
-                      //_opinionList(),
-                    ]))))));
+                          TextFormField(
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                            // cursorColor: Theme.of(context).cursorColor,
+                            maxLength: 140,
+                            focusNode: _focusNode,
+                            onTap: _requestFocus,
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.grey[400],
+                                ),
+                                onPressed: () {
+                                  _commentController.clear();
+                                },
+                              ),
+                              icon: Icon(
+                                Icons.comment,
+                                color: Colors.white,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              hintText: "Escribe una opinión...",
+                            ),
+                            controller: _commentController,
+                          ),
+
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context)
+                                      .viewInsets
+                                      .bottom)),
+
+                          Container(
+                            child: Align(
+                              alignment: Alignment(-0.7, -1.0),
+                              child: RatingBar.builder(
+                                initialRating: 2.5,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemSize: 20,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 0),
+                                itemBuilder: (context, _) => Icon(
+                                    Icons.star_rounded,
+                                    color: Colors.greenAccent[400]),
+                                onRatingUpdate: (rating) {
+                                  print("sumadre");
+                                  print(rating);
+                                  _score = rating.toString();
+                                },
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                if (_score == null) {
+                                  _score = '2.5';
+                                } else {
+                                  _score = _score;
+                                }
+                                _evaluacion();
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  'PUBLICAR',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 4,
+                          ),
+                          //_opinionList(),
+                        ]))))));
   }
 
   void _evaluacion() {
