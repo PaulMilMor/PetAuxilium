@@ -117,7 +117,8 @@ class _ListFeedState extends State<ListFeed> {
                             height: 34,
                           ),
                           //Aquí está el promedio we
-                          if (_data['category'] == 'CUIDADOR') _rating(),
+                          if (_data['category'] == 'CUIDADOR')
+                            _rating(_data['nevaluations'], _data['score']),
                         ],
                       )),
                   Spacer(),
@@ -291,7 +292,8 @@ class _ListFeedState extends State<ListFeed> {
     }
   }
 
-  Widget _rating() {
+  Widget _rating(nevaluations, score) {
+    double mean = score / nevaluations;
     return Row(
       children: [
         Icon(
@@ -299,7 +301,8 @@ class _ListFeedState extends State<ListFeed> {
           color: Colors.greenAccent[400],
           size: 25,
         ),
-        Text("5.0"),
+        Text(
+          nevaluations==0?'N/A':mean.toStringAsFixed(1)),
       ],
     );
   }

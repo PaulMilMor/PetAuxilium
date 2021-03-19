@@ -78,7 +78,9 @@ class dbUtil {
       'location': ad.location,
       'imgRef': ad.imgRef,
       'userID': ad.userID,
-      'pricing': ''
+      'pricing': '',
+      'nevaluations': 0,
+      'score': 0,
     });
   }
 
@@ -109,6 +111,14 @@ class dbUtil {
       'username': evaluation.username,
       'score': evaluation.score,
       'comment': evaluation.comment
+    });
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("publications")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(scorenum),
+      'nevaluations': FieldValue.increment(1),
     });
   }
 
@@ -198,7 +208,6 @@ class dbUtil {
     return follows;
   }
 
-/*
   Future<double> getPromedio(id) async {
     double evaluations = 0;
     int numScores = 0;
@@ -214,7 +223,7 @@ class dbUtil {
     });
     return evaluations / numScores;
   }
-*/
+
   void updateEvaluations(List evaluationsID) async {
     await _firestoreInstance
         .collection('users')
