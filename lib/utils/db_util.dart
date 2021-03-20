@@ -193,7 +193,22 @@ follows = [];
     });
     return follows;
   }
+  Future <void> banUser(String id) async{
+     await _firestoreInstance.collection('bans').doc(id).set({});
+    }
 
+  Future <List<String>> bansList() async{
+List<String> banlist=[];
+
+await _firestoreInstance.collection('bans').get().then((value) {
+ value.docs.forEach((element) { 
+   banlist.add(element.id);
+ });
+}).catchError((e){
+  banlist=[];
+});
+   return banlist;
+  }
   void updateEvaluations(List evaluationsID) async {
     await _firestoreInstance
         .collection('users')

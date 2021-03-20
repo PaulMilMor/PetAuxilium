@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/models/user_model.dart';
@@ -13,6 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final auth = AuthUtil();
+  final _db=dbUtil();
   final preferencesUtil prefs = preferencesUtil();
   bool _isLoading = false;
   //UserModel user;
@@ -179,12 +181,24 @@ class _LoginPageState extends State<LoginPage> {
     String _result = await auth.signInWithEmailAndPassword(_email, _password);
     print('LOGIN');
     print(prefs.userName);
+    List<String> _bans=await _db.bansList();
     if (_result == 'Ingresó') {
-      setState(() {
+        setState(() {
         _isLoading = false;
       });
-      Navigator.pushNamedAndRemoveUntil(
+      if(_bans.contains(prefs.userID)){
+        print('suspendido');
+          ScaffoldMessenger.of(context2)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Esta cuenta ha sido suspendida')));
+
+      }else{
+ Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
+
+      }
+    
+     
     } else {
       setState(() {
         _isLoading = false;

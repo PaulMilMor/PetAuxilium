@@ -180,7 +180,22 @@ class _ReportPageState extends State<ReportPage> {
                   ],
                 ),
                 value: 1,
-              ),
+              ),PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person_remove_alt_1_sharp,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Suspender Cuenta',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 3,
+                    ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -188,10 +203,8 @@ class _ReportPageState extends State<ReportPage> {
               _deletePublication(publication, report);
               break;
             case 2:
-            // PublicationModel selectedPublication =
-            //     PublicationModel.fromJsonMap(publications);
-
-            // print(publications);
+           
+                  _banUser(publication.userID);
           }
         });
   }
@@ -199,8 +212,8 @@ class _ReportPageState extends State<ReportPage> {
 //FIXME: Al eliminar una publicación y darle a deshacer, se cambia el orden,
 // y se pierde la userid y la id original
   _deletePublication(publication, report) {
-    dbUtil().deleteDocument(publication.id, "publications");
-    dbUtil().deleteDocument(report.id, 'reports');
+    _db.deleteDocument(publication.id, "publications");
+   _db.deleteDocument(report.id, 'reports');
     setState(() {});
     Scaffold.of(context)
       ..removeCurrentSnackBar()
@@ -212,8 +225,8 @@ class _ReportPageState extends State<ReportPage> {
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
               setState(() {
-                dbUtil().addPublication(publication);
-                dbUtil().addReport(report);
+                _db.addPublication(publication);
+                _db.addReport(report);
               });
             },
           ),
@@ -274,4 +287,29 @@ class _ReportPageState extends State<ReportPage> {
 
     return newPlace;
   }
+  _banUser(id){
+    Widget confirmButton = TextButton(
+    child: Text("Confirmar"),
+    onPressed: () { 
+      _db.banUser(id);
+    },
+  );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    //title: Text("My title"),
+    content: Text("¿Seguro que quiere eliminar el usuario?"),
+    actions: [
+      confirmButton,
+    ],
+  );
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+  //_db.banUser(id);
+
+}
 }

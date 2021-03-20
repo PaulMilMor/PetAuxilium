@@ -27,6 +27,7 @@ class ListFeed extends StatefulWidget {
 class _ListFeedState extends State<ListFeed> {
   
   MapsUtil mapsUtil=MapsUtil();
+  dbUtil _db=dbUtil();
    final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ _addFollow(String id,) async {
     } else {
       this.widget.follows.add(id);
     }
-    dbUtil().updateFollows(this.widget.follows);
+    _db.updateFollows(this.widget.follows);
     setState(() {});
     if(this.widget.voidCallback!=null){
      this.widget.voidCallback();
@@ -153,6 +154,24 @@ _addFollow(String id,) async {
                       ),
                       value: 2,
                     ),
+                      _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person_remove_alt_1_sharp,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Suspender Cuenta',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 3,
+                    ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -170,14 +189,14 @@ _addFollow(String id,) async {
             case 3:
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications);
-
-              print(publications);
+                  _banUser(selectedPublication.userID);
+              
           }
         });
   }
 
   _deletePublication(id, collection, selectedPublication) {
-    dbUtil().deleteDocument(id, collection);
+    _db.deleteDocument(id, collection);
     if(this.widget.voidCallback!=null){
      this.widget.voidCallback();
     }
@@ -192,7 +211,7 @@ _addFollow(String id,) async {
             onPressed: () {
             
               
-                dbUtil().addPublication(selectedPublication);
+                _db.addPublication(selectedPublication);
                     this.widget.voidCallback();
              
             },
@@ -200,6 +219,31 @@ _addFollow(String id,) async {
         ),
       );
   }
+_banUser(id){
+    Widget confirmButton = TextButton(
+    child: Text("Confirmar"),
+    onPressed: () { 
+      _db.banUser(id);
+    },
+  );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    //title: Text("My title"),
+    content: Text("¿Seguro que quiere eliminar el usuario?"),
+    actions: [
+      confirmButton,
+    ],
+  );
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+  //_db.banUser(id);
+
+}
 
   Widget _isFollowed(String id, List<String> follow) {
     if (follow.contains(id)) {

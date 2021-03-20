@@ -34,6 +34,8 @@ class AuthUtil {
     print(_auth.currentUser);
     
   }
+
+
   
   //Obtiene email y password para ingresar
 
