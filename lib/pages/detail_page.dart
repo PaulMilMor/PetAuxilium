@@ -16,7 +16,7 @@ class DetailPage extends StatelessWidget {
   final _db = dbUtil();
 
   final MapsUtil _mapsUtil = MapsUtil();
-
+//TODO: Tiene un márgen un tanto extraño y hace scroll por debajo de la barra de notificaciones
   @override
   Widget build(BuildContext context) {
     //getImages();

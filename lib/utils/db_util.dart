@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -26,6 +25,9 @@ class dbUtil {
 
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
+    //throw Exception('jiji');
+    print('POOL ID GET USER');
+    print(id);
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
       _prefs.userName = value.get("name");
       _prefs.userID = id;
@@ -35,11 +37,12 @@ class dbUtil {
       print('IMG');
       print(_prefs.userImg);
       print(value.get("imgRef"));
-      print(value.get("birthday"));
+      //TODO: Remover todo rastro del cumpleaños
+      // print(value.get("birthday"));
 
       return UserModel(
           name: value.get("name"),
-          birthday: value.get("birthday"),
+          //birthday: value.get("birthday"),
           imgRef: value.get("imgRef"),
           follows: value.get("follows") ?? [],
           evaluationsID: value.get("evaluationsID") ?? []);
@@ -154,11 +157,12 @@ class dbUtil {
     return images;
   }
 
-  Future <QuerySnapshot> getPublications(String collection,String category) async {
-  
-   return _firestoreInstance.collection(collection).where('category', isEqualTo: category)
+  Future<QuerySnapshot> getPublications(
+      String collection, String category) async {
+    return _firestoreInstance
+        .collection(collection)
+        .where('category', isEqualTo: category)
         .get();
-       
   }
 
   Future<QuerySnapshot> getAllPublications() {
@@ -188,10 +192,29 @@ class dbUtil {
           follows.add(element);
         });
       }
+    }).catchError((e) {
+      follows = [];
     });
     return follows;
   }
 
+/*
+  Future<double> getPromedio(id) async {
+    double evaluations = 0;
+    int numScores = 0;
+    await _firestoreInstance
+        .collection('evaluations')
+        .where('publicationID', isEqualTo: id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        evaluations += double.parse(element['score']);
+        numScores++;
+      });
+    });
+    return evaluations / numScores;
+  }
+*/
   void updateEvaluations(List evaluationsID) async {
     await _firestoreInstance
         .collection('users')
@@ -200,6 +223,7 @@ class dbUtil {
   }
 
   Future<void> deleteDocument(String id, String collection) async {
+    print('POOL DELETE');
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 

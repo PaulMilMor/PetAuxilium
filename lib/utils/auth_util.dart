@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
+
 import 'package:pet_auxilium/utils/prefs_util.dart';
+
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -21,24 +23,23 @@ class AuthUtil {
       return null;
     }
   }
-  Future <void> updateEmail(String email) async {
+
+  Future<void> updateEmail(String email) async {
     var firebaseUser = await _auth.currentUser;
     firebaseUser.updateEmail(email);
     print(email);
-    
   }
-  
-  Future <void> updatePassword(String password) async {
+
+  Future<void> updatePassword(String password) async {
     var firebaseUser = await _auth.currentUser;
     firebaseUser.updatePassword(password);
     print(_auth.currentUser);
-    
   }
-  
+
   //Obtiene email y password para ingresar
 
   //TODO:  Utilizar SharedPreferences para que la configuracion se quede guardada en el telefono
- 
+
   Future<String> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -55,6 +56,8 @@ class AuthUtil {
       return 'Ingresó';
       //_prefs.userName = userModel.name;
     } on FirebaseAuthException catch (e) {
+      print('POOL SWITCH');
+      print(e.code);
       switch (e.code) {
         case 'user-not-found':
           return 'No se encontró el usuario.';
@@ -72,7 +75,15 @@ class AuthUtil {
           return 'Algo salió mal. Error [${e.code}]';
           break;
       }
+    } on PlatformException catch (e) {
+      print('ERROR');
+      print(e);
     }
+    /*
+    catch (error) {
+      print('ERROR');
+      print(error);
+    }*/
   }
 
   //Retorna un usuario con nombre 'anonimo' y con una id generada automaticamente
@@ -111,7 +122,7 @@ class AuthUtil {
 
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
-      print(_db.getUser(user.uid));
+
       List<String> follows = await _db.getFollows(user.uid);
       UserModel userModel = UserModel(
           id: user.uid,

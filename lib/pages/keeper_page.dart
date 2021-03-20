@@ -27,7 +27,6 @@ class KeeperPageState extends State<KeeperPage> {
   final prefs = new preferencesUtil();
   var _pricingTxtController = TextEditingController();
 
-
   var _descTxtController = TextEditingController();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
@@ -40,7 +39,7 @@ class KeeperPageState extends State<KeeperPage> {
   List<String> imagesRef = [];
   List<Object> images = [];
   Future<File> _imageFile;
-  List<ImageUploadModel> _imgsFiles =[];
+  List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
@@ -103,9 +102,9 @@ class KeeperPageState extends State<KeeperPage> {
                     onTap: () {
                       setState(() {
                         images.removeAt(index);
-                        
+
                         _imgsFiles.remove(index);
-                        //   
+                        //
                       });
                     },
                   ),
@@ -156,15 +155,13 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   _limitImages(BuildContext context) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
   void getFileImage(int index) async {
-
-
     _imageFile.then((file) async {
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
 
@@ -205,13 +202,9 @@ class KeeperPageState extends State<KeeperPage> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-         
           _pricingTxt(),
-
           _descTxt(),
-        
           buildGridView(),
-          
           _buttons()
         ],
       ),
@@ -255,8 +248,6 @@ class KeeperPageState extends State<KeeperPage> {
 
   Widget _pricingTxt() {
     return Container(
-    
-
         child: Column(children: [
       Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
@@ -279,7 +270,6 @@ class KeeperPageState extends State<KeeperPage> {
             ),
             onChanged: (value) {
               setState(() {
-             
                 _pricing = value;
                 prefs.keeperPricing = value;
               });
@@ -349,7 +339,7 @@ class KeeperPageState extends State<KeeperPage> {
       child: RaisedButton(
           onPressed: () {
             if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
@@ -375,10 +365,7 @@ class KeeperPageState extends State<KeeperPage> {
           child: Text('Publicar')),
     );
   }
-
-
 }
-
 
 class AlwaysDisabledFocusNode extends FocusNode {
   @override

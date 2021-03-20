@@ -9,13 +9,12 @@ import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class ListFeed extends StatefulWidget {
-  ListFeed({
-    //this.itemCount,
-    @required this.snapshot,
-    this.follows,
-    this.voidCallback,
-    this.category
-  });
+  ListFeed(
+      {
+      //this.itemCount,
+      @required this.snapshot,
+      this.follows,
+      this.voidCallback});
 
   final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
@@ -27,18 +26,19 @@ class ListFeed extends StatefulWidget {
 }
 
 class _ListFeedState extends State<ListFeed> {
-  
-  MapsUtil mapsUtil=MapsUtil();
-   final preferencesUtil _prefs = preferencesUtil();
+  MapsUtil mapsUtil = MapsUtil();
+  final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
+    print('POOL PREFS');
+    print(_prefs.userID.toString().length);
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
-          
+
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
           return GestureDetector(
@@ -50,6 +50,7 @@ class _ListFeedState extends State<ListFeed> {
             },
             child: Card(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
@@ -84,7 +85,6 @@ class _ListFeedState extends State<ListFeed> {
                             height: 5,
                           ),
                           Container(
-                            
                             width: 150,
                             child: Text(
                               _data['pricing'],
@@ -94,7 +94,7 @@ class _ListFeedState extends State<ListFeed> {
                               ),
                             ),
                           ),
-                          
+
                           /*Container(
                             width: 150,
                             child: Icon(
@@ -102,7 +102,7 @@ class _ListFeedState extends State<ListFeed> {
                             color: Colors.greenAccent[400],
                             size: 20.0,
                             ),*/
-                             /*child: Text(
+                          /*child: Text(
                               _data['pricing'],
                               style: TextStyle(
                                 fontSize: 15,
@@ -110,28 +110,29 @@ class _ListFeedState extends State<ListFeed> {
                               ),
                             ),*/
                           //),
-                          
+
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,
                           ),
+                          //Aquí está el promedio we
+                          if (_data['category'] == 'CUIDADOR') _rating(),
                         ],
                       )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                       _optionsPopup(_data.id, _data.data())
-                    ],
-                  )
+                  Spacer(),
+                  _prefs.userID == ' '
+                      ? Text('')
+                      : _optionsPopup(_data.id, _data.data()),
                 ],
               ),
             ),
           );
-          
         });
   }
 
-_addFollow(String id,) async {
+  _addFollow(
+    String id,
+  ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
     } else {
@@ -139,12 +140,12 @@ _addFollow(String id,) async {
     }
     dbUtil().updateFollows(this.widget.follows);
     setState(() {});
-    if(this.widget.voidCallback!=null){
-     this.widget.voidCallback();
+    if (this.widget.voidCallback != null) {
+      this.widget.voidCallback();
     }
   }
 
-  Widget _optionsPopup(id,  publications) {
+  Widget _optionsPopup(id, publications) {
     return PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
@@ -175,6 +176,10 @@ _addFollow(String id,) async {
                       ),
                       value: 2,
                     ),
+              PopupMenuItem(
+                child: Text('a'),
+                value: 3,
+              ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -199,9 +204,12 @@ _addFollow(String id,) async {
   }
 
   _deletePublication(id, collection, selectedPublication) {
+    //FIXME: No se elimina la publicación de la vista
     dbUtil().deleteDocument(id, collection);
-    setState(() {});
-    Scaffold.of(context)
+    if (this.widget.voidCallback != null) {
+      this.widget.voidCallback();
+    }
+    ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
@@ -210,9 +218,8 @@ _addFollow(String id,) async {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              setState(() {
-                dbUtil().addPublication(selectedPublication);
-              });
+              dbUtil().addPublication(selectedPublication);
+              this.widget.voidCallback();
             },
           ),
         ),
@@ -283,6 +290,16 @@ _addFollow(String id,) async {
     }
   }
 
-
-  
+  Widget _rating() {
+    return Row(
+      children: [
+        Icon(
+          Icons.star_rate_rounded,
+          color: Colors.greenAccent[400],
+          size: 25,
+        ),
+        Text("5.0"),
+      ],
+    );
+  }
 }

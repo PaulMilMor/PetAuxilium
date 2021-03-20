@@ -173,7 +173,7 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   _limitImages(BuildContext context) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
@@ -401,7 +401,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _saveBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
-      child: RaisedButton(
+      child: ElevatedButton(
           onPressed: () {
             if (_selectedCategory == 'SITUACIÓN DE CALLE') {
               _name = 'Animal Callejero';
@@ -411,7 +411,7 @@ class PublicationPageState extends State<PublicationPage> {
                 _desc.isEmpty ||
                 imagesRef.isEmpty ||
                 _locations.isEmpty) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
@@ -455,8 +455,6 @@ class PublicationPageState extends State<PublicationPage> {
       });
     }
   }
-
- 
 }
 
 //Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección

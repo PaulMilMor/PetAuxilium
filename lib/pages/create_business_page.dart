@@ -198,7 +198,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
             if (_name.isEmpty || _locations.isEmpty || _desc.isEmpty) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
@@ -307,7 +307,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   _limitImages(BuildContext context) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));

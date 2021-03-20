@@ -440,7 +440,7 @@ class _SignupPageState extends State<SignupPage> {
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
       _isLoading = false;
-      Scaffold.of(context2)
+      ScaffoldMessenger.of(context2)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }
@@ -454,7 +454,7 @@ class _SignupPageState extends State<SignupPage> {
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }

@@ -15,6 +15,9 @@ final dbUtil _db =dbUtil();
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
+    void callback() {
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     print(ModalRoute.of(context).settings.name);
@@ -30,7 +33,7 @@ class _FeedState extends State<Feed> {
               future: _db.getAllPublications(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
-                  return ListFeed(snapshot: snapshot, follows:follow.data);
+                  return ListFeed(snapshot: snapshot, follows:follow.data, voidCallback: callback,);
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       _isLoading = true;
                     });
-                    _login(context);
+                    _login();
                   }
                 },
               ),
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         child: GoogleSignInButton(
           onPressed: () {
-            _loginGoogle(context);
+            _loginGoogle();
           },
           text: 'Ingresar con Google',
         ),
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 //metodo para ingresar usando auth
-  _login(BuildContext context2) async {
+  _login() async {
     String _email = _emailController.text;
     String _password = _pswdController.text;
     String _result = await auth.signInWithEmailAndPassword(_email, _password);
@@ -189,13 +189,15 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
       });
-      Scaffold.of(context2)
+      print('POOL LOGIN ERROR');
+      print(_result);
+      ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }
   }
 
-  _loginGoogle(BuildContext context2) async {
+  _loginGoogle() async {
     String _result = await auth.signInWithGoogle();
     print('LOGIN');
     print(prefs.userName);
@@ -203,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
-      Scaffold.of(context2)
+      ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
     }
