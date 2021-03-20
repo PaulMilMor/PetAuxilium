@@ -198,10 +198,12 @@ class dbUtil {
     return follows;
   }
 
-/*
-  Future<double> getPromedio(id) async {
+
+  Future<String> getPromedio(id) async {
     double evaluations = 0;
     int numScores = 0;
+    String promedio ="0.0";
+    double div =0;
     await _firestoreInstance
         .collection('evaluations')
         .where('publicationID', isEqualTo: id)
@@ -212,9 +214,13 @@ class dbUtil {
         numScores++;
       });
     });
-    return evaluations / numScores;
+    div = evaluations / numScores;
+    promedio = div.toStringAsFixed(1);
+    print(evaluations / numScores);
+    print(promedio);
+    return promedio;
   }
-*/
+
   void updateEvaluations(List evaluationsID) async {
     await _firestoreInstance
         .collection('users')

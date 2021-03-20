@@ -37,8 +37,6 @@ class _OpinionsState extends State<Opinions> {
     super.initState();
     _focusNode = FocusNode();
     promedio = "5";
-    
-    
   }
 
   @override
@@ -68,9 +66,7 @@ class _OpinionsState extends State<Opinions> {
           } else {
             return _makeOpinion('0');
           }
-          
         });
-        
   }
 
 //TODO: Darle formato correcto a las evaluaciones
@@ -78,7 +74,7 @@ class _OpinionsState extends State<Opinions> {
 //nombre del usuario sale en vertical
 //FIXME: El área donde están los comentarios no se puede hacer scroll
   Widget _listEvaluations(snapshot) {
-    suma=0;
+    suma = 0;
     return ListView.builder(
         shrinkWrap: true,
         itemCount: snapshot.data.length,
@@ -91,9 +87,9 @@ class _OpinionsState extends State<Opinions> {
           print("La perra suma");
           suma = temp + suma;
           print(suma);
-          
+
           print("el pinchi promedio");
-          prom = suma/snapshot.data.length;
+          prom = suma / snapshot.data.length;
           //contador++;
           print(prom);
           contador1 = snapshot.data.length;
@@ -101,7 +97,6 @@ class _OpinionsState extends State<Opinions> {
           contador = contador1.toString();
           //print(promedio);
           return Container(
-            
               child: SingleChildScrollView(
                   child: Material(
                       type: MaterialType.transparency,
@@ -119,7 +114,6 @@ class _OpinionsState extends State<Opinions> {
                                 TextSpan(
                                   text: opinion.username + "  ",
                                   style: TextStyle(fontWeight: FontWeight.bold),
-                                  
                                 ),
                                 WidgetSpan(
                                   child: Icon(
@@ -143,11 +137,9 @@ class _OpinionsState extends State<Opinions> {
                         SizedBox(
                           height: 17,
                         ),
-                      ]))))
-                      );
-        }); 
+                      ])))));
+        });
   }
-  
 
   Widget _makeOpinion(length) {
     return Container(
@@ -169,34 +161,29 @@ class _OpinionsState extends State<Opinions> {
                         width: 290,
                         height: 40,
                         child: Row(children: [
-                            Icon(
-                              Icons.star_rate_rounded,
-                              color: Colors.greenAccent[400],
-                              size: 25,
-                            ),
-                            
-                            Text(promedio),
-                            Text(" (" + contador +")")
-
-                          ]
+                          Icon(
+                            Icons.star_rate_rounded,
+                            color: Colors.greenAccent[400],
+                            size: 25,
                           ),
+                          Text(promedio),
+                          Text(" (" + contador + ")")
+                        ]),
                       ),
                       Container(
-                          width: 290,
-                          height: 40,
-                          
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                length == '1'
-                                    ? length + ' Opinión'
-                                    : length + ' Opiniones',
-                                //maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
+                        width: 290,
+                        height: 40,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            length == '1'
+                                ? length + ' Opinión'
+                                : length + ' Opiniones',
+                            //maxLines: 3,
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
+                        ),
+                      ),
 
                       //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
                       // Para todo lo demás se usa un TextField o TextFormField normal
@@ -278,6 +265,104 @@ class _OpinionsState extends State<Opinions> {
                     ]))))));
   }
 
+  Widget _showOpinion(length, snapshot) {
+    return Container(
+        child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+                width: 345,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Align(
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                        child: Column(children: <Widget>[
+                      Container(
+                        width: 290,
+                        height: 40,
+                        child: Row(children: [
+                          Icon(
+                            Icons.star_rate_rounded,
+                            color: Colors.greenAccent[400],
+                            size: 25,
+                          ),
+                          Text(promedio),
+                          Text(" (" + contador + ")")
+                        ]),
+                      ),
+                      Container(
+                        width: 290,
+                        height: 40,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            length == '1'
+                                ? length + ' Opinión'
+                                : length + ' Opiniones',
+                            //maxLines: 3,
+                            style: TextStyle(fontSize: 15, color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 290,
+                        height: 60,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Column(children: <Widget>[
+                            Row(children: [
+                              Text(
+                                prefs.userName,
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Icon(
+                                Icons.star_rate_rounded,
+                                color: Colors.greenAccent[400],
+                                size: 20,
+                              ),
+                              Text(
+                                _score,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.justify,
+                              ),
+
+                            ]),
+                            Text(
+                              _comment,
+                              textAlign: TextAlign.left,
+                            ),
+                          ]),
+                        ),
+                      ),
+                      Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            print('Eliminar comentario');
+                            //_evaluacion();
+                            setState(() {});
+                          },
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              'ELIMINAR EVALUACIÓN',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 11,
+                      ),
+
+                      //_opinionList(),
+                    ]))))));
+  }
+
   void _evaluacion() {
     EvaluationModel evaluation = EvaluationModel(
       userID: prefs.userID,
@@ -301,9 +386,7 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _opinion(snapshot) {
-    
     if (this.widget.category.toString().contains('CUIDADOR')) {
-      
       return SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -312,13 +395,12 @@ class _OpinionsState extends State<Opinions> {
             //FIXME: Así como está no muestra el número de opiniones
             _myEvaluation == null
                 ? _makeOpinion(snapshot.data.length.toString())
-                : Text('Ya has evaluado'),
+                : _showOpinion(snapshot.data.length.toString(),
+                    snapshot), //Text('Ya has evaluado'),
             _listEvaluations(snapshot),
-            
           ],
         ),
       );
-      
     } else {
       return SingleChildScrollView(
         child: Column(
@@ -338,6 +420,8 @@ class _OpinionsState extends State<Opinions> {
     for (EvaluationModel evaluation in snapshot.data) {
       if (evaluation.userID == prefs.userID) {
         _myEvaluation = evaluation;
+        _comment = _myEvaluation.comment;
+        _score = _myEvaluation.score;
       }
     }
   }

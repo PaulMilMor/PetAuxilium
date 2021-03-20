@@ -20,6 +20,7 @@ class ListFeed extends StatefulWidget {
   AsyncSnapshot<QuerySnapshot> snapshot;
   List<String> follows;
   String category;
+  
 
   @override
   _ListFeedState createState() => _ListFeedState();
@@ -28,6 +29,7 @@ class ListFeed extends StatefulWidget {
 class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
   final preferencesUtil _prefs = preferencesUtil();
+  String nose;
   @override
   Widget build(BuildContext context) {
     print('POOL PREFS');
@@ -95,28 +97,13 @@ class _ListFeedState extends State<ListFeed> {
                             ),
                           ),
 
-                          /*Container(
-                            width: 150,
-                            child: Icon(
-                            Icons.star,
-                            color: Colors.greenAccent[400],
-                            size: 20.0,
-                            ),*/
-                          /*child: Text(
-                              _data['pricing'],
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey[700],
-                              ),
-                            ),*/
-                          //),
 
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,
                           ),
                           //Aquí está el promedio we
-                          if (_data['category'] == 'CUIDADOR') _rating(),
+                          if (_data['category'] == 'CUIDADOR') _rating(_data.id), 
                         ],
                       )),
                   Spacer(),
@@ -289,16 +276,28 @@ class _ListFeedState extends State<ListFeed> {
       );
     }
   }
-
-  Widget _rating() {
+      average(id) async{
+      //print(dbUtil().getPromedio(id));
+      var prom =  await dbUtil().getPromedio(id);
+      //setState(() {
+              nose = prom;
+            //});
+      print(nose);
+        return//{
+          /*await*/ "5";//dbUtil().getPromedio(id)
+          //prom.toString()
+          //};
+      }
+    
+  Widget _rating(id) {
     return Row(
       children: [
         Icon(
           Icons.star_rate_rounded,
           color: Colors.greenAccent[400],
           size: 25,
-        ),
-        Text("5.0"),
+        ),    
+        Text(/*average(id)*/"5"),
       ],
     );
   }
