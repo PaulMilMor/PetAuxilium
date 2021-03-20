@@ -6,6 +6,7 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
+import 'package:pet_auxilium/widgets/comments_widget.dart';
 
 List<String> _lista = [];
 
@@ -82,7 +83,7 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 11,
+                        height: 7,
                       ),
                       const Divider(
                         color: Colors.black45,
@@ -145,14 +146,14 @@ class _DetailPageState extends State<DetailPage> {
                       const Divider(
                         color: Colors.black12,
                         height: 5,
-                        thickness: 1,
+                        thickness: 2,
                         indent: 1,
                         endIndent: 1,
                       ),
-                      Opinions(
-                        id: widget.detailDocument.id,
-                        category: widget.detailDocument['category'],
-                      )
+                      SizedBox(
+                        height: 3,
+                      ),
+                      _bottomSection(),
                     ],
                   )))),
         ) /*;}
@@ -170,21 +171,32 @@ class _DetailPageState extends State<DetailPage> {
 
   Widget _setBackIcon(context2) {
     return Positioned(
-      right: 0.0,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context2).pop();
-        },
-        child: Align(
-          alignment: Alignment(-0.9, -0.5),
-          child: CircleAvatar(
-            radius: 14.0,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.arrow_back, color: Colors.green),
+        right: 0.0,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context2).pop();
+          },
+          child: Align(
+            alignment: Alignment(-0.9, -0.5),
+            child: CircleAvatar(
+              radius: 14.0,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.arrow_back, color: Colors.green),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
+  }
+
+  _bottomSection() {
+    if (widget.detailDocument['category'].toString().contains('CUIDADOR')) {
+      return Opinions(
+          id: widget.detailDocument.id,
+          category: widget.detailDocument['category']);
+    } else {
+      return Comments(
+          id: widget.detailDocument.id,
+          category: widget.detailDocument['category']);
+    }
   }
 
   Widget _setCarousel() {

@@ -74,6 +74,7 @@ class _OpinionsState extends State<Opinions> {
   Widget _listEvaluations(snapshot) {
     suma = 0;
     return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
@@ -87,46 +88,43 @@ class _OpinionsState extends State<Opinions> {
           print(suma);
           return Container(
               child: SingleChildScrollView(
-                  child: Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                          // alignment: Alignment.topLeft,
-                          child: Column(children: <Widget>[
-                        Container(
-                            height: 17,
-                            width: 330,
-                            child: Text.rich(TextSpan(
-                              style: TextStyle(
-                                fontSize: 13.5,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: opinion.username + "  ",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.star_rate_rounded,
-                                    color: Colors.greenAccent[400],
-                                    size: 17,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: opinion.score,
-                                ),
-                              ],
-                            ))),
-                        Container(
-                          width: 330,
-                          alignment: Alignment.topLeft,
-                          child: Text(opinion.comment,
-                              textAlign: TextAlign.justify,
-                              style: new TextStyle()),
-                        ),
-                        SizedBox(
-                          height: 17,
-                        ),
-                      ])))));
+
+                  // alignment: Alignment.topLeft,
+                  child: Column(children: <Widget>[
+            Container(
+                height: 17,
+                width: 330,
+                child: Text.rich(TextSpan(
+                  style: TextStyle(
+                    fontSize: 13.5,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: opinion.username + "  ",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.star_rate_rounded,
+                        color: Colors.greenAccent[400],
+                        size: 17,
+                      ),
+                    ),
+                    TextSpan(
+                      text: opinion.score,
+                    ),
+                  ],
+                ))),
+            Container(
+              width: 330,
+              alignment: Alignment.topLeft,
+              child: Text(opinion.comment,
+                  textAlign: TextAlign.justify, style: new TextStyle()),
+            ),
+            SizedBox(
+              height: 11,
+            ),
+          ])));
         });
   }
 
@@ -145,100 +143,136 @@ class _OpinionsState extends State<Opinions> {
 
                     //padding: EdgeInsets.all(1),
                     child: SingleChildScrollView(
+                        reverse: true,
                         child: Column(children: <Widget>[
-                      Container(
-                        width: 290,
-                        height: 40,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            length == '1'
-                                ? length + ' Opinión'
-                                : length + ' Opiniones',
-                            //maxLines: 3,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                      ),
+                          TextFormField(
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            // cursorColor: Theme.of(context).cursorColor,
+                            maxLength: 140,
+                            focusNode: _focusNode,
+                            onTap: _requestFocus,
 
-                      //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
-                      // Para todo lo demás se usa un TextField o TextFormField normal
-                      //FIXME: No se ve el campo de texto al escribir
-                      TextFormField(
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                        // cursorColor: Theme.of(context).cursorColor,
-                        maxLength: 140,
-                        focusNode: _focusNode,
-                        onTap: _requestFocus,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.comment,
-                            color: Colors.white,
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.grey[400],
+                                  size: 19,
+                                ),
+                                onPressed: () {
+                                  _commentController.clear();
+                                },
+                              ),
+                              icon: Icon(
+                                Icons.comment,
+                                color: Colors.white,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              hintText: "Escribe una opinión...",
+                              contentPadding: EdgeInsets.fromLTRB(
+                                  1, 17, 10, 0), // control yo
+                            ),
+                            controller: _commentController,
                           ),
-                          labelStyle: TextStyle(
-                            color: Colors.black,
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          hintText: "Escribe una opinión...",
-                        ),
-                        controller: _commentController,
-                      ),
 
-                      Container(
-                        child: Align(
-                          alignment: Alignment(-0.7, -1.0),
-                          child: RatingBar.builder(
-                            initialRating: 2.5,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 20,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                            itemBuilder: (context, _) => Icon(
-                                Icons.star_rounded,
-                                color: Colors.greenAccent[400]),
-                            onRatingUpdate: (rating) {
-                              print("sumadre");
-                              print(rating);
-                              _score = rating.toString();
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: GestureDetector(
-                          onTap: () {
-                            print('PUBLICAR');
-                            _evaluacion();
-                            setState(() {});
-                          },
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              'PUBLICAR',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
+                          Container(
+                            child: Align(
+                              alignment: Alignment(-0.7, -1.0),
+                              child: RatingBar.builder(
+                                initialRating: 2.5,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemSize: 20,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 0),
+                                itemBuilder: (context, _) => Icon(
+                                    Icons.star_rounded,
+                                    color: Colors.greenAccent[400]),
+                                onRatingUpdate: (rating) {
+                                  print("sumadre");
+                                  print(rating);
+                                  _score = rating.toString();
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 11,
-                      ),
 
-                      //_opinionList(),
-                    ]))))));
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                if (_score == null) {
+                                  _score = '2.5';
+                                } else {
+                                  _score = _score;
+                                }
+                                print('PUBLICAR');
+                                _evaluacion();
+                                setState(() {});
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  'PUBLICAR',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context)
+                                      .viewInsets
+                                      .bottom)),
+                          SizedBox(
+                            height: 21,
+                          ),
+
+                          Container(
+                              width: 290,
+                              child: Text.rich(TextSpan(
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                ),
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      Icons.comment,
+                                      color: Colors.black45,
+                                      size: 17,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '  ',
+                                  ),
+                                  TextSpan(
+                                    text: length == '1'
+                                        ? length + ' Opinión'
+                                        : length + ' Opiniones',
+                                    //maxLines: 3,
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
+                                  ),
+                                ],
+                              ))),
+
+                          //_opinionList(),
+                        ]))))));
   }
 
   void _evaluacion() {
@@ -273,7 +307,7 @@ class _OpinionsState extends State<Opinions> {
             //FIXME: Así como está no muestra el número de opiniones
             _myEvaluation == null
                 ? _makeOpinion(snapshot.data.length.toString())
-                : Text('Ya has evaluado'),
+                : Text('YA HAS ESCRITO UNA OPINION'),
             _listEvaluations(snapshot),
           ],
         ),
