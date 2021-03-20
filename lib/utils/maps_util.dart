@@ -26,9 +26,9 @@ class MapsUtil {
   }
 
   Widget getLocationText(String location) {
- List<String> loc=location.split(',');
- double lat= double.parse(loc[0].replaceAll('(', ''));
- double long=double.parse(loc[1].replaceAll(')', ''));
+    List<String> loc = location.split(',');
+    double lat = double.parse(loc[0].replaceAll('(', ''));
+    double long = double.parse(loc[1].replaceAll(')', ''));
     if (lat == 29.115967 && long == -111.025490) {
       print('debio entrar aqui');
       return Container(
@@ -49,14 +49,15 @@ class MapsUtil {
               (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
             if (snapshot.hasData) {
               return Container(
-                width: 150,
+                alignment: Alignment.centerLeft,
+                width: 171,
                 child: Text(
                   snapshot.data.first.street +
-                      " " +
+                      ", " +
                       snapshot.data.first.locality,
                   style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.grey,
+                    fontSize: 13,
+                    color: Colors.black54,
                   ),
                 ),
               );
@@ -75,11 +76,10 @@ class MapsUtil {
           });
     }
   }
-Future<List<Placemark>> getAddress(lat, long) async {
+
+  Future<List<Placemark>> getAddress(lat, long) async {
     List<Placemark> newPlace = await placemarkFromCoordinates(lat, long);
 
     return newPlace;
   }
-
-  
 }

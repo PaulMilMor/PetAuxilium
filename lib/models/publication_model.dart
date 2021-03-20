@@ -9,6 +9,8 @@ class PublicationModel {
   List<dynamic> imgRef;
   String userID;
   String pricing;
+  int nevaluations;
+  double score;
   PublicationModel(
       {this.id,
       this.category,
@@ -17,7 +19,9 @@ class PublicationModel {
       this.location,
       this.imgRef,
       this.userID,
-      this.pricing});
+      this.pricing,
+      this.nevaluations,
+      this.score});
 
 // class AddAdoption {
 //   String id;

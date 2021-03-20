@@ -14,13 +14,13 @@ class ListFeed extends StatefulWidget {
       //this.itemCount,
       @required this.snapshot,
       this.follows,
-      this.voidCallback});
+      this.voidCallback,
+      this.category});
 
   final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
   List<String> follows;
   String category;
-  
 
   @override
   _ListFeedState createState() => _ListFeedState();
@@ -28,6 +28,7 @@ class ListFeed extends StatefulWidget {
 
 class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
+  dbUtil _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
   String nose;
   @override
@@ -97,13 +98,13 @@ class _ListFeedState extends State<ListFeed> {
                             ),
                           ),
 
-
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
                             height: 34,
                           ),
                           //Aquí está el promedio we
-                          if (_data['category'] == 'CUIDADOR') _rating(_data.id), 
+                          if (_data['category'] == 'CUIDADOR')
+                            _rating(_data['nevaluations'], _data['score']),
                         ],
                       )),
                   Spacer(),
@@ -125,7 +126,7 @@ class _ListFeedState extends State<ListFeed> {
     } else {
       this.widget.follows.add(id);
     }
-    dbUtil().updateFollows(this.widget.follows);
+    _db.updateFollows(this.widget.follows);
     setState(() {});
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
@@ -163,10 +164,24 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 2,
                     ),
-              PopupMenuItem(
-                child: Text('a'),
-                value: 3,
-              ),
+              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person_remove_alt_1_sharp,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            'Suspender Cuenta',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ],
+                      ),
+                      value: 3,
+                    ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -184,15 +199,13 @@ class _ListFeedState extends State<ListFeed> {
             case 3:
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications);
-
-              print(publications);
+              _banUser(selectedPublication.userID);
           }
         });
   }
 
   _deletePublication(id, collection, selectedPublication) {
-    //FIXME: No se elimina la publicación de la vista
-    dbUtil().deleteDocument(id, collection);
+    _db.deleteDocument(id, collection);
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
     }
@@ -205,12 +218,37 @@ class _ListFeedState extends State<ListFeed> {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              dbUtil().addPublication(selectedPublication);
+              _db.addPublication(selectedPublication);
               this.widget.voidCallback();
             },
           ),
         ),
       );
+  }
+
+  _banUser(id) {
+    Widget confirmButton = TextButton(
+      child: Text("Confirmar"),
+      onPressed: () {
+        _db.banUser(id);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      //title: Text("My title"),
+      content: Text("¿Seguro que quiere eliminar el usuario?"),
+      actions: [
+        confirmButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+    //_db.banUser(id);
   }
 
   Widget _isFollowed(String id, List<String> follow) {
@@ -276,28 +314,32 @@ class _ListFeedState extends State<ListFeed> {
       );
     }
   }
-      average(id) async{
-      //print(dbUtil().getPromedio(id));
-      var prom =  await dbUtil().getPromedio(id);
-      //setState(() {
-              nose = prom;
-            //});
-      print(nose);
-        return//{
-          /*await*/ "5";//dbUtil().getPromedio(id)
-          //prom.toString()
-          //};
-      }
-    
-  Widget _rating(id) {
+
+  Widget _rating(nevaluations, score) {
+    double mean = score / nevaluations;
     return Row(
       children: [
         Icon(
           Icons.star_rate_rounded,
-          color: Colors.greenAccent[400],
+          color: Color.fromRGBO(210, 210, 210, 1),
           size: 25,
-        ),    
-        Text(/*average(id)*/"5"),
+        ),
+        Text(
+          nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Icon(
+          Icons.comment,
+          color: Color.fromRGBO(210, 210, 210, 1),
+          size: 20,
+        ),
+        Text(
+          "$nevaluations",
+          style: TextStyle(fontSize: 12),
+        ),
       ],
     );
   }
