@@ -129,21 +129,6 @@ class _OpinionsState extends State<Opinions> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          Container(
-                            width: 290,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                length == '1'
-                                    ? length + ' Opinión'
-                                    : length + ' Opiniones',
-                                //maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                          ),
-
                           TextFormField(
                             style: TextStyle(
                               fontSize: 15,
@@ -184,12 +169,6 @@ class _OpinionsState extends State<Opinions> {
                             ),
                             controller: _commentController,
                           ),
-
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: MediaQuery.of(context)
-                                      .viewInsets
-                                      .bottom)),
 
                           Container(
                             child: Align(
@@ -237,10 +216,43 @@ class _OpinionsState extends State<Opinions> {
                               ),
                             ),
                           ),
-
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context)
+                                      .viewInsets
+                                      .bottom)),
                           SizedBox(
-                            height: 4,
+                            height: 21,
                           ),
+
+                          Container(
+                              width: 290,
+                              child: Text.rich(TextSpan(
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                ),
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      Icons.comment,
+                                      color: Colors.black45,
+                                      size: 17,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '  ',
+                                  ),
+                                  TextSpan(
+                                    text: length == '1'
+                                        ? length + ' Opinión'
+                                        : length + ' Opiniones',
+                                    //maxLines: 3,
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
+                                  ),
+                                ],
+                              ))),
+
                           //_opinionList(),
                         ]))))));
   }
@@ -268,35 +280,19 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _opinion(snapshot) {
-    if (this.widget.category.toString().contains('CUIDADOR')) {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //FIXME: Así como está no muestra el número de opiniones
-            _myEvaluation == null
-                ? _makeOpinion(snapshot.data.length.toString())
-                : Text('YA HAS ESCRITO UNA OPINION'),
-            _listEvaluations(snapshot)
-          ],
-        ),
-      );
-    } else {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //FIXME: Así como está no muestra el número de opiniones
-            _myEvaluation == null
-                ? _makeOpinion(snapshot.data.length.toString())
-                : Text('YA HAS ESCRITO UNA OPINION'),
-            _listEvaluations(snapshot)
-          ],
-        ),
-      );
-    }
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //FIXME: Así como está no muestra el número de opiniones
+          _myEvaluation == null
+              ? _makeOpinion(snapshot.data.length.toString())
+              : Text('YA HAS ESCRITO UNA OPINION'),
+          _listEvaluations(snapshot)
+        ],
+      ),
+    );
   }
 
   void _checkEvaluations(snapshot) {

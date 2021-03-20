@@ -1,9 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
+import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -109,6 +109,15 @@ class dbUtil {
     });
   }
 
+  Future<void> addComments(CommentModel comment) async {
+    await _firestoreInstance.collection("comments").add({
+      'userID': comment.userID,
+      'publicationID': comment.publicationID,
+      'username': comment.username,
+      'comment': comment.comment
+    });
+  }
+
   Future<List<String>> getLocations() async {
     List<String> lista = List<String>();
     String place = "";
@@ -154,11 +163,12 @@ class dbUtil {
     return images;
   }
 
-  Future <QuerySnapshot> getPublications(String collection,String category) async {
-  
-   return _firestoreInstance.collection(collection).where('category', isEqualTo: category)
+  Future<QuerySnapshot> getPublications(
+      String collection, String category) async {
+    return _firestoreInstance
+        .collection(collection)
+        .where('category', isEqualTo: category)
         .get();
-       
   }
 
   Future<QuerySnapshot> getAllPublications() {
@@ -199,6 +209,13 @@ class dbUtil {
         .update({'evaluationsID': evaluationsID});
   }
 
+  void updateComments(List commentsID) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(_prefs.userID)
+        .update({'commentsID': commentsID});
+  }
+
   Future<void> deleteDocument(String id, String collection) async {
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
@@ -232,6 +249,21 @@ class dbUtil {
       });
     });
     return opinions;
+  }
+
+  Future<List<CommentModel>> getComments(String id) async {
+    List<CommentModel> comments = [];
+    await _firestoreInstance
+        .collection('comments')
+        .where('publicationID', isEqualTo: id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        CommentModel comment = CommentModel.fromJsonMap(element.data());
+        comments.add(comment);
+      });
+    });
+    return comments;
   }
 
   Future<PublicationModel> getPublication(String id) async {

@@ -6,6 +6,7 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
+import 'package:pet_auxilium/widgets/comments_widget.dart';
 
 List<String> _lista = [];
 
@@ -113,11 +114,9 @@ class DetailPage extends StatelessWidget {
                         endIndent: 1,
                       ),
                       SizedBox(
-                        height: 14,
+                        height: 3,
                       ),
-                      Opinions(
-                          id: detailDocument.id,
-                          category: detailDocument['category'])
+                      _bottomSection(),
                     ],
                   )))),
         ) /*;}
@@ -149,6 +148,16 @@ class DetailPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  _bottomSection() {
+    if (detailDocument['category'].toString().contains('CUIDADOR')) {
+      return Opinions(
+          id: detailDocument.id, category: detailDocument['category']);
+    } else {
+      return Comments(
+          id: detailDocument.id, category: detailDocument['category']);
+    }
   }
 
   Widget _setCarousel() {
