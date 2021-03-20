@@ -298,11 +298,25 @@ class _ListFeedState extends State<ListFeed> {
       children: [
         Icon(
           Icons.star_rate_rounded,
-          color: Colors.greenAccent[400],
+          color: Color.fromRGBO(210, 210, 210, 1),
           size: 25,
         ),
         Text(
-          nevaluations==0?'N/A':mean.toStringAsFixed(1)),
+          nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Icon(
+          Icons.comment,
+          color: Color.fromRGBO(210, 210, 210, 1),
+          size: 20,
+        ),
+        Text(
+          "$nevaluations",
+          style: TextStyle(fontSize: 12),
+        ),
       ],
     );
   }

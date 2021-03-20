@@ -9,19 +9,35 @@ import 'package:pet_auxilium/widgets/opinions_widget.dart';
 
 List<String> _lista = [];
 
-class DetailPage extends StatelessWidget {
-  List<PublicationModel> ad = [];
+class DetailPage extends StatefulWidget {
   DocumentSnapshot detailDocument;
   DetailPage(this.detailDocument);
+
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  List<PublicationModel> ad = [];
+
   final _db = dbUtil();
 
   final MapsUtil _mapsUtil = MapsUtil();
-//TODO: Tiene un márgen un tanto extraño y hace scroll por debajo de la barra de notificaciones
+  double avgscore;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      avgscore = widget.detailDocument['score'] /
+          widget.detailDocument['nevaluations'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //getImages();
     return Scaffold(
-      
         resizeToAvoidBottomInset: false,
         body: Container(
           child: Material(
@@ -48,7 +64,7 @@ class DetailPage extends StatelessWidget {
                         height: 17,
                       ),
                       Text(
-                        detailDocument['name'],
+                        widget.detailDocument['name'],
                         style: TextStyle(
                           fontSize: 21,
                           color: Colors.black,
@@ -59,7 +75,7 @@ class DetailPage extends StatelessWidget {
                         height: 3,
                       ),
                       Text(
-                        detailDocument['category'],
+                        widget.detailDocument['category'],
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.green,
@@ -78,16 +94,36 @@ class DetailPage extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        detailDocument['pricing'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                        
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.star_rate_rounded,
+                            color: Colors.greenAccent[400],
+                            size: 25,
+                          ),
+                          Text(
+                            avgscore.toStringAsFixed(1),
+                          ),
+                          Text(" (${widget.detailDocument['nevaluations']})"),
+                          Container(
+                            height: 25,
+                            child: VerticalDivider(
+                              color: Colors.black45,
+                              width: 20,
+                            ),
+                          ),
+                          Text(
+                            widget.detailDocument['pricing'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                      _mapsUtil
-                          .getLocationText(detailDocument['location'].first),
+                      _mapsUtil.getLocationText(
+                          widget.detailDocument['location'].first),
                       SizedBox(
                         height: 21,
                       ),
@@ -96,7 +132,7 @@ class DetailPage extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            detailDocument['description'],
+                            widget.detailDocument['description'],
                             //maxLines: 3,
                             style: TextStyle(fontSize: 14, color: Colors.black),
                             textAlign: TextAlign.justify,
@@ -114,8 +150,9 @@ class DetailPage extends StatelessWidget {
                         endIndent: 1,
                       ),
                       Opinions(
-                          id: detailDocument.id,
-                          category: detailDocument['category'])
+                        id: widget.detailDocument.id,
+                        category: widget.detailDocument['category'],
+                      )
                     ],
                   )))),
         ) /*;}
@@ -125,41 +162,10 @@ class DetailPage extends StatelessWidget {
     /*)
         );*/
   }
-  /*Widget _opinion(snapshot) {
-    if (this.widget.category.toString().contains('CUIDADOR')) {
-      
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //FIXME: Así como está no muestra el número de opiniones
-            _myEvaluation == null
-                ? _makeOpinion(snapshot.data.length.toString())
-                : Text('Ya has evaluado'),
-            _listEvaluations(snapshot)
-          ],
-        ),
-        
-      );
-    } else {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //_makeOpinion(),
-  
-            _listEvaluations(snapshot)
-          ],
-        ),
-      );
-    }
-  }
-*/
+
   Future<List<String>> getImages() async {
-    print(detailDocument.id);
-    return _lista = await _db.getAllImages(detailDocument.id);
+    print(widget.detailDocument.id);
+    return _lista = await _db.getAllImages(widget.detailDocument.id);
   }
 
   Widget _setBackIcon(context2) {

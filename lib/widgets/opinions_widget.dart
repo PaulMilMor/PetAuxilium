@@ -9,7 +9,10 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Opinions extends StatefulWidget {
-  Opinions({@required this.id, @required this.category});
+  Opinions({
+    @required this.id,
+    @required this.category,
+  });
   String id;
   String category;
   @override
@@ -24,21 +27,14 @@ class _OpinionsState extends State<Opinions> {
   final prefs = new preferencesUtil();
   List<String> evaluations;
   var _commentController = TextEditingController();
-  String promedio = "0.0";
   double temp = 0.0;
   double suma = 0.0;
-  double prom = 0.0;
-  int contador1;
-  String contador = "0";
   EvaluationModel _myEvaluation;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    promedio = "5";
-    
-    
   }
 
   @override
@@ -68,9 +64,7 @@ class _OpinionsState extends State<Opinions> {
           } else {
             return _makeOpinion('0');
           }
-          
         });
-        
   }
 
 //TODO: Darle formato correcto a las evaluaciones
@@ -78,7 +72,7 @@ class _OpinionsState extends State<Opinions> {
 //nombre del usuario sale en vertical
 //FIXME: El área donde están los comentarios no se puede hacer scroll
   Widget _listEvaluations(snapshot) {
-    suma=0;
+    suma = 0;
     return ListView.builder(
         shrinkWrap: true,
         itemCount: snapshot.data.length,
@@ -91,17 +85,7 @@ class _OpinionsState extends State<Opinions> {
           print("La perra suma");
           suma = temp + suma;
           print(suma);
-          
-          print("el pinchi promedio");
-          prom = suma/snapshot.data.length;
-          //contador++;
-          print(prom);
-          contador1 = snapshot.data.length;
-          promedio = prom.toStringAsFixed(1);
-          contador = contador1.toString();
-          //print(promedio);
           return Container(
-            
               child: SingleChildScrollView(
                   child: Material(
                       type: MaterialType.transparency,
@@ -119,7 +103,6 @@ class _OpinionsState extends State<Opinions> {
                                 TextSpan(
                                   text: opinion.username + "  ",
                                   style: TextStyle(fontWeight: FontWeight.bold),
-                                  
                                 ),
                                 WidgetSpan(
                                   child: Icon(
@@ -143,11 +126,9 @@ class _OpinionsState extends State<Opinions> {
                         SizedBox(
                           height: 17,
                         ),
-                      ]))))
-                      );
-        }); 
+                      ])))));
+        });
   }
-  
 
   Widget _makeOpinion(length) {
     return Container(
@@ -168,35 +149,17 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         width: 290,
                         height: 40,
-                        child: Row(children: [
-                            Icon(
-                              Icons.star_rate_rounded,
-                              color: Colors.greenAccent[400],
-                              size: 25,
-                            ),
-                            
-                            Text(promedio),
-                            Text(" (" + contador +")")
-
-                          ]
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            length == '1'
+                                ? length + ' Opinión'
+                                : length + ' Opiniones',
+                            //maxLines: 3,
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
+                        ),
                       ),
-                      Container(
-                          width: 290,
-                          height: 40,
-                          
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                length == '1'
-                                    ? length + ' Opinión'
-                                    : length + ' Opiniones',
-                                //maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                          ),
 
                       //FIXME: El GrayTextFormField es para usarse gris, en lugares donde encaja el campo gris
                       // Para todo lo demás se usa un TextField o TextFormField normal
@@ -301,9 +264,7 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _opinion(snapshot) {
-    
     if (this.widget.category.toString().contains('CUIDADOR')) {
-      
       return SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -314,11 +275,9 @@ class _OpinionsState extends State<Opinions> {
                 ? _makeOpinion(snapshot.data.length.toString())
                 : Text('Ya has evaluado'),
             _listEvaluations(snapshot),
-            
           ],
         ),
       );
-      
     } else {
       return SingleChildScrollView(
         child: Column(
