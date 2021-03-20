@@ -62,15 +62,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _checkSession() {
-    print('USER ID');
-    print(_prefs.userID);
-    /*if (_prefs.userID != ' ' && _prefs.userID != null) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, 'navigation', (Route<dynamic> route) => false);
-    }*/
-  }
-
   Widget _image() {
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -163,6 +154,7 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.white),
         ),
       ),
+      //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))k
     );
   }
 }
