@@ -1,9 +1,11 @@
 // ignore: avoid_web_libraries_in_flutter
 //import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
+import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
@@ -15,22 +17,29 @@ class Opinions extends StatefulWidget {
   });
   String id;
   String category;
+  AsyncSnapshot<QuerySnapshot> snapshot1;
   @override
   _OpinionsState createState() => _OpinionsState();
+  
+  
+  //Opinions(this.detailDocument);
 }
 
 class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
+  String _id;
   FocusNode _focusNode;
   final prefs = new preferencesUtil();
+  final _firestoreInstance = FirebaseFirestore.instance;
   List<String> evaluations;
   var _commentController = TextEditingController();
   double temp = 0.0;
   double suma = 0.0;
   EvaluationModel _myEvaluation;
-
+  UserModel modelo;
+  DocumentSnapshot detailDocument;
   @override
   void initState() {
     super.initState();
@@ -51,6 +60,7 @@ class _OpinionsState extends State<Opinions> {
 
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder(
         future: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
@@ -59,7 +69,6 @@ class _OpinionsState extends State<Opinions> {
           print(snapshot.data[0].userID);
           _checkEvaluations(snapshot);
           if (snapshot.hasData) {
-            print("joder con la actualizacion de pantalla");
             return _opinion(snapshot);
           } else {
             return _makeOpinion('0');
@@ -79,13 +88,10 @@ class _OpinionsState extends State<Opinions> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
-
-          temp = double.parse(opinion.score);
-          print("El temporal");
-          print(temp);
-          print("La perra suma");
-          suma = temp + suma;
-          print(suma);
+          //DocumentSnapshot _data = this._myEvaluation.data.docs[index];
+          //opinion.id;S
+          //_id=snapshot.data.docs[index].id;
+         
 
           return Container(
               child: SingleChildScrollView(
@@ -340,7 +346,10 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         child: GestureDetector(
                           onTap: () {
+
                             print('Eliminar comentario');
+                            _scoredelete();
+                            //_db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
                             setState(() {});
                           },
@@ -363,9 +372,15 @@ class _OpinionsState extends State<Opinions> {
                       //_opinionList(),
                     ]))))));
   }
-
-  void _evaluacion() {
+/*Future<void> sabe() async {
+DocumentReference docRef = await 
+Firestore.instance.collection('gameLevels').add(map);
+print(docRef.documentID);
+}*/
+  void _evaluacion()  {
+    CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
+      id: docRef.doc().id,
       userID: prefs.userID,
       publicationID: this.widget.id,
       username: prefs.userName,
@@ -375,6 +390,15 @@ class _OpinionsState extends State<Opinions> {
     _db.addEvaluations(evaluation);
 
     _addevaluation(/*detailDocument.id,*/ evaluations);
+  }
+  void _scoredelete(){
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: this.widget.id,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.updateScore(evaluation);
   }
 
   void _addevaluation(evaluations) async {
@@ -419,8 +443,21 @@ class _OpinionsState extends State<Opinions> {
 
   void _checkEvaluations(snapshot) {
     for (EvaluationModel evaluation in snapshot.data) {
+
       if (evaluation.userID == prefs.userID) {
         _myEvaluation = evaluation;
+        //var _data = snapshot.data;
+        
+      DocumentReference docRef = FirebaseFirestore.instance.collection("evaluations").doc();//_firestoreInstance.collection('evaluations');
+
+        //_id= this._myEvaluation.id;
+        print("La chingada");
+        print(docRef.id);
+        _id=docRef.id;
+        //_id = _myEvaluation.id;
+        print(_id);
+        //print(snapshot.data.id);
+        //print(this.widget.id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
       }

@@ -194,6 +194,8 @@ class _ListFeedState extends State<ListFeed> {
 
               print(publications);
               selectedPublication.id = id;
+              print("putamadre");
+              print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
               break;
             case 3:

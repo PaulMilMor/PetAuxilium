@@ -106,7 +106,11 @@ class dbUtil {
   }
 
   Future<void> addEvaluations(EvaluationModel evaluation) async {
+    /*DocumentReference docRef = await 
+Firestore.instance.collection('gameLevels').add(map);
+print(docRef.documentID);*/
     await _firestoreInstance.collection("evaluations").add({
+      'id':evaluation.id,
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
@@ -120,6 +124,17 @@ class dbUtil {
         .update({
       'score': FieldValue.increment(scorenum),
       'nevaluations': FieldValue.increment(1),
+    });
+  }
+  
+  Future<void> updateScore(EvaluationModel evaluation) async {
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("publications")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(-scorenum),
+      'nevaluations': FieldValue.increment(-1),
     });
   }
 
