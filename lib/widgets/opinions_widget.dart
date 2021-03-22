@@ -405,10 +405,16 @@ class _OpinionsState extends State<Opinions> {
                             print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
-                            if (this.widget.callback != null)
-                              this.widget.callback();
+                            print('POOL SCORE');
+                            print(_score);
+                            print(this.widget.sumscore);
+                            this.widget.sumscore -= double.parse(_score);
+                            this.widget.nevaluations--;
 
-                            setState(() {});
+                            setState(() {
+                              avgscore = this.widget.sumscore /
+                                  this.widget.nevaluations;
+                            });
                           },
                           child: Align(
                             alignment: Alignment.topRight,
@@ -441,7 +447,10 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
+    print('POOL SCORE 2');
+    print(this.widget.sumscore);
     this.widget.sumscore += double.parse(_score);
+    print(this.widget.sumscore);
     this.widget.nevaluations++;
     _addevaluation(/*detailDocument.id,*/ evaluations);
 
