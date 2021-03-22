@@ -137,16 +137,7 @@ print(docRef.documentID);*/
     });
   }
 
-  Future<void> updateScore(EvaluationModel evaluation) async {
-    double scorenum = double.parse(evaluation.score);
-    await _firestoreInstance
-        .collection("publications")
-        .doc(evaluation.publicationID)
-        .update({
-      'score': FieldValue.increment(-scorenum),
-      'nevaluations': FieldValue.increment(-1),
-    });
-  }
+  
 
   Future<void> addComments(CommentModel comment) async {
     await _firestoreInstance.collection("comments").add({

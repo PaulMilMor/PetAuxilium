@@ -79,10 +79,10 @@ class _OpinionsState extends State<Opinions> {
           //print(snapshot.data[0].userID);
           print(_myEvaluation);
           print(snapshot.data[2].userID);
-          for (EvaluationModel evo in snapshot.data) {
+          /*for (EvaluationModel evo in snapshot.data) {
             print('POOL SNAPSJHOT');
             print(evo.id);
-          }
+          }*/
           _checkEvaluations(snapshot);
 
           if (snapshot.hasData) {
@@ -402,9 +402,7 @@ class _OpinionsState extends State<Opinions> {
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
-                            print("antes del null");
                             _myEvaluation = null;
-                            print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
                             print('POOL SCORE');
@@ -564,7 +562,6 @@ class _OpinionsState extends State<Opinions> {
         print('POOL CHECIF');
         _myEvaluation = evaluation;
         _myEvaluation.id = evaluation.id;
-        print("La chingada");
         _id = _myEvaluation.id;
         print(_id);
         _comment = _myEvaluation.comment;
