@@ -45,8 +45,8 @@ class _FollowingPageState extends State<FollowingPage> {
     return FutureBuilder(
       future: _db.getFollows(_prefs.userID),
       builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-
-        return follow.data.isEmpty
+if (follow.connectionState!=ConnectionState.waiting) {
+    return follow.data.isEmpty
             ? Center(
                 child: Text('No sigues ninguna publicación'),
               )
@@ -62,6 +62,11 @@ class _FollowingPageState extends State<FollowingPage> {
                           voidCallback: callback);
                 },
               );
+}else{
+
+  return Container();
+}
+      
       },
     );
   }

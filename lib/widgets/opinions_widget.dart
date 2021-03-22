@@ -11,17 +11,26 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Opinions extends StatefulWidget {
-  Opinions({
-    @required this.id,
-    @required this.category,
-  });
+  Opinions(
+      {@required this.id,
+      @required this.category,
+      @required this.pricing,
+      @required this.sumscore,
+      @required this.nevaluations,
+      @required this.description,
+      this.callback});
+  VoidCallback callback;
+
   String id;
+  String pricing;
   String category;
+  var nevaluations;
+  var sumscore;
+  String description;
   AsyncSnapshot<QuerySnapshot> snapshot1;
   @override
   _OpinionsState createState() => _OpinionsState();
-  
-  
+
   //Opinions(this.detailDocument);
 }
 
@@ -31,6 +40,7 @@ class _OpinionsState extends State<Opinions> {
   String _comment;
   String _id;
   FocusNode _focusNode;
+  double avgscore;
   final prefs = new preferencesUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
   List<String> evaluations;
@@ -44,6 +54,7 @@ class _OpinionsState extends State<Opinions> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+    avgscore = this.widget.sumscore / this.widget.nevaluations;
   }
 
   @override
@@ -60,15 +71,18 @@ class _OpinionsState extends State<Opinions> {
 
   @override
   Widget build(BuildContext context) {
-    
     return FutureBuilder(
         future: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print('POOL SNAPSHOT');
+          //print(snapshot.data[0].userID);
           print(_myEvaluation);
           print(snapshot.data[2].userID);
-
+          for (EvaluationModel evo in snapshot.data) {
+            print('POOL SNAPSJHOT');
+            print(evo.id);
+          }
           _checkEvaluations(snapshot);
 
           if (snapshot.hasData) {
@@ -94,7 +108,6 @@ class _OpinionsState extends State<Opinions> {
           //DocumentSnapshot _data = this._myEvaluation.data.docs[index];
           //opinion.id;S
           //_id=snapshot.data.docs[index].id;
-         
 
           return Container(
               child: SingleChildScrollView(
@@ -233,7 +246,8 @@ class _OpinionsState extends State<Opinions> {
                                 }
                                 print('PUBLICAR');
                                 _evaluacion();
-                                setState(() {});
+                                if (this.widget.callback != null)
+                                  this.widget.callback();
                               },
                               child: Align(
                                 alignment: Alignment.topRight,
@@ -255,7 +269,6 @@ class _OpinionsState extends State<Opinions> {
                           SizedBox(
                             height: 21,
                           ),
-
                           Container(
                               width: 290,
                               child: Text.rich(TextSpan(
@@ -286,6 +299,41 @@ class _OpinionsState extends State<Opinions> {
 
                           //_opinionList(),
                         ]))))));
+  }
+
+  Widget _serviceNumbers() {
+    if (this.widget.category == 'CUIDADOR') {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.star_rate_rounded,
+            color: Colors.greenAccent[400],
+            size: 25,
+          ),
+          Text(
+            avgscore.toStringAsFixed(1),
+          ),
+          Text(" (${this.widget.nevaluations})"),
+          Container(
+            height: 25,
+            child: VerticalDivider(
+              color: Colors.black45,
+              width: 20,
+            ),
+          ),
+          Text(
+            this.widget.pricing,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget _showOpinion(length, snapshot) {
@@ -349,7 +397,6 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         child: GestureDetector(
                           onTap: () {
-
                             print('Eliminar comentario');
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
@@ -359,8 +406,15 @@ class _OpinionsState extends State<Opinions> {
                             print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
+                            print('POOL SCORE');
+                            print(_score);
+                            print(this.widget.sumscore);
+                            this.widget.sumscore -= double.parse(_score);
+                            this.widget.nevaluations--;
+
                             setState(() {
-                              _myEvaluation = null;
+                              avgscore = this.widget.sumscore /
+                                  this.widget.nevaluations;
                             });
                           },
                           child: Align(
@@ -383,7 +437,8 @@ class _OpinionsState extends State<Opinions> {
                     ]))))));
   }
 
-  void _evaluacion()  {
+  void _evaluacion() {
+    CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -393,10 +448,19 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
-
+    print('POOL SCORE 2');
+    print(this.widget.sumscore);
+    this.widget.sumscore += double.parse(_score);
+    print(this.widget.sumscore);
+    this.widget.nevaluations++;
     _addevaluation(/*detailDocument.id,*/ evaluations);
+
+    setState(() {
+      avgscore = this.widget.sumscore / this.widget.nevaluations;
+    });
   }
-  void _scoredelete(){
+
+  void _scoredelete() {
     EvaluationModel evaluation = EvaluationModel(
       userID: prefs.userID,
       publicationID: this.widget.id,
@@ -420,17 +484,48 @@ class _OpinionsState extends State<Opinions> {
     print(_myEvaluation);
     if (this.widget.category.toString().contains('CUIDADOR')) {
       return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //FIXME: Así como está no muestra el número de opiniones
-            _myEvaluation == null
-                ? _makeOpinion(snapshot.data.length.toString())
-                : _showOpinion(snapshot.data.length.toString(),
-                    snapshot), //Text('Ya has evaluado'),
-            _listEvaluations(snapshot),
-          ],
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //FIXME: Así como está no muestra el número de opiniones
+              _serviceNumbers(),
+              SizedBox(
+                height: 21,
+              ),
+              Container(
+                width: 340,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    this.widget.description,
+                    //maxLines: 3,
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 31,
+              ),
+              const Divider(
+                color: Colors.black12,
+                height: 5,
+                thickness: 2,
+                indent: 1,
+                endIndent: 1,
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              _myEvaluation == null
+                  ? _makeOpinion(snapshot.data.length.toString())
+                  : _showOpinion(snapshot.data.length.toString(),
+                      snapshot), //Text('Ya has evaluado'),
+              _listEvaluations(snapshot),
+            ],
+          ),
         ),
       );
     } else {
@@ -440,7 +535,16 @@ class _OpinionsState extends State<Opinions> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //_makeOpinion(),
-
+            const Divider(
+              color: Colors.black12,
+              height: 5,
+              thickness: 2,
+              indent: 1,
+              endIndent: 1,
+            ),
+            SizedBox(
+              height: 3,
+            ),
             _listEvaluations(snapshot)
           ],
         ),
@@ -449,13 +553,15 @@ class _OpinionsState extends State<Opinions> {
   }
 
   void _checkEvaluations(snapshot) {
+    _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
-        
+      print('POOL CHEC');
       if (evaluation.userID == prefs.userID) {
+        print('POOL CHECIF');
         _myEvaluation = evaluation;
         _myEvaluation.id = evaluation.id;
         print("La chingada");
-        _id=_myEvaluation.id;
+        _id = _myEvaluation.id;
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;

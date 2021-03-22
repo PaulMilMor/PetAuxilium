@@ -34,7 +34,7 @@ class _DetailPageState extends State<DetailPage> {
           widget.detailDocument['nevaluations'];
     });
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     //getImages();
@@ -95,64 +95,11 @@ class _DetailPageState extends State<DetailPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.star_rate_rounded,
-                            color: Colors.greenAccent[400],
-                            size: 25,
-                          ),
-                          Text(
-                            avgscore.toStringAsFixed(1),
-                          ),
-                          Text(" (${widget.detailDocument['nevaluations']})"),
-                          Container(
-                            height: 25,
-                            child: VerticalDivider(
-                              color: Colors.black45,
-                              width: 20,
-                            ),
-                          ),
-                          Text(
-                            widget.detailDocument['pricing'],
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
+                   //  _serviceNumbers(),
                       _mapsUtil.getLocationText(
                           widget.detailDocument['location'].first),
-                      SizedBox(
-                        height: 21,
-                      ),
-                      Container(
-                        width: 340,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.detailDocument['description'],
-                            //maxLines: 3,
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 31,
-                      ),
-                      const Divider(
-                        color: Colors.black12,
-                        height: 5,
-                        thickness: 2,
-                        indent: 1,
-                        endIndent: 1,
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
+                   
+                      
                       _bottomSection(),
                     ],
                   )))),
@@ -168,7 +115,7 @@ class _DetailPageState extends State<DetailPage> {
     print(widget.detailDocument.id);
     return _lista = await _db.getAllImages(widget.detailDocument.id);
   }
-
+ 
   Widget _setBackIcon(context2) {
     return Positioned(
         right: 0.0,
@@ -188,14 +135,22 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
+   
     if (widget.detailDocument['category'].toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
-          category: widget.detailDocument['category']);
+          category: widget.detailDocument['category'],
+          sumscore: widget.detailDocument['score'],
+          nevaluations:widget.detailDocument['nevaluations'],
+          pricing: widget.detailDocument['pricing'],
+          description: widget.detailDocument['description']
+          );
     } else {
       return Comments(
           id: widget.detailDocument.id,
-          category: widget.detailDocument['category']);
+          category: widget.detailDocument['category'],
+          description: widget.detailDocument['description'],
+          );
     }
   }
 
@@ -203,7 +158,8 @@ class _DetailPageState extends State<DetailPage> {
     return FutureBuilder(
       future: getImages(),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        return CarouselSlider(
+        if(snapshot.connectionState!=ConnectionState.waiting){
+return CarouselSlider(
           options: CarouselOptions(
             aspectRatio: 2.0,
             enlargeCenterPage: true,
@@ -219,6 +175,12 @@ class _DetailPageState extends State<DetailPage> {
                   ))
               .toList(),
         );
+
+        }else{
+
+          return Container();
+        }
+        
       },
     );
   }
