@@ -68,7 +68,9 @@ class _OpinionsState extends State<Opinions> {
           print('POOL SNAPSHOT');
           print(_myEvaluation);
           print(snapshot.data[2].userID);
+
           _checkEvaluations(snapshot);
+
           if (snapshot.hasData) {
             return _opinion(snapshot);
           } else {
@@ -353,11 +355,13 @@ class _OpinionsState extends State<Opinions> {
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
                             print("antes del null");
-                            _myEvaluation = null;
+                            
                             print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
-                            setState(() {});
+                            setState(() {
+                              _myEvaluation = null;
+                            });
                           },
                           child: Align(
                             alignment: Alignment.topRight,
@@ -455,6 +459,7 @@ class _OpinionsState extends State<Opinions> {
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
+        print(evaluation.comment);
       }
     }
   }
