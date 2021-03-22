@@ -12,9 +12,20 @@ class Opinions extends StatefulWidget {
   Opinions({
     @required this.id,
     @required this.category,
+    @required this.pricing,
+    @required this.sumscore,
+    @required this.nevaluations,
+    @required this.description,
+   this.callback
   });
+  VoidCallback callback;
+
   String id;
+  String pricing;
   String category;
+  var nevaluations;
+  var sumscore;
+ String  description;
   @override
   _OpinionsState createState() => _OpinionsState();
 }
@@ -24,6 +35,7 @@ class _OpinionsState extends State<Opinions> {
   String _score;
   String _comment;
   FocusNode _focusNode;
+    double avgscore;
   final prefs = new preferencesUtil();
   List<String> evaluations;
   var _commentController = TextEditingController();
@@ -35,6 +47,8 @@ class _OpinionsState extends State<Opinions> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+     avgscore = this.widget.sumscore/this.widget.nevaluations;
+ 
   }
 
   @override
@@ -56,7 +70,7 @@ class _OpinionsState extends State<Opinions> {
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print('POOL SNAPSHOT');
-          print(snapshot.data[0].userID);
+          //print(snapshot.data[0].userID);
           _checkEvaluations(snapshot);
           if (snapshot.hasData) {
             print("joder con la actualizacion de pantalla");
@@ -224,7 +238,7 @@ class _OpinionsState extends State<Opinions> {
                                 }
                                 print('PUBLICAR');
                                 _evaluacion();
-                                setState(() {});
+                                if(this.widget.callback!=null) this.widget.callback(); 
                               },
                               child: Align(
                                 alignment: Alignment.topRight,
@@ -278,7 +292,44 @@ class _OpinionsState extends State<Opinions> {
                           //_opinionList(),
                         ]))))));
   }
+ Widget _serviceNumbers(){
+   if (this.widget.category=='CUIDADOR'){
 
+   return  Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.star_rate_rounded,
+                            color: Colors.greenAccent[400],
+                            size: 25,
+                          ),
+                       
+                          Text( 
+                           avgscore.toStringAsFixed(1),
+                          ),
+                            
+                          Text(" (${this.widget.nevaluations})"),
+                          Container(
+                            height: 25,
+                            child: VerticalDivider(
+                              color: Colors.black45,
+                              width: 20,
+                            ),
+                          ),
+                          Text(
+                            this.widget.pricing,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      );
+   }else{
+     return Container();
+   }
+
+ }
   Widget _showOpinion(length, snapshot) {
     return Container(
         child: Material(
@@ -373,8 +424,14 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
+    this.widget.sumscore+=double.parse(_score);
+    this.widget.nevaluations++;
+        _addevaluation(/*detailDocument.id,*/ evaluations);
+      
+    setState(() {
+      avgscore = this.widget.sumscore/this.widget.nevaluations;
+    });
 
-    _addevaluation(/*detailDocument.id,*/ evaluations);
   }
 
   void _addevaluation(evaluations) async {
@@ -389,17 +446,49 @@ class _OpinionsState extends State<Opinions> {
   Widget _opinion(snapshot) {
     if (this.widget.category.toString().contains('CUIDADOR')) {
       return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //FIXME: Así como está no muestra el número de opiniones
-            _myEvaluation == null
-                ? _makeOpinion(snapshot.data.length.toString())
-                : _showOpinion(snapshot.data.length.toString(),
-                    snapshot), //Text('Ya has evaluado'),
-            _listEvaluations(snapshot),
-          ],
+        child: Container(
+          
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //FIXME: Así como está no muestra el número de opiniones
+              _serviceNumbers(),
+                 SizedBox(
+                          height: 21,
+                        ),
+                        Container(
+                          width: 340,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              this.widget.description,
+                              //maxLines: 3,
+                              style: TextStyle(fontSize: 14, color: Colors.black),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 31,
+                        ),
+              const Divider(
+                          color: Colors.black12,
+                          height: 5,
+                          thickness: 2,
+                          indent: 1,
+                          endIndent: 1,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+              _myEvaluation == null
+                  ? _makeOpinion(snapshot.data.length.toString())
+                  : _showOpinion(snapshot.data.length.toString(),
+                      snapshot), //Text('Ya has evaluado'),
+              _listEvaluations(snapshot),
+            ],
+          ),
         ),
       );
     } else {
@@ -409,7 +498,16 @@ class _OpinionsState extends State<Opinions> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //_makeOpinion(),
-
+const Divider(
+                        color: Colors.black12,
+                        height: 5,
+                        thickness: 2,
+                        indent: 1,
+                        endIndent: 1,
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
             _listEvaluations(snapshot)
           ],
         ),
