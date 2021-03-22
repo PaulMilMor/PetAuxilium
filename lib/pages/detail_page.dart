@@ -158,7 +158,8 @@ class _DetailPageState extends State<DetailPage> {
     return FutureBuilder(
       future: getImages(),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        return CarouselSlider(
+        if(snapshot.connectionState!=ConnectionState.waiting){
+return CarouselSlider(
           options: CarouselOptions(
             aspectRatio: 2.0,
             enlargeCenterPage: true,
@@ -174,6 +175,12 @@ class _DetailPageState extends State<DetailPage> {
                   ))
               .toList(),
         );
+
+        }else{
+
+          return Container();
+        }
+        
       },
     );
   }
