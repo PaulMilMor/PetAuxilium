@@ -19,7 +19,9 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
       body: Stack(children: [
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
+           padding: _query == null || _query == ''
+                ? const EdgeInsets.all(18.0)
+                : const EdgeInsets.all(0.0),
             child: Column(
               children: [
                 _searchBar(),
@@ -66,17 +68,8 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
           return (snapshot.connectionState == ConnectionState.waiting)
               ? Center(child: CircularProgressIndicator())
               : ListFeed(
-                  snapshot: snapshot,
-                );
-          /*ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot data = snapshot.data.docs[index];
-                    List<dynamic> fotos = data['imgRef'];
-                    //return Text(data['name']);
-                  });*/
+                   snapshot: snapshot, physics: NeverScrollableScrollPhysics());
+          
         });
   }
 

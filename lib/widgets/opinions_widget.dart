@@ -1,5 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 //import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -34,10 +35,11 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
-   String _id;
+   String _id='';
   FocusNode _focusNode;
     double avgscore;
   final prefs = new preferencesUtil();
+   final _firestoreInstance = FirebaseFirestore.instance;
   List<String> evaluations;
   var _commentController = TextEditingController();
   double temp = 0.0;
@@ -72,12 +74,18 @@ class _OpinionsState extends State<Opinions> {
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print('POOL SNAPSHOT');
           //print(snapshot.data[0].userID);
-          _checkEvaluations(snapshot);
-          if (snapshot.hasData) {
-            print("joder con la actualizacion de pantalla");
+      
+          if (snapshot.connectionState!=ConnectionState.waiting) {
+                _checkEvaluations(snapshot);
+             if (snapshot.hasData) {
+     
             return _opinion(snapshot);
           } else {
             return _makeOpinion('0');
+          }
+          }else{
+
+            return Container();
           }
         });
   }
@@ -95,12 +103,7 @@ class _OpinionsState extends State<Opinions> {
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
 
-          temp = double.parse(opinion.score);
-          print("El temporal");
-          print(temp);
-          print("La perra suma");
-          suma = temp + suma;
-          print(suma);
+         
 
           return Container(
               child: SingleChildScrollView(
@@ -294,7 +297,7 @@ class _OpinionsState extends State<Opinions> {
                         ]))))));
   }
  Widget _serviceNumbers(){
-   if (this.widget.category=='CUIDADOR'){
+  
 
    return  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -326,9 +329,8 @@ class _OpinionsState extends State<Opinions> {
                           ),
                         ],
                       );
-   }else{
-     return Container();
-   }
+   
+   
 
  }
    Widget _showOpinion(length, snapshot) {
@@ -398,10 +400,9 @@ class _OpinionsState extends State<Opinions> {
                             print(_id);
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
-                            print("antes del null");
+                          
                             _myEvaluation = null;
-                            print("despues del chingado null");
-                            print(_myEvaluation);
+                          
                             _commentController.clear();
                             setState(() {});
                           },
@@ -425,16 +426,23 @@ class _OpinionsState extends State<Opinions> {
                     ]))))));
   }
   void _scoredelete(){
+    
     EvaluationModel evaluation = EvaluationModel(
       userID: prefs.userID,
       publicationID: this.widget.id,
       score: _score,
       comment: _commentController.text,
     );
+    this.widget.nevaluations--;
+     this.widget.sumscore-=double.parse(_score);
+      setState(() {
+      avgscore = this.widget.sumscore/this.widget.nevaluations;
+    });
     _db.updateScore(evaluation);
   }
 
   void _evaluacion() {
+    //CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
       userID: prefs.userID,
       publicationID: this.widget.id,
@@ -534,18 +542,18 @@ const Divider(
     }
   }
 
-  void _checkEvaluations(snapshot) {
+   void _checkEvaluations(snapshot) {
+    _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
-        
+      print('POOL CHEC');
       if (evaluation.userID == prefs.userID) {
+        print('POOL CHECIF');
         _myEvaluation = evaluation;
         _myEvaluation.id = evaluation.id;
         print("La chingada");
-        _id=_myEvaluation.id;
+        _id = _myEvaluation.id;
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
-      }
-    }
-  }
+      }}}
 }

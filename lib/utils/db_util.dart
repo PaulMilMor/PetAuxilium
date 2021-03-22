@@ -107,6 +107,7 @@ class dbUtil {
 
   Future<void> addEvaluations(EvaluationModel evaluation) async {
     await _firestoreInstance.collection("evaluations").add({
+
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
@@ -139,6 +140,12 @@ class dbUtil {
       'publicationID': comment.publicationID,
       'username': comment.username,
       'comment': comment.comment
+    });
+    await _firestoreInstance
+        .collection("publications")
+        .doc(comment.publicationID)
+        .update({
+      'nevaluations': FieldValue.increment(1),
     });
   }
 
@@ -289,7 +296,6 @@ class dbUtil {
     print(reports.first.id);
     return reports;
   }
-
   Future<List<EvaluationModel>> getOpinions(String id) async {
     List<EvaluationModel> opinions = [];
     await _firestoreInstance
@@ -299,6 +305,7 @@ class dbUtil {
         .then((value) {
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
+        opinion.id= element.id;
         opinions.add(opinion);
       });
     });

@@ -15,13 +15,15 @@ class ListFeed extends StatefulWidget {
       @required this.snapshot,
       this.follows,
       this.voidCallback,
-      this.category});
+      this.category,
+      this.physics
+      });
 
   final VoidCallback voidCallback;
   AsyncSnapshot<QuerySnapshot> snapshot;
   List<String> follows;
   String category;
-
+ ScrollPhysics physics;
   @override
   _ListFeedState createState() => _ListFeedState();
 }
@@ -38,6 +40,7 @@ class _ListFeedState extends State<ListFeed> {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
+        physics: this.widget.physics,
         itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
@@ -100,11 +103,12 @@ class _ListFeedState extends State<ListFeed> {
 
                           mapsUtil.getLocationText(_data['location'].first),
                           SizedBox(
-                            height: 34,
+                            height: 20,
                           ),
                           //Aquí está el promedio we
-                          if (_data['category'] == 'CUIDADOR')
-                            _rating(_data['nevaluations'], _data['score']),
+                          // if (_data['category'] == 'CUIDADOR')
+                          //   _rating(_data['nevaluations'], _data['score']),
+                          _rating(_data),
                         ],
                       )),
                   Spacer(),
@@ -319,29 +323,40 @@ class _ListFeedState extends State<ListFeed> {
     }
   }
 
-  Widget _rating(nevaluations, score) {
-    double mean = score / nevaluations;
+
+   Widget _rating(publication) {
+    bool isCuidador = publication['category'] == 'CUIDADOR';
+    double mean = 0;
+    if (isCuidador) mean = publication['score'] / publication['nevaluations'];
     return Row(
       children: [
-        Icon(
-          Icons.star_rate_rounded,
-          color: Color.fromRGBO(210, 210, 210, 1),
-          size: 25,
-        ),
-        Text(
-          nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
-          style: TextStyle(fontSize: 12),
-        ),
-        SizedBox(
-          width: 10,
-        ),
+           if (isCuidador)
+          Row(
+            children: [
+              Icon(
+                Icons.star_rate_rounded,
+                color: Color.fromRGBO(210, 210, 210, 1),
+                size: 25,
+              ),
+              Text(
+                publication['nevaluations'] == 0
+                    ? 'N/A'
+                    : mean.toStringAsFixed(1),
+                style: TextStyle(fontSize: 12),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
         Icon(
           Icons.comment,
           color: Color.fromRGBO(210, 210, 210, 1),
           size: 20,
         ),
         Text(
-          "$nevaluations",
+        
+          " ${publication["nevaluations"]}",
           style: TextStyle(fontSize: 12),
         ),
       ],
