@@ -10,15 +10,14 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Opinions extends StatefulWidget {
-  Opinions({
-    @required this.id,
-    @required this.category,
-    @required this.pricing,
-    @required this.sumscore,
-    @required this.nevaluations,
-    @required this.description,
-   this.callback
-  });
+  Opinions(
+      {@required this.id,
+      @required this.category,
+      @required this.pricing,
+      @required this.sumscore,
+      @required this.nevaluations,
+      @required this.description,
+      this.callback});
   VoidCallback callback;
 
   String id;
@@ -26,7 +25,7 @@ class Opinions extends StatefulWidget {
   String category;
   var nevaluations;
   var sumscore;
- String  description;
+  String description;
   @override
   _OpinionsState createState() => _OpinionsState();
 }
@@ -35,11 +34,11 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
-   String _id='';
+  String _id = '';
   FocusNode _focusNode;
-    double avgscore;
+  double avgscore;
   final prefs = new preferencesUtil();
-   final _firestoreInstance = FirebaseFirestore.instance;
+  final _firestoreInstance = FirebaseFirestore.instance;
   List<String> evaluations;
   var _commentController = TextEditingController();
   double temp = 0.0;
@@ -50,8 +49,7 @@ class _OpinionsState extends State<Opinions> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-     avgscore = this.widget.sumscore/this.widget.nevaluations;
- 
+    avgscore = this.widget.sumscore / this.widget.nevaluations;
   }
 
   @override
@@ -74,18 +72,20 @@ class _OpinionsState extends State<Opinions> {
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print('POOL SNAPSHOT');
           //print(snapshot.data[0].userID);
-      
-          if (snapshot.connectionState!=ConnectionState.waiting) {
-                _checkEvaluations(snapshot);
-             if (snapshot.hasData) {
-     
-            return _opinion(snapshot);
-          } else {
-            return _makeOpinion('0');
-          }
-          }else{
+          if (snapshot.connectionState == ConnectionState.done) {
+            _checkEvaluations(snapshot);
 
-            return Container();
+            if (snapshot.hasData) {
+              return _opinion(snapshot);
+            } else {
+              return _makeOpinion('0');
+            }
+          } else {
+            if (snapshot.hasData) {
+              return _opinion(snapshot);
+            } else {
+              return _makeOpinion('0');
+            }
           }
         });
   }
@@ -102,8 +102,6 @@ class _OpinionsState extends State<Opinions> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
-
-         
 
           return Container(
               child: SingleChildScrollView(
@@ -242,7 +240,8 @@ class _OpinionsState extends State<Opinions> {
                                 }
                                 print('PUBLICAR');
                                 _evaluacion();
-                                if(this.widget.callback!=null) this.widget.callback(); 
+                                if (this.widget.callback != null)
+                                  this.widget.callback();
                               },
                               child: Align(
                                 alignment: Alignment.topRight,
@@ -296,44 +295,39 @@ class _OpinionsState extends State<Opinions> {
                           //_opinionList(),
                         ]))))));
   }
- Widget _serviceNumbers(){
-  
 
-   return  Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.star_rate_rounded,
-                            color: Colors.greenAccent[400],
-                            size: 25,
-                          ),
-                       
-                          Text( 
-                           avgscore.toStringAsFixed(1),
-                          ),
-                            
-                          Text(" (${this.widget.nevaluations})"),
-                          Container(
-                            height: 25,
-                            child: VerticalDivider(
-                              color: Colors.black45,
-                              width: 20,
-                            ),
-                          ),
-                          Text(
-                            this.widget.pricing,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      );
-   
-   
+  Widget _serviceNumbers() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.star_rate_rounded,
+          color: Colors.greenAccent[400],
+          size: 25,
+        ),
+        Text(
+          avgscore.toStringAsFixed(1),
+        ),
+        Text(" (${this.widget.nevaluations})"),
+        Container(
+          height: 25,
+          child: VerticalDivider(
+            color: Colors.black45,
+            width: 20,
+          ),
+        ),
+        Text(
+          this.widget.pricing,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
 
- }
-   Widget _showOpinion(length, snapshot) {
+  Widget _showOpinion(length, snapshot) {
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -394,15 +388,14 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         child: GestureDetector(
                           onTap: () {
-
                             print('Eliminar comentario');
                             _scoredelete();
                             print(_id);
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
-                          
+
                             _myEvaluation = null;
-                          
+
                             _commentController.clear();
                             setState(() {});
                           },
@@ -425,8 +418,8 @@ class _OpinionsState extends State<Opinions> {
                       //_opinionList(),
                     ]))))));
   }
-  void _scoredelete(){
-    
+
+  void _scoredelete() {
     EvaluationModel evaluation = EvaluationModel(
       userID: prefs.userID,
       publicationID: this.widget.id,
@@ -434,9 +427,9 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     this.widget.nevaluations--;
-     this.widget.sumscore-=double.parse(_score);
-      setState(() {
-      avgscore = this.widget.sumscore/this.widget.nevaluations;
+    this.widget.sumscore -= double.parse(_score);
+    setState(() {
+      avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
     _db.updateScore(evaluation);
   }
@@ -451,14 +444,13 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
-    this.widget.sumscore+=double.parse(_score);
+    this.widget.sumscore += double.parse(_score);
     this.widget.nevaluations++;
-        _addevaluation(/*detailDocument.id,*/ evaluations);
-      
-    setState(() {
-      avgscore = this.widget.sumscore/this.widget.nevaluations;
-    });
+    _addevaluation(/*detailDocument.id,*/ evaluations);
 
+    setState(() {
+      avgscore = this.widget.sumscore / this.widget.nevaluations;
+    });
   }
 
   void _addevaluation(evaluations) async {
@@ -474,41 +466,40 @@ class _OpinionsState extends State<Opinions> {
     if (this.widget.category.toString().contains('CUIDADOR')) {
       return SingleChildScrollView(
         child: Container(
-          
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               //FIXME: Así como está no muestra el número de opiniones
               _serviceNumbers(),
-                 SizedBox(
-                          height: 21,
-                        ),
-                        Container(
-                          width: 340,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              this.widget.description,
-                              //maxLines: 3,
-                              style: TextStyle(fontSize: 14, color: Colors.black),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 31,
-                        ),
+              SizedBox(
+                height: 21,
+              ),
+              Container(
+                width: 340,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    this.widget.description,
+                    //maxLines: 3,
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 31,
+              ),
               const Divider(
-                          color: Colors.black12,
-                          height: 5,
-                          thickness: 2,
-                          indent: 1,
-                          endIndent: 1,
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
+                color: Colors.black12,
+                height: 5,
+                thickness: 2,
+                indent: 1,
+                endIndent: 1,
+              ),
+              SizedBox(
+                height: 3,
+              ),
               _myEvaluation == null
                   ? _makeOpinion(snapshot.data.length.toString())
                   : _showOpinion(snapshot.data.length.toString(),
@@ -525,16 +516,16 @@ class _OpinionsState extends State<Opinions> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //_makeOpinion(),
-const Divider(
-                        color: Colors.black12,
-                        height: 5,
-                        thickness: 2,
-                        indent: 1,
-                        endIndent: 1,
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
+            const Divider(
+              color: Colors.black12,
+              height: 5,
+              thickness: 2,
+              indent: 1,
+              endIndent: 1,
+            ),
+            SizedBox(
+              height: 3,
+            ),
             _listEvaluations(snapshot)
           ],
         ),
@@ -542,7 +533,7 @@ const Divider(
     }
   }
 
-   void _checkEvaluations(snapshot) {
+  void _checkEvaluations(snapshot) {
     _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
       print('POOL CHEC');
@@ -555,5 +546,7 @@ const Divider(
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
-      }}}
+      }
+    }
+  }
 }
