@@ -229,8 +229,12 @@ class _ListFeedState extends State<ListFeed> {
   _banUser(id) {
     Widget confirmButton = TextButton(
       child: Text("Confirmar"),
-      onPressed: () {
-        _db.banUser(id);
+      onPressed: () async {
+        print('entro adadadadad');
+        await _db.banUser(id);
+        setState(() {
+          
+        });
       },
     );
     // set up the AlertDialog

@@ -219,7 +219,16 @@ class dbUtil {
   }
 
   Future<void> banUser(String id) async {
+   
     await _firestoreInstance.collection('bans').doc(id).set({});
+    await _firestoreInstance.collection('publications').where('userID',isEqualTo:id).get().then((value){
+   
+        value.docs.forEach((element) async { 
+            
+          await _firestoreInstance.collection('publications').doc(element.id).delete();
+        });
+
+    });
   }
 
   Future<List<String>> bansList() async {
