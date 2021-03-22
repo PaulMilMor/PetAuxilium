@@ -246,7 +246,6 @@ class _OpinionsState extends State<Opinions> {
                           SizedBox(
                             height: 21,
                           ),
-
                           Container(
                               width: 290,
                               child: Text.rich(TextSpan(
