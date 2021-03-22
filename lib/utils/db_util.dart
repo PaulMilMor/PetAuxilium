@@ -300,6 +300,7 @@ print(docRef.documentID);*/
         .then((value) {
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
+        opinion.id= element.id;
         opinions.add(opinion);
       });
     });
