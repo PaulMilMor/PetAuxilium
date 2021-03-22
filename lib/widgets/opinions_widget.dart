@@ -34,6 +34,7 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
+   String _id;
   FocusNode _focusNode;
     double avgscore;
   final prefs = new preferencesUtil();
@@ -330,7 +331,7 @@ class _OpinionsState extends State<Opinions> {
    }
 
  }
-  Widget _showOpinion(length, snapshot) {
+   Widget _showOpinion(length, snapshot) {
     return Container(
         child: Material(
             type: MaterialType.transparency,
@@ -391,8 +392,17 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         child: GestureDetector(
                           onTap: () {
+
                             print('Eliminar comentario');
+                            _scoredelete();
+                            print(_id);
+                            _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
+                            print("antes del null");
+                            _myEvaluation = null;
+                            print("despues del chingado null");
+                            print(_myEvaluation);
+                            _commentController.clear();
                             setState(() {});
                           },
                           child: Align(
@@ -413,6 +423,15 @@ class _OpinionsState extends State<Opinions> {
 
                       //_opinionList(),
                     ]))))));
+  }
+  void _scoredelete(){
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: this.widget.id,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.updateScore(evaluation);
   }
 
   void _evaluacion() {
@@ -517,8 +536,13 @@ const Divider(
 
   void _checkEvaluations(snapshot) {
     for (EvaluationModel evaluation in snapshot.data) {
+        
       if (evaluation.userID == prefs.userID) {
         _myEvaluation = evaluation;
+        _myEvaluation.id = evaluation.id;
+        print("La chingada");
+        _id=_myEvaluation.id;
+        print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
       }

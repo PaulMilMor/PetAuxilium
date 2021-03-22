@@ -42,13 +42,13 @@ class _UserMapPageState extends State<UserMapPage> {
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _controller;
-    location.onLocationChanged.listen((l) {
-      _controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
-        ),
-      );
-    });
+    // location.onLocationChanged.listen((l) {
+    //   _controller.animateCamera(
+    //     CameraUpdate.newCameraPosition(
+    //       CameraPosition(target: LatLng(l.latitude, l.longitude), zoom: 15),
+    //     ),
+    //   );
+    // });
   }
 
   void getMarkers() async {
