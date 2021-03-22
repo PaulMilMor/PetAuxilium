@@ -397,12 +397,13 @@ class _OpinionsState extends State<Opinions> {
                       Container(
                         child: GestureDetector(
                           onTap: () {
+
                             print('Eliminar comentario');
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
                             print("antes del null");
-                            
+                            _myEvaluation = null;
                             print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
@@ -411,11 +412,14 @@ class _OpinionsState extends State<Opinions> {
                             print(this.widget.sumscore);
                             this.widget.sumscore -= double.parse(_score);
                             this.widget.nevaluations--;
+                            
+                            _commentController.clear();
 
                             setState(() {
                               avgscore = this.widget.sumscore /
                                   this.widget.nevaluations;
                             });
+
                           },
                           child: Align(
                             alignment: Alignment.topRight,
@@ -435,6 +439,15 @@ class _OpinionsState extends State<Opinions> {
 
                       //_opinionList(),
                     ]))))));
+  }
+  void _scoredelete(){
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: this.widget.id,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.updateScore(evaluation);
   }
 
   void _evaluacion() {
@@ -460,15 +473,6 @@ class _OpinionsState extends State<Opinions> {
     });
   }
 
-  void _scoredelete() {
-    EvaluationModel evaluation = EvaluationModel(
-      userID: prefs.userID,
-      publicationID: this.widget.id,
-      score: _score,
-      comment: _commentController.text,
-    );
-    _db.updateScore(evaluation);
-  }
 
   void _addevaluation(evaluations) async {
     if (evaluations.contains(this.widget.id)) {

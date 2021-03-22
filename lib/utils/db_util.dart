@@ -126,6 +126,16 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(1),
     });
   }
+   Future<void> updateScore(EvaluationModel evaluation) async {
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("publications")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(-scorenum),
+      'nevaluations': FieldValue.increment(-1),
+    });
+  }
 
   Future<void> updateScore(EvaluationModel evaluation) async {
     double scorenum = double.parse(evaluation.score);
@@ -240,7 +250,16 @@ print(docRef.documentID);*/
   }
 
   Future<void> banUser(String id) async {
+   
     await _firestoreInstance.collection('bans').doc(id).set({});
+    await _firestoreInstance.collection('publications').where('userID',isEqualTo:id).get().then((value){
+   
+        value.docs.forEach((element) async { 
+            
+          await _firestoreInstance.collection('publications').doc(element.id).delete();
+        });
+
+    });
   }
 
   Future<List<String>> bansList() async {
@@ -272,6 +291,7 @@ print(docRef.documentID);*/
 
   Future<void> deleteDocument(String id, String collection) async {
     print('POOL DELETE');
+    print('el id'+id);
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 
