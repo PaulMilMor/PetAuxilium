@@ -110,7 +110,7 @@ class dbUtil {
 Firestore.instance.collection('gameLevels').add(map);
 print(docRef.documentID);*/
     await _firestoreInstance.collection("evaluations").add({
-      'id':evaluation.id,
+      //'id':evaluation.id,
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,

@@ -372,15 +372,11 @@ class _OpinionsState extends State<Opinions> {
                       //_opinionList(),
                     ]))))));
   }
-/*Future<void> sabe() async {
-DocumentReference docRef = await 
-Firestore.instance.collection('gameLevels').add(map);
-print(docRef.documentID);
-}*/
+
   void _evaluacion()  {
     CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
-      id: docRef.doc().id,
+      //id: docRef.doc().id,
       userID: prefs.userID,
       publicationID: this.widget.id,
       username: prefs.userName,
@@ -447,13 +443,13 @@ print(docRef.documentID);
       if (evaluation.userID == prefs.userID) {
         _myEvaluation = evaluation;
         //var _data = snapshot.data;
-        
-      DocumentReference docRef = FirebaseFirestore.instance.collection("evaluations").doc();//_firestoreInstance.collection('evaluations');
+        _myEvaluation.id = evaluation.id;
+      //DocumentReference docRef = FirebaseFirestore.instance.collection("evaluations").doc();//_firestoreInstance.collection('evaluations');
 
         //_id= this._myEvaluation.id;
         print("La chingada");
-        print(docRef.id);
-        _id=docRef.id;
+        //print(docRef.id);
+        _id=_myEvaluation.id;
         //_id = _myEvaluation.id;
         print(_id);
         //print(snapshot.data.id);
