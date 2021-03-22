@@ -66,7 +66,8 @@ class _OpinionsState extends State<Opinions> {
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print('POOL SNAPSHOT');
-          print(snapshot.data[0].userID);
+          print(_myEvaluation);
+          print(snapshot.data[2].userID);
           _checkEvaluations(snapshot);
           if (snapshot.hasData) {
             return _opinion(snapshot);
@@ -349,8 +350,13 @@ class _OpinionsState extends State<Opinions> {
 
                             print('Eliminar comentario');
                             _scoredelete();
-                            //_db.deleteDocument(_id, "evaluations");
+                            _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
+                            print("antes del null");
+                            _myEvaluation = null;
+                            print("despues del chingado null");
+                            print(_myEvaluation);
+                            _commentController.clear();
                             setState(() {});
                           },
                           child: Align(
@@ -374,7 +380,6 @@ class _OpinionsState extends State<Opinions> {
   }
 
   void _evaluacion()  {
-    CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -407,6 +412,8 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _opinion(snapshot) {
+    print("checar la eval");
+    print(_myEvaluation);
     if (this.widget.category.toString().contains('CUIDADOR')) {
       return SingleChildScrollView(
         child: Column(
@@ -439,21 +446,13 @@ class _OpinionsState extends State<Opinions> {
 
   void _checkEvaluations(snapshot) {
     for (EvaluationModel evaluation in snapshot.data) {
-
+        
       if (evaluation.userID == prefs.userID) {
         _myEvaluation = evaluation;
-        //var _data = snapshot.data;
         _myEvaluation.id = evaluation.id;
-      //DocumentReference docRef = FirebaseFirestore.instance.collection("evaluations").doc();//_firestoreInstance.collection('evaluations');
-
-        //_id= this._myEvaluation.id;
         print("La chingada");
-        //print(docRef.id);
         _id=_myEvaluation.id;
-        //_id = _myEvaluation.id;
         print(_id);
-        //print(snapshot.data.id);
-        //print(this.widget.id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
       }
