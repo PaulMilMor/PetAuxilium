@@ -4,9 +4,13 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Comments extends StatefulWidget {
-  Comments({@required this.id, @required this.category});
+  Comments({
+    @required this.id, 
+    @required this.category,
+    @required this.description});
   String id;
   String category;
+  String description;
   @override
   _CommentsState createState() => _CommentsState();
 }
@@ -20,6 +24,7 @@ class _CommentsState extends State<Comments> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+        print("desc"+widget.description);
   }
 
   @override
@@ -46,9 +51,10 @@ class _CommentsState extends State<Comments> {
             (BuildContext context, AsyncSnapshot<List<CommentModel>> snapshot) {
           print('POOL SNAPSHOT');
           print(this.widget.id);
-          print(snapshot.data[0].userID);
-          _checkComments(snapshot);
+          //print(snapshot.data[0].userID);
+       print('essssssasadadaf' +snapshot.hasData.toString());
           if (snapshot.hasData) {
+               _checkComments(snapshot);
             return _comments(snapshot);
           } else {
             return _makeComment('0');
@@ -66,6 +72,7 @@ class _CommentsState extends State<Comments> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           CommentModel comment = snapshot.data.elementAt(index);
+          
           return Container(
               child: SingleChildScrollView(
 
@@ -241,10 +248,37 @@ class _CommentsState extends State<Comments> {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //FIXME: Así como está no muestra el número de opiniones
-
+ SizedBox(
+                          height: 21,
+                        ),
+                        Container(
+                          width: 340,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              this.widget.description,
+                              //maxLines: 3,
+                              style: TextStyle(fontSize: 14, color: Colors.black),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 31,
+                        ),
+              const Divider(
+                          color: Colors.black12,
+                          height: 5,
+                          thickness: 2,
+                          indent: 1,
+                          endIndent: 1,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
           _makeComment(snapshot.data.length.toString()),
 
           _listComments(snapshot)
