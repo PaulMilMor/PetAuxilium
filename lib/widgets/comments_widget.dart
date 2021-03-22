@@ -231,7 +231,9 @@ class _CommentsState extends State<Comments> {
       comment: _commentController.text,
     );
     _db.addComments(comentar);
-
+setState(() {
+  
+});
     _addcomment(/*detailDocument.id,*/ comments);
   }
 
@@ -248,7 +250,7 @@ class _CommentsState extends State<Comments> {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center ,
         children: [
           //FIXME: Así como está no muestra el número de opiniones
  SizedBox(
