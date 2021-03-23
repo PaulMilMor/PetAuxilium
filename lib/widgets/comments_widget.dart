@@ -4,10 +4,8 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Comments extends StatefulWidget {
-  Comments({
-    @required this.id, 
-    @required this.category,
-    @required this.description});
+  Comments(
+      {@required this.id, @required this.category, @required this.description});
   String id;
   String category;
   String description;
@@ -24,7 +22,7 @@ class _CommentsState extends State<Comments> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-        print("desc"+widget.description);
+    print("desc" + widget.description);
   }
 
   @override
@@ -52,9 +50,9 @@ class _CommentsState extends State<Comments> {
           print('POOL SNAPSHOT');
           print(this.widget.id);
           //print(snapshot.data[0].userID);
-       print('essssssasadadaf' +snapshot.hasData.toString());
+          print('essssssasadadaf' + snapshot.hasData.toString());
           if (snapshot.hasData) {
-               _checkComments(snapshot);
+            _checkComments(snapshot);
             return _comments(snapshot);
           } else {
             return _makeComment('0');
@@ -72,7 +70,7 @@ class _CommentsState extends State<Comments> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           CommentModel comment = snapshot.data.elementAt(index);
-          
+
           return Container(
               child: SingleChildScrollView(
 
@@ -158,7 +156,7 @@ class _CommentsState extends State<Comments> {
                                 border: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
-                                hintText: "Escribe una opinión...",
+                                hintText: "Hacer un comentario...",
                                 contentPadding: EdgeInsets.fromLTRB(
                                     1, 17, 10, 0), // control yo
                               ),
@@ -231,9 +229,7 @@ class _CommentsState extends State<Comments> {
       comment: _commentController.text,
     );
     _db.addComments(comentar);
-setState(() {
-  
-});
+    setState(() {});
     _addcomment(/*detailDocument.id,*/ comments);
   }
 
@@ -250,37 +246,37 @@ setState(() {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center ,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //FIXME: Así como está no muestra el número de opiniones
- SizedBox(
-                          height: 21,
-                        ),
-                        Container(
-                          width: 340,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              this.widget.description,
-                              //maxLines: 3,
-                              style: TextStyle(fontSize: 14, color: Colors.black),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 31,
-                        ),
-              const Divider(
-                          color: Colors.black12,
-                          height: 5,
-                          thickness: 2,
-                          indent: 1,
-                          endIndent: 1,
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
+          SizedBox(
+            height: 21,
+          ),
+          Container(
+            width: 340,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                this.widget.description,
+                //maxLines: 3,
+                style: TextStyle(fontSize: 14, color: Colors.black),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 31,
+          ),
+          const Divider(
+            color: Colors.black12,
+            height: 5,
+            thickness: 2,
+            indent: 1,
+            endIndent: 1,
+          ),
+          SizedBox(
+            height: 3,
+          ),
           _makeComment(snapshot.data.length.toString()),
 
           _listComments(snapshot)
