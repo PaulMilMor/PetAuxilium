@@ -241,6 +241,18 @@ print(docRef.documentID);*/
 
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
+    await _firestoreInstance
+        .collection('publications')
+        .where('userID', isEqualTo: id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) async {
+        await _firestoreInstance
+            .collection('publications')
+            .doc(element.id)
+            .delete();
+      });
+    });
   }
 
   Future<List<String>> bansList() async {
@@ -272,6 +284,7 @@ print(docRef.documentID);*/
 
   Future<void> deleteDocument(String id, String collection) async {
     print('POOL DELETE');
+    print('el id' + id);
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 
@@ -300,7 +313,7 @@ print(docRef.documentID);*/
         .then((value) {
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
-        opinion.id= element.id;
+        opinion.id = element.id;
         opinions.add(opinion);
       });
     });

@@ -39,6 +39,7 @@ class _OpinionsState extends State<Opinions> {
   String _score;
   String _comment;
   String _id;
+
   FocusNode _focusNode;
   double avgscore;
   final prefs = new preferencesUtil();
@@ -398,6 +399,7 @@ class _OpinionsState extends State<Opinions> {
                           onTap: () {
                             print('Eliminar comentario');
                             _scoredelete();
+                            print(_id);
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
                             print("antes del null");
@@ -554,7 +556,6 @@ class _OpinionsState extends State<Opinions> {
   void _checkEvaluations(snapshot) {
     _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
-      print('POOL CHEC');
       if (evaluation.userID == prefs.userID) {
         print('POOL CHECIF');
         _myEvaluation = evaluation;
