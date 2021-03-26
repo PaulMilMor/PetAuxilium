@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
@@ -58,6 +59,17 @@ class dbUtil {
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
+    });
+  }
+
+//Guarda denuncia
+  Future<void> addComplaint(ComplaintModel complaint) async {
+    await _firestoreInstance.collection("complaints").add({
+      'title': complaint.title,
+      'location': complaint.location,
+      'description': complaint.description,
+      'userID': complaint.userID,
+      'imgRef': complaint.imgRef,
     });
   }
 

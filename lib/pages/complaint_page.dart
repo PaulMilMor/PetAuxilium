@@ -5,54 +5,48 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
+import 'package:pet_auxilium/pages/create_business_page.dart';
+
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
-import 'package:pet_auxilium/widgets/textfield_widget.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:pet_auxilium/models/ImageUploadModel.dart';
 
-class CreateBusinessPage extends StatefulWidget {
+import 'package:pet_auxilium/widgets/textfield_widget.dart';
+
+class ComplaintPage extends StatefulWidget {
   @override
-  _CreateBusinessPageState createState() => _CreateBusinessPageState();
+  _ComplaintPageState createState() => _ComplaintPageState();
 }
 
-class _CreateBusinessPageState extends State<CreateBusinessPage> {
-  TextEditingController _nameTxtController;
+class _ComplaintPageState extends State<ComplaintPage> {
+  TextEditingController _titleTxtController;
   TextEditingController _dirTxtController;
   TextEditingController _descTxtController;
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
-  String _name = " ";
-  String _desc;
+  String _title = "";
+  String _desc = "";
+  String _direct = "";
   Future<File> _imageFile;
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
-
   List<LatLng> _locations;
   List<Object> images = [];
-
   final MapsUtil mapsUtil = MapsUtil();
+
   @override
   void initState() {
     super.initState();
     setState(() {
       images.add("Add Image");
-      /*images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");*/
     });
-//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
-    _name = prefs.businessName ?? ' ';
-    _desc = prefs.businessDescription;
-    _nameTxtController = TextEditingController(text: _name);
+    _titleTxtController = TextEditingController(text: _title);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
   }
@@ -61,93 +55,74 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget build(BuildContext context) {
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-    //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
-      body: SingleChildScrollView(child: _businessForm(context)),
+      body: SingleChildScrollView(child: _complaintForm(context)),
     );
   }
 
-  Widget _businessForm(BuildContext context) {
+  Widget _complaintForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(36.0),
+        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            SizedBox(
+              height: 15,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
               child: Text(
-                'PUBLICAR NEGOCIO',
+                'denunciar',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            // _selectService(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               child: Text('Completa los siguientes campos'),
             ),
-            _nameTxt(),
+            _titleTxt(),
             _dirTxt(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              //child: Text('Describa los servicios que ofrece'),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
             _descriptionTxt(),
             _buildGridView(),
-            _buttons()
+            _buttons(),
           ],
         ),
       ),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _titleTxt() {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
-          controller: _nameTxtController,
-          hintText: 'Nombre',
+          controller: _titleTxtController,
+          hintText: 'Título',
           onChanged: (value) {
             setState(() {
-              prefs.businessName = value;
-              _name = value;
+              //prefs.businessName = value;
+              _title = value;
             });
           }),
-
-      /*TextField(
-      controller: _nameTxtController,
-      hintText: 'Nombre',
-      onChanged: (value) {
-        setState(() {
-          prefs.businessName = value;
-          _name = value;
-        });
-      },
-    )*/
     );
   }
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: GrayTextFormField(
-            controller: _dirTxtController,
-            hintText: 'Direccion',
-            //Esto es para que no se pueda editar manualmente el texta de la ubicación
-            focusNode: AlwaysDisabledFocusNode(),
-            onTap: () {
-              Navigator.pushNamed(context, 'map', arguments: _markers);
-            })
-        /*TextField(
-      controller: _dirTxtController,
-    hintText: 'Direccion',
-      onTap: () {
-        Navigator.pushNamed(context, 'map', arguments: _markers);
-      },
-    )*/
-        );
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      child: GrayTextFormField(
+          controller: _dirTxtController,
+          hintText: 'Ubicación',
+          onChanged: (value) {
+            setState(() {
+              //prefs.businessName = value;
+              _direct = value;
+            });
+          }),
+    );
   }
 
   Widget _buttons() {
@@ -166,7 +141,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         maxLines: 6,
         controller: _descTxtController,
         decoration: InputDecoration(
-            hintText: "Describa los servicios que ofrece",
+            hintText: "Describa su denuncia",
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
@@ -190,28 +165,29 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     );
   }
 
-// ignore: todo
-//TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
     return Container(
-      child: RaisedButton(
+      child: ElevatedButton(
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
-            if (_name.isEmpty || _locations.isEmpty || _desc.isEmpty) {
+            if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
+              print('POOL DIRECT');
+              print(_direct);
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
             } else {
-              BusinessModel business = BusinessModel(
-                  name: _name,
-                  location: mapsUtil.locationtoString(_locations),
+              ComplaintModel complaint = ComplaintModel(
+                  title: _title,
+                  location: [_direct],
+                  //location: mapsUtil.locationtoString(_locations),
                   userID: prefs.userID,
                   description: _desc,
                   imgRef: imagesRef);
-              _db.addBusiness(business).then((value) {
-                prefs.businessName = '';
-                prefs.businessDescription = '';
+              _db.addComplaint(complaint).then((value) {
+                /*prefs.businessName = '';
+                prefs.businessDescription = '';*/
                 Navigator.popAndPushNamed(context, 'navigation');
               });
             }
@@ -298,10 +274,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         getFileImage(index);
-        print("xd" + _imageFile.toString());
-      } else {
-        print("faros");
-      }
+      } else {}
       if (images.length < 6) images.add("Add Image");
     });
   }
@@ -330,42 +303,4 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       });
     });
   }
-
-  Widget _selectService() {
-    return Row(
-      children: [
-        //Text('Servicios que ofrece:'),
-        /*DropdownButton(
-          isExpanded: true,
-          items: [
-            DropdownMenuItem(child: Text('Veterinaria')),
-            DropdownMenuItem(child: Text('???')),
-            DropdownMenuItem(child: Text('Tráfico de personas')),
-          ],
-        ),*/
-      ],
-    );
-  }
-
-//FIXME: optimizar este sector
-  void getDir(List<LatLng> locations) {
-    if (locations != null) {
-      locations.forEach((LatLng element) async {
-        String place = "";
-        List<Placemark> placemarks =
-            await placemarkFromCoordinates(element.latitude, element.longitude);
-        place =
-            placemarks.first.street + " " + placemarks.first.locality + "\n";
-        setState(() {
-          _dirTxtController.text = place;
-        });
-      });
-    }
-  }
-}
-
-//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
 }

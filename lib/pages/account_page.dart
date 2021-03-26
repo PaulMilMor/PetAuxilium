@@ -111,6 +111,7 @@ class _AccountPageState extends State<AccountPage> {
           if (!isAdmin()) _followListButton(),
           if (!isAdmin()) _postBusinessButton(),
           if (!isAdmin()) _caretakerButton(),
+          if (!isAdmin()) _complaintButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
@@ -221,6 +222,21 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Ajustes',
         icon: Icons.navigate_next,
         onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _complaintButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Hacer una denuncia',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'complaintPage');
+        },
       ),
     );
   }
