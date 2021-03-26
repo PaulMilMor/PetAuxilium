@@ -8,6 +8,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
+import 'button_widget.dart';
+
 class ListFeed extends StatefulWidget {
   ListFeed(
       {
@@ -32,6 +34,13 @@ class _ListFeedState extends State<ListFeed> {
   dbUtil _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
   String nose;
+  List listItems = [
+    'Spam',
+    'Informacion fraudulenta',
+    'Sumplantacion de identidad',
+    'Fotos Inapropiadas'
+  ];
+  String _selectedReason;
   @override
   Widget build(BuildContext context) {
     print('POOL PREFS');
@@ -46,6 +55,7 @@ class _ListFeedState extends State<ListFeed> {
 
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
+          _selectedReason = null;
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -146,7 +156,11 @@ class _ListFeedState extends State<ListFeed> {
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
-                      child: _isFollowedOption(id, this.widget.follows),
+                      child: Column(
+                        children: [
+                          _isFollowedOption(id, this.widget.follows),
+                        ],
+                      ),
                       value: 1,
                     ),
               _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
@@ -185,6 +199,12 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 3,
                     ),
+              PopupMenuItem(
+                child: Column(
+                  children: [_ReportOption()],
+                ),
+                value: 4,
+              ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -197,7 +217,6 @@ class _ListFeedState extends State<ListFeed> {
 
               print(publications);
               selectedPublication.id = id;
-              print("putamadre");
               print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
               break;
@@ -205,6 +224,10 @@ class _ListFeedState extends State<ListFeed> {
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications);
               _banUser(selectedPublication.userID);
+              break;
+            case 4:
+              _ReportMenu();
+              print(value);
           }
         });
   }
@@ -237,9 +260,7 @@ class _ListFeedState extends State<ListFeed> {
       onPressed: () async {
         print('entro adadadadad');
         await _db.banUser(id);
-        setState(() {
-          
-        });
+        setState(() {});
       },
     );
     // set up the AlertDialog
@@ -271,7 +292,7 @@ class _ListFeedState extends State<ListFeed> {
           ),
           Text(
             'Dejar de seguir ',
-            style: TextStyle(fontSize: 9),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       );
@@ -285,7 +306,7 @@ class _ListFeedState extends State<ListFeed> {
           ),
           Text(
             'Seguir ',
-            style: TextStyle(fontSize: 9),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       );
@@ -303,7 +324,7 @@ class _ListFeedState extends State<ListFeed> {
           ),
           Text(
             'Dejar de seguir ',
-            style: TextStyle(fontSize: 9),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       );
@@ -312,16 +333,106 @@ class _ListFeedState extends State<ListFeed> {
         children: [
           Icon(
             Icons.add_box,
-            size: 11,
+            size: 18,
             color: Colors.grey,
           ),
           Text(
             'Seguir ',
-            style: TextStyle(fontSize: 9),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       );
     }
+  }
+
+  Widget _ReportOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.flag,
+          size: 18,
+          color: Colors.red,
+        ),
+        Text(
+          'Reportar',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  void _ReportMenu() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 350,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                    padding: const EdgeInsets.only(bottom: 42),
+                    child:Center(
+                      child: Text("Reportar publicación",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                    ),),
+                    Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Center(
+                      child: Text("Motivo del reporte:",
+                          style: TextStyle(fontSize: 16)),
+                    ),),
+                    Padding(
+                    padding: const EdgeInsets.only(bottom: 52),
+                    child: Center(
+                      
+                      child: GrayDropdownButton(
+                        hint: Text("Selecciona el motivo"),
+                        value: _selectedReason,
+                        onChanged: (newValue) {
+                          //prefs.adoptionCategory = newValue;
+                          setState(() {
+                            _selectedReason = newValue;
+                          });
+                        },
+                        items: listItems.map((valueItem) {
+                          return DropdownMenuItem(
+                            value: valueItem,
+                            child: Text(valueItem),
+                          );
+                        }).toList(),
+                      ),
+                    ),),
+                    Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          child: Text('Cancelar',
+                              style: TextStyle(color: Colors.black)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ElevatedButton(
+                            onPressed: () {}, child: Text('Reportar')),
+                      ],
+                    ),),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   Widget _rating(publication) {

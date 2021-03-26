@@ -80,11 +80,12 @@ class _OpinionsState extends State<Opinions> {
           //print(snapshot.data[0].userID);
           print(_myEvaluation);
           print(snapshot.data[2].userID);
-          for (EvaluationModel evo in snapshot.data) {
+          /*for (EvaluationModel evo in snapshot.data) {
             print('POOL SNAPSJHOT');
             print(evo.id);
-          }
+          }*/
           _checkEvaluations(snapshot);
+
           if (snapshot.hasData) {
             return _opinion(snapshot);
           } else {
@@ -399,12 +400,9 @@ class _OpinionsState extends State<Opinions> {
                           onTap: () {
                             print('Eliminar comentario');
                             _scoredelete();
-                            print(_id);
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
-                            print("antes del null");
                             _myEvaluation = null;
-                            print("despues del chingado null");
                             print(_myEvaluation);
                             _commentController.clear();
                             print('POOL SCORE');
@@ -412,6 +410,8 @@ class _OpinionsState extends State<Opinions> {
                             print(this.widget.sumscore);
                             this.widget.sumscore -= double.parse(_score);
                             this.widget.nevaluations--;
+
+                            _commentController.clear();
 
                             setState(() {
                               avgscore = this.widget.sumscore /
@@ -438,6 +438,16 @@ class _OpinionsState extends State<Opinions> {
                     ]))))));
   }
 
+  void _scoredelete() {
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: this.widget.id,
+      score: _score,
+      comment: _commentController.text,
+    );
+    _db.updateScore(evaluation);
+  }
+
   void _evaluacion() {
     CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
@@ -459,16 +469,6 @@ class _OpinionsState extends State<Opinions> {
     setState(() {
       avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
-  }
-
-  void _scoredelete() {
-    EvaluationModel evaluation = EvaluationModel(
-      userID: prefs.userID,
-      publicationID: this.widget.id,
-      score: _score,
-      comment: _commentController.text,
-    );
-    _db.updateScore(evaluation);
   }
 
   void _addevaluation(evaluations) async {
@@ -556,15 +556,16 @@ class _OpinionsState extends State<Opinions> {
   void _checkEvaluations(snapshot) {
     _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
+      print('POOL CHEC');
       if (evaluation.userID == prefs.userID) {
         print('POOL CHECIF');
         _myEvaluation = evaluation;
         _myEvaluation.id = evaluation.id;
-        print("La chingada");
         _id = _myEvaluation.id;
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
+        print(evaluation.comment);
       }
     }
   }
