@@ -189,6 +189,10 @@ class _ComplaintPageState extends State<ComplaintPage> {
                 /*prefs.businessName = '';
                 prefs.businessDescription = '';*/
                 Navigator.popAndPushNamed(context, 'navigation');
+                ScaffoldMessenger.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(
+                      SnackBar(content: Text('listo krnal ya se guardó 👍')));
               });
             }
 
