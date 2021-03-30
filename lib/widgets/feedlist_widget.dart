@@ -43,9 +43,7 @@ class _ListFeedState extends State<ListFeed> {
     'Fotos Inapropiadas'
   ];
   String _selectedReason;
-  String _id;
-  String iddoc;
-  
+  String _id;  
   @override
   Widget build(BuildContext context) {
     print('POOL PREFS');
@@ -375,11 +373,13 @@ class _ListFeedState extends State<ListFeed> {
   void _ReportMenu(/*reports*/) {
     showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+        ),
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (context, setState) {
-            //shape: RoundedRectangleBorder(
-                //borderRadius: BorderRadius.circular(20.0)), //this right here
+            
             return Container(
               
               height: 350,
@@ -454,14 +454,26 @@ class _ListFeedState extends State<ListFeed> {
                                     if(element.id == _id){
                                       found = true;
                                       users = element.get('userid');
+                                      if(users.contains(_prefs.userID)){
+                                        ScaffoldMessenger.of(context)
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(
+                                            SnackBar(content: Text('Usted ya reporto esta publicación')));
+                                        //print("Ya existe el usuario");
+                                      }else{
+
                                       users.add(_prefs.userID);
-                                      print("ya existe");
                                       print(users);
                                       ReportModel update = ReportModel(
                                       publicationid: _id,
                                       userid: users,
                                       );
                                         _db.updatereport(update, _selectedReason);
+                                        ScaffoldMessenger.of(context)
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(
+                                            SnackBar(content: Text('Se reporto esta publicación')));
+                                      }
                                     }
                                     
                                   });
@@ -476,9 +488,14 @@ class _ListFeedState extends State<ListFeed> {
                                 );
                                   _db.addReport(addreport);
                                   _db.updatereport(addreport, _selectedReason);
+                                  ScaffoldMessenger.of(context)
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(
+                                            SnackBar(content: Text('Se reporto esta publicación')));
                                 }
                                 
                                   print("faros en vinagre");
+                            Navigator.of(context).pop();
                             }, child: Text('Reportar')),
                       ],
                     ),),
