@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
 
@@ -22,7 +23,7 @@ class _DetailPageState extends State<DetailPage> {
   List<PublicationModel> ad = [];
 
   final _db = dbUtil();
-
+  final preferencesUtil _prefs = preferencesUtil();
   final MapsUtil _mapsUtil = MapsUtil();
   double avgscore;
 
@@ -116,12 +117,13 @@ class _DetailPageState extends State<DetailPage> {
       expandedHeight: 320,
       actions: [
         //TODO: Actualmente se muestran los 3 puntitos pero no hacen nada
-        PopupMenuButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Color.fromRGBO(210, 210, 210, 1),
-            ),
-            itemBuilder: (BuildContext context) => []),
+        if (_prefs.userID == ' ')
+          PopupMenuButton(
+              icon: Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210, 210, 210, 1),
+              ),
+              itemBuilder: (BuildContext context) => []),
       ],
       leading: IconButton(
         icon: new Icon(

@@ -4,10 +4,8 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Comments extends StatefulWidget {
-  Comments({
-    @required this.id, 
-    @required this.category,
-    @required this.description});
+  Comments(
+      {@required this.id, @required this.category, @required this.description});
   String id;
   String category;
   String description;
@@ -24,7 +22,7 @@ class _CommentsState extends State<Comments> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-        print("desc"+widget.description);
+    print("desc" + widget.description);
   }
 
   @override
@@ -49,12 +47,8 @@ class _CommentsState extends State<Comments> {
         future: _db.getComments(this.widget.id),
         builder:
             (BuildContext context, AsyncSnapshot<List<CommentModel>> snapshot) {
-          print('POOL SNAPSHOT');
-          print(this.widget.id);
-          //print(snapshot.data[0].userID);
-       print('essssssasadadaf' +snapshot.hasData.toString());
           if (snapshot.hasData) {
-               _checkComments(snapshot);
+            _checkComments(snapshot);
             return _comments(snapshot);
           } else {
             return _makeComment('0');
@@ -72,7 +66,7 @@ class _CommentsState extends State<Comments> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           CommentModel comment = snapshot.data.elementAt(index);
-          
+
           return Container(
               child: SingleChildScrollView(
 
@@ -122,70 +116,103 @@ class _CommentsState extends State<Comments> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          Container(
-                            width: 600,
-                            child: TextFormField(
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                              // cursorColor: Theme.of(context).cursorColor,
-                              maxLength: 140,
-                              focusNode: _focusNode,
-                              onTap: _requestFocus,
+                          prefs.userID == ' '
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Text(
+                                      'Inicia sesión para unirte a la conversación.',
+                                      style: TextStyle(fontSize: 16)),
+                                )
+                              : Container(
+                                  width: 600,
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                    // cursorColor: Theme.of(context).cursorColor,
+                                    maxLength: 140,
+                                    focusNode: _focusNode,
+                                    onTap: _requestFocus,
 
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: Colors.grey[400],
-                                    size: 19,
-                                  ),
-                                  onPressed: () {
-                                    _commentController.clear();
-                                  },
-                                ),
-                                icon: Icon(
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          Icons.clear,
+                                          color: Colors.grey[400],
+                                          size: 19,
+                                        ),
+                                        onPressed: () {
+                                          _commentController.clear();
+                                        },
+                                      ),
+                                      /*icon: Icon(
                                   Icons.comment,
                                   color: Colors.white,
+                                ),*/
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                      ),
+                                      hintText: "Escribe una opinión...",
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          1, 17, 10, 0), // control yo
+                                    ),
+                                    controller: _commentController,
+                                  ),
                                 ),
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                border: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                hintText: "Escribe una opinión...",
-                                contentPadding: EdgeInsets.fromLTRB(
-                                    1, 17, 10, 0), // control yo
-                              ),
-                              controller: _commentController,
-                            ),
-                          ),
 
-                          Container(
-                            width: 310,
-                            height: 30,
-                            child: GestureDetector(
-                              onTap: () {
-                                _comentar();
-                                _commentController.clear();
-                              },
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'COMENTAR',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                          prefs.userID == ' '
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.popUntil(context,
+                                            ModalRoute.withName('home'));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Volver al inicio'),
+                                      ),
+                                      /* style: ButtonStyle(
+                                          backgroundColor:
+                                              Color.fromRGBO(49, 232, 93, 1),
+                                        ),*/
+                                    ),
+                                  ),
+                                )
+                              //FIXME: Ya hay un widget que hace esto...
+                              : Container(
+                                  width: 310,
+                                  height: 30,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _comentar();
+                                      _commentController.clear();
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        'COMENTAR',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                           Padding(
                               padding: EdgeInsets.only(
                                   bottom: MediaQuery.of(context)
@@ -223,6 +250,8 @@ class _CommentsState extends State<Comments> {
                         ]))))));
   }
 
+  //Widget
+
   void _comentar() {
     CommentModel comentar = CommentModel(
       userID: prefs.userID,
@@ -231,9 +260,7 @@ class _CommentsState extends State<Comments> {
       comment: _commentController.text,
     );
     _db.addComments(comentar);
-setState(() {
-  
-});
+    setState(() {});
     _addcomment(/*detailDocument.id,*/ comments);
   }
 
@@ -250,40 +277,40 @@ setState(() {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center ,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //FIXME: Así como está no muestra el número de opiniones
- SizedBox(
-                          height: 21,
-                        ),
-                        Container(
-                          width: 340,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              this.widget.description,
-                              //maxLines: 3,
-                              style: TextStyle(fontSize: 14, color: Colors.black),
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 31,
-                        ),
-              const Divider(
-                          color: Colors.black12,
-                          height: 5,
-                          thickness: 2,
-                          indent: 1,
-                          endIndent: 1,
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
+          SizedBox(
+            height: 21,
+          ),
+          Container(
+            width: 340,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                this.widget.description,
+                //maxLines: 3,
+                style: TextStyle(fontSize: 14, color: Colors.black),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 31,
+          ),
+          const Divider(
+            color: Colors.black12,
+            height: 5,
+            thickness: 2,
+            indent: 1,
+            endIndent: 1,
+          ),
+          SizedBox(
+            height: 3,
+          ),
           _makeComment(snapshot.data.length.toString()),
 
-          _listComments(snapshot)
+          if (prefs.userID != ' ') _listComments(snapshot)
         ],
       ),
     );
