@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
@@ -32,15 +33,19 @@ class ListFeed extends StatefulWidget {
 class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
   dbUtil _db = dbUtil();
+  final _firestoreInstance = FirebaseFirestore.instance;
   final preferencesUtil _prefs = preferencesUtil();
   String nose;
   List listItems = [
     'Spam',
     'Informacion fraudulenta',
-    'Sumplantacion de identidad',
+    'Suplantacion de identidad',
     'Fotos Inapropiadas'
   ];
   String _selectedReason;
+  String _id;
+  String iddoc;
+  
   @override
   Widget build(BuildContext context) {
     print('POOL PREFS');
@@ -226,8 +231,14 @@ class _ListFeedState extends State<ListFeed> {
               _banUser(selectedPublication.userID);
               break;
             case 4:
-              _ReportMenu();
-              print(value);
+            _selectedReason = null;
+            _id = null;
+            PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications);
+              _ReportMenu(/*publications*/);
+              selectedPublication.id = id;
+              _id=id;
+              print(selectedPublication.id);
           }
         });
   }
@@ -361,14 +372,16 @@ class _ListFeedState extends State<ListFeed> {
     );
   }
 
-  void _ReportMenu() {
-    showDialog(
+  void _ReportMenu(/*reports*/) {
+    showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)), //this right here
-            child: Container(
+          return StatefulBuilder(
+            builder: (context, setState) {
+            //shape: RoundedRectangleBorder(
+                //borderRadius: BorderRadius.circular(20.0)), //this right here
+            return Container(
+              
               height: 350,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -376,17 +389,25 @@ class _ListFeedState extends State<ListFeed> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                    padding: const EdgeInsets.only(bottom: 42),
-                    child:Center(
-                      child: Text("Reportar publicación",
+                    //Padding(
+                    //padding: const EdgeInsets.only(bottom: 42),
+                    Center(
+                      child: Text("Reportar",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),),
+                    ),//),
+                    const Divider(
+                        color: Colors.black45,
+                        height: 5,
+                        thickness: 1,
+                        indent: 50,
+                        endIndent: 50,
+                        
+                      ),
                     Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(top: 30, bottom: 10),
                     child: Center(
-                      child: Text("Motivo del reporte:",
+                      child: Text("¿Por qué estás reportando esta publicación?",
                           style: TextStyle(fontSize: 16)),
                     ),),
                     Padding(
@@ -424,15 +445,54 @@ class _ListFeedState extends State<ListFeed> {
                           },
                         ),
                         ElevatedButton(
-                            onPressed: () {}, child: Text('Reportar')),
+                            onPressed: () async {
+                              List users =[];
+                              var found= false;
+                              await _firestoreInstance.collection('reports').get().then((value) {
+                                  value.docs.forEach((element) {
+                                    print(element.id);
+                                    if(element.id == _id){
+                                      found = true;
+                                      users = element.get('userid');
+                                      users.add(_prefs.userID);
+                                      print("ya existe");
+                                      print(users);
+                                      ReportModel update = ReportModel(
+                                      publicationid: _id,
+                                      userid: users,
+                                      );
+                                        _db.updatereport(update, _selectedReason);
+                                    }
+                                    
+                                  });
+                                });
+
+                                if(found==false){
+                                  print(users);
+                                  users.add(_prefs.userID);
+                                  ReportModel addreport = ReportModel(
+                                  publicationid: _id,
+                                  userid: users,
+                                );
+                                  _db.addReport(addreport);
+                                  _db.updatereport(addreport, _selectedReason);
+                                }
+                                
+                                  print("faros en vinagre");
+                            }, child: Text('Reportar')),
                       ],
                     ),),
                   ],
                 ),
               ),
-            ),
+            );
+            },
           );
         });
+  }
+
+  _addreport(){
+
   }
 
   Widget _rating(publication) {
