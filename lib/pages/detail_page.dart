@@ -115,6 +115,7 @@ class _DetailPageState extends State<DetailPage> {
       elevation: 1,
       expandedHeight: 320,
       actions: [
+        //TODO: Actualmente se muestran los 3 puntitos pero no hacen nada
         PopupMenuButton(
             icon: Icon(
               Icons.more_vert,
