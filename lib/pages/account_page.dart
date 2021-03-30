@@ -63,9 +63,23 @@ class _AccountPageState extends State<AccountPage> {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(this._user.imgRef),
-              backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+              backgroundColor: Colors.white,
+              //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
               radius: 50,
             ),
+            /*Stack(children: [
+              Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                ),
+              ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(this._user.imgRef),
+                backgroundColor: Colors.white,
+                //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+                radius: 50,
+              ),
+            ]),*/
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,

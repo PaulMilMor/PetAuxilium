@@ -377,56 +377,59 @@ class _ListFeedState extends State<ListFeed> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                    padding: const EdgeInsets.only(bottom: 42),
-                    child:Center(
-                      child: Text("Reportar publicación",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),),
-                    Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Center(
-                      child: Text("Motivo del reporte:",
-                          style: TextStyle(fontSize: 16)),
-                    ),),
-                    Padding(
-                    padding: const EdgeInsets.only(bottom: 52),
-                    child: Center(
-                      
-                      child: GrayDropdownButton(
-                        hint: Text("Selecciona el motivo"),
-                        value: _selectedReason,
-                        onChanged: (newValue) {
-                          //prefs.adoptionCategory = newValue;
-                          setState(() {
-                            _selectedReason = newValue;
-                          });
-                        },
-                        items: listItems.map((valueItem) {
-                          return DropdownMenuItem(
-                            value: valueItem,
-                            child: Text(valueItem),
-                          );
-                        }).toList(),
+                      padding: const EdgeInsets.only(bottom: 42),
+                      child: Center(
+                        child: Text("Reportar publicación",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
-                    ),),
+                    ),
                     Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          child: Text('Cancelar',
-                              style: TextStyle(color: Colors.black)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Center(
+                        child: Text("Motivo del reporte:",
+                            style: TextStyle(fontSize: 16)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 52),
+                      child: Center(
+                        child: GrayDropdownButton(
+                          hint: Text("Selecciona el motivo"),
+                          value: _selectedReason,
+                          onChanged: (newValue) {
+                            //prefs.adoptionCategory = newValue;
+                            setState(() {
+                              _selectedReason = newValue;
+                            });
                           },
+                          items: listItems.map((valueItem) {
+                            return DropdownMenuItem(
+                              value: valueItem,
+                              child: Text(valueItem),
+                            );
+                          }).toList(),
                         ),
-                        ElevatedButton(
-                            onPressed: () {}, child: Text('Reportar')),
-                      ],
-                    ),),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: Text('Cancelar',
+                                style: TextStyle(color: Colors.black)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ElevatedButton(
+                              onPressed: () {}, child: Text('Reportar')),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
