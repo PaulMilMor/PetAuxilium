@@ -43,8 +43,6 @@ class _ListFeedState extends State<ListFeed> {
   String _selectedReason;
   @override
   Widget build(BuildContext context) {
-    print('POOL PREFS');
-    print(_prefs.userID.toString().length);
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,

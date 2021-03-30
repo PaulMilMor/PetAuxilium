@@ -34,7 +34,7 @@ class _DetailPageState extends State<DetailPage> {
           widget.detailDocument['nevaluations'];
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     //getImages();
@@ -50,59 +50,50 @@ class _DetailPageState extends State<DetailPage> {
                   padding: EdgeInsets.all(1),
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                      child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 45,
-                      ),
-                      _setBackIcon(context),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      _setCarousel(),
-                      SizedBox(
-                        height: 17,
-                      ),
-                      Text(
-                        widget.detailDocument['name'],
-                        style: TextStyle(
-                          fontSize: 21,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                  child: CustomScrollView(
+                    slivers: [
+                      _appBar(widget.detailDocument['name']),
+                      /*SliverAppBar(
+                        pinned: true,
+                        snap: false,
+                        floating: false,
+                        elevation: 1,
+                        expandedHeight: 300,
+                        leading: IconButton
+                      ),*/
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              widget.detailDocument['category'],
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.green,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            const Divider(
+                              color: Colors.black45,
+                              height: 5,
+                              thickness: 1,
+                              indent: 50,
+                              endIndent: 50,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            //  _serviceNumbers(),
+                            _mapsUtil.getLocationText(
+                                widget.detailDocument['location'].first),
+
+                            _bottomSection(),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Text(
-                        widget.detailDocument['category'],
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.green,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 7,
-                      ),
-                      const Divider(
-                        color: Colors.black45,
-                        height: 5,
-                        thickness: 1,
-                        indent: 50,
-                        endIndent: 50,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                   //  _serviceNumbers(),
-                      _mapsUtil.getLocationText(
-                          widget.detailDocument['location'].first),
-                   
-                      
-                      _bottomSection(),
                     ],
-                  )))),
+                  ))),
         ) /*;}
             });*/
         //}
@@ -115,7 +106,43 @@ class _DetailPageState extends State<DetailPage> {
     print(widget.detailDocument.id);
     return _lista = await _db.getAllImages(widget.detailDocument.id);
   }
- 
+
+  Widget _appBar(String name) {
+    return SliverAppBar(
+      pinned: true,
+      snap: false,
+      floating: false,
+      elevation: 1,
+      expandedHeight: 320,
+      actions: [
+        PopupMenuButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Color.fromRGBO(210, 210, 210, 1),
+            ),
+            itemBuilder: (BuildContext context) => []),
+      ],
+      leading: IconButton(
+        icon: new Icon(
+          Icons.arrow_back_ios,
+          color: Color.fromRGBO(49, 232, 93, 1),
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+        iconSize: 32,
+      ),
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text(name,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            )),
+        background: _setCarousel(),
+        centerTitle: true,
+      ),
+    );
+  }
+
   Widget _setBackIcon(context2) {
     return Positioned(
         right: 0.0,
@@ -135,22 +162,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
-   
     if (widget.detailDocument['category'].toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
           category: widget.detailDocument['category'],
           sumscore: widget.detailDocument['score'],
-          nevaluations:widget.detailDocument['nevaluations'],
+          nevaluations: widget.detailDocument['nevaluations'],
           pricing: widget.detailDocument['pricing'],
-          description: widget.detailDocument['description']
-          );
+          description: widget.detailDocument['description']);
     } else {
       return Comments(
-          id: widget.detailDocument.id,
-          category: widget.detailDocument['category'],
-          description: widget.detailDocument['description'],
-          );
+        id: widget.detailDocument.id,
+        category: widget.detailDocument['category'],
+        description: widget.detailDocument['description'],
+      );
     }
   }
 
@@ -158,29 +183,26 @@ class _DetailPageState extends State<DetailPage> {
     return FutureBuilder(
       future: getImages(),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        if(snapshot.connectionState!=ConnectionState.waiting){
-return CarouselSlider(
-          options: CarouselOptions(
-            aspectRatio: 2.0,
-            enlargeCenterPage: true,
-            enableInfiniteScroll: false,
-            initialPage: 0,
-            autoPlay: false,
-          ),
-          items: snapshot.data
-              .map((element) => Container(
-                    child: Center(
-                        child: Image.network(element,
-                            fit: BoxFit.cover, width: 300)),
-                  ))
-              .toList(),
-        );
-
-        }else{
-
+        if (snapshot.connectionState != ConnectionState.waiting) {
+          return CarouselSlider(
+            options: CarouselOptions(
+              aspectRatio: 2.0,
+              enlargeCenterPage: true,
+              enableInfiniteScroll: false,
+              initialPage: 0,
+              autoPlay: false,
+            ),
+            items: snapshot.data
+                .map((element) => Container(
+                      child: Center(
+                          child: Image.network(element,
+                              fit: BoxFit.cover, width: 300)),
+                    ))
+                .toList(),
+          );
+        } else {
           return Container();
         }
-        
       },
     );
   }
