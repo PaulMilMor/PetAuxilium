@@ -28,6 +28,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
+  FocusScopeNode node;
   bool _imageSelected = true;
   AuthUtil _auth = AuthUtil();
   final StorageUtil _storage = StorageUtil();
@@ -38,6 +40,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    node = FocusScope.of(context);
     return Scaffold(
       //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
       /*appBar: PreferredSize(
@@ -312,6 +315,14 @@ class _SignupPageState extends State<SignupPage> {
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce tu nombre' : null;
         },
+        onEditingComplete: () {
+          if (_nameController.text.trim().isNotEmpty) {
+            node.nextFocus();
+          } else {
+            _nameController.text = 'a';
+            _nameController.text = '';
+          }
+        },
       ),
     );
   }
@@ -326,6 +337,14 @@ class _SignupPageState extends State<SignupPage> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce tu Apellido' : null;
+        },
+        onEditingComplete: () {
+          if (_lastNameController.text.trim().isNotEmpty) {
+            node.nextFocus();
+          } else {
+            _lastNameController.text = 'a';
+            _lastNameController.text = '';
+          }
         },
       ),
     );
@@ -347,11 +366,23 @@ class _SignupPageState extends State<SignupPage> {
           }
           return null;
         },
+        onEditingComplete: () {
+          if (_emailController.text.trim().isNotEmpty &&
+              EmailValidator.validate(_emailController.text)) {
+            node.nextFocus();
+          } else if (_emailController.text.trim().isEmpty) {
+            _emailController.text = 'a';
+            _emailController.text = '';
+          }
+        },
       ),
     );
   }
 
   Widget _passwordTxt() {
+    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])';
+    RegExp regExp = new RegExp(pattern);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
@@ -360,8 +391,6 @@ class _SignupPageState extends State<SignupPage> {
         controller: _passwordController,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
-          String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])';
-          RegExp regExp = new RegExp(pattern);
           if (value.trim().isEmpty) {
             return 'Ingresa una contraseña';
           } else if (value.trim().length < 6) {
@@ -370,6 +399,16 @@ class _SignupPageState extends State<SignupPage> {
             return 'Incluye mayúsculas, minúsculas, y números';
           }
           return null;
+        },
+        onEditingComplete: () {
+          if (_passwordController.text.trim().isNotEmpty &&
+              _passwordController.text.trim().length >= 6 &&
+              regExp.hasMatch(_passwordController.text.trim())) {
+            node.nextFocus();
+          } else if (_passwordController.text.trim().isEmpty) {
+            _passwordController.text = 'a';
+            _passwordController.text = '';
+          }
         },
       ),
     );
@@ -390,6 +429,34 @@ class _SignupPageState extends State<SignupPage> {
             return 'Las contraseñas no coinciden';
           }
           return null;
+        },
+        onEditingComplete: () {
+          if (_confirmController.text.trim().isNotEmpty &&
+              _confirmController.text == _passwordController.text) {
+            if (_formKey.currentState.validate()) {
+              print('VALIDATE');
+              print(_imageFile);
+              if (_image == null) {
+                node.unfocus();
+
+                setState(() {
+                  _imageSelected = false;
+                });
+              } else {
+                setState(() {
+                  _isLoading = true;
+                });
+                _signUp(context);
+              }
+            } else if (_image == null) {
+              setState(() {
+                _imageSelected = false;
+              });
+            }
+          } else if (_confirmController.text.trim().isEmpty) {
+            _confirmController.text = 'a';
+            _confirmController.text = '';
+          }
         },
       ),
     );
@@ -443,13 +510,24 @@ class _SignupPageState extends State<SignupPage> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        child: GoogleSignInButton(
-          text: 'Registrarse con Google',
-          darkMode: true,
-          onPressed: () {
-            _signUpGoogle(context);
-          },
-        ),
+        child: _isGoogleLoading
+            ? Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+                ),
+              )
+            : GoogleSignInButton(
+                text: 'Registrarse con Google',
+                darkMode: true,
+                onPressed: () {
+                  setState(() {
+                    _isGoogleLoading = true;
+                  });
+                  _signUpGoogle(context);
+                },
+              ),
       ),
     );
   }
@@ -491,9 +569,11 @@ class _SignupPageState extends State<SignupPage> {
     print(context);
     print("dentro del registro google");
     if (_result == 'Ingresó') {
+      _isGoogleLoading = false;
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
+      _isGoogleLoading = false;
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
