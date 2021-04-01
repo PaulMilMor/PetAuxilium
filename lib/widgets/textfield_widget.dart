@@ -69,7 +69,7 @@ class GrayTextFormField extends StatelessWidget {
         maxLength: this.maxLength,
         readOnly: this.readOnly,
         decoration: InputDecoration(
-          errorMaxLines: 2,
+          errorMaxLines: 3,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 18,
             horizontal: 20,
