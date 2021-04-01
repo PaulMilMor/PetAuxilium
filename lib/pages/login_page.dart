@@ -17,13 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   final _db = dbUtil();
   final preferencesUtil prefs = preferencesUtil();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
+  FocusScopeNode node;
   //UserModel user;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _pswdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     print(ModalRoute.of(context).settings.name);
-
+    node = FocusScope.of(context);
     return Scaffold(
       //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
       /*appBar: PreferredSize(
@@ -149,6 +151,7 @@ class _LoginPageState extends State<LoginPage> {
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce el correo' : null;
         },
+        onEditingComplete: () => node.nextFocus(),
       ),
     );
   }
@@ -162,6 +165,15 @@ class _LoginPageState extends State<LoginPage> {
         obscureText: true,
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce la contraseña' : null;
+        },
+        onEditingComplete: () {
+          if (_formKey.currentState.validate()) {
+            node.unfocus();
+            setState(() {
+              _isLoading = true;
+            });
+            _login();
+          }
         },
       ),
     );
@@ -200,15 +212,27 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _googleLoginButton() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        child: GoogleSignInButton(
-          onPressed: () {
-            _loginGoogle();
-          },
-          text: 'Ingresar con Google',
-        ),
-      ),
+      child: _isGoogleLoading
+          ? Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+                //backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              child: GoogleSignInButton(
+                onPressed: () {
+                  setState(() {
+                    _isGoogleLoading = true;
+                  });
+                  _loginGoogle();
+                },
+                text: 'Ingresar con Google',
+              ),
+            ),
     );
   }
 
@@ -253,10 +277,16 @@ class _LoginPageState extends State<LoginPage> {
     if (_result == 'Ingresó') {
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
+      setState(() {
+        _isGoogleLoading = false;
+      });
     } else {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
+      setState(() {
+        _isGoogleLoading = false;
+      });
     }
   }
 }
