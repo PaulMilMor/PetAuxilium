@@ -169,7 +169,7 @@ class _OpinionsState extends State<Opinions> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 16),
                                   child: Text(
-                                      'Inicia sesión para hacer una evaluación',
+                                      'Inicia sesión para hacer una evaluación.',
                                       style: TextStyle(fontSize: 16)),
                                 )
                               : TextFormField(

@@ -52,8 +52,10 @@ class _DetailPageState extends State<DetailPage> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   child: CustomScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
                       _appBar(widget.detailDocument['name']),
+
                       /*SliverAppBar(
                         pinned: true,
                         snap: false,
@@ -117,7 +119,7 @@ class _DetailPageState extends State<DetailPage> {
       expandedHeight: 320,
       actions: [
         //TODO: Actualmente se muestran los 3 puntitos pero no hacen nada
-        if (_prefs.userID == ' ')
+        if (_prefs.userID != ' ')
           PopupMenuButton(
               icon: Icon(
                 Icons.more_vert,
