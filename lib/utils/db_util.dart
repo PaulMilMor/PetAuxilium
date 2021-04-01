@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
@@ -98,11 +99,63 @@ class dbUtil {
   }
 
   Future<void> addReport(ReportModel rm) async {
-    await _firestoreInstance.collection("reports").doc(rm.id).set({
+    await _firestoreInstance.collection("reports").doc(rm.publicationid).set({
       'publicationid': rm.publicationid,
-      'nreports': rm.nreports,
+      'nreports': 0,
+      'nspam': 0,
+      'nfalseinfo': 0,
+      'nidentityfraud': 0,
+      'nbadphotos': 0,
       'userid': rm.userid
     });
+    print("dentro de los reportes");
+    print(rm.publicationid);
+    
+  }
+  Future<void> updatereport(ReportModel rm, String selectedoption) async {
+
+  if(selectedoption =="Spam"){
+    print("adentro del spam");
+    print(rm.userid);
+      await _firestoreInstance
+        .collection("reports")
+        .doc(rm.publicationid)
+        .update({
+      'userid': rm.userid,
+      'nreports': FieldValue.increment(1),
+      'nspam': FieldValue.increment(1),
+    });
+    }
+    if(selectedoption =="Informacion fraudulenta"){
+      await _firestoreInstance
+        .collection("reports")
+        .doc(rm.publicationid)
+        .update({
+      'userid': rm.userid,
+      'nreports': FieldValue.increment(1),
+      'nfalseinfo': FieldValue.increment(1),
+    });
+    }
+    if(selectedoption =="Suplantacion de identidad"){
+      await _firestoreInstance
+        .collection("reports")
+        .doc(rm.publicationid)
+        .update({
+      'userid': rm.userid,
+      'nreports': FieldValue.increment(1),
+      'nidentityfraud': FieldValue.increment(1),
+    });
+    }
+    if(selectedoption =="Fotos Inapropiadas"){
+      await _firestoreInstance
+        .collection("reports")
+        .doc(rm.publicationid)
+        .update({
+      'userid': rm.userid,
+      'nreports': FieldValue.increment(1),
+      'nbadphotos': FieldValue.increment(1),
+    });
+    }
   }
 
   Future<void> addKeeper(PublicationModel ad) async {
