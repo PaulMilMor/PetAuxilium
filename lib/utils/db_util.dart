@@ -29,8 +29,6 @@ class dbUtil {
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     //throw Exception('jiji');
-    print('POOL ID GET USER');
-    print(id);
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
       _prefs.userName = value.get("name");
       _prefs.userID = id;
@@ -110,51 +108,50 @@ class dbUtil {
     });
     print("dentro de los reportes");
     print(rm.publicationid);
-    
   }
-  Future<void> updatereport(ReportModel rm, String selectedoption) async {
 
-  if(selectedoption =="Spam"){
-    print("adentro del spam");
-    print(rm.userid);
+  Future<void> updatereport(ReportModel rm, String selectedoption) async {
+    if (selectedoption == "Spam") {
+      print("adentro del spam");
+      print(rm.userid);
       await _firestoreInstance
-        .collection("reports")
-        .doc(rm.publicationid)
-        .update({
-      'userid': rm.userid,
-      'nreports': FieldValue.increment(1),
-      'nspam': FieldValue.increment(1),
-    });
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nspam': FieldValue.increment(1),
+      });
     }
-    if(selectedoption =="Informacion fraudulenta"){
+    if (selectedoption == "Informacion fraudulenta") {
       await _firestoreInstance
-        .collection("reports")
-        .doc(rm.publicationid)
-        .update({
-      'userid': rm.userid,
-      'nreports': FieldValue.increment(1),
-      'nfalseinfo': FieldValue.increment(1),
-    });
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nfalseinfo': FieldValue.increment(1),
+      });
     }
-    if(selectedoption =="Suplantacion de identidad"){
+    if (selectedoption == "Suplantacion de identidad") {
       await _firestoreInstance
-        .collection("reports")
-        .doc(rm.publicationid)
-        .update({
-      'userid': rm.userid,
-      'nreports': FieldValue.increment(1),
-      'nidentityfraud': FieldValue.increment(1),
-    });
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nidentityfraud': FieldValue.increment(1),
+      });
     }
-    if(selectedoption =="Fotos Inapropiadas"){
+    if (selectedoption == "Fotos Inapropiadas") {
       await _firestoreInstance
-        .collection("reports")
-        .doc(rm.publicationid)
-        .update({
-      'userid': rm.userid,
-      'nreports': FieldValue.increment(1),
-      'nbadphotos': FieldValue.increment(1),
-    });
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nbadphotos': FieldValue.increment(1),
+      });
     }
   }
 
@@ -348,8 +345,6 @@ print(docRef.documentID);*/
   }
 
   Future<void> deleteDocument(String id, String collection) async {
-    print('POOL DELETE');
-    print('el id' + id);
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 

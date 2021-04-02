@@ -181,8 +181,6 @@ class _ComplaintPageState extends State<ComplaintPage> {
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
             if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
-              print('POOL DIRECT');
-              print(_direct);
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
