@@ -163,7 +163,9 @@ class dbUtil {
       'location': ad.location,
       'imgRef': ad.imgRef,
       'userID': ad.userID,
-      'pricing': ad.pricing
+      'pricing': ad.pricing,
+      'nevaluations': 0,
+      'score': 0,
     });
   }
 
