@@ -446,6 +446,9 @@ class _ListFeedState extends State<ListFeed> {
                               },
                             ),
                             ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromRGBO(49, 232, 93, 1),
+                                ),
                                 onPressed: () async {
                                   List users = [];
                                   var found = false;
@@ -513,7 +516,10 @@ class _ListFeedState extends State<ListFeed> {
                                   }
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Reportar')),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text('Reportar'),
+                                )),
                           ],
                         ),
                       ),

@@ -250,12 +250,15 @@ class _OpinionsState extends State<Opinions> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16),
                                     child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Color.fromRGBO(49, 232, 93, 1),
+                                      ),
                                       onPressed: () {
                                         Navigator.popUntil(context,
                                             ModalRoute.withName('home'));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(12.0),
                                         child: Text('Volver al inicio'),
                                       ),
                                       /* style: ButtonStyle(

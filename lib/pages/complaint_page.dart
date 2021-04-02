@@ -71,7 +71,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
               height: 15,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
                 'denunciar',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -79,7 +79,10 @@ class _ComplaintPageState extends State<ComplaintPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: Text('Completa los siguientes campos'),
+              child: Text(
+                'Completa los siguientes campos',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             _titleTxt(),
             _dirTxt(),
@@ -138,10 +141,14 @@ class _ComplaintPageState extends State<ComplaintPage> {
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
         maxLength: 500,
-        maxLines: 6,
+        maxLines: 4,
         controller: _descTxtController,
         decoration: InputDecoration(
-            hintText: "Describa su denuncia",
+            labelText: "Describa su denuncia",
+            labelStyle: TextStyle(
+              color: Colors.grey,
+              // color: Color.fromRGBO(49, 232, 93, 1),
+            ),
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
@@ -168,6 +175,9 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Widget _saveBtn() {
     return Container(
       child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromRGBO(49, 232, 93, 1),
+          ),
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
             if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
@@ -198,7 +208,10 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
             //print(_dir);
           },
-          child: Text('Publicar')),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text('Publicar'),
+          )),
     );
   }
 

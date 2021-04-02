@@ -193,7 +193,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )
             : ElevatedButton(
-                child: Text('Continuar', style: TextStyle(color: Colors.white)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child:
+                      Text('Continuar', style: TextStyle(color: Colors.white)),
+                ),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromRGBO(49, 232, 93, 1),
                 ),

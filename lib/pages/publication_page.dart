@@ -402,6 +402,9 @@ class PublicationPageState extends State<PublicationPage> {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromRGBO(49, 232, 93, 1),
+          ),
           onPressed: () {
             if (_selectedCategory == 'SITUACIÓN DE CALLE') {
               _name = 'Animal Callejero';
@@ -434,7 +437,10 @@ class PublicationPageState extends State<PublicationPage> {
               print(_name);
             }
           },
-          child: Text('Publicar')),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text('Publicar'),
+          )),
     );
   }
 

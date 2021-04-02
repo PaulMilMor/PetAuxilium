@@ -43,7 +43,7 @@ class KeeperPageState extends State<KeeperPage> {
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-
+  FocusScopeNode _node;
   void initState() {
     super.initState();
     setState(() {
@@ -64,7 +64,7 @@ class KeeperPageState extends State<KeeperPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
+    _node = FocusScope.of(context);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -190,23 +190,26 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(36.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 18),
-          Center(
-            child: Text(
-              'CREAR PERFIL DE CUIDADOR',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Text(
+                'CREAR PERFIL DE CUIDADOR',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          _pricingTxt(),
-          _descTxt(),
-          buildGridView(),
-          _buttons()
-        ],
+            _pricingTxt(),
+            _descTxt(),
+            buildGridView(),
+            _buttons()
+          ],
+        ),
       ),
     );
   }
@@ -249,16 +252,19 @@ class KeeperPageState extends State<KeeperPage> {
   Widget _pricingTxt() {
     return Container(
         child: Column(children: [
-      Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-          child: Text(
-            'Completa los siguientes campos',
-            style: TextStyle(fontSize: 18),
-          )),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            child: Text(
+              'Completa los siguientes campos',
+              style: TextStyle(fontSize: 18),
+            )),
+      ),
       Container(
           margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-          width: 300.0,
           child: GrayTextFormField(
+            keyboardType: TextInputType.number,
             controller: _pricingTxtController,
             hintText: 'Tarifa por hora',
             suffixIcon: IconButton(
@@ -274,39 +280,41 @@ class KeeperPageState extends State<KeeperPage> {
                 prefs.keeperPricing = value;
               });
             },
+            onEditingComplete: () => _node.nextFocus(),
           ))
     ]));
   }
 
   Widget _descTxt() {
-    return Container(
-        height: 100.0,
-        child: Center(
-            child: Column(children: [
-          Container(
-              width: 300.0,
-              child: TextField(
-                controller: _descTxtController,
-                decoration: InputDecoration(
-                    labelText: 'Descripción',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _descTxtController.clear();
-                        prefs.keeperDescription = '';
-                      },
-                      icon: Icon(Icons.clear),
-                    )),
-                maxLength: 500,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                onChanged: (value) {
-                  setState(() {
-                    prefs.keeperDescription = value;
-                    _desc = value;
-                  });
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: TextField(
+          controller: _descTxtController,
+          decoration: InputDecoration(
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey)),
+              labelText: 'Descripción',
+              labelStyle: TextStyle(
+                color: Colors.grey,
+              ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _descTxtController.clear();
+                  prefs.keeperDescription = '';
                 },
+                icon: Icon(Icons.clear),
               )),
-        ])));
+          maxLength: 500,
+          maxLines: 4,
+          keyboardType: TextInputType.multiline,
+          onChanged: (value) {
+            setState(() {
+              prefs.keeperDescription = value;
+              _desc = value;
+            });
+          },
+          onEditingComplete: () => _node.unfocus(),
+        ));
   }
 
   Widget _buttons() {
@@ -336,7 +344,10 @@ class KeeperPageState extends State<KeeperPage> {
   Widget _saveBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
-      child: RaisedButton(
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromRGBO(49, 232, 93, 1),
+          ),
           onPressed: () {
             if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
               ScaffoldMessenger.of(context)
@@ -359,10 +370,18 @@ class KeeperPageState extends State<KeeperPage> {
                 prefs.keeperDescription = '';
                 prefs.keeperCategory = 'ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
+                ScaffoldMessenger.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                      content:
+                          Text('Te registraste correctamente como cuidador')));
               });
             }
           },
-          child: Text('Publicar')),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text('Publicar'),
+          )),
     );
   }
 }
