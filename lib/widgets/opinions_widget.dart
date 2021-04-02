@@ -111,7 +111,7 @@ class _OpinionsState extends State<Opinions> {
                           child: Column(children: <Widget>[
                         Container(
                             height: 17,
-                            width: 330,
+                            width: 350,
                             child: Text.rich(TextSpan(
                               style: TextStyle(
                                 fontSize: 13.5,
@@ -134,7 +134,7 @@ class _OpinionsState extends State<Opinions> {
                               ],
                             ))),
                         Container(
-                          width: 330,
+                          width: 350,
                           alignment: Alignment.topLeft,
                           child: Text(opinion.comment,
                               textAlign: TextAlign.justify,
@@ -152,7 +152,7 @@ class _OpinionsState extends State<Opinions> {
         child: Material(
             type: MaterialType.transparency,
             child: Container(
-                width: 345,
+                width: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
@@ -213,12 +213,15 @@ class _OpinionsState extends State<Opinions> {
                                         1, 17, 10, 0), // control yo
                                   ),
                                   controller: _commentController,
+                                  onEditingComplete: () => _focusNode.unfocus(),
                                 ),
+                          SizedBox(height: 10),
 
                           if (prefs.userID != ' ')
                             Container(
                               child: Align(
-                                alignment: Alignment(-0.7, -1.0),
+                                //alignment: Alignment(-0.7, -1.0),
+                                alignment: Alignment.centerLeft,
                                 child: RatingBar.builder(
                                   initialRating: 2.5,
                                   minRating: 1,
@@ -296,7 +299,7 @@ class _OpinionsState extends State<Opinions> {
                             height: 21,
                           ),
                           Container(
-                              width: 290,
+                              width: 350,
                               child: Text.rich(TextSpan(
                                 style: TextStyle(
                                   fontSize: 13.5,
@@ -338,7 +341,9 @@ class _OpinionsState extends State<Opinions> {
             size: 25,
           ),
           Text(
-            avgscore.isNaN ? 'N/A' : avgscore.toStringAsFixed(1),
+            avgscore.isNaN || avgscore <= 0
+                ? 'N/A'
+                : avgscore.toStringAsFixed(1),
           ),
           Text(" (${this.widget.nevaluations})"),
           Container(
@@ -545,6 +550,9 @@ class _OpinionsState extends State<Opinions> {
                   : _showOpinion(snapshot.data.length.toString(),
                       snapshot), //Text('Ya has evaluado'),
               _listEvaluations(snapshot),
+              SizedBox(
+                height: 350,
+              ),
             ],
           ),
         ),

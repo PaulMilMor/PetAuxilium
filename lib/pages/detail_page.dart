@@ -88,8 +88,11 @@ class _DetailPageState extends State<DetailPage> {
                               height: 10,
                             ),
                             //  _serviceNumbers(),
-                            _mapsUtil.getLocationText(
-                                widget.detailDocument['location'].first),
+                            Align(
+                              alignment: Alignment.center,
+                              child: _mapsUtil.getLocationText(
+                                  widget.detailDocument['location'].first),
+                            ),
 
                             _bottomSection(),
                           ],
@@ -116,7 +119,7 @@ class _DetailPageState extends State<DetailPage> {
       snap: false,
       floating: false,
       elevation: 1,
-      expandedHeight: 320,
+      expandedHeight: 350,
       actions: [
         //TODO: Actualmente se muestran los 3 puntitos pero no hacen nada
         if (_prefs.userID != ' ')

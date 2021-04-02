@@ -49,8 +49,8 @@ class MapsUtil {
               (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
             if (snapshot.hasData) {
               return Container(
-                alignment: Alignment.centerLeft,
-                width: 171,
+                //alignment: Alignment.centerLeft,
+                //width: 171,
                 child: Text(
                   snapshot.data.first.street +
                       ", " +

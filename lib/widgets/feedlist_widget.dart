@@ -111,7 +111,11 @@ class _ListFeedState extends State<ListFeed> {
                             ),
                           ),
 
-                          mapsUtil.getLocationText(_data['location'].first),
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              width: 171,
+                              child: mapsUtil
+                                  .getLocationText(_data['location'].first)),
                           SizedBox(
                             height: 20,
                           ),

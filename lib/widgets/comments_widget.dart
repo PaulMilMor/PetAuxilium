@@ -74,7 +74,7 @@ class _CommentsState extends State<Comments> {
                   child: Column(children: <Widget>[
             Container(
                 height: 17,
-                width: 330,
+                width: 350,
                 child: Text.rich(TextSpan(
                   style: TextStyle(
                     fontSize: 13.5,
@@ -87,7 +87,7 @@ class _CommentsState extends State<Comments> {
                   ],
                 ))),
             Container(
-              width: 330,
+              width: 350,
               alignment: Alignment.topLeft,
               child: Text(comment.comment,
                   textAlign: TextAlign.justify, style: new TextStyle()),
@@ -167,8 +167,13 @@ class _CommentsState extends State<Comments> {
                                           1, 17, 10, 0), // control yo
                                     ),
                                     controller: _commentController,
+                                    onEditingComplete: () =>
+                                        _focusNode.unfocus(),
                                   ),
                                 ),
+                          SizedBox(
+                            height: 10,
+                          ),
 
                           prefs.userID == ' '
                               ? Align(
@@ -194,7 +199,7 @@ class _CommentsState extends State<Comments> {
                                 )
                               //FIXME: Ya hay un widget que hace esto...
                               : Container(
-                                  width: 310,
+                                  width: 350,
                                   height: 30,
                                   child: GestureDetector(
                                     onTap: () {
@@ -220,7 +225,7 @@ class _CommentsState extends State<Comments> {
                                       .bottom)),
 
                           Container(
-                              width: 290,
+                              width: 350,
                               child: Text.rich(TextSpan(
                                 style: TextStyle(
                                   fontSize: 13.5,
@@ -281,7 +286,7 @@ class _CommentsState extends State<Comments> {
         children: [
           //FIXME: Así como está no muestra el número de opiniones
           SizedBox(
-            height: 21,
+            height: 25,
           ),
           Container(
             width: 340,
@@ -296,7 +301,7 @@ class _CommentsState extends State<Comments> {
             ),
           ),
           SizedBox(
-            height: 31,
+            height: 35,
           ),
           const Divider(
             color: Colors.black12,
@@ -306,11 +311,16 @@ class _CommentsState extends State<Comments> {
             endIndent: 1,
           ),
           SizedBox(
-            height: 3,
+            height: 10,
           ),
           _makeComment(snapshot.data.length.toString()),
-
-          if (prefs.userID != ' ') _listComments(snapshot)
+          SizedBox(
+            height: 10,
+          ),
+          if (prefs.userID != ' ') _listComments(snapshot),
+          SizedBox(
+            height: 350,
+          ),
         ],
       ),
     );
