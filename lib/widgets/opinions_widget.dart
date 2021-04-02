@@ -338,7 +338,7 @@ class _OpinionsState extends State<Opinions> {
             size: 25,
           ),
           Text(
-            avgscore.toStringAsFixed(1),
+            avgscore.isNaN ? 'N/A' : avgscore.toStringAsFixed(1),
           ),
           Text(" (${this.widget.nevaluations})"),
           Container(
