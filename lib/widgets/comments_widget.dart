@@ -158,7 +158,7 @@ class _CommentsState extends State<Comments> {
                                 border: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
-                                hintText: "Escribe una opinión...",
+                                hintText: "Escribe un comentario...",
                                 contentPadding: EdgeInsets.fromLTRB(
                                     1, 17, 10, 0), // control yo
                               ),
