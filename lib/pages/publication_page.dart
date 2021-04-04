@@ -261,7 +261,7 @@ class PublicationPageState extends State<PublicationPage> {
 
         child: Column(children: [
       Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Text(
             'Completa los siguientes campos',
             style: TextStyle(fontSize: 18),

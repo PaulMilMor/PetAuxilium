@@ -202,20 +202,21 @@ class _SignupPageState extends State<SignupPage> {
         ],
       ),
     );*/
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(100)),
-          color: Colors.grey[200],
-        ),
-        height: 85,
-        width: 85,
-        child: GestureDetector(
-            onTap: _onAddImageClick,
-            child: Icon(
-              Icons.add_a_photo,
-              size: 48,
-              color: Color.fromRGBO(210, 210, 210, 1),
-            )));
+    return GestureDetector(
+      onTap: _onAddImageClick,
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            color: Colors.grey[200],
+          ),
+          height: 85,
+          width: 85,
+          child: Icon(
+            Icons.add_a_photo,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          )),
+    );
   }
 
   Widget _removePhoto() {

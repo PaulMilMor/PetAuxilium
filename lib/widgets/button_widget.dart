@@ -82,17 +82,18 @@ class AddImageButton extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.grey[200],
-        child: GestureDetector(
-            onTap: this.onTap,
-            child: Align(
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.add,
-                size: 48,
-                color: Color.fromRGBO(210, 210, 210, 1),
-              ),
-            )));
+    return GestureDetector(
+      onTap: this.onTap,
+      child: Container(
+          color: Colors.grey[200],
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.add,
+              size: 48,
+              color: Color.fromRGBO(210, 210, 210, 1),
+            ),
+          )),
+    );
   }
 }

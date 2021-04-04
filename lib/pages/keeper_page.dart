@@ -131,12 +131,12 @@ class KeeperPageState extends State<KeeperPage> {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
+        if (images.length < 6) images.add("Add Image");
         getFileImage(index);
         print("xd" + _imageFile.toString());
       } else {
         print("faros");
       }
-      if (images.length < 6) images.add("Add Image");
     });
   }
 
@@ -149,6 +149,11 @@ class KeeperPageState extends State<KeeperPage> {
 
   void getFileImage(int index) async {
     _imageFile.then((file) async {
+      setState(() {
+        if (file == null) {
+          images.remove("Add Image");
+        }
+      });
       imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
 
       setState(() {

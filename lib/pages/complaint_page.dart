@@ -290,9 +290,9 @@ class _ComplaintPageState extends State<ComplaintPage> {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
+        if (images.length < 6) images.add("Add Image");
         getFileImage(index);
       } else {}
-      if (images.length < 6) images.add("Add Image");
     });
   }
 
@@ -307,6 +307,11 @@ class _ComplaintPageState extends State<ComplaintPage> {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      setState(() {
+        if (file == null) {
+          images.remove("Add Image");
+        }
+      });
       imagesRef.add(await _storage.uploadFile(file, 'BusinessImages'));
 
       setState(() {

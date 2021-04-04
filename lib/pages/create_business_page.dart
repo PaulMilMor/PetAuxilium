@@ -74,13 +74,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _businessForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(36.0),
+        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 15),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
                 'PUBLICAR NEGOCIO',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -88,8 +88,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             ),
             // _selectService(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              child: Text('Completa los siguientes campos'),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: Text('Completa los siguientes campos',
+                  style: TextStyle(fontSize: 18)),
             ),
             _nameTxt(),
             _dirTxt(),
@@ -110,14 +111,23 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
-          controller: _nameTxtController,
-          hintText: 'Nombre',
-          onChanged: (value) {
-            setState(() {
-              prefs.businessName = value;
-              _name = value;
-            });
-          }),
+        controller: _nameTxtController,
+        hintText: 'Nombre',
+        onChanged: (value) {
+          setState(() {
+            prefs.businessName = value;
+            _name = value;
+          });
+        },
+        suffixIcon: IconButton(
+          onPressed: () {
+            _nameTxtController.clear();
+            prefs.businessName = '';
+            _name = '';
+          },
+          icon: Icon(Icons.clear),
+        ),
+      ),
 
       /*TextField(
       controller: _nameTxtController,
@@ -135,14 +145,28 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _dirTxt() {
     return Container(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: GrayTextFormField(
-            controller: _dirTxtController,
-            hintText: 'Direccion',
-            //Esto es para que no se pueda editar manualmente el texta de la ubicación
-            focusNode: AlwaysDisabledFocusNode(),
-            onTap: () {
-              Navigator.pushNamed(context, 'map', arguments: _markers);
-            })
+        child: Stack(
+          children: [
+            GrayTextFormField(
+                controller: _dirTxtController,
+                hintText: 'Direccion',
+                //Esto es para que no se pueda editar manualmente el texta de la ubicación
+                focusNode: AlwaysDisabledFocusNode(),
+                maxLines: null,
+                onTap: () {
+                  Navigator.pushNamed(context, 'map', arguments: _markers);
+                }),
+            Positioned(
+              right: 1,
+              top: 5,
+              child: IconButton(
+                color: Colors.grey[600],
+                onPressed: _cleanDir,
+                icon: Icon(Icons.clear),
+              ),
+            ),
+          ],
+        )
         /*TextField(
       controller: _dirTxtController,
     hintText: 'Direccion',
@@ -151,6 +175,11 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       },
     )*/
         );
+  }
+
+  void _cleanDir() {
+    _dirTxtController.clear();
+    _markers.clear();
   }
 
   Widget _buttons() {
@@ -166,12 +195,24 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
         maxLength: 500,
-        maxLines: 6,
+        maxLines: 4,
         controller: _descTxtController,
         decoration: InputDecoration(
-            hintText: "Describa los servicios que ofrece",
+            labelText: 'Describa los servicios que ofrece',
+            labelStyle: TextStyle(
+              color: Colors.grey,
+              // color: Color.fromRGBO(49, 232, 93, 1),
+            ),
             focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey))),
+                borderSide: BorderSide(color: Colors.grey)),
+            suffixIcon: IconButton(
+              onPressed: () {
+                _descTxtController.clear();
+                prefs.businessDescription = '';
+                _desc = '';
+              },
+              icon: Icon(Icons.clear),
+            )),
         onChanged: (value) {
           setState(() {
             prefs.businessDescription = value;
@@ -197,7 +238,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 //TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
     return Container(
-      child: RaisedButton(
+      child: ElevatedButton(
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
             if (_name.isEmpty || _locations.isEmpty || _desc.isEmpty) {
@@ -216,12 +257,23 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                 prefs.businessName = '';
                 prefs.businessDescription = '';
                 Navigator.popAndPushNamed(context, 'navigation');
+                ScaffoldMessenger.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text('Se ha publicado tu negocio.')),
+                  );
               });
             }
 
             //print(_dir);
           },
-          child: Text('Publicar')),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromRGBO(49, 232, 93, 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text('Publicar'),
+          )),
     );
   }
 
@@ -286,12 +338,14 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
+        if (images.length < 6) images.add("Add Image");
         getFileImage(index);
+
         print("xd" + _imageFile.toString());
       } else {
         print("faros");
       }
-      if (images.length < 6) images.add("Add Image");
+      //if (images.length < 6) images.add("Add Image");
     });
   }
 
@@ -306,6 +360,11 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 //    var dir = await path_provider.getTemporaryDirectory();
 
     _imageFile.then((file) async {
+      setState(() {
+        if (file == null) {
+          images.remove("Add Image");
+        }
+      });
       imagesRef.add(await _storage.uploadFile(file, 'BusinessImages'));
 
       setState(() {
