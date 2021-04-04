@@ -121,7 +121,7 @@ class _ListFeedState extends State<ListFeed> {
                           ),
                           //Aquí está el promedio we
                           // if (_data['category'] == 'CUIDADOR')
-                          //  _rating(_data['nevaluations'], _data['score']),
+                          //   _rating(_data['nevaluations'], _data['score']),
                           _rating(_data),
                         ],
                       )),

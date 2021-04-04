@@ -38,8 +38,7 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
-  String _id;
-
+  String _id = '';
   FocusNode _focusNode;
   double avgscore;
   final prefs = new preferencesUtil();
@@ -80,8 +79,11 @@ class _OpinionsState extends State<Opinions> {
 
           if (snapshot.hasData) {
             return _opinion(snapshot);
-          } else {
-            return _makeOpinion('0');
+            print('POOL SNAPSHOT');
+            //print(snapshot.data[0].userID);
+            if (snapshot.connectionState == ConnectionState.done) {
+              _checkEvaluations(snapshot);
+            }
           }
         });
   }
@@ -98,9 +100,6 @@ class _OpinionsState extends State<Opinions> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
-          //DocumentSnapshot _data = this._myEvaluation.data.docs[index];
-          //opinion.id;S
-          //_id=snapshot.data.docs[index].id;
 
           return Container(
               child: SingleChildScrollView(
@@ -435,8 +434,9 @@ class _OpinionsState extends State<Opinions> {
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
+
                             _myEvaluation = null;
-                            print(_myEvaluation);
+
                             _commentController.clear();
 
                             this.widget.sumscore -= double.parse(_score);
@@ -476,11 +476,16 @@ class _OpinionsState extends State<Opinions> {
       score: _score,
       comment: _commentController.text,
     );
+    this.widget.nevaluations--;
+    this.widget.sumscore -= double.parse(_score);
+    setState(() {
+      avgscore = this.widget.sumscore / this.widget.nevaluations;
+    });
     _db.updateScore(evaluation);
   }
 
   void _evaluacion() {
-    CollectionReference docRef = _firestoreInstance.collection('evaluations');
+    //CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -490,7 +495,7 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
-
+    this.widget.sumscore += double.parse(_score);
     this.widget.nevaluations++;
     _addevaluation(/*detailDocument.id,*/ evaluations);
 

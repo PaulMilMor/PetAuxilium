@@ -71,15 +71,6 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
               ? Center(child: CircularProgressIndicator())
               : ListFeed(
                   snapshot: snapshot, physics: NeverScrollableScrollPhysics());
-          /*ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot data = snapshot.data.docs[index];
-                    List<dynamic> fotos = data['imgRef'];
-                    //return Text(data['name']);
-                  });*/
         });
   }
 
