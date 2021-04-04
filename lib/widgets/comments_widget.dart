@@ -190,7 +190,7 @@ class _CommentsState extends State<Comments> {
                                             ModalRoute.withName('home'));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Text('Volver al inicio'),
                                       ),
                                       /* style: ButtonStyle(

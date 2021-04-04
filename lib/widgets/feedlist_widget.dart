@@ -517,7 +517,7 @@ class _ListFeedState extends State<ListFeed> {
                                   Navigator.of(context).pop();
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Text('Reportar'),
                                 )),
                           ],

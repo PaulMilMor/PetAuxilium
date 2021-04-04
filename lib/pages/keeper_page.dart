@@ -379,7 +379,7 @@ class KeeperPageState extends State<KeeperPage> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(10.0),
             child: Text('Publicar'),
           )),
     );

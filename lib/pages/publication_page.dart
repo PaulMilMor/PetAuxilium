@@ -209,17 +209,18 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(36.0),
+      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 18),
-          /*Center(
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Text(
               'CREAR PUBLICACIÓN',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-          ),*/
+          ),
           _category(),
           if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
           _dirTxt(),
@@ -236,7 +237,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _category() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
       child: Center(
           child: Column(children: [
         Container(
@@ -303,34 +304,35 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Widget _descTxt() {
-    return Container(
-        height: 100.0,
-        child: Center(
-            child: Column(children: [
-          Container(
-              width: 300.0,
-              child: TextField(
-                controller: _descTxtController,
-                decoration: InputDecoration(
-                    labelText: 'Descripción',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _descTxtController.clear();
-                        prefs.adoptionDescription = '';
-                      },
-                      icon: Icon(Icons.clear),
-                    )),
-                maxLength: 500,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                onChanged: (value) {
-                  setState(() {
-                    prefs.adoptionDescription = value;
-                    _desc = value;
-                  });
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: TextField(
+          controller: _descTxtController,
+          decoration: InputDecoration(
+              labelText: 'Descripción',
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                // color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey)),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _descTxtController.clear();
+                  prefs.adoptionDescription = '';
                 },
+                icon: Icon(Icons.clear),
               )),
-        ])));
+          maxLength: 500,
+          maxLines: 4,
+          keyboardType: TextInputType.multiline,
+          onChanged: (value) {
+            setState(() {
+              prefs.adoptionDescription = value;
+              _desc = value;
+            });
+          },
+        ));
   }
 
   Widget _dirTxt() {
@@ -376,72 +378,70 @@ class PublicationPageState extends State<PublicationPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _saveBtn()],
+        children: [_cancelBtn(), _saveBtn()],
       ),
     );
   }
 
-  Widget _CancelBtn() {
-    return Container(
-      margin: const EdgeInsets.only(right: 30.0, bottom: 50),
-      child: TextButton(
-        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
-        onPressed: () {
-          //Navigator.pop(context);
-          //_name = null;
-          //_desc = null;
-          _nameTxtController.clear();
-          _descTxtController.clear();
-          _dirTxtController.clear();
-        },
-      ),
+  Widget _cancelBtn() {
+    return TextButton(
+      child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+      onPressed: () {
+        //Navigator.pop(context);
+        //_name = null;
+        //_desc = null;
+        _nameTxtController.clear();
+        _descTxtController.clear();
+        _dirTxtController.clear();
+      },
     );
   }
 
   Widget _saveBtn() {
-    return Container(
-      margin: const EdgeInsets.only(right: 12.0, bottom: 50),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(49, 232, 93, 1),
-          ),
-          onPressed: () {
-            if (_selectedCategory == 'SITUACIÓN DE CALLE') {
-              _name = 'Animal Callejero';
-              prefs.adoptionName = 'Animal Callejero';
-            }
-            if (_name.isEmpty ||
-                _desc.isEmpty ||
-                imagesRef.isEmpty ||
-                _locations.isEmpty) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
+        onPressed: () {
+          if (_selectedCategory == 'SITUACIÓN DE CALLE') {
+            _name = 'Animal Callejero';
+            prefs.adoptionName = 'Animal Callejero';
+          }
+          if (_name.isEmpty ||
+              _desc.isEmpty ||
+              imagesRef.isEmpty ||
+              _locations.isEmpty) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text('Es necesario llenar todos los campos')));
+          } else {
+            print(_imgsFiles.toString());
+            //print(mapsUtil.locationtoString(_locations));
+            PublicationModel ad = PublicationModel(
+                category: _selectedCategory,
+                name: _name,
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
+                description: _desc,
+                imgRef: imagesRef);
+            _db.addPublication(ad).then((value) {
+              prefs.adoptionCategory = 'ADOPCIÓN';
+              prefs.adoptionDescription = '';
+              prefs.adoptionName = '';
+              Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text('Es necesario llenar todos los campos')));
-            } else {
-              print(_imgsFiles.toString());
-              //print(mapsUtil.locationtoString(_locations));
-              PublicationModel ad = PublicationModel(
-                  category: _selectedCategory,
-                  name: _name,
-                  location: mapsUtil.locationtoString(_locations),
-                  userID: prefs.userID,
-                  description: _desc,
-                  imgRef: imagesRef);
-              _db.addPublication(ad).then((value) {
-                prefs.adoptionCategory = 'ADOPCIÓN';
-                prefs.adoptionDescription = '';
-                prefs.adoptionName = '';
-                Navigator.popAndPushNamed(context, 'navigation');
-              });
-              print(_name);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text('Publicar'),
-          )),
-    );
+                ..showSnackBar(
+                    SnackBar(content: Text('Se ha creado tu publicación.')));
+            });
+            print(_name);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Publicar'),
+        ));
   }
 
   void getDir(List<LatLng> locations) {

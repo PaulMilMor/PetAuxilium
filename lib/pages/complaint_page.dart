@@ -162,55 +162,51 @@ class _ComplaintPageState extends State<ComplaintPage> {
   }
 
   Widget _cancelBtn() {
-    return Container(
-      child: TextButton(
-        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+    return TextButton(
+      child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
   }
 
   Widget _saveBtn() {
-    return Container(
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(49, 232, 93, 1),
-          ),
-          onPressed: () async {
-            // print(mapsUtil.locationtoString(_locations));
-            if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
+        onPressed: () async {
+          // print(mapsUtil.locationtoString(_locations));
+          if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text('Es necesario llenar todos los campos')));
+          } else {
+            ComplaintModel complaint = ComplaintModel(
+                title: _title,
+                location: [_direct],
+                //location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
+                description: _desc,
+                imgRef: imagesRef);
+            _db.addComplaint(complaint).then((value) {
+              /*prefs.businessName = '';
+              prefs.businessDescription = '';*/
+              Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text('Es necesario llenar todos los campos')));
-            } else {
-              ComplaintModel complaint = ComplaintModel(
-                  title: _title,
-                  location: [_direct],
-                  //location: mapsUtil.locationtoString(_locations),
-                  userID: prefs.userID,
-                  description: _desc,
-                  imgRef: imagesRef);
-              _db.addComplaint(complaint).then((value) {
-                /*prefs.businessName = '';
-                prefs.businessDescription = '';*/
-                Navigator.popAndPushNamed(context, 'navigation');
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(
-                      SnackBar(content: Text('listo krnal ya se guardó 👍')));
-              });
-            }
+                ..showSnackBar(
+                    SnackBar(content: Text('listo krnal ya se guardó 👍')));
+            });
+          }
 
-            //print(_dir);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text('Publicar'),
-          )),
-    );
+          //print(_dir);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Publicar'),
+        ));
   }
 
   Widget _buildGridView() {
