@@ -194,28 +194,30 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Text(
-              'CREAR PUBLICACIÓN',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Text(
+                'CREAR PUBLICACIÓN',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          _category(),
-          if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
-          _dirTxt(),
-          _descTxt(),
-          //_images(),
-          buildGridView(),
-          //_boton(),
-          _buttons()
-        ],
+            _category(),
+            if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
+            _dirTxt(),
+            _descTxt(),
+            //_images(),
+            buildGridView(),
+            //_boton(),
+            _buttons()
+          ],
+        ),
       ),
     );
   }
