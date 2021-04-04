@@ -11,7 +11,10 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
+
+import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 
@@ -273,23 +276,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Widget _addBtn(int index) {
-    return FlatButton(
-      onPressed: () {
-        images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
-      },
-      color: Colors.grey[200],
-      height: 85,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.add,
-            size: 48,
-            color: Color.fromRGBO(210, 210, 210, 1),
-          ),
-        ],
-      ),
-    );
+    return AddImageButton(onTap: () {
+      images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+    });
   }
 
   Future _onAddImageClick(int index) async {

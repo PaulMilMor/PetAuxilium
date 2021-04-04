@@ -13,6 +13,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
+import 'package:pet_auxilium/widgets/button_widget.dart';
 
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
@@ -260,7 +261,12 @@ class _ComplaintPageState extends State<ComplaintPage> {
   }
 
   Widget _addBtn(int index) {
-    return FlatButton(
+    return AddImageButton(
+      onTap: () {
+        images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+      },
+    );
+    /*return FlatButton(
       onPressed: () {
         images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
       },
@@ -276,7 +282,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
           ),
         ],
       ),
-    );
+    );*/
   }
 
   Future _onAddImageClick(int index) async {

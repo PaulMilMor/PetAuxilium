@@ -185,7 +185,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _addPhoto() {
-    return FlatButton(
+    /*return FlatButton(
       onPressed: () {
         _onAddImageClick();
       },
@@ -201,13 +201,24 @@ class _SignupPageState extends State<SignupPage> {
           ),
         ],
       ),
-    );
+    );*/
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          color: Colors.grey[200],
+        ),
+        height: 85,
+        width: 85,
+        child: GestureDetector(
+            onTap: _onAddImageClick,
+            child: Icon(
+              Icons.add_a_photo,
+              size: 48,
+              color: Color.fromRGBO(210, 210, 210, 1),
+            )));
   }
 
   Widget _removePhoto() {
-    print('JALO');
-    print(_image);
-    print(_image.imageFile);
     return Stack(
       children: <Widget>[
         CircleAvatar(
@@ -242,29 +253,6 @@ class _SignupPageState extends State<SignupPage> {
             },
           ),
         ),
-        /*Positioned(
-          bottom: -11,
-          right: 20,
-          child: FlatButton(
-            onPressed: () {
-              _onAddImageClick();
-            },
-            color: Color.fromRGBO(49, 232, 93, 1),
-            height: 30,
-            minWidth: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100.0)),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.add_a_photo,
-                  size: 15,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ),*/
       ],
     );
   }

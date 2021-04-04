@@ -162,37 +162,29 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   }
 
   Widget _addPhoto() {
-    return FlatButton(
-      onPressed: () {
-        _onAddImageClick();
-      },
-      //color: Colors.grey[200],
-      height: 85,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-      child: Row(
-        children: [
-          /*Image.network(this._user.imgRef,height: 85),*/
-          CircleAvatar(
-            backgroundImage: NetworkImage(this._user.imgRef),
-            backgroundColor: Color.fromRGBO(210, 210, 210, 1),
-            radius: 40,
-          ),
-          Padding(
-              padding: const EdgeInsets.only(top: 60, left: 0),
-              child: InkWell(
-                child: Icon(Icons.edit,
-                    size: 20, color: Color.fromRGBO(49, 232, 93, 1)),
-                onTap: () {
-                  _onAddImageClick();
-                },
-              ))
-          /*Icon(
-            Icons.edit,
-              size: 20,
-              color: Color.fromRGBO(49, 232, 93, 1),
-          ),*/
-        ],
-      ),
+    return Row(
+      children: [
+        /*Image.network(this._user.imgRef,height: 85),*/
+        CircleAvatar(
+          backgroundImage: NetworkImage(this._user.imgRef),
+          backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+          radius: 40,
+        ),
+        Padding(
+            padding: const EdgeInsets.only(top: 60, left: 0),
+            child: InkWell(
+              child: Icon(Icons.edit,
+                  size: 20, color: Color.fromRGBO(49, 232, 93, 1)),
+              onTap: () {
+                _onAddImageClick();
+              },
+            ))
+        /*Icon(
+          Icons.edit,
+            size: 20,
+            color: Color.fromRGBO(49, 232, 93, 1),
+        ),*/
+      ],
     );
   }
 

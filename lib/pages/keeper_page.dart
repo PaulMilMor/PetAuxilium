@@ -115,25 +115,11 @@ class KeeperPageState extends State<KeeperPage> {
         } else {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-              onPressed: () {
-                images.length < 6
-                    ? _onAddImageClick(index)
-                    : _limitImages(context);
-              },
-              color: Colors.grey[200],
-              height: 85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    size: 48,
-                    color: Color.fromRGBO(210, 210, 210, 1),
-                  ),
-                ],
-              ),
-            ),
+            child: AddImageButton(onTap: () {
+              images.length < 6
+                  ? _onAddImageClick(index)
+                  : _limitImages(context);
+            }),
           );
         }
       }),
