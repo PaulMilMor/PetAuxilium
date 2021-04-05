@@ -191,7 +191,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
           setState(() {
-            prefs.businessDescription = value;
+            //   prefs.businessDescription = value;
             _desc = value;
           });
         },
@@ -201,10 +201,17 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _cancelBtn() {
     return TextButton(
-      child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text('Cancelar',
+            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+      ),
       onPressed: () {
         Navigator.pop(context);
       },
+      style: TextButton.styleFrom(
+        primary: Color.fromRGBO(49, 232, 93, 1),
+      ),
     );
   }
 

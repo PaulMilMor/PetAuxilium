@@ -373,7 +373,10 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _cancelBtn() {
     return TextButton(
-      child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+      ),
       onPressed: () {
         //Navigator.pop(context);
         //_name = null;
@@ -382,6 +385,9 @@ class PublicationPageState extends State<PublicationPage> {
         _descTxtController.clear();
         _dirTxtController.clear();
       },
+      style: TextButton.styleFrom(
+        primary: Color.fromRGBO(49, 232, 93, 1),
+      ),
     );
   }
 

@@ -226,10 +226,16 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _cancelBtn() {
     return Container(
       child: TextButton(
-        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        ),
         onPressed: () {
           Navigator.pop(context);
         },
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
       ),
     );
   }

@@ -463,10 +463,16 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     return Container(
       margin: const EdgeInsets.only(right: 5.0, bottom: 7.0),
       child: TextButton(
-        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        ),
         onPressed: () {
           Navigator.pop(context);
         },
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
       ),
     );
   }

@@ -322,12 +322,18 @@ class KeeperPageState extends State<KeeperPage> {
     return Container(
       margin: const EdgeInsets.only(right: 30.0, bottom: 50),
       child: TextButton(
-        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Cancelar', style: TextStyle(color: Colors.black)),
+        ),
         onPressed: () {
           Navigator.pop(context);
           _pricing = null;
           _desc = null;
         },
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
       ),
     );
   }
