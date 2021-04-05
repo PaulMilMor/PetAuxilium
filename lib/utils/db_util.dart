@@ -202,15 +202,15 @@ class dbUtil {
         .get();
   }
 
-  Future<QuerySnapshot> getAllPublications() {
-    return _firestoreInstance.collection('publications').get();
+  Stream<QuerySnapshot> getAllPublications() {
+    return _firestoreInstance.collection('publications').snapshots();
   }
 
-  Future<QuerySnapshot> getFollowPublications(data) {
+  Stream<QuerySnapshot> getFollowPublications(data) {
     return _firestoreInstance
         .collection('publications')
-        .where(FieldPath.documentId, whereIn: data)
-        .get();
+        .where(FieldPath.documentId, whereIn: data).snapshots()
+        ;
   }
 
   void updateFollows(List follows) async {

@@ -29,8 +29,8 @@ class _FeedState extends State<Feed> {
         future: _db.getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print(follow.data);
-          return FutureBuilder(
-              future: _db.getAllPublications(),
+          return StreamBuilder(
+              stream: _db.getAllPublications(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   return ListFeed(snapshot: snapshot, follows:follow.data, voidCallback: callback,);
