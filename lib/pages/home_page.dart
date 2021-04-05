@@ -50,15 +50,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      //  body: Container(child: Icon(Icons.access_alarm_sharp))
-      /*
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-    //body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.registerWithEmailAndPassword(user),))
-     body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithEmailAndPassword(user.email,user.pass ),))
-    //  body: Container(child:FlatButton(child: Text('prueba'),onPressed: () async => await auth.signInWithGoogle(),))
-    */
     );
   }
 

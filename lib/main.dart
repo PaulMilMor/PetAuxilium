@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
+import 'package:pet_auxilium/pages/complaint_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
           'service': (BuildContext context) => ServicePage(),
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
+          'complaintPage': (BuildContext context) => ComplaintPage(),
         },
       ),
     );

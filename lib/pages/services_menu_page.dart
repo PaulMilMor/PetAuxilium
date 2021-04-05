@@ -18,8 +18,10 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     return Scaffold(
       body: Stack(children: [
         SingleChildScrollView(
-          child: Padding(
-           padding: _query == null || _query == ''
+          child: AnimatedPadding(
+            duration: Duration(milliseconds: 400),
+            curve: Curves.decelerate,
+            padding: _query == null || _query == ''
                 ? const EdgeInsets.all(18.0)
                 : const EdgeInsets.all(0.0),
             child: Column(
@@ -68,8 +70,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
           return (snapshot.connectionState == ConnectionState.waiting)
               ? Center(child: CircularProgressIndicator())
               : ListFeed(
-                   snapshot: snapshot, physics: NeverScrollableScrollPhysics());
-          
+                  snapshot: snapshot, physics: NeverScrollableScrollPhysics());
         });
   }
 
