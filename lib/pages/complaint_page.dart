@@ -56,6 +56,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Widget build(BuildContext context) {
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
+    getDir(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _complaintForm(context)),
     );
@@ -74,7 +75,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
-                'denunciar',
+                'CREAR DENUNCIA',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
@@ -110,23 +111,53 @@ class _ComplaintPageState extends State<ComplaintPage> {
               //prefs.businessName = value;
               _title = value;
             });
-          }),
+          },
+          suffixIcon: IconButton(
+            onPressed: () {
+              _titleTxtController.clear();
+            },
+            icon: Icon(Icons.clear),
+          )),
     );
   }
 
   Widget _dirTxt() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-      child: GrayTextFormField(
-          controller: _dirTxtController,
-          hintText: 'Ubicación',
-          onChanged: (value) {
-            setState(() {
-              //prefs.businessName = value;
-              _direct = value;
-            });
-          }),
-    );
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: Stack(
+          children: [
+            GrayTextFormField(
+              controller: _dirTxtController,
+              hintText: 'Ubicación',
+              focusNode: AlwaysDisabledFocusNode(),
+              maxLines: null,
+              onTap: () {
+                Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);
+              },
+              /* onChanged: (value) {
+                setState(() {
+                  //prefs.businessName = value;
+                  _direct = value;
+                });
+              }),*/
+            ),
+            Positioned(
+              right: 1,
+              top: 5,
+              child: IconButton(
+                color: Colors.grey[600],
+                onPressed: _cleanDir,
+                icon: Icon(Icons.clear),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  void _cleanDir() {
+    _dirTxtController.clear();
+    _markers.clear();
   }
 
   Widget _buttons() {
@@ -149,6 +180,12 @@ class _ComplaintPageState extends State<ComplaintPage> {
             labelStyle: TextStyle(
               color: Colors.grey,
               // color: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            suffixIcon: IconButton(
+              onPressed: () {
+                _titleTxtController.clear();
+              },
+              icon: Icon(Icons.clear),
             ),
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
@@ -178,7 +215,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
         ),
         onPressed: () async {
           // print(mapsUtil.locationtoString(_locations));
-          if (_title.isEmpty || _direct.isEmpty || _desc.isEmpty) {
+          if (_title.isEmpty || _locations.isEmpty || _desc.isEmpty) {
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -186,8 +223,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
           } else {
             ComplaintModel complaint = ComplaintModel(
                 title: _title,
-                location: [_direct],
-                //location: mapsUtil.locationtoString(_locations),
+                //location: [_direct],
+                location: mapsUtil.locationtoString(_locations),
                 userID: prefs.userID,
                 description: _desc,
                 imgRef: imagesRef);
@@ -198,7 +235,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
-                    SnackBar(content: Text('listo krnal ya se guardó 👍')));
+                    SnackBar(content: Text('Se publicó tu denuncia.')));
             });
           }
 
@@ -324,5 +361,21 @@ class _ComplaintPageState extends State<ComplaintPage> {
         images.replaceRange(index, index + 1, [imageUpload]);
       });
     });
+  }
+
+  void getDir(List<LatLng> locations) {
+    print(locations);
+    if (locations != null) {
+      locations.forEach((LatLng element) async {
+        String place = "";
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(element.latitude, element.longitude);
+        place =
+            placemarks.first.street + " " + placemarks.first.locality + "\n";
+        setState(() {
+          _dirTxtController.text = place;
+        });
+      });
+    }
   }
 }
