@@ -162,7 +162,7 @@ class _CommentsState extends State<Comments> {
                                         borderSide:
                                             BorderSide(color: Colors.black),
                                       ),
-                                      hintText: "Escribe una opinión...",
+                                      hintText: "Hacer un comentario...",
                                       contentPadding: EdgeInsets.fromLTRB(
                                           1, 17, 10, 0), // control yo
                                     ),
