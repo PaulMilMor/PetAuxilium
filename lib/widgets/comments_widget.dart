@@ -164,26 +164,8 @@ class _CommentsState extends State<Comments> {
                             ),
                           ),
 
-                          Container(
-                            width: 310,
-                            height: 30,
-                            child: GestureDetector(
-                              onTap: () {
-                                _comentar();
-                                _commentController.clear();
-                              },
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'COMENTAR',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
+                          comentar_button(),
+
                           Padding(
                               padding: EdgeInsets.only(
                                   bottom: MediaQuery.of(context)
@@ -219,6 +201,49 @@ class _CommentsState extends State<Comments> {
                               ))),
                           //_opinionList(),
                         ]))))));
+  }
+
+  comentar_button() {
+    if (_commentController.text.isNotEmpty) {
+      return Container(
+        width: 310,
+        height: 30,
+        child: GestureDetector(
+          onTap: () {
+            _comentar();
+            _commentController.clear();
+          },
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'COMENTAR',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: 310,
+        height: 30,
+        child: GestureDetector(
+          onTap: () {},
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'COMENTAR',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   void _comentar() {
