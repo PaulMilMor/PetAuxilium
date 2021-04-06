@@ -226,7 +226,8 @@ class _ReportPageState extends State<ReportPage> {
             onPressed: () {
               setState(() {
                 _db.addPublication(publication);
-                _db.addReport(report);
+                //Esto que esta comentado no se como resoverlo xd
+                //_db.addReport(report);
               });
             },
           ),

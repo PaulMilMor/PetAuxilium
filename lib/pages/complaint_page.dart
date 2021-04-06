@@ -5,57 +5,49 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
+import 'package:pet_auxilium/pages/create_business_page.dart';
+
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
-
 import 'package:pet_auxilium/widgets/button_widget.dart';
+
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
-import 'package:image_picker/image_picker.dart';
-import 'package:pet_auxilium/models/ImageUploadModel.dart';
-
-class CreateBusinessPage extends StatefulWidget {
+class ComplaintPage extends StatefulWidget {
   @override
-  _CreateBusinessPageState createState() => _CreateBusinessPageState();
+  _ComplaintPageState createState() => _ComplaintPageState();
 }
 
-class _CreateBusinessPageState extends State<CreateBusinessPage> {
-  TextEditingController _nameTxtController;
+class _ComplaintPageState extends State<ComplaintPage> {
+  TextEditingController _titleTxtController;
   TextEditingController _dirTxtController;
   TextEditingController _descTxtController;
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
-  String _name = " ";
-  String _desc;
+  String _title = "";
+  String _desc = "";
+  String _direct = "";
   Future<File> _imageFile;
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
-
   List<LatLng> _locations;
   List<Object> images = [];
-
   final MapsUtil mapsUtil = MapsUtil();
+
   @override
   void initState() {
     super.initState();
     setState(() {
       images.add("Add Image");
-      /*images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");*/
     });
-//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
-    _name = prefs.businessName ?? ' ';
-    _desc = prefs.businessDescription;
-    _nameTxtController = TextEditingController(text: _name);
+    _titleTxtController = TextEditingController(text: _title);
     _dirTxtController = TextEditingController();
     _descTxtController = TextEditingController(text: _desc);
   }
@@ -65,80 +57,67 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
-    //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
-      body: SingleChildScrollView(child: _businessForm(context)),
+      body: SingleChildScrollView(child: _complaintForm(context)),
     );
   }
 
-  Widget _businessForm(BuildContext context) {
+  Widget _complaintForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            SizedBox(
+              height: 15,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
-                'PUBLICAR NEGOCIO',
+                'CREAR DENUNCIA',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            // _selectService(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: Text('Completa los siguientes campos',
-                  style: TextStyle(fontSize: 18)),
+              child: Text(
+                'Completa los siguientes campos',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
-            _nameTxt(),
+            _titleTxt(),
             _dirTxt(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              //child: Text('Describa los servicios que ofrece'),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
             _descriptionTxt(),
             _buildGridView(),
-            _buttons()
+            _buttons(),
           ],
         ),
       ),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _titleTxt() {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
-        controller: _nameTxtController,
-        hintText: 'Nombre',
-        onChanged: (value) {
-          setState(() {
-            prefs.businessName = value;
-            _name = value;
-          });
-        },
-        suffixIcon: IconButton(
-          onPressed: () {
-            _nameTxtController.clear();
-            prefs.businessName = '';
-            _name = '';
+          controller: _titleTxtController,
+          hintText: 'Título',
+          onChanged: (value) {
+            setState(() {
+              //prefs.businessName = value;
+              _title = value;
+            });
           },
-          icon: Icon(Icons.clear),
-        ),
-      ),
-
-      /*TextField(
-      controller: _nameTxtController,
-      hintText: 'Nombre',
-      onChanged: (value) {
-        setState(() {
-          prefs.businessName = value;
-          _name = value;
-        });
-      },
-    )*/
+          suffixIcon: IconButton(
+            onPressed: () {
+              _titleTxtController.clear();
+            },
+            icon: Icon(Icons.clear),
+          )),
     );
   }
 
@@ -148,14 +127,21 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         child: Stack(
           children: [
             GrayTextFormField(
-                controller: _dirTxtController,
-                hintText: 'Direccion',
-                //Esto es para que no se pueda editar manualmente el texta de la ubicación
-                focusNode: AlwaysDisabledFocusNode(),
-                maxLines: null,
-                onTap: () {
-                  Navigator.pushNamed(context, 'map', arguments: _markers);
-                }),
+              controller: _dirTxtController,
+              hintText: 'Ubicación',
+              focusNode: AlwaysDisabledFocusNode(),
+              maxLines: null,
+              onTap: () {
+                Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);
+              },
+              /* onChanged: (value) {
+                setState(() {
+                  //prefs.businessName = value;
+                  _direct = value;
+                });
+              }),*/
+            ),
             Positioned(
               right: 1,
               top: 5,
@@ -166,15 +152,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               ),
             ),
           ],
-        )
-        /*TextField(
-      controller: _dirTxtController,
-    hintText: 'Direccion',
-      onTap: () {
-        Navigator.pushNamed(context, 'map', arguments: _markers);
-      },
-    )*/
-        );
+        ));
   }
 
   void _cleanDir() {
@@ -198,24 +176,22 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
         maxLines: 4,
         controller: _descTxtController,
         decoration: InputDecoration(
-            labelText: 'Describa los servicios que ofrece',
+            labelText: "Describa su denuncia",
             labelStyle: TextStyle(
               color: Colors.grey,
               // color: Color.fromRGBO(49, 232, 93, 1),
             ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
             suffixIcon: IconButton(
               onPressed: () {
-                _descTxtController.clear();
-                prefs.businessDescription = '';
-                _desc = '';
+                _titleTxtController.clear();
               },
               icon: Icon(Icons.clear),
-            )),
+            ),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
           setState(() {
-            prefs.businessDescription = value;
+            //   prefs.businessDescription = value;
             _desc = value;
           });
         },
@@ -224,63 +200,58 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Widget _cancelBtn() {
-    return Container(
-      child: TextButton(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text('Cancelar', style: TextStyle(color: Colors.black)),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: TextButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
-        ),
+    return TextButton(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text('Cancelar',
+            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      style: TextButton.styleFrom(
+        primary: Color.fromRGBO(49, 232, 93, 1),
       ),
     );
   }
 
-// ignore: todo
-//TODO: cambiar el userID por el que este usando el usuario
   Widget _saveBtn() {
-    return Container(
-      child: ElevatedButton(
-          onPressed: () async {
-            // print(mapsUtil.locationtoString(_locations));
-            if (_name.isEmpty || _locations.isEmpty || _desc.isEmpty) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color.fromRGBO(49, 232, 93, 1),
+        ),
+        onPressed: () async {
+          // print(mapsUtil.locationtoString(_locations));
+          if (_title.isEmpty || _locations.isEmpty || _desc.isEmpty) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text('Es necesario llenar todos los campos')));
+          } else {
+            ComplaintModel complaint = ComplaintModel(
+                title: _title,
+                //location: [_direct],
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
+                description: _desc,
+                imgRef: imagesRef);
+            _db.addComplaint(complaint).then((value) {
+              /*prefs.businessName = '';
+              prefs.businessDescription = '';*/
+              Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text('Es necesario llenar todos los campos')));
-            } else {
-              BusinessModel business = BusinessModel(
-                  name: _name,
-                  location: mapsUtil.locationtoString(_locations),
-                  userID: prefs.userID,
-                  description: _desc,
-                  imgRef: imagesRef);
-              _db.addBusiness(business).then((value) {
-                prefs.businessName = '';
-                prefs.businessDescription = '';
-                Navigator.popAndPushNamed(context, 'navigation');
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text('Se ha publicado tu negocio.')),
-                  );
-              });
-            }
+                ..showSnackBar(
+                    SnackBar(content: Text('Se publicó tu denuncia.')));
+            });
+          }
 
-            //print(_dir);
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(49, 232, 93, 1),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text('Publicar'),
-          )),
-    );
+          //print(_dir);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Publicar'),
+        ));
   }
 
   Widget _buildGridView() {
@@ -334,9 +305,28 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Widget _addBtn(int index) {
-    return AddImageButton(onTap: () {
-      images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
-    });
+    return AddImageButton(
+      onTap: () {
+        images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+      },
+    );
+    /*return FlatButton(
+      onPressed: () {
+        images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+      },
+      color: Colors.grey[200],
+      height: 85,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.add,
+            size: 48,
+            color: Color.fromRGBO(210, 210, 210, 1),
+          ),
+        ],
+      ),
+    );*/
   }
 
   Future _onAddImageClick(int index) async {
@@ -346,12 +336,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       if (_imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-
-        print("xd" + _imageFile.toString());
-      } else {
-        print("faros");
-      }
-      //if (images.length < 6) images.add("Add Image");
+      } else {}
     });
   }
 
@@ -385,24 +370,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     });
   }
 
-  Widget _selectService() {
-    return Row(
-      children: [
-        //Text('Servicios que ofrece:'),
-        /*DropdownButton(
-          isExpanded: true,
-          items: [
-            DropdownMenuItem(child: Text('Veterinaria')),
-            DropdownMenuItem(child: Text('???')),
-            DropdownMenuItem(child: Text('Tráfico de personas')),
-          ],
-        ),*/
-      ],
-    );
-  }
-
-//FIXME: optimizar este sector
   void getDir(List<LatLng> locations) {
+    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";
@@ -416,10 +385,4 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       });
     }
   }
-}
-
-//Aquí se crea la clase AlwaysDisabledFocusNode para que no se pueda editar el campo de la dirección
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
 }

@@ -34,22 +34,31 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     print(ModalRoute.of(context).settings.name);
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _userInfo(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
-            child: Divider(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text('Mi Cuenta'),
-          ),
-          _buttonColumn(),
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 15),
+            Center(
+              child: Text(
+                'PERFIL',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            _userInfo(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+              child: Divider(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text('Mi Cuenta'),
+            ),
+            _buttonColumn(),
+          ],
+        ),
       ),
     );
   }
@@ -63,9 +72,23 @@ class _AccountPageState extends State<AccountPage> {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(this._user.imgRef),
-              backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+              backgroundColor: Colors.white,
+              //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
               radius: 50,
             ),
+            /*Stack(children: [
+              Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                ),
+              ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(this._user.imgRef),
+                backgroundColor: Colors.white,
+                //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+                radius: 50,
+              ),
+            ]),*/
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -111,6 +134,7 @@ class _AccountPageState extends State<AccountPage> {
           if (!isAdmin()) _followListButton(),
           if (!isAdmin()) _postBusinessButton(),
           if (!isAdmin()) _caretakerButton(),
+          if (!isAdmin()) _complaintButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
@@ -221,6 +245,21 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Ajustes',
         icon: Icons.navigate_next,
         onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _complaintButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Hacer una denuncia',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'complaintPage');
+        },
       ),
     );
   }

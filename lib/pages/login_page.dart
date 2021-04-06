@@ -17,16 +17,18 @@ class _LoginPageState extends State<LoginPage> {
   final _db = dbUtil();
   final preferencesUtil prefs = preferencesUtil();
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
+  FocusScopeNode node;
   //UserModel user;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _pswdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     print(ModalRoute.of(context).settings.name);
-
+    node = FocusScope.of(context);
     return Scaffold(
       //TODO: la AppBar fue creada como widget independiente pero hace falta añadirla aquí de esa manera
-      appBar: PreferredSize(
+      /*appBar: PreferredSize(
         preferredSize: Size.fromHeight(75),
         child: AppBar(
             elevation: 0,
@@ -48,14 +50,52 @@ class _LoginPageState extends State<LoginPage> {
                 //width: 120,
               ),
             ]),
-      ),
+      ),*/
       body: Builder(
-        builder: (context) => SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            width: double.infinity,
-            child: Padding(padding: EdgeInsets.all(36.0), child: _loginForm()),
-          ),
+        builder: (context) => SafeArea(
+          child: CustomScrollView(slivers: [
+            SliverAppBar(
+              pinned: true,
+              snap: false,
+              floating: false,
+              elevation: 1,
+              expandedHeight: 200,
+              leading: IconButton(
+                icon: new Icon(
+                  Icons.arrow_back_ios,
+                  color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+                iconSize: 32,
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  'Iniciar sesión',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(49, 232, 93, 1),
+                  ),
+                ),
+                background: Align(
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    'assets/logo_asset.png',
+                    width: 100,
+                    //width: 120,
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                child:
+                    Padding(padding: EdgeInsets.all(36.0), child: _loginForm()),
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -69,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          /* Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
             child: Text(
               'Iniciar Sesión',
@@ -79,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Color.fromRGBO(49, 232, 93, 1),
               ),
             ),
-          ),
+          ),*/
           _emailTxt(),
           _passwordTxt(),
           _loginButton(),
@@ -111,6 +151,7 @@ class _LoginPageState extends State<LoginPage> {
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce el correo' : null;
         },
+        onEditingComplete: () => node.nextFocus(),
       ),
     );
   }
@@ -124,6 +165,15 @@ class _LoginPageState extends State<LoginPage> {
         obscureText: true,
         validator: (value) {
           return value.trim().isEmpty ? 'Introduce la contraseña' : null;
+        },
+        onEditingComplete: () {
+          if (_formKey.currentState.validate()) {
+            node.unfocus();
+            setState(() {
+              _isLoading = true;
+            });
+            _login();
+          }
         },
       ),
     );
@@ -143,7 +193,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )
             : ElevatedButton(
-                child: Text('Continuar', style: TextStyle(color: Colors.white)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child:
+                      Text('Continuar', style: TextStyle(color: Colors.white)),
+                ),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromRGBO(49, 232, 93, 1),
                 ),
@@ -162,15 +216,27 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _googleLoginButton() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        child: GoogleSignInButton(
-          onPressed: () {
-            _loginGoogle();
-          },
-          text: 'Ingresar con Google',
-        ),
-      ),
+      child: _isGoogleLoading
+          ? Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+                //backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              child: GoogleSignInButton(
+                onPressed: () {
+                  setState(() {
+                    _isGoogleLoading = true;
+                  });
+                  _loginGoogle();
+                },
+                text: 'Ingresar con Google',
+              ),
+            ),
     );
   }
 
@@ -200,8 +266,6 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
       });
-      print('POOL LOGIN ERROR');
-      print(_result);
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
@@ -215,10 +279,16 @@ class _LoginPageState extends State<LoginPage> {
     if (_result == 'Ingresó') {
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
+      setState(() {
+        _isGoogleLoading = false;
+      });
     } else {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(_result)));
+      setState(() {
+        _isGoogleLoading = false;
+      });
     }
   }
 }

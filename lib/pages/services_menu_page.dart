@@ -18,7 +18,9 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     return Scaffold(
       body: Stack(children: [
         SingleChildScrollView(
-          child: Padding(
+          child: AnimatedPadding(
+            duration: Duration(milliseconds: 400),
+            curve: Curves.decelerate,
             padding: _query == null || _query == ''
                 ? const EdgeInsets.all(18.0)
                 : const EdgeInsets.all(0.0),
@@ -69,15 +71,6 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
               ? Center(child: CircularProgressIndicator())
               : ListFeed(
                   snapshot: snapshot, physics: NeverScrollableScrollPhysics());
-          /*ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot data = snapshot.data.docs[index];
-                    List<dynamic> fotos = data['imgRef'];
-                    //return Text(data['name']);
-                  });*/
         });
   }
 

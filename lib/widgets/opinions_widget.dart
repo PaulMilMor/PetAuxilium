@@ -38,7 +38,7 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String _score;
   String _comment;
-  String _id;
+  String _id = '';
   FocusNode _focusNode;
   double avgscore;
   final prefs = new preferencesUtil();
@@ -75,19 +75,15 @@ class _OpinionsState extends State<Opinions> {
         future: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
-          print('POOL SNAPSHOT');
-          //print(snapshot.data[0].userID);
-          print(_myEvaluation);
-          print(snapshot.data[2].userID);
-          for (EvaluationModel evo in snapshot.data) {
-            print('POOL SNAPSJHOT');
-            print(evo.id);
-          }
           _checkEvaluations(snapshot);
+
           if (snapshot.hasData) {
             return _opinion(snapshot);
-          } else {
-            return _makeOpinion('0');
+            print('POOL SNAPSHOT');
+            //print(snapshot.data[0].userID);
+            if (snapshot.connectionState == ConnectionState.done) {
+              _checkEvaluations(snapshot);
+            }
           }
         });
   }
@@ -104,9 +100,6 @@ class _OpinionsState extends State<Opinions> {
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           EvaluationModel opinion = snapshot.data.elementAt(index);
-          //DocumentSnapshot _data = this._myEvaluation.data.docs[index];
-          //opinion.id;S
-          //_id=snapshot.data.docs[index].id;
 
           return Container(
               child: SingleChildScrollView(
@@ -117,7 +110,7 @@ class _OpinionsState extends State<Opinions> {
                           child: Column(children: <Widget>[
                         Container(
                             height: 17,
-                            width: 330,
+                            width: 350,
                             child: Text.rich(TextSpan(
                               style: TextStyle(
                                 fontSize: 13.5,
@@ -140,7 +133,7 @@ class _OpinionsState extends State<Opinions> {
                               ],
                             ))),
                         Container(
-                          width: 330,
+                          width: 350,
                           alignment: Alignment.topLeft,
                           child: Text(opinion.comment,
                               textAlign: TextAlign.justify,
@@ -158,7 +151,7 @@ class _OpinionsState extends State<Opinions> {
         child: Material(
             type: MaterialType.transparency,
             child: Container(
-                width: 345,
+                width: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
@@ -170,96 +163,135 @@ class _OpinionsState extends State<Opinions> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          TextFormField(
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                            // cursorColor: Theme.of(context).cursorColor,
-                            maxLength: 140,
-                            focusNode: _focusNode,
-                            onTap: _requestFocus,
+                          prefs.userID == ' '
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Text(
+                                      'Inicia sesión para hacer una evaluación.',
+                                      style: TextStyle(fontSize: 16)),
+                                )
+                              : TextFormField(
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                  // cursorColor: Theme.of(context).cursorColor,
+                                  maxLength: 140,
+                                  focusNode: _focusNode,
+                                  onTap: _requestFocus,
 
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.grey[400],
-                                  size: 19,
-                                ),
-                                onPressed: () {
-                                  _commentController.clear();
-                                },
-                              ),
-                              icon: Icon(
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        Icons.clear,
+                                        color: Colors.grey[400],
+                                        size: 19,
+                                      ),
+                                      onPressed: () {
+                                        _commentController.clear();
+                                      },
+                                    ),
+                                    /*icon: Icon(
                                 Icons.comment,
                                 color: Colors.white,
-                              ),
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              hintText: "Escribe una opinión...",
-                              contentPadding: EdgeInsets.fromLTRB(
-                                  1, 17, 10, 0), // control yo
-                            ),
-                            controller: _commentController,
-                          ),
-
-                          Container(
-                            child: Align(
-                              alignment: Alignment(-0.7, -1.0),
-                              child: RatingBar.builder(
-                                initialRating: 2.5,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemSize: 20,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 0),
-                                itemBuilder: (context, _) => Icon(
-                                    Icons.star_rounded,
-                                    color: Colors.greenAccent[400]),
-                                onRatingUpdate: (rating) {
-                                  print("sumadre");
-                                  print(rating);
-                                  _score = rating.toString();
-                                },
-                              ),
-                            ),
-                          ),
-
-                          Container(
-                            child: GestureDetector(
-                              onTap: () {
-                                if (_score == null) {
-                                  _score = '2.5';
-                                } else {
-                                  _score = _score;
-                                }
-                                print('PUBLICAR');
-                                _evaluacion();
-                                if (this.widget.callback != null)
-                                  this.widget.callback();
-                              },
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                  'PUBLICAR',
-                                  style: TextStyle(
-                                      fontSize: 13,
+                              ),*/
+                                    labelStyle: TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
+                                    border: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black),
+                                    ),
+                                    hintText: "Escribe una opinión...",
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        1, 17, 10, 0), // control yo
+                                  ),
+                                  controller: _commentController,
+                                  onEditingComplete: () => _focusNode.unfocus(),
+                                ),
+                          SizedBox(height: 10),
+
+                          if (prefs.userID != ' ')
+                            Container(
+                              child: Align(
+                                //alignment: Alignment(-0.7, -1.0),
+                                alignment: Alignment.centerLeft,
+                                child: RatingBar.builder(
+                                  initialRating: 2.5,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemSize: 20,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 0),
+                                  itemBuilder: (context, _) => Icon(
+                                      Icons.star_rounded,
+                                      color: Colors.greenAccent[400]),
+                                  onRatingUpdate: (rating) {
+                                    print("sumadre");
+                                    print(rating);
+                                    _score = rating.toString();
+                                  },
                                 ),
                               ),
                             ),
-                          ),
+//FIXME: Ya hay un widget q hace esto...
+                          prefs.userID == ' '
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Color.fromRGBO(49, 232, 93, 1),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.popUntil(context,
+                                            ModalRoute.withName('home'));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text('Volver al inicio'),
+                                      ),
+                                      /* style: ButtonStyle(
+                                          backgroundColor:
+                                              Color.fromRGBO(49, 232, 93, 1),
+                                        ),*/
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (_score == null) {
+                                        _score = '2.5';
+                                      } else {
+                                        _score = _score;
+                                      }
+                                      print('PUBLICAR');
+                                      _evaluacion();
+                                      if (this.widget.callback != null)
+                                        this.widget.callback();
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: Text(
+                                        'PUBLICAR',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                           Padding(
                               padding: EdgeInsets.only(
                                   bottom: MediaQuery.of(context)
@@ -269,7 +301,7 @@ class _OpinionsState extends State<Opinions> {
                             height: 21,
                           ),
                           Container(
-                              width: 290,
+                              width: 350,
                               child: Text.rich(TextSpan(
                                 style: TextStyle(
                                   fontSize: 13.5,
@@ -311,7 +343,9 @@ class _OpinionsState extends State<Opinions> {
             size: 25,
           ),
           Text(
-            avgscore.toStringAsFixed(1),
+            avgscore.isNaN || avgscore <= 0
+                ? 'N/A'
+                : avgscore.toStringAsFixed(1),
           ),
           Text(" (${this.widget.nevaluations})"),
           Container(
@@ -400,16 +434,15 @@ class _OpinionsState extends State<Opinions> {
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
-                            print("antes del null");
+
                             _myEvaluation = null;
-                            print("despues del chingado null");
-                            print(_myEvaluation);
+
                             _commentController.clear();
-                            print('POOL SCORE');
-                            print(_score);
-                            print(this.widget.sumscore);
+
                             this.widget.sumscore -= double.parse(_score);
                             this.widget.nevaluations--;
+
+                            _commentController.clear();
 
                             setState(() {
                               avgscore = this.widget.sumscore /
@@ -436,8 +469,23 @@ class _OpinionsState extends State<Opinions> {
                     ]))))));
   }
 
+  void _scoredelete() {
+    EvaluationModel evaluation = EvaluationModel(
+      userID: prefs.userID,
+      publicationID: this.widget.id,
+      score: _score,
+      comment: _commentController.text,
+    );
+    this.widget.nevaluations--;
+    this.widget.sumscore -= double.parse(_score);
+    setState(() {
+      avgscore = this.widget.sumscore / this.widget.nevaluations;
+    });
+    _db.updateScore(evaluation);
+  }
+
   void _evaluacion() {
-    CollectionReference docRef = _firestoreInstance.collection('evaluations');
+    //CollectionReference docRef = _firestoreInstance.collection('evaluations');
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -447,26 +495,13 @@ class _OpinionsState extends State<Opinions> {
       comment: _commentController.text,
     );
     _db.addEvaluations(evaluation);
-    print('POOL SCORE 2');
-    print(this.widget.sumscore);
     this.widget.sumscore += double.parse(_score);
-    print(this.widget.sumscore);
     this.widget.nevaluations++;
     _addevaluation(/*detailDocument.id,*/ evaluations);
 
     setState(() {
       avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
-  }
-
-  void _scoredelete() {
-    EvaluationModel evaluation = EvaluationModel(
-      userID: prefs.userID,
-      publicationID: this.widget.id,
-      score: _score,
-      comment: _commentController.text,
-    );
-    _db.updateScore(evaluation);
   }
 
   void _addevaluation(evaluations) async {
@@ -523,6 +558,9 @@ class _OpinionsState extends State<Opinions> {
                   : _showOpinion(snapshot.data.length.toString(),
                       snapshot), //Text('Ya has evaluado'),
               _listEvaluations(snapshot),
+              SizedBox(
+                height: 350,
+              ),
             ],
           ),
         ),
@@ -554,16 +592,14 @@ class _OpinionsState extends State<Opinions> {
   void _checkEvaluations(snapshot) {
     _myEvaluation = null;
     for (EvaluationModel evaluation in snapshot.data) {
-      print('POOL CHEC');
       if (evaluation.userID == prefs.userID) {
-        print('POOL CHECIF');
         _myEvaluation = evaluation;
         _myEvaluation.id = evaluation.id;
-        print("La chingada");
         _id = _myEvaluation.id;
         print(_id);
         _comment = _myEvaluation.comment;
         _score = _myEvaluation.score;
+        print(evaluation.comment);
       }
     }
   }

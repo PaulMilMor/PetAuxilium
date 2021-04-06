@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+//FIXME: Este método se llama en Build, lo que ocasiona un bucle infinito
 class MapsUtil {
   List<LatLng> getLocations(Set<Marker> markers) {
     if (markers != null) {
       print("hay markers");
-      List<LatLng> listLocations = List<LatLng>();
+      List<LatLng> listLocations = [];
       markers.forEach((Marker element) {
         listLocations.add(element.position);
       });
@@ -17,7 +18,7 @@ class MapsUtil {
   }
 
   List<String> locationtoString(List<LatLng> locations) {
-    List<String> stringlocations = List<String>();
+    List<String> stringlocations = [];
     locations.forEach((LatLng element) {
       stringlocations.add(
           element.latitude.toString() + ',' + element.longitude.toString());
@@ -49,8 +50,8 @@ class MapsUtil {
               (BuildContext context, AsyncSnapshot<List<Placemark>> snapshot) {
             if (snapshot.hasData) {
               return Container(
-                alignment: Alignment.centerLeft,
-                width: 171,
+                //alignment: Alignment.centerLeft,
+                //width: 171,
                 child: Text(
                   snapshot.data.first.street +
                       ", " +

@@ -47,10 +47,6 @@ class _CommentsState extends State<Comments> {
         future: _db.getComments(this.widget.id),
         builder:
             (BuildContext context, AsyncSnapshot<List<CommentModel>> snapshot) {
-          print('POOL SNAPSHOT');
-          print(this.widget.id);
-          //print(snapshot.data[0].userID);
-          print('essssssasadadaf' + snapshot.hasData.toString());
           if (snapshot.hasData) {
             _checkComments(snapshot);
             return _comments(snapshot);
@@ -78,7 +74,7 @@ class _CommentsState extends State<Comments> {
                   child: Column(children: <Widget>[
             Container(
                 height: 17,
-                width: 330,
+                width: 350,
                 child: Text.rich(TextSpan(
                   style: TextStyle(
                     fontSize: 13.5,
@@ -91,7 +87,7 @@ class _CommentsState extends State<Comments> {
                   ],
                 ))),
             Container(
-              width: 330,
+              width: 350,
               alignment: Alignment.topLeft,
               child: Text(comment.comment,
                   textAlign: TextAlign.justify, style: new TextStyle()),
@@ -120,48 +116,63 @@ class _CommentsState extends State<Comments> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          Container(
-                            width: 600,
-                            child: TextFormField(
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                              // cursorColor: Theme.of(context).cursorColor,
-                              maxLength: 140,
-                              focusNode: _focusNode,
-                              onTap: _requestFocus,
+                          prefs.userID == ' '
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Text(
+                                      'Inicia sesión para unirte a la conversación.',
+                                      style: TextStyle(fontSize: 16)),
+                                )
+                              : Container(
+                                  width: 600,
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                    // cursorColor: Theme.of(context).cursorColor,
+                                    maxLength: 140,
+                                    focusNode: _focusNode,
+                                    onTap: _requestFocus,
 
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: Colors.grey[400],
-                                    size: 19,
-                                  ),
-                                  onPressed: () {
-                                    _commentController.clear();
-                                  },
-                                ),
-                                icon: Icon(
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          Icons.clear,
+                                          color: Colors.grey[400],
+                                          size: 19,
+                                        ),
+                                        onPressed: () {
+                                          _commentController.clear();
+                                        },
+                                      ),
+                                      /*icon: Icon(
                                   Icons.comment,
                                   color: Colors.white,
+                                ),*/
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                      ),
+                                      hintText: "Hacer un comentario...",
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          1, 17, 10, 0), // control yo
+                                    ),
+                                    controller: _commentController,
+                                    onEditingComplete: () =>
+                                        _focusNode.unfocus(),
+                                  ),
                                 ),
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                border: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                hintText: "Hacer un comentario...",
-                                contentPadding: EdgeInsets.fromLTRB(
-                                    1, 17, 10, 0), // control yo
-                              ),
-                              controller: _commentController,
-                            ),
+                          SizedBox(
+                            height: 10,
                           ),
 
                           comentar_button(),
@@ -173,7 +184,7 @@ class _CommentsState extends State<Comments> {
                                       .bottom)),
 
                           Container(
-                              width: 290,
+                              width: 350,
                               child: Text.rich(TextSpan(
                                 style: TextStyle(
                                   fontSize: 13.5,
@@ -275,7 +286,7 @@ class _CommentsState extends State<Comments> {
         children: [
           //FIXME: Así como está no muestra el número de opiniones
           SizedBox(
-            height: 21,
+            height: 25,
           ),
           Container(
             width: 340,
@@ -290,7 +301,7 @@ class _CommentsState extends State<Comments> {
             ),
           ),
           SizedBox(
-            height: 31,
+            height: 35,
           ),
           const Divider(
             color: Colors.black12,
@@ -300,11 +311,16 @@ class _CommentsState extends State<Comments> {
             endIndent: 1,
           ),
           SizedBox(
-            height: 3,
+            height: 10,
           ),
           _makeComment(snapshot.data.length.toString()),
-
-          _listComments(snapshot)
+          SizedBox(
+            height: 10,
+          ),
+          if (prefs.userID != ' ') _listComments(snapshot),
+          SizedBox(
+            height: 350,
+          ),
         ],
       ),
     );

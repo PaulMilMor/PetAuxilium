@@ -15,7 +15,7 @@ class MapPagePublication extends StatefulWidget {
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
- 
+
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -45,7 +45,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
     //_name=ModalRoute.of(context).settings.arguments;
     if (ModalRoute.of(context).settings.arguments != null)
       _markers = ModalRoute.of(context).settings.arguments;
-  
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),
@@ -53,9 +53,13 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                
-                Navigator.popAndPushNamed(context, 'navigation',
-                    arguments: _markers);
+                if (prefs.selectedIndex == 2) {
+                  Navigator.popAndPushNamed(context, 'navigation',
+                      arguments: _markers);
+                } else if (prefs.selectedIndex == 4) {
+                  Navigator.popAndPushNamed(context, 'complaintPage',
+                      arguments: _markers);
+                }
               })
         ],
       ),
@@ -77,7 +81,9 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   }
 
 //TODO:limitar los markers
-  _addMarker(LatLng point,) async {
+  _addMarker(
+    LatLng point,
+  ) async {
     if (_markers.length < 1) {
       setState(() {
         _markers.add(Marker(

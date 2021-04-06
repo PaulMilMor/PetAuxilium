@@ -56,7 +56,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getAppbar(),
+      //appBar: getAppbar(),
       body: _getTabs()[_prefs.selectedIndex],
       bottomNavigationBar: _getBottomBar(),
     );

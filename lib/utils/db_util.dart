@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
@@ -27,8 +29,6 @@ class dbUtil {
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     //throw Exception('jiji');
-    print('POOL ID GET USER');
-    print(id);
     await _firestoreInstance.collection("users").doc(id).get().then((value) {
       _prefs.userName = value.get("name");
       _prefs.userID = id;
@@ -61,6 +61,17 @@ class dbUtil {
     });
   }
 
+//Guarda denuncia
+  Future<void> addComplaint(ComplaintModel complaint) async {
+    await _firestoreInstance.collection("complaints").add({
+      'title': complaint.title,
+      'location': complaint.location,
+      'description': complaint.description,
+      'userID': complaint.userID,
+      'imgRef': complaint.imgRef,
+    });
+  }
+
   Future<List<BusinessModel>> getAllLocations() async {
     List<BusinessModel> locations = List<BusinessModel>();
     await _firestoreInstance.collection('business').get().then((value) {
@@ -86,11 +97,62 @@ class dbUtil {
   }
 
   Future<void> addReport(ReportModel rm) async {
-    await _firestoreInstance.collection("reports").doc(rm.id).set({
+    await _firestoreInstance.collection("reports").doc(rm.publicationid).set({
       'publicationid': rm.publicationid,
-      'nreports': rm.nreports,
+      'nreports': 0,
+      'nspam': 0,
+      'nfalseinfo': 0,
+      'nidentityfraud': 0,
+      'nbadphotos': 0,
       'userid': rm.userid
     });
+    print("dentro de los reportes");
+    print(rm.publicationid);
+  }
+
+  Future<void> updatereport(ReportModel rm, String selectedoption) async {
+    if (selectedoption == "Spam") {
+      print("adentro del spam");
+      print(rm.userid);
+      await _firestoreInstance
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nspam': FieldValue.increment(1),
+      });
+    }
+    if (selectedoption == "Informacion fraudulenta") {
+      await _firestoreInstance
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nfalseinfo': FieldValue.increment(1),
+      });
+    }
+    if (selectedoption == "Suplantacion de identidad") {
+      await _firestoreInstance
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nidentityfraud': FieldValue.increment(1),
+      });
+    }
+    if (selectedoption == "Fotos Inapropiadas") {
+      await _firestoreInstance
+          .collection("reports")
+          .doc(rm.publicationid)
+          .update({
+        'userid': rm.userid,
+        'nreports': FieldValue.increment(1),
+        'nbadphotos': FieldValue.increment(1),
+      });
+    }
   }
 
   Future<void> addKeeper(PublicationModel ad) async {
@@ -101,7 +163,9 @@ class dbUtil {
       'location': ad.location,
       'imgRef': ad.imgRef,
       'userID': ad.userID,
-      'pricing': ad.pricing
+      'pricing': ad.pricing,
+      'nevaluations': 0,
+      'score': 0,
     });
   }
 
@@ -110,7 +174,6 @@ class dbUtil {
 Firestore.instance.collection('gameLevels').add(map);
 print(docRef.documentID);*/
     await _firestoreInstance.collection("evaluations").add({
-      //'id':evaluation.id,
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
@@ -241,6 +304,18 @@ print(docRef.documentID);*/
 
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
+    await _firestoreInstance
+        .collection('publications')
+        .where('userID', isEqualTo: id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) async {
+        await _firestoreInstance
+            .collection('publications')
+            .doc(element.id)
+            .delete();
+      });
+    });
   }
 
   Future<List<String>> bansList() async {
@@ -271,7 +346,6 @@ print(docRef.documentID);*/
   }
 
   Future<void> deleteDocument(String id, String collection) async {
-    print('POOL DELETE');
     await _firestoreInstance.collection(collection).doc(id).delete();
   }
 
@@ -300,7 +374,7 @@ print(docRef.documentID);*/
         .then((value) {
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
-        opinion.id= element.id;
+        opinion.id = element.id;
         opinions.add(opinion);
       });
     });
