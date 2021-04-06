@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -32,7 +34,7 @@ class KeeperPageState extends State<KeeperPage> {
   final MapsUtil mapsUtil = MapsUtil();
 
   String _selectedCategory;
-  List listItems = ['ENTRENAMIENTO'];
+  List listItems = ['ENTRENAMIENTO', 'LIMPIEZA', 'CUIDADOS'];
   String _pricing;
   String _desc;
 
@@ -195,6 +197,7 @@ class KeeperPageState extends State<KeeperPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
+            _category(),
             _pricingTxt(),
             _descTxt(),
             buildGridView(),
@@ -218,7 +221,80 @@ class KeeperPageState extends State<KeeperPage> {
             style: TextStyle(fontSize: 18),
           ),
         ),
-        Container(
+        MultiSelectDialogField(
+          cancelText: Text(
+            'CANCELAR',
+            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          ),
+          confirmText: Text(
+            'OKI DOKI',
+            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          ),
+          height: 250,
+          items: listItems
+              .map((item) => MultiSelectItem<String>(item, item))
+              .toList(),
+          title: Text('Servicios'),
+          selectedColor: Color.fromRGBO(49, 232, 93, 1),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(235, 235, 235, 1),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(
+              color: Color.fromRGBO(235, 235, 235, 1),
+              width: 6,
+            ),
+          ),
+          buttonIcon: Icon(
+            Icons.arrow_drop_down, color: Colors.grey[800],
+            //color: Colors.blue,
+          ),
+          buttonText: Text(
+            "Servicios que ofrece",
+            style: TextStyle(
+              //color: Color.fromRGBO(202, 202, 202, 1),
+              fontSize: 16,
+            ),
+          ),
+          onConfirm: (results) {
+            //_selectedAnimals = results;
+          },
+        ),
+        MultiSelectBottomSheetField<String>(
+          //    key: _multiSelectKey,
+          initialChildSize: 0.7,
+          maxChildSize: 0.95,
+          title: Text("Animals"),
+          buttonText: Text("Favorite Animals"),
+          items: listItems
+              .map((item) => MultiSelectItem<String>(item, item))
+              .toList(),
+          searchable: true,
+          validator: (values) {
+            if (values == null || values.isEmpty) {
+              return "Required";
+            }
+            List<String> names = values.map((e) => e).toList();
+            if (names.contains("Frog")) {
+              return "Frogs are weird!";
+            }
+            return null;
+          },
+          onConfirm: (values) {
+            /* setState(() {
+                    _selectedAnimals3 = values;
+                  });
+                  _multiSelectKey.currentState.validate();*/
+          },
+          chipDisplay: MultiSelectChipDisplay(
+            onTap: (item) {
+              /* setState(() {
+                      _selectedAnimals3.remove(item);
+                    });
+                    _multiSelectKey.currentState.validate();*/
+            },
+          ),
+        ),
+        /*Container(
           child: GrayDropdownButton(
             hint: Text("Selecciona una categoria"),
             value: _selectedCategory,
@@ -235,7 +311,7 @@ class KeeperPageState extends State<KeeperPage> {
               );
             }).toList(),
           ),
-        )
+        )*/
       ])),
     );
   }
