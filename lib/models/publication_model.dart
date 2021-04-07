@@ -11,6 +11,7 @@ class PublicationModel {
   String pricing;
   int nevaluations;
   double score;
+  List<dynamic> services;
   PublicationModel(
       {this.id,
       this.category,
@@ -21,7 +22,8 @@ class PublicationModel {
       this.userID,
       this.pricing,
       this.nevaluations,
-      this.score});
+      this.score,
+      this.services});
 
 // class AddAdoption {
 //   String id;
@@ -47,5 +49,8 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
+    nevaluations = json['nevaluations'];
+    score = json['score'].toDouble();
+    services = json['services'];
   }
 }

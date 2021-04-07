@@ -166,6 +166,7 @@ class dbUtil {
       'pricing': ad.pricing,
       'nevaluations': 0,
       'score': 0,
+      //  'services': ad.services,
     });
   }
 

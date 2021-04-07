@@ -39,8 +39,6 @@ class _ServicePageState extends State<ServicePage> {
                   future: _db.getPublications('publications', _category),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {
-                     
-                
                       return ListFeed(snapshot: snapshot, follows: follow.data);
                     } else {
                       return Center(

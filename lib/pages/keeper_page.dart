@@ -33,7 +33,7 @@ class KeeperPageState extends State<KeeperPage> {
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
 
-  String _selectedCategory;
+  List<String> _selectedServices = [];
   List listItems = ['ENTRENAMIENTO', 'LIMPIEZA', 'CUIDADOS'];
   String _pricing;
   String _desc;
@@ -46,6 +46,7 @@ class KeeperPageState extends State<KeeperPage> {
   List<File> _listImages = [];
   final picker = ImagePicker();
   FocusScopeNode _node;
+  //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
   void initState() {
     super.initState();
     setState(() {
@@ -57,7 +58,7 @@ class KeeperPageState extends State<KeeperPage> {
     });
     _pricing = prefs.keeperPricing ?? ' ';
     _desc = prefs.keeperDescription;
-    _selectedCategory = 'ENTRENAMIENTO';
+    //_selectedCategory = 'ENTRENAMIENTO';
     _pricingTxtController = TextEditingController(text: _pricing);
 
     _descTxtController = TextEditingController(text: _desc);
@@ -197,7 +198,7 @@ class KeeperPageState extends State<KeeperPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-            _category(),
+            _services(),
             _pricingTxt(),
             _descTxt(),
             buildGridView(),
@@ -208,111 +209,63 @@ class KeeperPageState extends State<KeeperPage> {
     );
   }
 
-  Widget _category() {
+  Widget _services() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
-      child: Center(
-          child: Column(children: [
-        Container(
-          margin: const EdgeInsets.only(right: 4.5),
-          child: Text(
-            'Servicios que ofrece:',
-            style: TextStyle(fontSize: 18),
-          ),
+      margin: const EdgeInsets.fromLTRB(8, 16, 8, 6),
+      child: MultiSelectBottomSheetField<String>(
+        //key: _multiSelectKey,
+        initialChildSize: 0.7,
+        maxChildSize: 0.95,
+        cancelText: Text(
+          'CANCELAR',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
         ),
-        MultiSelectDialogField(
-          cancelText: Text(
-            'CANCELAR',
-            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
-          ),
-          confirmText: Text(
-            'OKI DOKI',
-            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
-          ),
-          height: 250,
-          items: listItems
-              .map((item) => MultiSelectItem<String>(item, item))
-              .toList(),
-          title: Text('Servicios'),
-          selectedColor: Color.fromRGBO(49, 232, 93, 1),
-          decoration: BoxDecoration(
+        confirmText: Text(
+          'OK',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+        ),
+        selectedColor: Color.fromRGBO(49, 232, 93, 1),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(235, 235, 235, 1),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: Border.all(
             color: Color.fromRGBO(235, 235, 235, 1),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(
-              color: Color.fromRGBO(235, 235, 235, 1),
-              width: 6,
-            ),
-          ),
-          buttonIcon: Icon(
-            Icons.arrow_drop_down, color: Colors.grey[800],
-            //color: Colors.blue,
-          ),
-          buttonText: Text(
-            "Servicios que ofrece",
-            style: TextStyle(
-              //color: Color.fromRGBO(202, 202, 202, 1),
-              fontSize: 16,
-            ),
-          ),
-          onConfirm: (results) {
-            //_selectedAnimals = results;
-          },
-        ),
-        MultiSelectBottomSheetField<String>(
-          //    key: _multiSelectKey,
-          initialChildSize: 0.7,
-          maxChildSize: 0.95,
-          title: Text("Animals"),
-          buttonText: Text("Favorite Animals"),
-          items: listItems
-              .map((item) => MultiSelectItem<String>(item, item))
-              .toList(),
-          searchable: true,
-          validator: (values) {
-            if (values == null || values.isEmpty) {
-              return "Required";
-            }
-            List<String> names = values.map((e) => e).toList();
-            if (names.contains("Frog")) {
-              return "Frogs are weird!";
-            }
-            return null;
-          },
-          onConfirm: (values) {
-            /* setState(() {
-                    _selectedAnimals3 = values;
-                  });
-                  _multiSelectKey.currentState.validate();*/
-          },
-          chipDisplay: MultiSelectChipDisplay(
-            onTap: (item) {
-              /* setState(() {
-                      _selectedAnimals3.remove(item);
-                    });
-                    _multiSelectKey.currentState.validate();*/
-            },
+            width: 6,
           ),
         ),
-        /*Container(
-          child: GrayDropdownButton(
-            hint: Text("Selecciona una categoria"),
-            value: _selectedCategory,
-            onChanged: (newValue) {
-              prefs.keeperCategory = newValue;
-              setState(() {
-                _selectedCategory = newValue;
-              });
-            },
-            items: listItems.map((valueItem) {
-              return DropdownMenuItem(
-                value: valueItem,
-                child: Text(valueItem),
-              );
-            }).toList(),
+        title: Text(
+          'Servicios',
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-        )*/
-      ])),
+        ),
+        buttonText: Text(
+          "Servicios que ofrece",
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+          ),
+        ),
+        buttonIcon: Icon(
+          Icons.arrow_drop_down, color: Colors.grey[800],
+          //color: Colors.blue,
+        ),
+        items: listItems
+            .map((item) => MultiSelectItem<String>(item, item))
+            .toList(),
+        searchable: false,
+
+        onConfirm: (values) {
+          setState(() {
+            _selectedServices = values;
+          });
+          // _multiSelectKey.currentState.validate();
+        },
+        chipDisplay: MultiSelectChipDisplay.none(),
+      ),
     );
   }
 
@@ -422,7 +375,10 @@ class KeeperPageState extends State<KeeperPage> {
             primary: Color.fromRGBO(49, 232, 93, 1),
           ),
           onPressed: () {
-            if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
+            if (_pricing.isEmpty ||
+                _desc.isEmpty ||
+                imagesRef.isEmpty ||
+                _selectedServices.isEmpty) {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -431,17 +387,19 @@ class KeeperPageState extends State<KeeperPage> {
               print(_imgsFiles.toString());
 
               PublicationModel ad = PublicationModel(
-                  category: 'CUIDADOR',
-                  name: prefs.userName,
-                  location: ['29.115967, -111.025490'],
-                  userID: prefs.userID,
-                  description: _desc,
-                  pricing: '\$$_pricing por hora',
-                  imgRef: imagesRef);
+                category: 'CUIDADOR',
+                name: prefs.userName,
+                location: ['29.115967, -111.025490'],
+                userID: prefs.userID,
+                description: _desc,
+                pricing: '\$$_pricing por hora',
+                imgRef: imagesRef,
+                //services: _selectedServices
+              );
               _db.addKeeper(ad).then((value) {
                 prefs.keeperPricing = '';
                 prefs.keeperDescription = '';
-                prefs.keeperCategory = 'ENTRENAMIENTO';
+                //prefs.keeperCategory = 'ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
