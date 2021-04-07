@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-
 import 'button_widget.dart';
+
+enum ClosePub { adopcion, perdido, cuidador, calle, negocio, eliminar }
 
 class ListFeed extends StatefulWidget {
   ListFeed(
@@ -42,8 +43,16 @@ class _ListFeedState extends State<ListFeed> {
     'Suplantacion de identidad',
     'Fotos Inapropiadas'
   ];
+  List listItems2 = [
+    'La mascota ha sido dada en adopción',
+    'El animal callejero ha sido atendido',
+    'La mascota ya fue localizada',
+    'La denuncia ya fue atendida',
+    'Deseo eliminar esta publicación',
+  ];
   String _selectedReason;
   String _id;
+  ClosePub _option = ClosePub.adopcion;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -158,6 +167,12 @@ class _ListFeedState extends State<ListFeed> {
           color: Color.fromRGBO(210, 210, 210, 1),
         ),
         itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                child: Column(
+                  children: [_ResolveOption()],
+                ),
+                value: 5,
+              ),
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
@@ -236,9 +251,13 @@ class _ListFeedState extends State<ListFeed> {
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications);
               _ReportMenu(/*publications*/);
+
               selectedPublication.id = id;
               _id = id;
               print(selectedPublication.id);
+              break;
+            case 5:
+              _ResolveMenu(publications);
           }
         });
   }
@@ -334,7 +353,7 @@ class _ListFeedState extends State<ListFeed> {
             color: Colors.grey,
           ),
           Text(
-            'Dejar de seguir ',
+            '  Dejar de seguir ',
             style: TextStyle(fontSize: 14),
           ),
         ],
@@ -348,7 +367,7 @@ class _ListFeedState extends State<ListFeed> {
             color: Colors.grey,
           ),
           Text(
-            'Seguir ',
+            '  Seguir ',
             style: TextStyle(fontSize: 14),
           ),
         ],
@@ -365,7 +384,23 @@ class _ListFeedState extends State<ListFeed> {
           color: Colors.red,
         ),
         Text(
-          'Reportar',
+          '  Reportar',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  Widget _ResolveOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.check,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Cerrar publicación',
           style: TextStyle(fontSize: 14),
         ),
       ],
@@ -395,9 +430,12 @@ class _ListFeedState extends State<ListFeed> {
                         child: Text("Reportar",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
-                      ), //),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                       const Divider(
-                        color: Colors.black45,
+                        color: Colors.black38,
                         height: 5,
                         thickness: 1,
                         indent: 50,
@@ -510,8 +548,6 @@ class _ListFeedState extends State<ListFeed> {
                                             content: Text(
                                                 'Se reporto esta publicación')));
                                     }
-
-                                    print("faros en vinagre");
                                     //Navigator.of(context).pop();
                                   }
                                   Navigator.of(context).pop();
@@ -530,6 +566,530 @@ class _ListFeedState extends State<ListFeed> {
             },
           );
         });
+  }
+
+  void _ResolveMenu(publications) {
+    if (publications['category'] == 'ANIMAL PERDIDO') {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  height: 350,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Padding(
+                        //padding: const EdgeInsets.only(bottom: 42),
+                        Center(
+                          child: Text("Cerrar publicación",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ), //),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 10),
+                          child: Center(
+                            child: Text(
+                                "¿Por qué quieres cerrar esta publicación?",
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text(
+                                  'La mascota perdida ya ha sido localizada'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.perdido,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title:
+                                  const Text('Deseo eliminar esta publicación'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.eliminar,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text('Continuar'),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    } else if (publications['category'] == 'ADOPCIÓN') {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  height: 350,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Padding(
+                        //padding: const EdgeInsets.only(bottom: 42),
+                        Center(
+                          child: Text("Cerrar publicación",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ), //),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 10),
+                          child: Center(
+                            child: Text(
+                                "¿Por qué quieres cerrar esta publicación?",
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text(
+                                  'La mascota ya ha sido dada en adopción'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.perdido,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title:
+                                  const Text('Deseo eliminar esta publicación'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.eliminar,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text('Continuar'),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    } else if (publications['category'] == 'CUIDADOR') {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  height: 350,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Padding(
+                        //padding: const EdgeInsets.only(bottom: 42),
+                        Center(
+                          child: Text("Cerrar publicación",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ), //),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 10),
+                          child: Center(
+                            child: Text(
+                                "¿Por qué quieres cerrar esta publicación?",
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text(
+                                  'Al chile ya me harté de andar cuidando animales'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.perdido,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title:
+                                  const Text('Deseo eliminar esta publicación'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.eliminar,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text('Continuar'),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    } else if (publications['category'] == 'NEGOCIO') {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  height: 350,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Padding(
+                        //padding: const EdgeInsets.only(bottom: 42),
+                        Center(
+                          child: Text("Cerrar publicación",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ), //),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 10),
+                          child: Center(
+                            child: Text(
+                                "¿Por qué quieres cerrar esta publicación?",
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text(
+                                  'Ya no me interesa publicitar este negocio'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.perdido,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title:
+                                  const Text('Deseo eliminar esta publicación'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.eliminar,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text('Continuar'),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    } else if (publications['category'] == 'SITUACIÓN DE CALLE') {
+      showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  height: 350,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Padding(
+                        //padding: const EdgeInsets.only(bottom: 42),
+                        Center(
+                          child: Text("Cerrar publicación",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ), //),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                          thickness: 1,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 10),
+                          child: Center(
+                            child: Text(
+                                "¿Por qué quieres cerrar esta publicación?",
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: const Text(
+                                  'El animal callejero ya ha sido atendido'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.perdido,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title:
+                                  const Text('Deseo eliminar esta publicación'),
+                              leading: Radio<ClosePub>(
+                                value: ClosePub.eliminar,
+                                groupValue: _option,
+                                onChanged: (ClosePub value) {
+                                  setState(() {
+                                    _option = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                child: Text('Cancelar',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromRGBO(49, 232, 93, 1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text('Continuar'),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    }
   }
 
   Widget _rating(publication) {
