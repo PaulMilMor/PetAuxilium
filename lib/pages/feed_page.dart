@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class Feed extends StatefulWidget {
 }
 final preferencesUtil _prefs = preferencesUtil();
 final dbUtil _db =dbUtil();
+
+      
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
@@ -30,9 +33,10 @@ class _FeedState extends State<Feed> {
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print(follow.data);
           return StreamBuilder(
-              stream: _db.getAllPublications(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: _db.allFeedElements,
+              builder: (context,  snapshot) {
                 if (snapshot.hasData) {
+                  print('hay info');
                   return ListFeed(snapshot: snapshot, follows:follow.data, voidCallback: callback,);
                 } else {
                   return Center(

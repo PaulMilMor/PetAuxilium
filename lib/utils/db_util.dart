@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
+import 'package:path/path.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
@@ -10,6 +11,7 @@ import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:rxdart/rxdart.dart';
 
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -222,7 +224,7 @@ print(docRef.documentID);*/
     await _firestoreInstance.collection('publications').get().then((value) {
       value.docs.forEach((element) {
         PublicationModel publication =
-            PublicationModel.fromJsonMap(element.data());
+            PublicationModel.fromJsonMap(element.data(), element.id);
 
         publication.location.forEach((element) async {
           double latitude =
@@ -252,7 +254,8 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      PublicationModel publication = PublicationModel.fromJsonMap(value.data());
+      PublicationModel publication =
+          PublicationModel.fromJsonMap(value.data(), id);
 
       publication.imgRef.forEach((element) {
         images.add(element);
@@ -269,15 +272,58 @@ print(docRef.documentID);*/
         .get();
   }
 
-  Stream<QuerySnapshot> getAllPublications() {
-    return _firestoreInstance.collection('publications').snapshots();
-  }
+  Stream get allFeedElements => Rx.combineLatest3(
+      streamPublication(),
+      streamBusiness(),streamComplaints(),
+      (List<PublicationModel> p, List<PublicationModel> b, List<PublicationModel> c) => p + b+ c);
+  //Stream get feedStream =>
+  Stream<List<PublicationModel>> streamPublication() =>
+      _firestoreInstance.collection('publications').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+         
+          list.add(p);
+        });
 
+        return list;
+      });
+  Stream<List<PublicationModel>> streamComplaints() =>
+      _firestoreInstance.collection('complaints').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+      
+          list.add(p);
+        });
+
+        return list;
+      });
+
+  Stream<List<PublicationModel>> streamBusiness() =>
+      _firestoreInstance.collection('business').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+          
+          list.add(p);
+        });
+
+        //print(list);
+
+        return list;
+      });
   Stream<QuerySnapshot> getFollowPublications(data) {
     return _firestoreInstance
         .collection('publications')
-        .where(FieldPath.documentId, whereIn: data).snapshots()
-        ;
+        .where(FieldPath.documentId, whereIn: data)
+        .snapshots();
   }
 
   void updateFollows(List follows) async {
@@ -403,7 +449,7 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      publication = PublicationModel.fromJsonMap(value.data());
+      publication = PublicationModel.fromJsonMap(value.data(), id);
     });
     return publication;
   }
@@ -419,5 +465,69 @@ print(docRef.documentID);*/
       }
     });
     return evaluationsID;
+  }
+
+  Future addMessage(
+      String chatRoomId, String messageId, Map messageInfoMap) async {
+    return await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc(messageId)
+        .set(messageInfoMap);
+  }
+
+  Future updateLastMessageSend(
+      String chatRoomId, Map lastMessageInfoMap) async {
+    print('deberia entrar en update');
+    print(chatRoomId);
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .update(lastMessageInfoMap)
+        .then((value) => print('en teoria funciono'));
+  }
+
+  createChatRoom(String chatRoomId, Map chatRoomInfoMap) async {
+    final snapShot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .get();
+
+    if (snapShot.exists) {
+      // chatroom already exists
+      return true;
+    } else {
+      // chatroom does not exists
+      return FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(chatRoomId)
+          .set(chatRoomInfoMap);
+    }
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .orderBy("ts", descending: true)
+        .snapshots();
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRooms() async {
+    print('fafaaf');
+    //print('El user es $myUsername');
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        // .orderBy("lastMessageSendTs", descending: true)
+        //.where("users", arrayContains: myUserID)
+        .snapshots();
+  }
+
+  Future<QuerySnapshot> getAllChatRooms() async {
+    print('fafaaf');
+    // print('El user es $myUsername');
+    return FirebaseFirestore.instance.collection("chatrooms").get();
   }
 }
