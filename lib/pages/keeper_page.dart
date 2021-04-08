@@ -34,7 +34,14 @@ class KeeperPageState extends State<KeeperPage> {
   final MapsUtil mapsUtil = MapsUtil();
 
   List<String> _selectedServices = [];
-  List listItems = ['ENTRENAMIENTO', 'LIMPIEZA', 'CUIDADOS'];
+  List listItems = [
+    'CUIDADOS ESPECIALES',
+    'CONSULTORÍA',
+    'ENTRENAMIENTO',
+    'GUARDERÍA / HOTEL ANIMAL',
+    'LIMPIEZA / ASEO',
+    'SERVICIOS DE SALUD'
+  ];
   String _pricing;
   String _desc;
 
@@ -212,7 +219,7 @@ class KeeperPageState extends State<KeeperPage> {
   Widget _services() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 16, 8, 6),
+      margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
       child: MultiSelectBottomSheetField<String>(
         //key: _multiSelectKey,
         initialChildSize: 0.7,
@@ -387,15 +394,14 @@ class KeeperPageState extends State<KeeperPage> {
               print(_imgsFiles.toString());
 
               PublicationModel ad = PublicationModel(
-                category: 'CUIDADOR',
-                name: prefs.userName,
-                location: ['29.115967, -111.025490'],
-                userID: prefs.userID,
-                description: _desc,
-                pricing: '\$$_pricing por hora',
-                imgRef: imagesRef,
-                //services: _selectedServices
-              );
+                  category: 'CUIDADOR',
+                  name: prefs.userName,
+                  location: ['29.115967, -111.025490'],
+                  userID: prefs.userID,
+                  description: _desc,
+                  pricing: '\$$_pricing por hora',
+                  imgRef: imagesRef,
+                  services: _selectedServices);
               _db.addKeeper(ad).then((value) {
                 prefs.keeperPricing = '';
                 prefs.keeperDescription = '';

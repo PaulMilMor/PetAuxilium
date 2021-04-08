@@ -36,7 +36,8 @@ class _ServicePageState extends State<ServicePage> {
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> follow) {
               return FutureBuilder(
-                  future: _db.getPublications('publications', _category),
+                  future: _getFeed(_category),
+                  //future: _db.getPublications('publications', _category),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {
                       return ListFeed(snapshot: snapshot, follows: follow.data);
@@ -62,9 +63,54 @@ class _ServicePageState extends State<ServicePage> {
       case 'Animales\nCallejeros':
         return 'SITUACIÓN DE CALLE';
         break;
-
+      case 'Cuidados\nEspeciales':
+        return 'CUIDADOS ESPECIALES';
+        break;
+      case 'Consultoría':
+        return 'CONSULTORÍA';
+        break;
+      case 'Estética':
+        return 'ESTÉTICA';
+        break;
+      case 'Entrenamiento':
+        return 'ENTRENAMIENTO';
+        break;
+      case 'Guardería/Hotel\nde animales':
+        return 'GUARDERÍA / HOTEL ANIMAL';
+        break;
+      case 'Servicios de\nSalud':
+        return 'SERVICIOS DE SALUD';
+        break;
+      case 'Servicios de\nLimpieza':
+        return 'LIMPIEZA / ASEO';
+        break;
+      case 'Ventas':
+        return 'VENTAS';
+        break;
+      case 'Veterinarias':
+        return 'Veterinarias';
+        break;
       default:
         return '';
+    }
+  }
+
+  Future<QuerySnapshot> _getFeed(String service) async {
+    switch (service) {
+      case 'ADOPCIÓN':
+
+      case 'ANIMAL PERDIDO':
+      case 'SITUACIÓN DE CALLE':
+        return _db.getPublications('publications', service);
+        break;
+      case 'CUIDADOS ESPECIALES':
+      case 'CONSULTORÍA':
+      case 'ENTRENAMIENTO':
+      case 'GUARDERÍA / HOTEL ANIMAL':
+      case 'LIMPIEZA / ASEO':
+      case 'SERVICIOS DE SALUD':
+        return _db.getKeepers(service);
+        break;
     }
   }
 

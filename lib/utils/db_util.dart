@@ -58,6 +58,7 @@ class dbUtil {
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
+      'services': business.services,
     });
   }
 
@@ -166,7 +167,7 @@ class dbUtil {
       'pricing': ad.pricing,
       'nevaluations': 0,
       'score': 0,
-      //  'services': ad.services,
+      'services': ad.services,
     });
   }
 
@@ -267,6 +268,14 @@ print(docRef.documentID);*/
     return _firestoreInstance
         .collection(collection)
         .where('category', isEqualTo: category)
+        .get();
+  }
+
+  Future<QuerySnapshot> getKeepers(String service) async {
+    return _firestoreInstance
+        .collection('publications')
+        .where('category', isEqualTo: 'CUIDADOR')
+        .where('services', arrayContains: service)
         .get();
   }
 

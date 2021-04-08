@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
@@ -40,7 +41,15 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   List<LatLng> _locations;
   List<Object> images = [];
-
+  List<String> _selectedServices = [];
+  List listItems = [
+    'CUIDADOS ESPECIALES',
+    'ESTÉTICA',
+    'GUARDERÍA / HOTEL ANIMAL',
+    'LIMPIEZA / ASEO',
+    'VETERINARIA',
+    'VENTAS'
+  ];
   final MapsUtil mapsUtil = MapsUtil();
   @override
   void initState() {
@@ -86,7 +95,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            // _selectService(),
+            _selectService(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               child: Text('Completa los siguientes campos',
@@ -247,7 +256,10 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: ElevatedButton(
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
-            if (_name.isEmpty || _locations.isEmpty || _desc.isEmpty) {
+            if (_name.isEmpty ||
+                _locations.isEmpty ||
+                _desc.isEmpty ||
+                _selectedServices.isEmpty) {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -258,7 +270,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   location: mapsUtil.locationtoString(_locations),
                   userID: prefs.userID,
                   description: _desc,
-                  imgRef: imagesRef);
+                  imgRef: imagesRef,
+                  services: _selectedServices);
               _db.addBusiness(business).then((value) {
                 prefs.businessName = '';
                 prefs.businessDescription = '';
@@ -386,18 +399,62 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Widget _selectService() {
-    return Row(
-      children: [
-        //Text('Servicios que ofrece:'),
-        /*DropdownButton(
-          isExpanded: true,
-          items: [
-            DropdownMenuItem(child: Text('Veterinaria')),
-            DropdownMenuItem(child: Text('???')),
-            DropdownMenuItem(child: Text('Tráfico de personas')),
-          ],
-        ),*/
-      ],
+    return Container(
+      // height: 100.0,
+      margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
+      child: MultiSelectBottomSheetField<String>(
+        //key: _multiSelectKey,
+        initialChildSize: 0.7,
+        maxChildSize: 0.95,
+        cancelText: Text(
+          'CANCELAR',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+        ),
+        confirmText: Text(
+          'OK',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+        ),
+        selectedColor: Color.fromRGBO(49, 232, 93, 1),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(235, 235, 235, 1),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: Border.all(
+            color: Color.fromRGBO(235, 235, 235, 1),
+            width: 6,
+          ),
+        ),
+        title: Text(
+          'Servicios',
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        buttonText: Text(
+          "Servicios que ofrece",
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+          ),
+        ),
+        buttonIcon: Icon(
+          Icons.arrow_drop_down, color: Colors.grey[800],
+          //color: Colors.blue,
+        ),
+        items: listItems
+            .map((item) => MultiSelectItem<String>(item, item))
+            .toList(),
+        searchable: false,
+
+        onConfirm: (values) {
+          setState(() {
+            _selectedServices = values;
+          });
+          // _multiSelectKey.currentState.validate();
+        },
+        chipDisplay: MultiSelectChipDisplay.none(),
+      ),
     );
   }
 

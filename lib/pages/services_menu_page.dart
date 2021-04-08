@@ -86,7 +86,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
           _btnService('Cuidados\nEspeciales', context)
         ]),
         TableRow(children: [
-          _btnService('Consultaria', context),
+          _btnService('Consultoría', context),
           _btnService('Estética', context)
         ]),
         TableRow(children: [

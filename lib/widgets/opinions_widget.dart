@@ -612,15 +612,27 @@ class _OpinionsState extends State<Opinions> {
                   label: Text(serviceString),
                   onPressed: () {
                     switch (serviceString) {
+                      case 'Cuidados especiales':
+                        _navigate('Cuidados\nEspeciales', context);
+
+                        break;
+                      case 'Consultoría':
+                        _navigate('Consultoría', context);
+
+                        break;
                       case 'Entrenamiento':
                         _navigate('Entrenamiento', context);
                         break;
-                      case 'Limpieza':
-                        _navigate('Servicios de \nLimpieza', context);
+                      case 'Guardería / hotel animal':
+                        _navigate('Guardería/Hotel\nde animales', context);
 
                         break;
-                      case 'Cuidados':
-                        _navigate('Cuidados \nEspeciales', context);
+                      case 'Limpieza / aseo':
+                        _navigate('Servicios de\nLimpieza', context);
+
+                        break;
+                      case 'Servicios de salud':
+                        _navigate('Servicios de\nSalud', context);
 
                         break;
                     }
