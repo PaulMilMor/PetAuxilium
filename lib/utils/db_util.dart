@@ -411,36 +411,41 @@ print(docRef.documentID);*/
     return reports;
   }
 
-  Future<List<EvaluationModel>> getOpinions(String id) async {
-    List<EvaluationModel> opinions = [];
-    await _firestoreInstance
+  Stream<List<EvaluationModel>> getOpinions(String id) =>
+
+  _firestoreInstance
         .collection('evaluations')
         .where('publicationID', isEqualTo: id)
-        .get()
-        .then((value) {
+        .snapshots()
+        .map((value) {
+              List<EvaluationModel> opinions = [];
       value.docs.forEach((element) {
         EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
         opinion.id = element.id;
         opinions.add(opinion);
       });
+          return opinions;
     });
-    return opinions;
-  }
 
-  Future<List<CommentModel>> getComments(String id) async {
-    List<CommentModel> comments = [];
-    await _firestoreInstance
+  
+
+  Stream<List<CommentModel>> getComments(String id)  =>
+   
+   _firestoreInstance
         .collection('comments')
         .where('publicationID', isEqualTo: id)
-        .get()
-        .then((value) {
+        .snapshots()
+        .map((value) {
+          List<CommentModel> comments = [];
       value.docs.forEach((element) {
+         
         CommentModel comment = CommentModel.fromJsonMap(element.data());
         comments.add(comment);
       });
-    });
     return comments;
-  }
+    });
+  
+  
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;

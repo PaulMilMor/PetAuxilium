@@ -71,9 +71,9 @@ class _OpinionsState extends State<Opinions> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _db.getOpinions(this.widget.id),
-        builder: (BuildContext context,
+    return StreamBuilder(
+        stream: _db.getOpinions(this.widget.id),
+        builder: (context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           _checkEvaluations(snapshot);
 

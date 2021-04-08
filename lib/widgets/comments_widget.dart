@@ -43,8 +43,8 @@ class _CommentsState extends State<Comments> {
   CommentModel _myComment;
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _db.getComments(this.widget.id),
+    return StreamBuilder(
+        stream: _db.getComments(this.widget.id),
         builder:
             (BuildContext context, AsyncSnapshot<List<CommentModel>> snapshot) {
           if (snapshot.hasData) {

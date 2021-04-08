@@ -62,10 +62,10 @@ class _ListFeedState extends State<ListFeed> {
           _selectedReason = null;
           return GestureDetector(
             onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //       builder: (BuildContext context) => DetailPage(_data)),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DetailPage(_data)),
+              );
             },
             child: Card(
               child: Row(

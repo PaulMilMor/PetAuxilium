@@ -12,7 +12,7 @@ import 'package:pet_auxilium/widgets/comments_widget.dart';
 List<String> _lista = [];
 
 class DetailPage extends StatefulWidget {
-  DocumentSnapshot detailDocument;
+  PublicationModel detailDocument;
   DetailPage(this.detailDocument);
 
   @override
@@ -31,8 +31,8 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     setState(() {
-      avgscore = widget.detailDocument['score'] /
-          widget.detailDocument['nevaluations'];
+      avgscore = widget.detailDocument.score /
+          widget.detailDocument.nevaluations;
     });
   }
 
@@ -54,7 +54,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: CustomScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
-                      _appBar(widget.detailDocument['name']),
+                      _appBar(widget.detailDocument.name),
 
                       /*SliverAppBar(
                         pinned: true,
@@ -68,7 +68,7 @@ class _DetailPageState extends State<DetailPage> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              widget.detailDocument['category'],
+                              widget.detailDocument.category,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.green,
@@ -91,7 +91,7 @@ class _DetailPageState extends State<DetailPage> {
                             Align(
                               alignment: Alignment.center,
                               child: _mapsUtil.getLocationText(
-                                  widget.detailDocument['location'].first),
+                                  widget.detailDocument.location.first),
                             ),
 
                             _bottomSection(),
@@ -108,10 +108,7 @@ class _DetailPageState extends State<DetailPage> {
         );*/
   }
 
-  Future<List<String>> getImages() async {
-    print(widget.detailDocument.id);
-    return _lista = await _db.getAllImages(widget.detailDocument.id);
-  }
+
 
   Widget _appBar(String name) {
     return SliverAppBar(
@@ -170,28 +167,25 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
-    if (widget.detailDocument['category'].toString().contains('CUIDADOR')) {
+    if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
-          category: widget.detailDocument['category'],
-          sumscore: widget.detailDocument['score'],
-          nevaluations: widget.detailDocument['nevaluations'],
-          pricing: widget.detailDocument['pricing'],
-          description: widget.detailDocument['description']);
+          category: widget.detailDocument.category,
+          sumscore: widget.detailDocument.score,
+          nevaluations: widget.detailDocument.nevaluations,
+          pricing: widget.detailDocument.pricing,
+          description: widget.detailDocument.description);
     } else {
       return Comments(
         id: widget.detailDocument.id,
-        category: widget.detailDocument['category'],
-        description: widget.detailDocument['description'],
+        category: widget.detailDocument.category,
+        description: widget.detailDocument.description,
       );
     }
   }
 
   Widget _setCarousel() {
-    return FutureBuilder(
-      future: getImages(),
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting) {
+   
           return CarouselSlider(
             options: CarouselOptions(
               aspectRatio: 2.0,
@@ -200,7 +194,7 @@ class _DetailPageState extends State<DetailPage> {
               initialPage: 0,
               autoPlay: false,
             ),
-            items: snapshot.data
+            items: widget.detailDocument.imgRef
                 .map((element) => Container(
                       child: Center(
                           child: Image.network(element,
@@ -208,10 +202,7 @@ class _DetailPageState extends State<DetailPage> {
                     ))
                 .toList(),
           );
-        } else {
-          return Container();
-        }
-      },
-    );
+       
+    
   }
 }

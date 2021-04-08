@@ -47,7 +47,7 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
-    // score=json['score'];
+     score=5.0;
     nevaluations=json['nevaluations'];
   }
 }
