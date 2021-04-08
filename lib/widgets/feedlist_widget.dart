@@ -53,7 +53,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.docs.length,
         itemBuilder: (BuildContext context, index) {
           DocumentSnapshot _data = this.widget.snapshot.data.docs[index];
-
+          print(_data.id);
           List<dynamic> _fotos = _data['imgRef'];
           String _foto = _fotos.first;
           _selectedReason = null;
@@ -61,7 +61,7 @@ class _ListFeedState extends State<ListFeed> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DetailPage(_data)),
+                    builder: (BuildContext context) => DetailPage(_data,this.widget.follows,this.widget.voidCallback)),
               );
             },
             child: Card(
@@ -164,6 +164,7 @@ class _ListFeedState extends State<ListFeed> {
                       child: Column(
                         children: [
                           _isFollowedOption(id, this.widget.follows),
+                          
                         ],
                       ),
                       value: 1,
@@ -362,7 +363,7 @@ class _ListFeedState extends State<ListFeed> {
         Icon(
           Icons.flag,
           size: 18,
-          color: Colors.red,
+          color: Colors.grey,
         ),
         Text(
           'Reportar',
