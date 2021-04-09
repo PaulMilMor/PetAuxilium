@@ -9,8 +9,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'button_widget.dart';
+import 'package:pet_auxilium/widgets/closepub_widget.dart';
 
-enum ClosePub { adopcion, perdido, cuidador, calle, negocio, eliminar }
+enum ClosePub { option1, eliminar }
 
 class ListFeed extends StatefulWidget {
   ListFeed(
@@ -52,7 +53,7 @@ class _ListFeedState extends State<ListFeed> {
   ];
   String _selectedReason;
   String _id;
-  ClosePub _option = ClosePub.adopcion;
+  ClosePub _option = ClosePub.option1;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -169,7 +170,7 @@ class _ListFeedState extends State<ListFeed> {
         itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 child: Column(
-                  children: [_ResolveOption()],
+                  children: [_CloseOption()],
                 ),
                 value: 5,
               ),
@@ -257,7 +258,7 @@ class _ListFeedState extends State<ListFeed> {
               print(selectedPublication.id);
               break;
             case 5:
-              _ResolveMenu(publications);
+              _ClosePubMenu(publications);
           }
         });
   }
@@ -391,7 +392,7 @@ class _ListFeedState extends State<ListFeed> {
     );
   }
 
-  Widget _ResolveOption() {
+  Widget _CloseOption() {
     return Row(
       children: [
         Icon(
@@ -568,7 +569,7 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-  void _ResolveMenu(publications) {
+  void _ClosePubMenu(publications) {
     if (publications['category'] == 'ANIMAL PERDIDO') {
       showModalBottomSheet(
           context: context,
@@ -603,6 +604,7 @@ class _ListFeedState extends State<ListFeed> {
                           indent: 50,
                           endIndent: 50,
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(top: 30, bottom: 10),
                           child: Center(
@@ -611,13 +613,14 @@ class _ListFeedState extends State<ListFeed> {
                                 style: TextStyle(fontSize: 16)),
                           ),
                         ),
+
                         Column(
                           children: <Widget>[
                             ListTile(
                               title: const Text(
                                   'La mascota perdida ya ha sido localizada'),
                               leading: Radio<ClosePub>(
-                                value: ClosePub.perdido,
+                                value: ClosePub.option1,
                                 groupValue: _option,
                                 onChanged: (ClosePub value) {
                                   setState(() {
@@ -641,7 +644,6 @@ class _ListFeedState extends State<ListFeed> {
                             ),
                           ],
                         ),
-
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(
@@ -721,7 +723,7 @@ class _ListFeedState extends State<ListFeed> {
                               title: const Text(
                                   'La mascota ya ha sido dada en adopción'),
                               leading: Radio<ClosePub>(
-                                value: ClosePub.perdido,
+                                value: ClosePub.option1,
                                 groupValue: _option,
                                 onChanged: (ClosePub value) {
                                   setState(() {
@@ -825,7 +827,7 @@ class _ListFeedState extends State<ListFeed> {
                               title: const Text(
                                   'Al chile ya me harté de andar cuidando animales'),
                               leading: Radio<ClosePub>(
-                                value: ClosePub.perdido,
+                                value: ClosePub.option1,
                                 groupValue: _option,
                                 onChanged: (ClosePub value) {
                                   setState(() {
@@ -929,7 +931,7 @@ class _ListFeedState extends State<ListFeed> {
                               title: const Text(
                                   'Ya no me interesa publicitar este negocio'),
                               leading: Radio<ClosePub>(
-                                value: ClosePub.perdido,
+                                value: ClosePub.option1,
                                 groupValue: _option,
                                 onChanged: (ClosePub value) {
                                   setState(() {
@@ -1033,7 +1035,7 @@ class _ListFeedState extends State<ListFeed> {
                               title: const Text(
                                   'El animal callejero ya ha sido atendido'),
                               leading: Radio<ClosePub>(
-                                value: ClosePub.perdido,
+                                value: ClosePub.option1,
                                 groupValue: _option,
                                 onChanged: (ClosePub value) {
                                   setState(() {
