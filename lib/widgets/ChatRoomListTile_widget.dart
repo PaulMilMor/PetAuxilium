@@ -30,7 +30,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
    
     return GestureDetector(
       onTap:(){
-
+print('dssds');
         Navigator.push(context, MaterialPageRoute(
    builder:(context)=>ChatScreenPage(userID,  name,) 
  
@@ -63,10 +63,13 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
   }
  _getUserInfo() async{
  userID=widget.chatRoomId.replaceAll(widget.myUserID, "").replaceAll("_", "");
- UserModel user= await _db.getUser((userID));
- 
- name=user.name;
- urlImg=user.imgRef;
+ DocumentSnapshot document= await _db.getUserById(userID);
+ print(document.data());
+
+ setState(() {
+    name=document.data()["name"];
+ urlImg=document.data()["imgRef"];
+ });
  }
 _goToChat(){
  

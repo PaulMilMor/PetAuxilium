@@ -542,7 +542,7 @@ class _ListFeedState extends State<ListFeed> {
   Widget _rating(PublicationModel publication) {
     bool isCuidador = publication.category == 'CUIDADOR';
     double mean = 0;
-    if (isCuidador) mean = 1/ 1;
+    if (isCuidador) mean = publication.score/ publication.nevaluations;
     return Row(
       children: [
         if (isCuidador)

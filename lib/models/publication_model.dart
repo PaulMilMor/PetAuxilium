@@ -10,7 +10,7 @@ class PublicationModel {
   String userID;
   String pricing;
   int nevaluations;
-  double score;
+  var score;
   PublicationModel(
       {this.id,
       this.category,
@@ -23,20 +23,6 @@ class PublicationModel {
       this.nevaluations,
       this.score});
 
-// class AddAdoption {
-//   String id;
-//   String category;
-//   String name;
-//   String description;
-//   List<dynamic> location;
-//   List<dynamic> imgRef;
-//   AddAdoption(
-//       {this.id,
-//       this.category,
-//       this.name,
-//       this.description,
-//       this.location,
-//       this.imgRef});
 
   PublicationModel.fromJsonMap(Map<String, dynamic> json, String id) {
     id = id;
@@ -47,7 +33,7 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
-     score=5.0;
+     score= json['score'];
     nevaluations=json['nevaluations'];
   }
 }

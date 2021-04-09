@@ -49,7 +49,7 @@ class _NavigationPageState extends State<NavigationPage> {
     ChatRooms(),
     //Adoptionpage(),
     PublicationPage(),
-    ChatRooms(),
+    null,
     AccountPage()
   ];
   final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];
