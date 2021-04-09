@@ -61,7 +61,8 @@ class _ListFeedState extends State<ListFeed> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DetailPage(_data,this.widget.follows,this.widget.voidCallback)),
+                    builder: (BuildContext context) => DetailPage(
+                        _data, this.widget.follows, this.widget.voidCallback)),
               );
             },
             child: Card(
@@ -164,7 +165,6 @@ class _ListFeedState extends State<ListFeed> {
                       child: Column(
                         children: [
                           _isFollowedOption(id, this.widget.follows),
-                          
                         ],
                       ),
                       value: 1,
@@ -212,7 +212,7 @@ class _ListFeedState extends State<ListFeed> {
                 value: 4,
               ),
             ],
-        onSelected: (value) {
+        onSelected: (value) async {
           switch (value) {
             case 1:
               _addFollow(id);
@@ -232,13 +232,44 @@ class _ListFeedState extends State<ListFeed> {
               _banUser(selectedPublication.userID);
               break;
             case 4:
+              List users = [];
               _selectedReason = null;
               _id = null;
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications);
-              _ReportMenu(/*publications*/);
+              
               selectedPublication.id = id;
               _id = id;
+              var found = false;
+
+             // _ReportMenu(/*publications*/);
+              await _firestoreInstance
+                  .collection('reports')
+                  .get()
+                  .then((value) {
+                value.docs.forEach((element) {
+                  print(element.id);
+                  if (element.id == _id) {
+                    found = true;
+                    
+
+                    users = element.get('userid');
+                    if (users.contains(_prefs.userID)) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(SnackBar(
+                            content:
+                                Text('Usted ya reporto esta publicación')));
+                      //print("Ya existe el usuario");
+                    }else{
+                      _ReportMenu(/*publications*/);                      
+                    }
+                  }
+                });
+              });
+              if (found == false) {
+                _ReportMenu(/*publications*/); 
+              }
               print(selectedPublication.id);
           }
         });
@@ -469,14 +500,14 @@ class _ListFeedState extends State<ListFeed> {
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
-                                          if (users.contains(_prefs.userID)) {
+                                          /*if (users.contains(_prefs.userID)) {
                                             ScaffoldMessenger.of(context)
                                               ..removeCurrentSnackBar()
                                               ..showSnackBar(SnackBar(
                                                   content: Text(
                                                       'Usted ya reporto esta publicación')));
                                             //print("Ya existe el usuario");
-                                          } else {
+                                          } else {*/
                                             users.add(_prefs.userID);
                                             print(users);
                                             ReportModel update = ReportModel(
@@ -492,7 +523,8 @@ class _ListFeedState extends State<ListFeed> {
                                                       'Se reporto esta publicación')));
                                           }
                                         }
-                                      });
+                                      //}
+                                      );
                                     });
 
                                     if (found == false) {
