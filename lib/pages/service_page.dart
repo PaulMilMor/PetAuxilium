@@ -35,10 +35,10 @@ class _ServicePageState extends State<ServicePage> {
             future: _db.getFollows(_prefs.userID),
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> follow) {
-              return FutureBuilder(
-                  future: _getFeed(_category),
+              return StreamBuilder(
+                  stream: _getFeed(_category),
                   //future: _db.getPublications('publications', _category),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListFeed(snapshot: snapshot, follows: follow.data);
                     } else {
@@ -88,28 +88,37 @@ class _ServicePageState extends State<ServicePage> {
         return 'VENTAS';
         break;
       case 'Veterinarias':
-        return 'Veterinarias';
+        return 'VETERINARIA';
         break;
       default:
         return '';
     }
   }
 
-  Future<QuerySnapshot> _getFeed(String service) async {
+  Stream _getFeed(String service) {
     switch (service) {
       case 'ADOPCIÓN':
 
       case 'ANIMAL PERDIDO':
       case 'SITUACIÓN DE CALLE':
-        return _db.getPublications('publications', service);
+        return _db.streamPubsServices(service);
+        //return _db.getPublications('publications', service);
         break;
       case 'CUIDADOS ESPECIALES':
-      case 'CONSULTORÍA':
-      case 'ENTRENAMIENTO':
       case 'GUARDERÍA / HOTEL ANIMAL':
       case 'LIMPIEZA / ASEO':
+        return _db.serviceFeed(service);
+        break;
+      case 'CONSULTORÍA':
+      case 'ENTRENAMIENTO':
       case 'SERVICIOS DE SALUD':
-        return _db.getKeepers(service);
+        return _db.streamKeepersServices(service);
+        //return _db.getKeepers(service);
+        break;
+      case 'ESTÉTICA':
+      case 'VETERINARIA':
+      case 'VENTAS':
+        return _db.streamBusinessServices(service);
         break;
     }
   }

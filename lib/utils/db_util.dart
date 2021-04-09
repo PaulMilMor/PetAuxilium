@@ -274,6 +274,62 @@ print(docRef.documentID);*/
         .get();
   }
 
+  Stream<List<PublicationModel>> streamPubsServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamKeepersServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: 'CUIDADOR')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamBusinessServices(String category) =>
+      _firestoreInstance
+          .collection('business')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream serviceFeed(String category) => Rx.combineLatest2(
+      streamKeepersServices(category),
+      streamBusinessServices(category),
+      (List<PublicationModel> p, List<PublicationModel> b) => p + b);
   Future<QuerySnapshot> getKeepers(String service) async {
     return _firestoreInstance
         .collection('publications')

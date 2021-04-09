@@ -548,8 +548,7 @@ class _DetailPageState extends State<DetailPage> {
     if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
-
-          // services: widget.detailDocument['services']);
+          services: widget.detailDocument.services,
           category: widget.detailDocument.category,
           sumscore: widget.detailDocument.score,
           nevaluations: widget.detailDocument.nevaluations,
