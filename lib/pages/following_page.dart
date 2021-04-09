@@ -50,8 +50,8 @@ if (follow.connectionState!=ConnectionState.waiting) {
             ? Center(
                 child: Text('No sigues ninguna publicación'),
               )
-            : FutureBuilder(
-                future: _db.getFollowPublications(follow.data),
+            : StreamBuilder(
+                stream: _db.getFollowPublications(follow.data),
                 builder: (context, snapshot) {
                   return (snapshot.connectionState == ConnectionState.waiting)
                       ? Center(child: CircularProgressIndicator())

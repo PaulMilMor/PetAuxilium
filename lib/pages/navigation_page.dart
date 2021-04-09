@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
+import 'package:pet_auxilium/pages/chatsrooms_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/report_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
@@ -16,7 +17,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
-    if (index != 1 && index != 3) {
+    if ( index != 3) {
       setState(() {
         _prefs.selectedIndex = index;
       });
@@ -45,10 +46,10 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<Widget> _tabs = [
     // Feed(),
     StartupPage(),
-    null,
+    ChatRooms(),
     //Adoptionpage(),
     PublicationPage(),
-    CreateBusinessPage(),
+    ChatRooms(),
     AccountPage()
   ];
   final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];

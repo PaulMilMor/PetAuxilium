@@ -14,9 +14,9 @@ import 'package:pet_auxilium/widgets/comments_widget.dart';
 List<String> _lista = [];
 
 class DetailPage extends StatefulWidget {
-  DocumentSnapshot detailDocument;
-  DetailPage(this.detailDocument,this.follows,this.voidCallback);
-    List<String> follows;
+  PublicationModel detailDocument;
+  DetailPage(this.detailDocument, this.follows, this.voidCallback);
+  List<String> follows;
   final VoidCallback voidCallback;
 
   @override
@@ -43,8 +43,8 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     super.initState();
     setState(() {
-      avgscore = widget.detailDocument['score'] /
-          widget.detailDocument['nevaluations'];
+      avgscore =
+          widget.detailDocument.score / widget.detailDocument.nevaluations;
     });
   }
 
@@ -66,7 +66,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: CustomScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
-                      _appBar(widget.detailDocument['name']),
+                      _appBar(widget.detailDocument.name),
 
                       /*SliverAppBar(
                         pinned: true,
@@ -80,7 +80,7 @@ class _DetailPageState extends State<DetailPage> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              widget.detailDocument['category'],
+                              widget.detailDocument.category,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.green,
@@ -89,7 +89,7 @@ class _DetailPageState extends State<DetailPage> {
                             SizedBox(
                               height: 7,
                             ),
-                            const Divider(
+                            Divider(
                               color: Colors.black45,
                               height: 5,
                               thickness: 1,
@@ -103,7 +103,7 @@ class _DetailPageState extends State<DetailPage> {
                             Align(
                               alignment: Alignment.center,
                               child: _mapsUtil.getLocationText(
-                                  widget.detailDocument['location'].first),
+                                  widget.detailDocument.location.first),
                             ),
 
                             _bottomSection(),
@@ -124,6 +124,7 @@ class _DetailPageState extends State<DetailPage> {
     print(widget.detailDocument.id);
     return _lista = await _db.getAllImages(widget.detailDocument.id);
   }
+
   _addFollow(
     String id,
   ) async {
@@ -138,6 +139,7 @@ class _DetailPageState extends State<DetailPage> {
       this.widget.voidCallback();
     }
   }
+
   Widget _appBar(String name) {
     return SliverAppBar(
       pinned: true,
@@ -148,99 +150,103 @@ class _DetailPageState extends State<DetailPage> {
       actions: [
         //TODO: Actualmente se muestran los 3 puntitos pero no hacen nada
         if (_prefs.userID != ' ')
-        
           PopupMenuButton(
               icon: Icon(
                 Icons.more_vert,
                 color: Color.fromRGBO(210, 210, 210, 1),
               ),
               itemBuilder: (BuildContext context) => [
-                _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                  ? null
-                  : PopupMenuItem(
+                    _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Column(
+                              children: [
+                                _isFollowedOption(widget.detailDocument.id,
+                                    this.widget.follows),
+                              ],
+                            ),
+                            value: 1,
+                          ),
+                    _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  size: 11,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Eliminar',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                              ],
+                            ),
+                            value: 2,
+                          ),
+                    _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.person_remove_alt_1_sharp,
+                                  size: 11,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Suspender Cuenta',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                              ],
+                            ),
+                            value: 3,
+                          ),
+                    PopupMenuItem(
                       child: Column(
-                        children: [
-                          _isFollowedOption(widget.detailDocument.id, this.widget.follows),
-                        ],
+                        children: [_ReportOption()],
                       ),
-                      value: 1,
+                      value: 4,
                     ),
-              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                  ? null
-                  : PopupMenuItem(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            size: 11,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            'Eliminar',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ],
-                      ),
-                      value: 2,
-                    ),
-              _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                  ? null
-                  : PopupMenuItem(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.person_remove_alt_1_sharp,
-                            size: 11,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            'Suspender Cuenta',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ],
-                      ),
-                      value: 3,
-                    ),
-              PopupMenuItem(
-                child: Column(
-                  children: [_ReportOption()],
-                ),
-                value: 4,
-              ),
+                  ],
+              onSelected: (value) {
+                switch (value) {
+                  case 1:
+                    _addFollow(widget.detailDocument.id);
+                    break;
+                  case 2:
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    //   PublicationModel.fromJsonMap(widget.detailDocument.data());
 
-              ],
-          onSelected: (value) {
-          switch (value) {
-            case 1:
-              _addFollow(widget.detailDocument.id);
-              break;
-            case 2:
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(widget.detailDocument.data());
-
-              print(widget.detailDocument.data());
-              selectedPublication.id = widget.detailDocument.id;
-              print(selectedPublication);
-              _deletePublication(widget.detailDocument.id, "publications", selectedPublication);
-              break;
-            case 3:
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(widget.detailDocument.data());
-              _banUser(selectedPublication.userID);
-              break;
-            case 4:
-              _selectedReason = null;
-              _id = null;
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(widget.detailDocument.data());
-              _ReportMenu(/*publications*/);
-              selectedPublication.id = widget.detailDocument.id;
-              _id = widget.detailDocument.id;
-              print(selectedPublication.id);
-          }
-        })
+                    // print(widget.detailDocument.data());
+                    selectedPublication.id = widget.detailDocument.id;
+                    print(selectedPublication);
+                    _deletePublication(widget.detailDocument.id, "publications",
+                        selectedPublication);
+                    break;
+                  case 3:
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    /* PublicationModel.fromJsonMap(
+                            widget.detailDocument.data());*/
+                    _banUser(selectedPublication.userID);
+                    break;
+                  case 4:
+                    _selectedReason = null;
+                    _id = null;
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    //      PublicationModel.fromJsonMap(
+                    //         widget.detailDocument.data());
+                    _ReportMenu(/*publications*/);
+                    selectedPublication.id = widget.detailDocument.id;
+                    _id = widget.detailDocument.id;
+                    print(selectedPublication.id);
+                }
+              })
       ],
-      
       leading: IconButton(
         icon: new Icon(
           Icons.arrow_back_ios,
@@ -261,6 +267,7 @@ class _DetailPageState extends State<DetailPage> {
       ),
     );
   }
+
   _deletePublication(id, collection, selectedPublication) {
     _db.deleteDocument(id, collection);
     if (this.widget.voidCallback != null) {
@@ -310,8 +317,8 @@ class _DetailPageState extends State<DetailPage> {
     //_db.banUser(id);
   }
 
-Widget _isFollowedOption(String id, List<String> follow) {
-  print(id);
+  Widget _isFollowedOption(String id, List<String> follow) {
+    print(id);
     if (follow.contains(id)) {
       return Row(
         children: [
@@ -342,6 +349,7 @@ Widget _isFollowedOption(String id, List<String> follow) {
       );
     }
   }
+
   Widget _ReportOption() {
     return Row(
       children: [
@@ -357,6 +365,7 @@ Widget _isFollowedOption(String id, List<String> follow) {
       ],
     );
   }
+
   void _ReportMenu(/*reports*/) {
     showModalBottomSheet(
         context: context,
@@ -516,6 +525,7 @@ Widget _isFollowedOption(String id, List<String> follow) {
           );
         });
   }
+
   Widget _setBackIcon(context2) {
     return Positioned(
         right: 0.0,
@@ -535,49 +545,41 @@ Widget _isFollowedOption(String id, List<String> follow) {
   }
 
   _bottomSection() {
-    if (widget.detailDocument['category'].toString().contains('CUIDADOR')) {
+    if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
-          category: widget.detailDocument['category'],
-          sumscore: widget.detailDocument['score'],
-          nevaluations: widget.detailDocument['nevaluations'],
-          pricing: widget.detailDocument['pricing'],
-          description: widget.detailDocument['description'],
-          services: widget.detailDocument['services']);
+
+          // services: widget.detailDocument['services']);
+          category: widget.detailDocument.category,
+          sumscore: widget.detailDocument.score,
+          nevaluations: widget.detailDocument.nevaluations,
+          pricing: widget.detailDocument.pricing,
+          description: widget.detailDocument.description);
     } else {
       return Comments(
         id: widget.detailDocument.id,
-        category: widget.detailDocument['category'],
-        description: widget.detailDocument['description'],
+        category: widget.detailDocument.category,
+        description: widget.detailDocument.description,
       );
     }
   }
 
   Widget _setCarousel() {
-    return FutureBuilder(
-      future: getImages(),
-      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting) {
-          return CarouselSlider(
-            options: CarouselOptions(
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              initialPage: 0,
-              autoPlay: false,
-            ),
-            items: snapshot.data
-                .map((element) => Container(
-                      child: Center(
-                          child: Image.network(element,
-                              fit: BoxFit.cover, width: 300)),
-                    ))
-                .toList(),
-          );
-        } else {
-          return Container();
-        }
-      },
+    return CarouselSlider(
+      options: CarouselOptions(
+        aspectRatio: 2.0,
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
+        initialPage: 0,
+        autoPlay: false,
+      ),
+      items: widget.detailDocument.imgRef
+          .map((element) => Container(
+                child: Center(
+                    child:
+                        Image.network(element, fit: BoxFit.cover, width: 300)),
+              ))
+          .toList(),
     );
   }
 }

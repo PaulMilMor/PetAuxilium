@@ -40,8 +40,8 @@ class PublicationModel {
 //       this.location,
 //       this.imgRef});
 
-  PublicationModel.fromJsonMap(Map<String, dynamic> json) {
-    id = json['id'];
+  PublicationModel.fromJsonMap(Map<String, dynamic> json, String id) {
+    id = id;
     category = json['category'];
     name = json['name'];
     description = json['description'];
@@ -49,8 +49,10 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
-    nevaluations = json['nevaluations'];
-    score = json['score'].toDouble();
+    //nevaluations = json['nevaluations'];
+    //score = json['score'].toDouble();
     services = json['services'];
+    score = 5.0;
+    nevaluations = json['nevaluations'];
   }
 }
