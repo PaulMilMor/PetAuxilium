@@ -229,7 +229,7 @@ class _ListFeedState extends State<ListFeed> {
                 value: 4,
               ),
             ],
-        onSelected: (value) {
+        onSelected: (value) async {
           switch (value) {
             case 1:
               _addFollow(id);
@@ -249,14 +249,43 @@ class _ListFeedState extends State<ListFeed> {
               _banUser(selectedPublication.userID);
               break;
             case 4:
+              List users = [];
               _selectedReason = null;
               _id = null;
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
-              _ReportMenu(/*publications*/);
 
               selectedPublication.id = id;
               _id = id;
+              var found = false;
+
+              // _ReportMenu(/*publications*/);
+              await _firestoreInstance
+                  .collection('reports')
+                  .get()
+                  .then((value) {
+                value.docs.forEach((element) {
+                  print(element.id);
+                  if (element.id == _id) {
+                    found = true;
+
+                    users = element.get('userid');
+                    if (users.contains(_prefs.userID)) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(SnackBar(
+                            content:
+                                Text('Usted ya reporto esta publicación')));
+                      //print("Ya existe el usuario");
+                    } else {
+                      _ReportMenu(/*publications*/);
+                    }
+                  }
+                });
+              });
+              if (found == false) {
+                _ReportMenu(/*publications*/);
+              }
               print(selectedPublication.id);
               break;
             case 5:
@@ -509,30 +538,31 @@ class _ListFeedState extends State<ListFeed> {
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
-                                          if (users.contains(_prefs.userID)) {
+                                          /*if (users.contains(_prefs.userID)) {
                                             ScaffoldMessenger.of(context)
                                               ..removeCurrentSnackBar()
                                               ..showSnackBar(SnackBar(
                                                   content: Text(
                                                       'Usted ya reporto esta publicación')));
                                             //print("Ya existe el usuario");
-                                          } else {
-                                            users.add(_prefs.userID);
-                                            print(users);
-                                            ReportModel update = ReportModel(
-                                              publicationid: _id,
-                                              userid: users,
-                                            );
-                                            _db.updatereport(
-                                                update, _selectedReason);
-                                            ScaffoldMessenger.of(context)
-                                              ..removeCurrentSnackBar()
-                                              ..showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Se reporto esta publicación')));
-                                          }
+                                          } else {*/
+                                          users.add(_prefs.userID);
+                                          print(users);
+                                          ReportModel update = ReportModel(
+                                            publicationid: _id,
+                                            userid: users,
+                                          );
+                                          _db.updatereport(
+                                              update, _selectedReason);
+                                          ScaffoldMessenger.of(context)
+                                            ..removeCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Se reporto esta publicación')));
                                         }
-                                      });
+                                      }
+                                          //}
+                                          );
                                     });
 
                                     if (found == false) {

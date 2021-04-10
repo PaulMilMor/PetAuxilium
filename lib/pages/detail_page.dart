@@ -49,7 +49,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext contex) {
     //getImages();
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -67,15 +67,6 @@ class _DetailPageState extends State<DetailPage> {
                     physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
                       _appBar(widget.detailDocument.name),
-
-                      /*SliverAppBar(
-                        pinned: true,
-                        snap: false,
-                        floating: false,
-                        elevation: 1,
-                        expandedHeight: 300,
-                        leading: IconButton
-                      ),*/
                       SliverToBoxAdapter(
                         child: Column(
                           children: <Widget>[
@@ -112,12 +103,7 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ],
                   ))),
-        ) /*;}
-            });*/
-        //}
-        );
-    /*)
-        );*/
+        ));
   }
 
   Future<List<String>> getImages() async {
@@ -210,7 +196,7 @@ class _DetailPageState extends State<DetailPage> {
                       value: 4,
                     ),
                   ],
-              onSelected: (value) {
+              onSelected: (value) async {
                 switch (value) {
                   case 1:
                     _addFollow(widget.detailDocument.id);
@@ -234,16 +220,45 @@ class _DetailPageState extends State<DetailPage> {
                     _banUser(selectedPublication.userID);
                     break;
                   case 4:
+                    List users = [];
                     _selectedReason = null;
                     _id = null;
                     PublicationModel selectedPublication =
                         widget.detailDocument;
-                    //      PublicationModel.fromJsonMap(
-                    //         widget.detailDocument.data());
-                    _ReportMenu(/*publications*/);
+                    //   PublicationModel.fromJsonMap(widget.detailDocument.data());
+                    //_ReportMenu(/*publications*/);
                     selectedPublication.id = widget.detailDocument.id;
                     _id = widget.detailDocument.id;
+                    var found = false;
                     print(selectedPublication.id);
+                    await _firestoreInstance
+                        .collection('reports')
+                        .get()
+                        .then((value) {
+                      value.docs.forEach((element) {
+                        print(element.id);
+                        if (element.id == _id) {
+                          found = true;
+
+                          users = element.get('userid');
+                          if (users.contains(_prefs.userID)) {
+                            ScaffoldMessenger.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Usted ya reporto esta publicación')));
+                            //print("Ya existe el usuario");
+                          } else {
+                            _ReportMenu(/*publications*/);
+                          }
+                        }
+                      });
+                    });
+                    if (found == false) {
+                      _ReportMenu(/*publications*/);
+                    }
+                    print(selectedPublication.id);
+                    break;
                 }
               })
       ],
@@ -462,30 +477,31 @@ class _DetailPageState extends State<DetailPage> {
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
-                                          if (users.contains(_prefs.userID)) {
+                                          /*if (users.contains(_prefs.userID)) {
                                             ScaffoldMessenger.of(context)
                                               ..removeCurrentSnackBar()
                                               ..showSnackBar(SnackBar(
                                                   content: Text(
                                                       'Usted ya reporto esta publicación')));
                                             //print("Ya existe el usuario");
-                                          } else {
-                                            users.add(_prefs.userID);
-                                            print(users);
-                                            ReportModel update = ReportModel(
-                                              publicationid: _id,
-                                              userid: users,
-                                            );
-                                            _db.updatereport(
-                                                update, _selectedReason);
-                                            ScaffoldMessenger.of(context)
-                                              ..removeCurrentSnackBar()
-                                              ..showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Se reporto esta publicación')));
-                                          }
+                                          } else {*/
+                                          users.add(_prefs.userID);
+                                          print(users);
+                                          ReportModel update = ReportModel(
+                                            publicationid: _id,
+                                            userid: users,
+                                          );
+                                          _db.updatereport(
+                                              update, _selectedReason);
+                                          ScaffoldMessenger.of(context)
+                                            ..removeCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Se reporto esta publicación')));
                                         }
-                                      });
+                                      }
+                                          // }
+                                          );
                                     });
 
                                     if (found == false) {
