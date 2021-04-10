@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
+import 'package:pet_auxilium/pages/notifications_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/complaint_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
@@ -10,7 +11,6 @@ import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
 import 'package:pet_auxilium/pages/map_publication_page.dart';
 import 'package:pet_auxilium/pages/service_page.dart';
-
 import 'package:pet_auxilium/pages/signup_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/pages/navigation_page.dart';
@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
           //'AdoptionPage': (BuildContext context) => Adoptionpage(),
           // 'Feed': (BuildContext context) => Feed(),
           'PublicationPage': (BuildContext context) => PublicationPage(),
+          'NotificationsPage': (BuildContext context) => NotificationsPage(),
           'mapPublication': (BuildContext context) => MapPagePublication(),
           'startupPage': (BuildContext context) => StartupPage(),
           'caretakerPage': (BuildContext context) => KeeperPage(),

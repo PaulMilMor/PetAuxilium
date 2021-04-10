@@ -40,7 +40,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   List<LatLng> _locations;
   List<Object> images = [];
-
+  final picker = ImagePicker();
   final MapsUtil mapsUtil = MapsUtil();
   @override
   void initState() {
@@ -340,9 +340,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   Future _onAddImageClick(int index) async {
+    //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
+    final _imageFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);

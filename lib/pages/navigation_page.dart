@@ -3,10 +3,10 @@ import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/report_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
-
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/notifications_page.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -48,6 +48,7 @@ class _NavigationPageState extends State<NavigationPage> {
     null,
     //Adoptionpage(),
     PublicationPage(),
+    NotificationsPage(),
     CreateBusinessPage(),
     AccountPage()
   ];
