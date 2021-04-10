@@ -37,6 +37,7 @@ void initState() {
                  
                    
                       print('Necesito tugsteno');
+                      print(ds.id);
   return ChatRoomListTile(ds["lastMessage"], ds.id,_prefs.userID,);
                    
                     
