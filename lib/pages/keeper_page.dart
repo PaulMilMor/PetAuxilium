@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -31,8 +33,15 @@ class KeeperPageState extends State<KeeperPage> {
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
 
-  String _selectedCategory;
-  List listItems = ['ENTRENAMIENTO'];
+  List<String> _selectedServices = [];
+  List listItems = [
+    'CUIDADOS ESPECIALES',
+    'CONSULTORÍA',
+    'ENTRENAMIENTO',
+    'GUARDERÍA / HOTEL ANIMAL',
+    'LIMPIEZA / ASEO',
+    'SERVICIOS DE SALUD'
+  ];
   String _pricing;
   String _desc;
 
@@ -44,6 +53,7 @@ class KeeperPageState extends State<KeeperPage> {
   List<File> _listImages = [];
   final picker = ImagePicker();
   FocusScopeNode _node;
+  //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
   void initState() {
     super.initState();
     setState(() {
@@ -55,7 +65,7 @@ class KeeperPageState extends State<KeeperPage> {
     });
     _pricing = prefs.keeperPricing ?? ' ';
     _desc = prefs.keeperDescription;
-    _selectedCategory = 'ENTRENAMIENTO';
+    //_selectedCategory = 'ENTRENAMIENTO';
     _pricingTxtController = TextEditingController(text: _pricing);
 
     _descTxtController = TextEditingController(text: _desc);
@@ -195,6 +205,7 @@ class KeeperPageState extends State<KeeperPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
+            _services(),
             _pricingTxt(),
             _descTxt(),
             buildGridView(),
@@ -205,38 +216,63 @@ class KeeperPageState extends State<KeeperPage> {
     );
   }
 
-  Widget _category() {
+  Widget _services() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 8, 8, 6),
-      child: Center(
-          child: Column(children: [
-        Container(
-          margin: const EdgeInsets.only(right: 4.5),
-          child: Text(
-            'Servicios que ofrece:',
-            style: TextStyle(fontSize: 18),
+      margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
+      child: MultiSelectBottomSheetField<String>(
+        //key: _multiSelectKey,
+        initialChildSize: 0.7,
+        maxChildSize: 0.95,
+        cancelText: Text(
+          'CANCELAR',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+        ),
+        confirmText: Text(
+          'OK',
+          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+        ),
+        selectedColor: Color.fromRGBO(49, 232, 93, 1),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(235, 235, 235, 1),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: Border.all(
+            color: Color.fromRGBO(235, 235, 235, 1),
+            width: 6,
           ),
         ),
-        Container(
-          child: GrayDropdownButton(
-            hint: Text("Selecciona una categoria"),
-            value: _selectedCategory,
-            onChanged: (newValue) {
-              prefs.keeperCategory = newValue;
-              setState(() {
-                _selectedCategory = newValue;
-              });
-            },
-            items: listItems.map((valueItem) {
-              return DropdownMenuItem(
-                value: valueItem,
-                child: Text(valueItem),
-              );
-            }).toList(),
+        title: Text(
+          'Servicios',
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-        )
-      ])),
+        ),
+        buttonText: Text(
+          "Servicios que ofrece",
+          style: TextStyle(
+            //color: Color.fromRGBO(202, 202, 202, 1),
+            fontSize: 16,
+          ),
+        ),
+        buttonIcon: Icon(
+          Icons.arrow_drop_down, color: Colors.grey[800],
+          //color: Colors.blue,
+        ),
+        items: listItems
+            .map((item) => MultiSelectItem<String>(item, item))
+            .toList(),
+        searchable: false,
+
+        onConfirm: (values) {
+          setState(() {
+            _selectedServices = values;
+          });
+          // _multiSelectKey.currentState.validate();
+        },
+        chipDisplay: MultiSelectChipDisplay.none(),
+      ),
     );
   }
 
@@ -346,7 +382,10 @@ class KeeperPageState extends State<KeeperPage> {
             primary: Color.fromRGBO(49, 232, 93, 1),
           ),
           onPressed: () {
-            if (_pricing.isEmpty || _desc.isEmpty || imagesRef.isEmpty) {
+            if (_pricing.isEmpty ||
+                _desc.isEmpty ||
+                imagesRef.isEmpty ||
+                _selectedServices.isEmpty) {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -361,11 +400,12 @@ class KeeperPageState extends State<KeeperPage> {
                   userID: prefs.userID,
                   description: _desc,
                   pricing: '\$$_pricing por hora',
-                  imgRef: imagesRef);
+                  imgRef: imagesRef,
+                  services: _selectedServices);
               _db.addKeeper(ad).then((value) {
                 prefs.keeperPricing = '';
                 prefs.keeperDescription = '';
-                prefs.keeperCategory = 'ENTRENAMIENTO';
+                //prefs.keeperCategory = 'ENTRENAMIENTO';
                 Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()

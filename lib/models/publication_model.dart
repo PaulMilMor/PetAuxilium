@@ -11,6 +11,7 @@ class PublicationModel {
   String pricing;
   int nevaluations;
   var score;
+  List<dynamic> services;
   PublicationModel(
       {this.id,
       this.category,
@@ -21,8 +22,8 @@ class PublicationModel {
       this.userID,
       this.pricing,
       this.nevaluations,
-      this.score});
-
+      this.score,
+      this.services});
 
   PublicationModel.fromJsonMap(Map<String, dynamic> json, String id) {
     id = id;
@@ -33,7 +34,10 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
-     score= json['score'];
-    nevaluations=json['nevaluations'];
+    //nevaluations = json['nevaluations'];
+    //score = json['score'].toDouble();
+    services = json['services'];
+    score = json['score'];
+    nevaluations = json['nevaluations'];
   }
 }

@@ -62,6 +62,7 @@ class dbUtil {
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
+      'services': business.services,
     });
   }
 
@@ -170,6 +171,7 @@ class dbUtil {
       'pricing': ad.pricing,
       'nevaluations': 0,
       'score': 0,
+      'services': ad.services,
     });
   }
 
@@ -274,10 +276,81 @@ print(docRef.documentID);*/
         .get();
   }
 
+  Stream<List<PublicationModel>> streamPubsServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamKeepersServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: 'CUIDADOR')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamBusinessServices(String category) =>
+      _firestoreInstance
+          .collection('business')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream serviceFeed(String category) => Rx.combineLatest2(
+      streamKeepersServices(category),
+      streamBusinessServices(category),
+      (List<PublicationModel> p, List<PublicationModel> b) => p + b);
+  Future<QuerySnapshot> getKeepers(String service) async {
+    return _firestoreInstance
+        .collection('publications')
+        .where('category', isEqualTo: 'CUIDADOR')
+        .where('services', arrayContains: service)
+        .get();
+  }
+
+  Future<QuerySnapshot> getAllPublications() {
+    return _firestoreInstance.collection('publications').get();
+  }
+
   Stream get allFeedElements => Rx.combineLatest3(
       streamPublication(),
-      streamBusiness(),streamComplaints(),
-      (List<PublicationModel> p, List<PublicationModel> b, List<PublicationModel> c) => p + b+ c);
+      streamBusiness(),
+      streamComplaints(),
+      (List<PublicationModel> p, List<PublicationModel> b,
+              List<PublicationModel> c) =>
+          p + b + c);
   //Stream get feedStream =>
   Stream<List<PublicationModel>> streamPublication() =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
@@ -286,7 +359,7 @@ print(docRef.documentID);*/
           print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-         
+
           list.add(p);
         });
 
@@ -299,7 +372,7 @@ print(docRef.documentID);*/
           print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-      
+
           list.add(p);
         });
 
@@ -313,7 +386,7 @@ print(docRef.documentID);*/
           print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-          
+
           list.add(p);
         });
 
@@ -413,41 +486,32 @@ print(docRef.documentID);*/
     return reports;
   }
 
-  Stream<List<EvaluationModel>> getOpinions(String id) =>
-
-  _firestoreInstance
-        .collection('evaluations')
-        .where('publicationID', isEqualTo: id)
-        .snapshots()
-        .map((value) {
-              List<EvaluationModel> opinions = [];
-      value.docs.forEach((element) {
-        EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
-        opinion.id = element.id;
-        opinions.add(opinion);
+  Stream<List<EvaluationModel>> getOpinions(String id) => _firestoreInstance
+          .collection('evaluations')
+          .where('publicationID', isEqualTo: id)
+          .snapshots()
+          .map((value) {
+        List<EvaluationModel> opinions = [];
+        value.docs.forEach((element) {
+          EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
+          opinion.id = element.id;
+          opinions.add(opinion);
+        });
+        return opinions;
       });
-          return opinions;
-    });
 
-  
-
-  Stream<List<CommentModel>> getComments(String id)  =>
-   
-   _firestoreInstance
-        .collection('comments')
-        .where('publicationID', isEqualTo: id)
-        .snapshots()
-        .map((value) {
-          List<CommentModel> comments = [];
-      value.docs.forEach((element) {
-         
-        CommentModel comment = CommentModel.fromJsonMap(element.data());
-        comments.add(comment);
+  Stream<List<CommentModel>> getComments(String id) => _firestoreInstance
+          .collection('comments')
+          .where('publicationID', isEqualTo: id)
+          .snapshots()
+          .map((value) {
+        List<CommentModel> comments = [];
+        value.docs.forEach((element) {
+          CommentModel comment = CommentModel.fromJsonMap(element.data());
+          comments.add(comment);
+        });
+        return comments;
       });
-    return comments;
-    });
-  
-  
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;

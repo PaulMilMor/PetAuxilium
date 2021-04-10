@@ -175,52 +175,8 @@ class _CommentsState extends State<Comments> {
                             height: 10,
                           ),
 
-                          prefs.userID == ' '
-                              ? Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Color.fromRGBO(49, 232, 93, 1),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('home'));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text('Volver al inicio'),
-                                      ),
-                                      /* style: ButtonStyle(
-                                          backgroundColor:
-                                              Color.fromRGBO(49, 232, 93, 1),
-                                        ),*/
-                                    ),
-                                  ),
-                                )
-                              //FIXME: Ya hay un widget que hace esto...
-                              : Container(
-                                  width: 350,
-                                  height: 30,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _comentar();
-                                      _commentController.clear();
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        'COMENTAR',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                          comentar_button(),
+
                           Padding(
                               padding: EdgeInsets.only(
                                   bottom: MediaQuery.of(context)
@@ -258,7 +214,48 @@ class _CommentsState extends State<Comments> {
                         ]))))));
   }
 
-  //Widget
+  comentar_button() {
+    if (_commentController.text.isNotEmpty) {
+      return Container(
+        width: 310,
+        height: 30,
+        child: GestureDetector(
+          onTap: () {
+            _comentar();
+            _commentController.clear();
+          },
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'COMENTAR',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: 310,
+        height: 30,
+        child: GestureDetector(
+          onTap: () {},
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'COMENTAR',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+    }
+  }
 
   void _comentar() {
     CommentModel comentar = CommentModel(

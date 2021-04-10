@@ -1,19 +1,23 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/ChatRoomListTile_widget.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
 
 class DetailPage extends StatefulWidget {
   PublicationModel detailDocument;
-  DetailPage(this.detailDocument);
+  DetailPage(this.detailDocument, this.follows, this.voidCallback);
+  List<String> follows;
+  final VoidCallback voidCallback;
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -24,9 +28,17 @@ class _DetailPageState extends State<DetailPage> {
 
   final _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
+  final _firestoreInstance = FirebaseFirestore.instance;
   final MapsUtil _mapsUtil = MapsUtil();
   double avgscore;
-
+  List listItems = [
+    'Spam',
+    'Informacion fraudulenta',
+    'Suplantacion de identidad',
+    'Fotos Inapropiadas'
+  ];
+  String _selectedReason;
+  String _id;
   @override
   void initState() {
     super.initState();
@@ -37,7 +49,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext contex) {
     //getImages();
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -55,15 +67,6 @@ class _DetailPageState extends State<DetailPage> {
                     physics: AlwaysScrollableScrollPhysics(),
                     slivers: [
                       _appBar(widget.detailDocument.name),
-
-                      /*SliverAppBar(
-                        pinned: true,
-                        snap: false,
-                        floating: false,
-                        elevation: 1,
-                        expandedHeight: 300,
-                        leading: IconButton
-                      ),*/
                       SliverToBoxAdapter(
                         child: Column(
                           children: <Widget>[
@@ -80,15 +83,17 @@ class _DetailPageState extends State<DetailPage> {
                                 SizedBox(
                                   width: 52,
                                 ),
-                                  if ( widget.detailDocument.category.toString().contains('CUIDADOR'))  GestureDetector(
-                                  onTap: _chats(),
-                                  child:Icon(Icons.chat))
+                                if (widget.detailDocument.category
+                                    .toString()
+                                    .contains('CUIDADOR'))
+                                  GestureDetector(
+                                      onTap: _chats(), child: Icon(Icons.chat))
                               ],
                             ),
                             SizedBox(
                               height: 7,
                             ),
-                            const Divider(
+                            Divider(
                               color: Colors.black45,
                               height: 5,
                               thickness: 1,
@@ -111,12 +116,27 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ],
                   ))),
-        ) /*;}
-            });*/
-        //}
-        );
-    /*)
-        );*/
+        ));
+  }
+
+  /* Future<List<String>> getImages() async {
+    print(widget.detailDocument.id);
+    return _lista = await _db.getAllImages(widget.detailDocument.id);
+  }
+*/
+  _addFollow(
+    String id,
+  ) async {
+    if (this.widget.follows.contains(id)) {
+      this.widget.follows.remove(id);
+    } else {
+      this.widget.follows.add(id);
+    }
+    _db.updateFollows(this.widget.follows);
+    setState(() {});
+    if (this.widget.voidCallback != null) {
+      this.widget.voidCallback();
+    }
   }
 
   Widget _appBar(String name) {
@@ -134,7 +154,126 @@ class _DetailPageState extends State<DetailPage> {
                 Icons.more_vert,
                 color: Color.fromRGBO(210, 210, 210, 1),
               ),
-              itemBuilder: (BuildContext context) => []),
+              itemBuilder: (BuildContext context) => [
+                    _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Column(
+                              children: [
+                                _isFollowedOption(widget.detailDocument.id,
+                                    this.widget.follows),
+                              ],
+                            ),
+                            value: 1,
+                          ),
+                    _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  size: 11,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Eliminar',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                              ],
+                            ),
+                            value: 2,
+                          ),
+                    _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.person_remove_alt_1_sharp,
+                                  size: 11,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Suspender Cuenta',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                              ],
+                            ),
+                            value: 3,
+                          ),
+                    PopupMenuItem(
+                      child: Column(
+                        children: [_ReportOption()],
+                      ),
+                      value: 4,
+                    ),
+                  ],
+              onSelected: (value) async {
+                switch (value) {
+                  case 1:
+                    _addFollow(widget.detailDocument.id);
+                    break;
+                  case 2:
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    //   PublicationModel.fromJsonMap(widget.detailDocument.data());
+
+                    // print(widget.detailDocument.data());
+                    selectedPublication.id = widget.detailDocument.id;
+                    print(selectedPublication);
+                    _deletePublication(widget.detailDocument.id, "publications",
+                        selectedPublication);
+                    break;
+                  case 3:
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    /* PublicationModel.fromJsonMap(
+                            widget.detailDocument.data());*/
+                    _banUser(selectedPublication.userID);
+                    break;
+                  case 4:
+                    List users = [];
+                    _selectedReason = null;
+                    _id = null;
+                    PublicationModel selectedPublication =
+                        widget.detailDocument;
+                    //   PublicationModel.fromJsonMap(widget.detailDocument.data());
+                    //_ReportMenu(/*publications*/);
+                    selectedPublication.id = widget.detailDocument.id;
+                    _id = widget.detailDocument.id;
+                    var found = false;
+                    print(selectedPublication.id);
+                    await _firestoreInstance
+                        .collection('reports')
+                        .get()
+                        .then((value) {
+                      value.docs.forEach((element) {
+                        print(element.id);
+                        if (element.id == _id) {
+                          found = true;
+
+                          users = element.get('userid');
+                          if (users.contains(_prefs.userID)) {
+                            ScaffoldMessenger.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Usted ya reporto esta publicación')));
+                            //print("Ya existe el usuario");
+                          } else {
+                            _ReportMenu(/*publications*/);
+                          }
+                        }
+                      });
+                    });
+                    if (found == false) {
+                      _ReportMenu(/*publications*/);
+                    }
+                    print(selectedPublication.id);
+                    break;
+                }
+              })
       ],
       leading: IconButton(
         icon: new Icon(
@@ -155,6 +294,265 @@ class _DetailPageState extends State<DetailPage> {
         centerTitle: true,
       ),
     );
+  }
+
+  _deletePublication(id, collection, selectedPublication) {
+    _db.deleteDocument(id, collection);
+    if (this.widget.voidCallback != null) {
+      this.widget.voidCallback();
+    }
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Se eliminó la publicación'),
+          action: SnackBarAction(
+            label: "DESHACER",
+            textColor: Color.fromRGBO(49, 232, 93, 1),
+            onPressed: () {
+              _db.addPublication(selectedPublication);
+              this.widget.voidCallback();
+            },
+          ),
+        ),
+      );
+  }
+
+  _banUser(id) {
+    Widget confirmButton = TextButton(
+      child: Text("Confirmar"),
+      onPressed: () async {
+        print('entro adadadadad');
+        await _db.banUser(id);
+        setState(() {});
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      //title: Text("My title"),
+      content: Text("¿Seguro que quiere eliminar el usuario?"),
+      actions: [
+        confirmButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+    //_db.banUser(id);
+  }
+
+  Widget _isFollowedOption(String id, List<String> follow) {
+    print(id);
+    if (follow.contains(id)) {
+      return Row(
+        children: [
+          Icon(
+            Icons.remove_circle,
+            size: 11,
+            color: Colors.grey,
+          ),
+          Text(
+            'Dejar de seguir ',
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(
+            Icons.add_box,
+            size: 18,
+            color: Colors.grey,
+          ),
+          Text(
+            'Seguir ',
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _ReportOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.flag,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          'Reportar',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  void _ReportMenu(/*reports*/) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+        ),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                height: 350,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Padding(
+                      //padding: const EdgeInsets.only(bottom: 42),
+                      Center(
+                        child: Text("Reportar",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ), //),
+                      const Divider(
+                        color: Colors.black45,
+                        height: 5,
+                        thickness: 1,
+                        indent: 50,
+                        endIndent: 50,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30, bottom: 10),
+                        child: Center(
+                          child: Text(
+                              "¿Por qué estás reportando esta publicación?",
+                              style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 52),
+                        child: Center(
+                          child: GrayDropdownButton(
+                            hint: Text("Selecciona el motivo"),
+                            value: _selectedReason,
+                            onChanged: (newValue) {
+                              //prefs.adoptionCategory = newValue;
+                              setState(() {
+                                _selectedReason = newValue;
+                              });
+                            },
+                            items: listItems.map((valueItem) {
+                              return DropdownMenuItem(
+                                value: valueItem,
+                                child: Text(valueItem),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              child: Text('Cancelar',
+                                  style: TextStyle(color: Colors.black)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromRGBO(49, 232, 93, 1),
+                                ),
+                                onPressed: () async {
+                                  List users = [];
+                                  var found = false;
+                                  if (_selectedReason == null) {
+                                    ScaffoldMessenger.of(context)
+                                      ..removeCurrentSnackBar()
+                                      ..showSnackBar(SnackBar(
+                                          content: Text(
+                                              'Debe seleccionar un motivo')));
+                                  } else {
+                                    await _firestoreInstance
+                                        .collection('reports')
+                                        .get()
+                                        .then((value) {
+                                      value.docs.forEach((element) {
+                                        print(element.id);
+                                        if (element.id == _id) {
+                                          found = true;
+                                          users = element.get('userid');
+                                          /*if (users.contains(_prefs.userID)) {
+                                            ScaffoldMessenger.of(context)
+                                              ..removeCurrentSnackBar()
+                                              ..showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Usted ya reporto esta publicación')));
+                                            //print("Ya existe el usuario");
+                                          } else {*/
+                                          users.add(_prefs.userID);
+                                          print(users);
+                                          ReportModel update = ReportModel(
+                                            publicationid: _id,
+                                            userid: users,
+                                          );
+                                          _db.updatereport(
+                                              update, _selectedReason);
+                                          ScaffoldMessenger.of(context)
+                                            ..removeCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Se reporto esta publicación')));
+                                        }
+                                      }
+                                          // }
+                                          );
+                                    });
+
+                                    if (found == false) {
+                                      print(users);
+                                      users.add(_prefs.userID);
+                                      ReportModel addreport = ReportModel(
+                                        publicationid: _id,
+                                        userid: users,
+                                      );
+                                      _db.addReport(addreport);
+                                      _db.updatereport(
+                                          addreport, _selectedReason);
+                                      ScaffoldMessenger.of(context)
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(SnackBar(
+                                            content: Text(
+                                                'Se reporto esta publicación')));
+                                    }
+
+                                    print("faros en vinagre");
+                                    //Navigator.of(context).pop();
+                                  }
+                                  Navigator.of(context).pop();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('Reportar'),
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   Widget _setBackIcon(context2) {
@@ -179,6 +577,7 @@ class _DetailPageState extends State<DetailPage> {
     if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
       return Opinions(
           id: widget.detailDocument.id,
+          services: widget.detailDocument.services,
           category: widget.detailDocument.category,
           sumscore: widget.detailDocument.score,
           nevaluations: widget.detailDocument.nevaluations,
@@ -211,23 +610,24 @@ class _DetailPageState extends State<DetailPage> {
           .toList(),
     );
   }
-  
+
   _chats() {
-      var myId = _prefs.userID;
+    var myId = _prefs.userID;
     var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
     Map<String, dynamic> chatRoomInfoMap = {
-      "users": [myId,widget.detailDocument.userID]
+      "users": [myId, widget.detailDocument.userID]
     };
     _db.createChatRoom(chatRoomId, chatRoomInfoMap);
-  //  Navigator.popUntil(context, (route) => true);
-  
-  //    Navigator.of(context).push(
-    
-  //      MaterialPageRoute(
-   
-  //        builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
+    //  Navigator.popUntil(context, (route) => true);
+
+    //    Navigator.of(context).push(
+
+    //      MaterialPageRoute(
+
+    //        builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
   }
- _getChatRoomIdByIds(String a, String b) {
+
+  _getChatRoomIdByIds(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
       return "$b\_$a";
     } else {
