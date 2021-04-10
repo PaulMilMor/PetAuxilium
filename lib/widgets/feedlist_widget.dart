@@ -760,9 +760,7 @@ Widget _rating(publication) {
               size: 25,
             ),
             Text(
-              publication.nevaluations == 0
-                  ? 'N/A'
-                  : mean.toStringAsFixed(publication.nevaluations),
+              publication.nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(
