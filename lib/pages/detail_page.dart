@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
+import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
+import 'package:pet_auxilium/widgets/ChatRoomListTile_widget.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
-
-List<String> _lista = [];
 
 class DetailPage extends StatefulWidget {
   PublicationModel detailDocument;
@@ -70,12 +70,25 @@ class _DetailPageState extends State<DetailPage> {
                       SliverToBoxAdapter(
                         child: Column(
                           children: <Widget>[
-                            Text(
-                              widget.detailDocument.category,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.green,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.detailDocument.category,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 52,
+                                ),
+                                if (widget.detailDocument.category
+                                    .toString()
+                                    .contains('CUIDADOR'))
+                                  GestureDetector(
+                                      onTap: _chats(), child: Icon(Icons.chat))
+                              ],
                             ),
                             SizedBox(
                               height: 7,
@@ -106,11 +119,11 @@ class _DetailPageState extends State<DetailPage> {
         ));
   }
 
-  Future<List<String>> getImages() async {
+  /* Future<List<String>> getImages() async {
     print(widget.detailDocument.id);
     return _lista = await _db.getAllImages(widget.detailDocument.id);
   }
-
+*/
   _addFollow(
     String id,
   ) async {
@@ -596,5 +609,29 @@ class _DetailPageState extends State<DetailPage> {
               ))
           .toList(),
     );
+  }
+
+  _chats() {
+    var myId = _prefs.userID;
+    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
+    Map<String, dynamic> chatRoomInfoMap = {
+      "users": [myId, widget.detailDocument.userID]
+    };
+    _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+    //  Navigator.popUntil(context, (route) => true);
+
+    //    Navigator.of(context).push(
+
+    //      MaterialPageRoute(
+
+    //        builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
+  }
+
+  _getChatRoomIdByIds(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
   }
 }

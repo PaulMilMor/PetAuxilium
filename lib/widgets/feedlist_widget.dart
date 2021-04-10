@@ -748,7 +748,7 @@ _optionSection(publications) {
 Widget _rating(publication) {
   bool isCuidador = publication.category == 'CUIDADOR';
   double mean = 0;
-  if (isCuidador) mean = 1 / 1;
+  if (isCuidador) mean = publication.score / publication.nevaluations;
   return Row(
     children: [
       if (isCuidador)
@@ -760,7 +760,9 @@ Widget _rating(publication) {
               size: 25,
             ),
             Text(
-              publication.nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
+              publication.nevaluations == 0
+                  ? 'N/A'
+                  : mean.toStringAsFixed(publication.nevaluations),
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(

@@ -51,7 +51,9 @@ class dbUtil {
           evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
-
+    Future<DocumentSnapshot> getUserById(String userID) async {
+    return await FirebaseFirestore.instance.collection("users").doc(userID).get();
+  }
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
@@ -590,7 +592,7 @@ print(docRef.documentID);*/
     return FirebaseFirestore.instance
         .collection("chatrooms")
         // .orderBy("lastMessageSendTs", descending: true)
-        //.where("users", arrayContains: myUserID)
+       .where("users", arrayContains: _prefs.userID)
         .snapshots();
   }
 

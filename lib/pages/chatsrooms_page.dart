@@ -26,25 +26,28 @@ void initState() {
         stream: chatRoomsStream,
         builder: (context, snapshot) {
           print("vuil");
-          return snapshot.hasData
-                ? ListView.builder(
+         // print(_prefs.userID)x;
+         if(snapshot.hasData){
+    return 
+                ListView.builder(
                     itemCount: snapshot.data.docs.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       DocumentSnapshot ds = snapshot.data.docs[index];
-                      print(ds.data());
-                      List users=ds["users"];
-                      print(ds.id);
-                    print(users);
-                      if(users.contains(_prefs.userID)){
+                 
+                   
                       print('Necesito tugsteno');
-  return ChatRoomListTile(ds["lastMessage"], ds.id,_prefs.userID);
-                      }else{
-                        return Container();
-                      }
+  return ChatRoomListTile(ds["lastMessage"], ds.id,_prefs.userID,);
+                   
                     
-                    })
-                : Center(child: CircularProgressIndicator());
+                    });
+
+         }
+      
+                else{
+return Center(child: CircularProgressIndicator());
+
+                }
         },
     ),
               ),
