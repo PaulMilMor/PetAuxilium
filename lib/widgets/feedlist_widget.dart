@@ -64,7 +64,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           PublicationModel _data = this.widget.snapshot.data[index];
-
+print('id p ${_data.id}');
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
           _selectedReason = null;
