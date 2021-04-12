@@ -80,6 +80,7 @@ class dbUtil {
       'imgRef': complaint.imgRef,
       'nevaluations': 0,
       'score': 0,
+      'pricing': "",
       'date': DateTime.now(),
     });
   }
