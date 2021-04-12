@@ -122,6 +122,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: GrayTextFormField(
         controller: _nameTxtController,
         hintText: 'Nombre',
+        maxLength: 20,
+        textCapitalization: TextCapitalization.words,
         onChanged: (value) {
           setState(() {
             prefs.businessName = value;

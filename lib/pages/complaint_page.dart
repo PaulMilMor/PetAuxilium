@@ -106,6 +106,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
       child: GrayTextFormField(
           controller: _titleTxtController,
           hintText: 'Título',
+          maxLength: 20,
+          textCapitalization: TextCapitalization.words,
           onChanged: (value) {
             setState(() {
               //prefs.businessName = value;
@@ -203,8 +205,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
     return TextButton(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Text('Cancelar',
-            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
         Navigator.pop(context);

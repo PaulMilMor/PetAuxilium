@@ -55,8 +55,9 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
   }
 
 //FIXME: Esto no hace scroll al tocar las cards
+//TODO: Ajustar la búsqueda para que busque en publicaciones, denuncias y negocios
   Widget _searchResults() {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder(
         stream: (_query != "" && _query != null)
             ? FirebaseFirestore.instance
                 .collection('publications')

@@ -271,6 +271,8 @@ class PublicationPageState extends State<PublicationPage> {
           child: GrayTextFormField(
             controller: _nameTxtController,
             hintText: 'Nombre',
+            maxLength: 20,
+            textCapitalization: TextCapitalization.words,
             suffixIcon: IconButton(
               onPressed: () {
                 _nameTxtController.clear();
