@@ -5,10 +5,14 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Comments extends StatefulWidget {
   Comments(
-      {@required this.id, @required this.category, @required this.description});
+      {@required this.id,
+      @required this.category,
+      @required this.description,
+      @required this.date});
   String id;
   String category;
   String description;
+  DateTime date;
   @override
   _CommentsState createState() => _CommentsState();
 }
@@ -60,6 +64,9 @@ class _CommentsState extends State<Comments> {
 //FIXME: Así como está, si un comentario tiene más de una linea, el
 //nombre del usuario sale en vertical
   Widget _listComments(snapshot) {
+    snapshot.data
+        .sort((CommentModel a, CommentModel b) => a.date.compareTo(b.date));
+
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -300,6 +307,11 @@ class _CommentsState extends State<Comments> {
               ),
             ),
           ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36),
+            child: _infoRow(),
+          ),
           SizedBox(
             height: 35,
           ),
@@ -324,6 +336,78 @@ class _CommentsState extends State<Comments> {
         ],
       ),
     );
+  }
+
+  Widget _infoRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Row(
+            children: [
+              Placeholder(
+                fallbackWidth: 30,
+                fallbackHeight: 30,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text('John Doe'),
+            ],
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Text("Publicado el ${this.widget.date.day} de " +
+              "${_getMonth(this.widget.date.month)} de " +
+              "${this.widget.date.year}"),
+        ),
+      ],
+    );
+  }
+
+  String _getMonth(month) {
+    switch (month) {
+      case 1:
+        return 'Enero';
+        break;
+      case 2:
+        return 'Febrero';
+        break;
+      case 3:
+        return 'Marzo';
+        break;
+      case 4:
+        return 'Abril';
+        break;
+      case 5:
+        return 'Mayo';
+        break;
+      case 6:
+        return 'Junio';
+        break;
+      case 7:
+        return 'Julio';
+        break;
+      case 8:
+        return 'Agosto';
+        break;
+      case 9:
+        return 'Septiembre';
+        break;
+      case 10:
+        return 'Octubre';
+        break;
+      case 11:
+        return 'Noviembre';
+        break;
+      case 12:
+        return 'Diciembre';
+        break;
+    }
   }
 
   void _checkComments(snapshot) {
