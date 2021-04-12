@@ -83,11 +83,11 @@ class _DetailPageState extends State<DetailPage> {
                                 SizedBox(
                                   width: 52,
                                 ),
+                           
                                 if (widget.detailDocument.category
                                     .toString()
-                                    .contains('CUIDADOR'))
-                                  GestureDetector(
-                                      onTap: _chats(), child: Icon(Icons.chat))
+                                    .contains('CUIDADOR'))     _buttonChat()
+                               
                               ],
                             ),
                             SizedBox(
@@ -614,19 +614,22 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
+  
+    //  Navigator.popUntil(context, (route) => true);
+WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
     var myId = _prefs.userID;
     var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
     Map<String, dynamic> chatRoomInfoMap = {
       "users": [myId, widget.detailDocument.userID]
     };
     _db.createChatRoom(chatRoomId, chatRoomInfoMap);
-    //  Navigator.popUntil(context, (route) => true);
+    Navigator.push(context,
 
-    //    Navigator.of(context).push(
+         MaterialPageRoute(
 
-    //      MaterialPageRoute(
-
-    //        builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
+           builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
+});
+     
   }
 
   _getChatRoomIdByIds(String a, String b) {
@@ -635,5 +638,16 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       return "$a\_$b";
     }
+  }
+
+  Widget _buttonChat() {
+ return TextButton(
+   child: Icon(Icons.chat,color: Colors.grey,),
+   onPressed: (){
+
+    _chats();
+   },
+ );
+
   }
 }

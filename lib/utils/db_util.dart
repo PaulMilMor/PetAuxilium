@@ -52,12 +52,8 @@ class dbUtil {
     });
   }
 
-  Future<DocumentSnapshot> getUserById(String userID) async {
-    return await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get();
-  }
+  Future<DocumentSnapshot> getUserById(String userID) =>
+      FirebaseFirestore.instance.collection("users").doc(userID).get();
 
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
@@ -601,7 +597,7 @@ print(docRef.documentID);*/
         .snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> getChatRooms() async {
+  Stream<QuerySnapshot> getChatRooms() {
     print('fafaaf');
     //print('El user es $myUsername');
     return FirebaseFirestore.instance
