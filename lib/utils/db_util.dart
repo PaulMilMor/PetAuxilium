@@ -66,6 +66,7 @@ class dbUtil {
       'services': business.services,
       'nevaluations': 0,
       'score': 0,
+      'pricing': '',
       'date': DateTime.now(),
     });
   }
