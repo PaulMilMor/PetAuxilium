@@ -408,7 +408,7 @@ print(docRef.documentID);*/
         .update({'follows': follows});
   }
 
-  Future<List<String>> getFollows(id) async {
+  Future<List<String>> getFollowsFuture(id) async {
     List<String> follows = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
       UserModel user = UserModel.fromJsonMap(value.data());
@@ -422,7 +422,19 @@ print(docRef.documentID);*/
     });
     return follows;
   }
-
+  Stream<List<String>> getFollows(id)=>
+   
+     _firestoreInstance.collection('users').doc(id).snapshots().map((value) {
+       List<String> follows = [];
+      UserModel user = UserModel.fromJsonMap(value.data());
+      if (user.follows != null) {
+        user.follows.forEach((element) {
+          follows.add(element);
+        });
+      }
+      return follows;
+    });
+    
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
     await _firestoreInstance
