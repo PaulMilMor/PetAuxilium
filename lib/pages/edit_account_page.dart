@@ -41,7 +41,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   ImageUploadModel _image = null;
   var name;
   var imageload;
-
+  final picker = ImagePicker();
   UserModel _user;
   void initState() {
     super.initState();
@@ -231,8 +231,8 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   }
 
   Future _onAddImageClick() async {
+    final _imageFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         print('NOT NULL');
         print(_imageFile);

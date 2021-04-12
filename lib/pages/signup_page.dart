@@ -37,6 +37,7 @@ class _SignupPageState extends State<SignupPage> {
   final preferencesUtil _prefs = preferencesUtil();
   Future<File> _imageFile;
   ImageUploadModel _image = null;
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -259,8 +260,8 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future _onAddImageClick() async {
+    final _imageFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         print('NOT NULL');
         print(_imageFile);
