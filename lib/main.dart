@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
@@ -18,10 +19,10 @@ import 'package:pet_auxilium/pages/map_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final prefs = preferencesUtil();

@@ -457,6 +457,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
+  plain_notification_token:
+    dependency: "direct main"
+    description:
+      name: plain_notification_token
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2-nullsafety.0"
   platform:
     dependency: transitive
     description:

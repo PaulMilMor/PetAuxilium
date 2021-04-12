@@ -152,7 +152,7 @@ class AuthUtil {
           break;
       }
       // assert(!user.isAnonymous);
-      // assert(await user.getIdToken() != null);
+      //assert(await user.getIdToken() != null);
 
       //return user;
     }
