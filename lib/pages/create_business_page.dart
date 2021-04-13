@@ -41,9 +41,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   List<LatLng> _locations;
   List<Object> images = [];
-<<<<<<< HEAD
-  final picker = ImagePicker();
-=======
   List<String> _selectedServices = [];
   List listItems = [
     'CUIDADOS ESPECIALES',
@@ -53,7 +50,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     'VETERINARIA',
     'VENTAS'
   ];
->>>>>>> 9310fb8ad34d910c586c0e444a81b94eee7a21f9
   final MapsUtil mapsUtil = MapsUtil();
   @override
   void initState() {

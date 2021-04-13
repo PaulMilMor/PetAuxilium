@@ -53,7 +53,6 @@ dependencies:
   google_sign_in: ^4.5.9
   google_maps_flutter: ^2.0.0
   geolocator:
-<<<<<<< HEAD
   geocoding: ^2.0.0
   geocoding_platform_interface: ^2.0.0
   google_maps_flutter_platform_interface: ^2.0.0
@@ -63,14 +62,6 @@ dependencies:
   image_picker: ^0.7.0
  
   location: ^4.0.2
-=======
-  geocoding: ^1.0.5
-  shared_preferences: ^0.5.12+4
-  image_picker: ^0.6.6+5
-  rxdart: ^0.26.0
-  location: ^3.0.0
-  random_string:
->>>>>>> 9310fb8ad34d910c586c0e444a81b94eee7a21f9
   
 dev_dependencies:
   flutter_test:
