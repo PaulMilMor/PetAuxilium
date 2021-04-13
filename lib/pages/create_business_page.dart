@@ -38,7 +38,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
-
+  final picker = ImagePicker();
   List<LatLng> _locations;
   List<Object> images = [];
   List<String> _selectedServices = [];
