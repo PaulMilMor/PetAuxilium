@@ -35,12 +35,11 @@ class _ServicePageState extends State<ServicePage> {
             future: _db.getFollows(_prefs.userID),
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> follow) {
-              return FutureBuilder(
-                  future: _db.getPublications('publications', _category),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              return StreamBuilder(
+                  stream: _getFeed(_category),
+                  //future: _db.getPublications('publications', _category),
+                  builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                     
-                
                       return ListFeed(snapshot: snapshot, follows: follow.data);
                     } else {
                       return Center(
@@ -64,9 +63,63 @@ class _ServicePageState extends State<ServicePage> {
       case 'Animales\nCallejeros':
         return 'SITUACIÓN DE CALLE';
         break;
-
+      case 'Cuidados\nEspeciales':
+        return 'CUIDADOS ESPECIALES';
+        break;
+      case 'Consultoría':
+        return 'CONSULTORÍA';
+        break;
+      case 'Estética':
+        return 'ESTÉTICA';
+        break;
+      case 'Entrenamiento':
+        return 'ENTRENAMIENTO';
+        break;
+      case 'Guardería/Hotel\nde animales':
+        return 'GUARDERÍA / HOTEL ANIMAL';
+        break;
+      case 'Servicios de\nSalud':
+        return 'SERVICIOS DE SALUD';
+        break;
+      case 'Servicios de\nLimpieza':
+        return 'LIMPIEZA / ASEO';
+        break;
+      case 'Ventas':
+        return 'VENTAS';
+        break;
+      case 'Veterinarias':
+        return 'VETERINARIA';
+        break;
       default:
         return '';
+    }
+  }
+
+  Stream _getFeed(String service) {
+    switch (service) {
+      case 'ADOPCIÓN':
+
+      case 'ANIMAL PERDIDO':
+      case 'SITUACIÓN DE CALLE':
+        return _db.streamPubsServices(service);
+        //return _db.getPublications('publications', service);
+        break;
+      case 'CUIDADOS ESPECIALES':
+      case 'GUARDERÍA / HOTEL ANIMAL':
+      case 'LIMPIEZA / ASEO':
+        return _db.serviceFeed(service);
+        break;
+      case 'CONSULTORÍA':
+      case 'ENTRENAMIENTO':
+      case 'SERVICIOS DE SALUD':
+        return _db.streamKeepersServices(service);
+        //return _db.getKeepers(service);
+        break;
+      case 'ESTÉTICA':
+      case 'VETERINARIA':
+      case 'VENTAS':
+        return _db.streamBusinessServices(service);
+        break;
     }
   }
 

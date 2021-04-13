@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -31,10 +32,11 @@ class _FeedState extends State<Feed> {
         future: _db.getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print(follow.data);
-          return FutureBuilder(
-              future: _db.getAllPublications(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return StreamBuilder(
+              stream: _db.allFeedElements,
+              builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  print('hay info');
                   return ListFeed(
                     snapshot: snapshot,
                     follows: follow.data,

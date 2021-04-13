@@ -10,7 +10,8 @@ class PublicationModel {
   String userID;
   String pricing;
   int nevaluations;
-  double score;
+  var score;
+  List<dynamic> services;
   PublicationModel(
       {this.id,
       this.category,
@@ -21,25 +22,11 @@ class PublicationModel {
       this.userID,
       this.pricing,
       this.nevaluations,
-      this.score});
+      this.score,
+      this.services});
 
-// class AddAdoption {
-//   String id;
-//   String category;
-//   String name;
-//   String description;
-//   List<dynamic> location;
-//   List<dynamic> imgRef;
-//   AddAdoption(
-//       {this.id,
-//       this.category,
-//       this.name,
-//       this.description,
-//       this.location,
-//       this.imgRef});
-
-  PublicationModel.fromJsonMap(Map<String, dynamic> json) {
-    id = json['id'];
+  PublicationModel.fromJsonMap(Map<String, dynamic> json, String id) {
+    id = id;
     category = json['category'];
     name = json['name'];
     description = json['description'];
@@ -47,5 +34,10 @@ class PublicationModel {
     imgRef = json['imgRef'];
     pricing = json['pricing'];
     userID = json['userID'];
+    //nevaluations = json['nevaluations'];
+    //score = json['score'].toDouble();
+    services = json['services'];
+    score = json['score'];
+    nevaluations = json['nevaluations'];
   }
 }

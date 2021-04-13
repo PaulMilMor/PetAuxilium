@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
+import 'package:path/path.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
@@ -10,6 +11,7 @@ import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:rxdart/rxdart.dart';
 
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -49,7 +51,9 @@ class dbUtil {
           evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
-
+    Future<DocumentSnapshot> getUserById(String userID) async {
+    return await FirebaseFirestore.instance.collection("users").doc(userID).get();
+  }
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
@@ -58,6 +62,7 @@ class dbUtil {
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
+      'services': business.services,
     });
   }
 
@@ -166,6 +171,7 @@ class dbUtil {
       'pricing': ad.pricing,
       'nevaluations': 0,
       'score': 0,
+      'services': ad.services,
     });
   }
 
@@ -222,7 +228,7 @@ print(docRef.documentID);*/
     await _firestoreInstance.collection('publications').get().then((value) {
       value.docs.forEach((element) {
         PublicationModel publication =
-            PublicationModel.fromJsonMap(element.data());
+            PublicationModel.fromJsonMap(element.data(), element.id);
 
         publication.location.forEach((element) async {
           double latitude =
@@ -252,7 +258,8 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      PublicationModel publication = PublicationModel.fromJsonMap(value.data());
+      PublicationModel publication =
+          PublicationModel.fromJsonMap(value.data(), id);
 
       publication.imgRef.forEach((element) {
         images.add(element);
@@ -269,15 +276,129 @@ print(docRef.documentID);*/
         .get();
   }
 
+  Stream<List<PublicationModel>> streamPubsServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamKeepersServices(String category) =>
+      _firestoreInstance
+          .collection('publications')
+          .where('category', isEqualTo: 'CUIDADOR')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamBusinessServices(String category) =>
+      _firestoreInstance
+          .collection('business')
+          .where('services', arrayContains: category)
+          .snapshots()
+          .map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream serviceFeed(String category) => Rx.combineLatest2(
+      streamKeepersServices(category),
+      streamBusinessServices(category),
+      (List<PublicationModel> p, List<PublicationModel> b) => p + b);
+  Future<QuerySnapshot> getKeepers(String service) async {
+    return _firestoreInstance
+        .collection('publications')
+        .where('category', isEqualTo: 'CUIDADOR')
+        .where('services', arrayContains: service)
+        .get();
+  }
+
   Future<QuerySnapshot> getAllPublications() {
     return _firestoreInstance.collection('publications').get();
   }
 
-  Future<QuerySnapshot> getFollowPublications(data) {
+  Stream get allFeedElements => Rx.combineLatest3(
+      streamPublication(),
+      streamBusiness(),
+      streamComplaints(),
+      (List<PublicationModel> p, List<PublicationModel> b,
+              List<PublicationModel> c) =>
+          p + b + c);
+  //Stream get feedStream =>
+  Stream<List<PublicationModel>> streamPublication() =>
+      _firestoreInstance.collection('publications').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+  Stream<List<PublicationModel>> streamComplaints() =>
+      _firestoreInstance.collection('complaints').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
+
+  Stream<List<PublicationModel>> streamBusiness() =>
+      _firestoreInstance.collection('business').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          print(element.id);
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        //print(list);
+
+        return list;
+      });
+  Stream<QuerySnapshot> getFollowPublications(data) {
     return _firestoreInstance
         .collection('publications')
         .where(FieldPath.documentId, whereIn: data)
-        .get();
+        .snapshots();
   }
 
   void updateFollows(List follows) async {
@@ -365,36 +486,32 @@ print(docRef.documentID);*/
     return reports;
   }
 
-  Future<List<EvaluationModel>> getOpinions(String id) async {
-    List<EvaluationModel> opinions = [];
-    await _firestoreInstance
-        .collection('evaluations')
-        .where('publicationID', isEqualTo: id)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
-        opinion.id = element.id;
-        opinions.add(opinion);
+  Stream<List<EvaluationModel>> getOpinions(String id) => _firestoreInstance
+          .collection('evaluations')
+          .where('publicationID', isEqualTo: id)
+          .snapshots()
+          .map((value) {
+        List<EvaluationModel> opinions = [];
+        value.docs.forEach((element) {
+          EvaluationModel opinion = EvaluationModel.fromJsonMap(element.data());
+          opinion.id = element.id;
+          opinions.add(opinion);
+        });
+        return opinions;
       });
-    });
-    return opinions;
-  }
 
-  Future<List<CommentModel>> getComments(String id) async {
-    List<CommentModel> comments = [];
-    await _firestoreInstance
-        .collection('comments')
-        .where('publicationID', isEqualTo: id)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        CommentModel comment = CommentModel.fromJsonMap(element.data());
-        comments.add(comment);
+  Stream<List<CommentModel>> getComments(String id) => _firestoreInstance
+          .collection('comments')
+          .where('publicationID', isEqualTo: id)
+          .snapshots()
+          .map((value) {
+        List<CommentModel> comments = [];
+        value.docs.forEach((element) {
+          CommentModel comment = CommentModel.fromJsonMap(element.data());
+          comments.add(comment);
+        });
+        return comments;
       });
-    });
-    return comments;
-  }
 
   Future<PublicationModel> getPublication(String id) async {
     PublicationModel publication;
@@ -403,7 +520,7 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      publication = PublicationModel.fromJsonMap(value.data());
+      publication = PublicationModel.fromJsonMap(value.data(), id);
     });
     return publication;
   }
@@ -419,5 +536,69 @@ print(docRef.documentID);*/
       }
     });
     return evaluationsID;
+  }
+
+  Future addMessage(
+      String chatRoomId, String messageId, Map messageInfoMap) async {
+    return await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc(messageId)
+        .set(messageInfoMap);
+  }
+
+  Future updateLastMessageSend(
+      String chatRoomId, Map lastMessageInfoMap) async {
+    print('deberia entrar en update');
+    print(chatRoomId);
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .update(lastMessageInfoMap)
+        .then((value) => print('en teoria funciono'));
+  }
+
+  createChatRoom(String chatRoomId, Map chatRoomInfoMap) async {
+    final snapShot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .get();
+
+    if (snapShot.exists) {
+      // chatroom already exists
+      return true;
+    } else {
+      // chatroom does not exists
+      return FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(chatRoomId)
+          .set(chatRoomInfoMap);
+    }
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("chats")
+        .orderBy("ts", descending: true)
+        .snapshots();
+  }
+
+  Future<Stream<QuerySnapshot>> getChatRooms() async {
+    print('fafaaf');
+    //print('El user es $myUsername');
+    return FirebaseFirestore.instance
+        .collection("chatrooms")
+        // .orderBy("lastMessageSendTs", descending: true)
+       .where("users", arrayContains: _prefs.userID)
+        .snapshots();
+  }
+
+  Future<QuerySnapshot> getAllChatRooms() async {
+    print('fafaaf');
+    // print('El user es $myUsername');
+    return FirebaseFirestore.instance.collection("chatrooms").get();
   }
 }

@@ -18,6 +18,7 @@ class Opinions extends StatefulWidget {
       @required this.sumscore,
       @required this.nevaluations,
       @required this.description,
+      @required this.services,
       this.callback});
   VoidCallback callback;
 
@@ -28,6 +29,7 @@ class Opinions extends StatefulWidget {
   var sumscore;
   String description;
   AsyncSnapshot<QuerySnapshot> snapshot1;
+  List<dynamic> services;
   @override
   _OpinionsState createState() => _OpinionsState();
 
@@ -71,9 +73,9 @@ class _OpinionsState extends State<Opinions> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _db.getOpinions(this.widget.id),
-        builder: (BuildContext context,
+    return StreamBuilder(
+        stream: _db.getOpinions(this.widget.id),
+        builder: (context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
           _checkEvaluations(snapshot);
 
@@ -540,9 +542,12 @@ class _OpinionsState extends State<Opinions> {
                   ),
                 ),
               ),
+              SizedBox(height: 5),
+              _chipList(),
               SizedBox(
                 height: 31,
               ),
+
               const Divider(
                 color: Colors.black12,
                 height: 5,
@@ -587,6 +592,58 @@ class _OpinionsState extends State<Opinions> {
         ),
       );
     }
+  }
+
+  Widget _chipList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Wrap(
+            spacing: 6,
+            children: this.widget.services.map((service) {
+              String serviceString = service.toString()[0] +
+                  service.toString().substring(1).toLowerCase();
+
+              return ActionChip(
+                  backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+
+                  //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
+                  label: Text(serviceString),
+                  onPressed: () {
+                    switch (serviceString) {
+                      case 'Cuidados especiales':
+                        _navigate('Cuidados\nEspeciales', context);
+
+                        break;
+                      case 'Consultoría':
+                        _navigate('Consultoría', context);
+
+                        break;
+                      case 'Entrenamiento':
+                        _navigate('Entrenamiento', context);
+                        break;
+                      case 'Guardería / hotel animal':
+                        _navigate('Guardería/Hotel\nde animales', context);
+
+                        break;
+                      case 'Limpieza / aseo':
+                        _navigate('Servicios de\nLimpieza', context);
+
+                        break;
+                      case 'Servicios de salud':
+                        _navigate('Servicios de\nSalud', context);
+
+                        break;
+                    }
+                  });
+            }).toList()),
+      ),
+    );
+  }
+
+  void _navigate(String service, BuildContext context) {
+    Navigator.pushNamed(context, 'service', arguments: service);
   }
 
   void _checkEvaluations(snapshot) {

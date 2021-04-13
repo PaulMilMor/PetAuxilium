@@ -6,8 +6,14 @@ class BusinessModel {
   String description;
   String userID;
   List<dynamic> imgRef;
+  List<dynamic> services;
   BusinessModel(
-      {this.name, this.description, this.location, this.userID, this.imgRef});
+      {this.name,
+      this.description,
+      this.location,
+      this.userID,
+      this.imgRef,
+      this.services});
   // LatLng getLatLng() {
 
   //   final latLng = this.location.substring(4).split(',');
@@ -22,5 +28,6 @@ class BusinessModel {
     location = json['location'];
     description = json['description'];
     userID = json['userID'];
+    this.services = json['services'];
   }
 }
