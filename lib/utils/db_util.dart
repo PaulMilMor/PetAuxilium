@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -51,9 +52,14 @@ class dbUtil {
           evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
-    Future<DocumentSnapshot> getUserById(String userID) async {
-    return await FirebaseFirestore.instance.collection("users").doc(userID).get();
+
+  Future<DocumentSnapshot> getUserById(String userID) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userID)
+        .get();
   }
+
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
@@ -204,6 +210,15 @@ print(docRef.documentID);*/
         .update({
       'score': FieldValue.increment(-scorenum),
       'nevaluations': FieldValue.increment(-1),
+    });
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    // Assume user is logged in for this example
+    String userId = FirebaseAuth.instance.currentUser.uid;
+
+    await _firestoreInstance.collection('users').doc(userId).update({
+      'token': FieldValue.arrayUnion([token]),
     });
   }
 
@@ -592,7 +607,7 @@ print(docRef.documentID);*/
     return FirebaseFirestore.instance
         .collection("chatrooms")
         // .orderBy("lastMessageSendTs", descending: true)
-       .where("users", arrayContains: _prefs.userID)
+        .where("users", arrayContains: _prefs.userID)
         .snapshots();
   }
 

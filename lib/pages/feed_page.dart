@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/token_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -42,6 +43,8 @@ class _FeedState extends State<Feed> {
                     follows: follow.data,
                     voidCallback: callback,
                   );
+                  // ignore: dead_code
+                  Token();
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

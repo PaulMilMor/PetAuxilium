@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/token_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'button_widget.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/widgets/closepub_widget.dart';
 
 enum ClosePub { option1, eliminar }
@@ -43,13 +47,6 @@ class _ListFeedState extends State<ListFeed> {
     'Informacion fraudulenta',
     'Suplantacion de identidad',
     'Fotos Inapropiadas'
-  ];
-  List listItems2 = [
-    'La mascota ha sido dada en adopción',
-    'El animal callejero ha sido atendido',
-    'La mascota ya fue localizada',
-    'La denuncia ya fue atendida',
-    'Deseo eliminar esta publicación',
   ];
   String _selectedReason;
   String _id;
