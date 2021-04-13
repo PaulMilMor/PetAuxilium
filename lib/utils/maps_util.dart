@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapsUtil {
   List<LatLng> getLocations(Set<Marker> markers) {
     if (markers != null) {
-      print("hay markers");
+     
       List<LatLng> listLocations = [];
       markers.forEach((Marker element) {
         listLocations.add(element.position);
@@ -31,7 +31,7 @@ class MapsUtil {
     double lat = double.parse(loc[0].replaceAll('(', ''));
     double long = double.parse(loc[1].replaceAll(')', ''));
     if (lat == 29.115967 && long == -111.025490) {
-      print('debio entrar aqui');
+  
       return Container(
         width: 150,
         child: Text(
@@ -43,7 +43,7 @@ class MapsUtil {
         ),
       );
     } else {
-      print('no aqui' + lat.toString() + '  ' + long.toString());
+    
       return FutureBuilder(
           future: getAddress(lat, long),
           builder:

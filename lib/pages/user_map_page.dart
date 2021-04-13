@@ -53,11 +53,11 @@ class _UserMapPageState extends State<UserMapPage> {
 
   void getMarkers() async {
     business = await db.getAllLocations();
-    print("negocios " + business.toString());
+
     business.forEach((BusinessModel business) {
       business.location.forEach((element) {
         String location = element.toString();
-        print(element.toString().split(','));
+
         _markers.add(Marker(
           markerId: MarkerId(element),
           position: LatLng(
@@ -100,7 +100,6 @@ class _UserMapPageState extends State<UserMapPage> {
     _initialcameraposition =
         LatLng(_currentPosition.latitude, _currentPosition.longitude);
     location.onLocationChanged.listen((LocationData currentLocation) {
-      print("${currentLocation.longitude} : ${currentLocation.longitude}");
       setStateIfMounted(() {
         _currentPosition = currentLocation;
         _initialcameraposition =

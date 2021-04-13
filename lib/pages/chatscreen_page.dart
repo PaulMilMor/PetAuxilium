@@ -13,6 +13,7 @@ class ChatScreenPage extends StatefulWidget {
 }
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
+  String userImg = " ";
   String messageId = '';
   Stream messageStream;
   final preferencesUtil _prefs = preferencesUtil();
@@ -35,7 +36,20 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //     ClipRRect(
+            //   borderRadius:BorderRadius.circular(30),
+            //   child:Image.network(
+            //     widget.urlImg,
+            //     height:40,
+            //     width:40
+            //   )
+            // ),
+            Text(widget.name),
+          ],
+        ),
       ),
       body: Container(
         child: Stack(

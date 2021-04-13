@@ -12,8 +12,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'button_widget.dart';
-import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/widgets/closepub_widget.dart';
 
 enum ClosePub { option1, eliminar }
 
@@ -61,7 +59,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           PublicationModel _data = this.widget.snapshot.data[index];
-
+          print('id p ${_data.id}');
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
           _selectedReason = null;
@@ -235,7 +233,6 @@ class _ListFeedState extends State<ListFeed> {
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
 
-              print(publications);
               selectedPublication.id = id;
               print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
@@ -262,7 +259,6 @@ class _ListFeedState extends State<ListFeed> {
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
-                  print(element.id);
                   if (element.id == _id) {
                     found = true;
 
@@ -317,7 +313,6 @@ class _ListFeedState extends State<ListFeed> {
     Widget confirmButton = TextButton(
       child: Text("Confirmar"),
       onPressed: () async {
-        print('entro adadadadad');
         await _db.banUser(id);
         setState(() {});
       },
@@ -531,7 +526,6 @@ class _ListFeedState extends State<ListFeed> {
                                         .get()
                                         .then((value) {
                                       value.docs.forEach((element) {
-                                        print(element.id);
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
@@ -544,7 +538,7 @@ class _ListFeedState extends State<ListFeed> {
                                             //print("Ya existe el usuario");
                                           } else {*/
                                           users.add(_prefs.userID);
-                                          print(users);
+
                                           ReportModel update = ReportModel(
                                             publicationid: _id,
                                             userid: users,
@@ -563,7 +557,6 @@ class _ListFeedState extends State<ListFeed> {
                                     });
 
                                     if (found == false) {
-                                      print(users);
                                       users.add(_prefs.userID);
                                       ReportModel addreport = ReportModel(
                                         publicationid: _id,

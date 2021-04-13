@@ -46,16 +46,15 @@ class AuthUtil {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      print(result);
+    
 
       UserModel userModel = await _db.getUser(result.user.uid);
-      print('SIGN IN');
-      print(result.user.uid);
+    
 
       _prefs.userID = result.user.uid;
       _prefs.selectedIndex = 0;
       return 'Ingresó';
-      //_prefs.userName = userModel.name;
+   
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -90,7 +89,7 @@ class AuthUtil {
     try {
       //TODO:Poner img default para los anonimos
       var result = await _auth.signInAnonymously();
-      print(result.user);
+    
       return (UserModel(id: result.user.uid, name: "anonimo"));
     } catch (e) {
       print(e.toString());
@@ -122,14 +121,14 @@ class AuthUtil {
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
 
-      List<String> follows = await _db.getFollows(user.uid);
+      List<String> follows = await _db.getFollowsFuture(user.uid);
       UserModel userModel = UserModel(
           id: user.uid,
           name: user.displayName,
           email: user.email,
           imgRef: user.photoURL,
           follows: follows);
-      print(user);
+
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
       _prefs.userID = userModel.id;

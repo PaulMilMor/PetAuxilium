@@ -56,10 +56,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     super.initState();
     setState(() {
       images.add("Add Image");
-      /*images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");*/
+   
     });
 //FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _name = prefs.businessName ?? ' ';

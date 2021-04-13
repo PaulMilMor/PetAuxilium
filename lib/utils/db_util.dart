@@ -38,9 +38,6 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
 
-      print('IMG');
-      print(_prefs.userImg);
-      print(value.get("imgRef"));
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -53,12 +50,8 @@ class dbUtil {
     });
   }
 
-  Future<DocumentSnapshot> getUserById(String userID) async {
-    return await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get();
-  }
+  Future<DocumentSnapshot> getUserById(String userID) =>
+      FirebaseFirestore.instance.collection("users").doc(userID).get();
 
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
@@ -257,10 +250,7 @@ print(docRef.documentID);*/
               " " +
               placemarks.first.locality +
               "\n";
-          print(place);
         });
-
-        print(lista.toString());
       });
     });
     return lista;
@@ -299,7 +289,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -317,7 +306,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -334,7 +322,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -371,7 +358,6 @@ print(docRef.documentID);*/
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -384,7 +370,6 @@ print(docRef.documentID);*/
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -398,7 +383,6 @@ print(docRef.documentID);*/
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -423,7 +407,7 @@ print(docRef.documentID);*/
         .update({'follows': follows});
   }
 
-  Future<List<String>> getFollows(id) async {
+  Future<List<String>> getFollowsFuture(id) async {
     List<String> follows = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
       UserModel user = UserModel.fromJsonMap(value.data());
@@ -437,6 +421,18 @@ print(docRef.documentID);*/
     });
     return follows;
   }
+
+  Stream<List<String>> getFollows(id) =>
+      _firestoreInstance.collection('users').doc(id).snapshots().map((value) {
+        List<String> follows = [];
+        UserModel user = UserModel.fromJsonMap(value.data());
+        if (user.follows != null) {
+          user.follows.forEach((element) {
+            follows.add(element);
+          });
+        }
+        return follows;
+      });
 
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
@@ -601,8 +597,7 @@ print(docRef.documentID);*/
         .snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> getChatRooms() async {
-    print('fafaaf');
+  Stream<QuerySnapshot> getChatRooms() {
     //print('El user es $myUsername');
     return FirebaseFirestore.instance
         .collection("chatrooms")
@@ -612,7 +607,6 @@ print(docRef.documentID);*/
   }
 
   Future<QuerySnapshot> getAllChatRooms() async {
-    print('fafaaf');
     // print('El user es $myUsername');
     return FirebaseFirestore.instance.collection("chatrooms").get();
   }
