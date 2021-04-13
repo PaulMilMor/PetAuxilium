@@ -574,7 +574,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
-    if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
+    if (widget.detailDocument.category.toString().contains('CUIDADOR') || widget.detailDocument.category.toString().contains('NEGOCIO')) {
       return Opinions(
           id: widget.detailDocument.id,
           services: widget.detailDocument.services,
