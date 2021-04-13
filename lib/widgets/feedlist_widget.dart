@@ -252,21 +252,22 @@ print('id p ${_data.id}');
               List users = [];
               _selectedReason = null;
               _id = null;
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(publications, id);
-
-              selectedPublication.id = id;
+              
+              /*PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications, id);*/
+                print(publications);
+              //selectedPublication.id = id;
               _id = id;
               var found = false;
 
-              // _ReportMenu(/*publications*/);
+               //_ReportMenu(/*publications*/);
               await _firestoreInstance
                   .collection('reports')
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
                   print(element.id);
-                  if (element.id == _id) {
+                  if (element.id == id) {
                     found = true;
 
                     users = element.get('userid');
@@ -286,7 +287,7 @@ print('id p ${_data.id}');
               if (found == false) {
                 _ReportMenu(/*publications*/);
               }
-              print(selectedPublication.id);
+              print(id);
               break;
             case 5:
               _ClosePubMenu(publications);
