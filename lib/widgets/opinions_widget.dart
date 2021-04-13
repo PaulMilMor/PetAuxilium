@@ -77,6 +77,7 @@ class _OpinionsState extends State<Opinions> {
         stream: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
+              print(snapshot.data);
           _checkEvaluations(snapshot);
 
           if (snapshot.hasData) {

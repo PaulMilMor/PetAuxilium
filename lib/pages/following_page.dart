@@ -42,8 +42,10 @@ class _FollowingPageState extends State<FollowingPage> {
   }
 
   Widget _followedList() {
-    return FutureBuilder(
-      future: _db.getFollows(_prefs.userID),
+ 
+    return StreamBuilder(
+    
+      stream: _db.getFollows(_prefs.userID),
       builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
 if (follow.connectionState!=ConnectionState.waiting) {
     return follow.data.isEmpty

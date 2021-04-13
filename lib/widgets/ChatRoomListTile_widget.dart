@@ -4,23 +4,30 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 
-String urlImg='',name='',userID='';
 
 class ChatRoomListTile extends StatefulWidget {
-   final String lastMessage, chatRoomId, myUserID;
-  ChatRoomListTile(this.lastMessage, this.chatRoomId, this.myUserID);
+   final String lastMessage, otherId, myUserID;
+  VoidCallback callback;
+  ChatRoomListTile(this.lastMessage, this.otherId, this.myUserID,this.callback);
   @override
   _ChatRoomListTileState createState() => _ChatRoomListTileState();
 }
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
   final dbUtil _db=dbUtil();
-    
+    String urlImg="",name="",userID="";
 
+ _getUserInfo() async{
+ userID=widget.otherId;
+ DocumentSnapshot document= await _db.getUserById(userID);
+ print(document.data());
+   name=document.data()["name"];
+ urlImg=document.data()["imgRef"];
+ widget.callback(); 
+ }
     @override
   void initState() {
     // TODO: implement initState
-
     _getUserInfo();
     super.initState();
   }
@@ -61,18 +68,5 @@ print('dssds');
 
     
   }
- _getUserInfo() async{
- userID=widget.chatRoomId.replaceAll(widget.myUserID, "").replaceAll("_", "");
- DocumentSnapshot document= await _db.getUserById(userID);
- print(document.data());
 
- setState(() {
-    name=document.data()["name"];
- urlImg=document.data()["imgRef"];
- });
- }
-_goToChat(){
- 
-
-}
 }

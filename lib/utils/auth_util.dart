@@ -122,7 +122,7 @@ class AuthUtil {
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
 
-      List<String> follows = await _db.getFollows(user.uid);
+      List<String> follows = await _db.getFollowsFuture(user.uid);
       UserModel userModel = UserModel(
           id: user.uid,
           name: user.displayName,

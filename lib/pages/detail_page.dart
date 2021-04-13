@@ -9,7 +9,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
-import 'package:pet_auxilium/widgets/ChatRoomListTile_widget.dart';
+
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
 
@@ -86,8 +86,7 @@ class _DetailPageState extends State<DetailPage> {
                                 if (widget.detailDocument.category
                                     .toString()
                                     .contains('CUIDADOR'))
-                                  GestureDetector(
-                                      onTap: _chats(), child: Icon(Icons.chat))
+                                  _buttonChat()
                               ],
                             ),
                             SizedBox(
@@ -612,19 +611,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-    var myId = _prefs.userID;
-    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
-    Map<String, dynamic> chatRoomInfoMap = {
-      "users": [myId, widget.detailDocument.userID]
-    };
-    _db.createChatRoom(chatRoomId, chatRoomInfoMap);
     //  Navigator.popUntil(context, (route) => true);
-
-    //    Navigator.of(context).push(
-
-    //      MaterialPageRoute(
-
-    //        builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var myId = _prefs.userID;
+      var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
+      Map<String, dynamic> chatRoomInfoMap = {
+        "users": [myId, widget.detailDocument.userID]
+      };
+      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatScreenPage(
+                  widget.detailDocument.userID, widget.detailDocument.name)));
+    });
   }
 
   _getChatRoomIdByIds(String a, String b) {
@@ -633,5 +633,17 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       return "$a\_$b";
     }
+  }
+
+  Widget _buttonChat() {
+    return TextButton(
+      child: Icon(
+        Icons.chat,
+        color: Colors.grey,
+      ),
+      onPressed: () {
+        _chats();
+      },
+    );
   }
 }

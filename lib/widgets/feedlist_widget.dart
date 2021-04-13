@@ -9,7 +9,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'button_widget.dart';
-import 'package:pet_auxilium/widgets/closepub_widget.dart';
+
 
 enum ClosePub { option1, eliminar }
 
@@ -64,7 +64,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           PublicationModel _data = this.widget.snapshot.data[index];
-
+print('id p ${_data.id}');
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
           _selectedReason = null;
