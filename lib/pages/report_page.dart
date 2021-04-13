@@ -28,7 +28,6 @@ class _ReportPageState extends State<ReportPage> {
                 itemBuilder: (BuildContext context, index) {
                   var report = reports.data[index];
                   var id = report.publicationid;
-                  print(id);
 
                   return FutureBuilder(
                     future: _db.getPublication(id),
@@ -43,7 +42,7 @@ class _ReportPageState extends State<ReportPage> {
                         Map<int, String> values = {
                           for (int i = 0; i < split.length; i++) i: split[i]
                         };
-                        print(values);
+
                         String latitude = values[0];
                         String longitude = values[1];
                         String value3 = values[2];
@@ -180,22 +179,23 @@ class _ReportPageState extends State<ReportPage> {
                   ],
                 ),
                 value: 1,
-              ),PopupMenuItem(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.person_remove_alt_1_sharp,
-                            size: 11,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            'Suspender Cuenta',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ],
-                      ),
-                      value: 3,
+              ),
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person_remove_alt_1_sharp,
+                      size: 11,
+                      color: Colors.grey,
                     ),
+                    Text(
+                      'Suspender Cuenta',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                  ],
+                ),
+                value: 3,
+              ),
             ],
         onSelected: (value) {
           switch (value) {
@@ -203,8 +203,7 @@ class _ReportPageState extends State<ReportPage> {
               _deletePublication(publication, report);
               break;
             case 2:
-           
-                  _banUser(publication.userID);
+              _banUser(publication.userID);
           }
         });
   }
@@ -213,7 +212,7 @@ class _ReportPageState extends State<ReportPage> {
 // y se pierde la userid y la id original
   _deletePublication(publication, report) {
     _db.deleteDocument(publication.id, "publications");
-   _db.deleteDocument(report.id, 'reports');
+    _db.deleteDocument(report.id, 'reports');
     setState(() {});
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
@@ -237,7 +236,6 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget _getLocationText(double lat, double long) {
     if (lat == 29.115967 && long == -111.025490) {
-      print('debio entrar aqui');
       return Container(
         width: 150,
         child: Text(
@@ -249,7 +247,6 @@ class _ReportPageState extends State<ReportPage> {
         ),
       );
     } else {
-      print('no aqui' + lat.toString() + '  ' + long.toString());
       return FutureBuilder(
           future: getAddress(lat, long),
           builder:
@@ -288,29 +285,29 @@ class _ReportPageState extends State<ReportPage> {
 
     return newPlace;
   }
-  _banUser(id){
-    Widget confirmButton = TextButton(
-    child: Text("Confirmar"),
-    onPressed: () { 
-      _db.banUser(id);
-    },
-  );
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    //title: Text("My title"),
-    content: Text("¿Seguro que quiere eliminar el usuario?"),
-    actions: [
-      confirmButton,
-    ],
-  );
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-  //_db.banUser(id);
 
-}
+  _banUser(id) {
+    Widget confirmButton = TextButton(
+      child: Text("Confirmar"),
+      onPressed: () {
+        _db.banUser(id);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      //title: Text("My title"),
+      content: Text("¿Seguro que quiere eliminar el usuario?"),
+      actions: [
+        confirmButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+    //_db.banUser(id);
+  }
 }

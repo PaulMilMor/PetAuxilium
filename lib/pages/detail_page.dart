@@ -587,6 +587,7 @@ class _DetailPageState extends State<DetailPage> {
         id: widget.detailDocument.id,
         category: widget.detailDocument.category,
         description: widget.detailDocument.description,
+        userid: widget.detailDocument.userID,
       );
     }
   }
@@ -611,7 +612,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-    //  Navigator.popUntil(context, (route) => true);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var myId = _prefs.userID;
       var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);

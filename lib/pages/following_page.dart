@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -12,7 +11,6 @@ class FollowingPage extends StatefulWidget {
 class _FollowingPageState extends State<FollowingPage> {
   final preferencesUtil _prefs = preferencesUtil();
   final dbUtil _db = dbUtil();
-
 
   @override
   void initState() {
@@ -28,7 +26,6 @@ class _FollowingPageState extends State<FollowingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('LISTA DE SEGUIMIENTO'),
-     
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -42,33 +39,28 @@ class _FollowingPageState extends State<FollowingPage> {
   }
 
   Widget _followedList() {
- 
     return StreamBuilder(
-    
       stream: _db.getFollows(_prefs.userID),
       builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-if (follow.connectionState!=ConnectionState.waiting) {
-    return follow.data.isEmpty
-            ? Center(
-                child: Text('No sigues ninguna publicación'),
-              )
-            : StreamBuilder(
-                stream: _db.getFollowPublications(follow.data),
-                builder: (context, snapshot) {
-                  return (snapshot.connectionState == ConnectionState.waiting)
-                      ? Center(child: CircularProgressIndicator())
-                      : //_listFeed;
-                      ListFeed(
-                          snapshot: snapshot,
-                          follows: follow.data,
-                          voidCallback: callback);
-                },
-              );
-}else{
-
-  return Container();
-}
-      
+        if (follow.connectionState != ConnectionState.waiting) {
+          return follow.data.isEmpty
+              ? Center(
+                  child: Text('No sigues ninguna publicación'),
+                )
+              : StreamBuilder(
+                  stream: _db.getFollowPublications(follow.data),
+                  builder: (context, snapshot) {
+                    return (snapshot.connectionState == ConnectionState.waiting)
+                        ? Center(child: CircularProgressIndicator())
+                        : ListFeed(
+                            snapshot: snapshot,
+                            follows: follow.data,
+                            voidCallback: callback);
+                  },
+                );
+        } else {
+          return Container();
+        }
       },
     );
   }

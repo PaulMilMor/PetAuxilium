@@ -1,20 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/comment_model.dart';
+import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class Comments extends StatefulWidget {
   Comments(
-      {@required this.id, @required this.category, @required this.description});
+      {@required this.id,
+      @required this.category,
+      @required this.description,
+      @required this.userid});
   String id;
   String category;
   String description;
+  String userid;
   @override
   _CommentsState createState() => _CommentsState();
 }
 
 class _CommentsState extends State<Comments> {
   final dbUtil _db = dbUtil();
+  final preferencesUtil _prefs = preferencesUtil();
+  String _userName = '', _userImg = '';
   String _comment;
   FocusNode _focusNode;
 
@@ -22,7 +30,8 @@ class _CommentsState extends State<Comments> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    print("desc" + widget.description);
+    _getUser();
+  
   }
 
   @override
@@ -43,7 +52,7 @@ class _CommentsState extends State<Comments> {
   CommentModel _myComment;
   @override
   Widget build(BuildContext context) {
-    print(widget.id);
+    
     return StreamBuilder(
         stream: _db.getComments(this.widget.id),
         builder:
@@ -215,6 +224,14 @@ class _CommentsState extends State<Comments> {
                         ]))))));
   }
 
+  _getUser() async {
+    DocumentSnapshot document = await _db.getUserById(widget.userid);
+
+    _userName = document.data()["name"];
+    _userImg = document.data()["imgRef"];
+    setState(() {});
+  }
+
   comentar_button() {
     if (_commentController.text.isNotEmpty) {
       return Container(
@@ -301,6 +318,11 @@ class _CommentsState extends State<Comments> {
               ),
             ),
           ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36),
+            child: _infoRow(),
+          ),
           SizedBox(
             height: 35,
           ),
@@ -325,6 +347,78 @@ class _CommentsState extends State<Comments> {
         ],
       ),
     );
+  }
+
+  Widget _infoRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Row(
+            children: [
+             ClipRRect(
+            borderRadius:BorderRadius.circular(30),
+            child:Image.network(
+              _userImg,
+              height:40,
+              width:40
+            )
+          ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(_userName),
+              _buttonChat()
+            ],
+          ),
+        ),
+        // Flexible(
+        //   flex: 1,
+        //   fit: FlexFit.tight,
+        //   child: Text("Publicado el ${this.widget.date.day} de " +
+        //       "${_getMonth(this.widget.date.month)} de " +
+        //       "${this.widget.date.year}"),
+        // ),
+      ],
+    );
+  }
+
+  Widget _buttonChat() {
+    return TextButton(
+      child: Icon(
+        Icons.chat,
+        color: Colors.grey,
+      ),
+      onPressed: () {
+        _chats();
+      },
+    );
+  }
+
+  _chats() {
+    //  Navigator.popUntil(context, (route) => true);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var myId = _prefs.userID;
+      var chatRoomId = _getChatRoomIdByIds(myId, widget.userid);
+      Map<String, dynamic> chatRoomInfoMap = {
+        "users": [myId, widget.userid]
+      };
+      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatScreenPage(widget.userid, _userName)));
+    });
+  }
+
+  _getChatRoomIdByIds(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
   }
 
   void _checkComments(snapshot) {

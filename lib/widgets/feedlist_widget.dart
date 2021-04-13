@@ -238,7 +238,7 @@ print('id p ${_data.id}');
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
 
-              print(publications);
+            
               selectedPublication.id = id;
               print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
@@ -265,7 +265,7 @@ print('id p ${_data.id}');
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
-                  print(element.id);
+                 
                   if (element.id == _id) {
                     found = true;
 
@@ -320,7 +320,7 @@ print('id p ${_data.id}');
     Widget confirmButton = TextButton(
       child: Text("Confirmar"),
       onPressed: () async {
-        print('entro adadadadad');
+      
         await _db.banUser(id);
         setState(() {});
       },
@@ -534,7 +534,7 @@ print('id p ${_data.id}');
                                         .get()
                                         .then((value) {
                                       value.docs.forEach((element) {
-                                        print(element.id);
+                                       
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
@@ -547,7 +547,7 @@ print('id p ${_data.id}');
                                             //print("Ya existe el usuario");
                                           } else {*/
                                           users.add(_prefs.userID);
-                                          print(users);
+                                       
                                           ReportModel update = ReportModel(
                                             publicationid: _id,
                                             userid: users,
@@ -566,7 +566,7 @@ print('id p ${_data.id}');
                                     });
 
                                     if (found == false) {
-                                      print(users);
+                                    
                                       users.add(_prefs.userID);
                                       ReportModel addreport = ReportModel(
                                         publicationid: _id,
