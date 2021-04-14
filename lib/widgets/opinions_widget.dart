@@ -76,7 +76,8 @@ class _OpinionsState extends State<Opinions> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _db.getOpinions(this.widget.id),
-        builder: (context, AsyncSnapshot<List<EvaluationModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print(snapshot.data);
           _checkEvaluations(snapshot);
 
@@ -338,7 +339,8 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _serviceNumbers() {
-    if (this.widget.category == 'CUIDADOR') {
+    if (this.widget.category == 'CUIDADOR' ||
+        this.widget.category == 'NEGOCIO') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -486,11 +488,16 @@ class _OpinionsState extends State<Opinions> {
     setState(() {
       avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
-    _db.updateScore(evaluation);
+    if (this.widget.category == "CUIDADOR") {
+      _db.updateScore(evaluation);
+    } else {
+      _db.updateScoreBusiness(evaluation);
+    }
   }
 
   void _evaluacion() {
     //CollectionReference docRef = _firestoreInstance.collection('evaluations');
+
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -499,9 +506,14 @@ class _OpinionsState extends State<Opinions> {
       score: _score,
       comment: _commentController.text,
     );
-    _db.addEvaluations(evaluation);
     this.widget.sumscore += double.parse(_score);
     this.widget.nevaluations++;
+    if (this.widget.category == "CUIDADOR") {
+      _db.addEvaluations(evaluation);
+    } else {
+      _db.addEvaluationsBusiness(evaluation);
+    }
+
     _addevaluation(/*detailDocument.id,*/ evaluations);
 
     setState(() {
@@ -510,19 +522,21 @@ class _OpinionsState extends State<Opinions> {
   }
 
   void _addevaluation(evaluations) async {
+    print("chingados");
     if (evaluations.contains(this.widget.id)) {
       evaluations.remove(this.widget.id);
     } else {
       evaluations.add(this.widget.id);
     }
+
     _db.updateEvaluations(evaluations);
   }
 
   Widget _opinion(snapshot) {
     print("checar la eval");
     print(_myEvaluation);
-
-    if (this.widget.category.toString().contains('CUIDADOR')) {
+    if (this.widget.category.toString().contains('CUIDADOR') ||
+        this.widget.category.toString().contains('NEGOCIO')) {
       return SingleChildScrollView(
         child: Container(
           child: Column(

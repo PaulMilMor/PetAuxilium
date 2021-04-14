@@ -55,6 +55,7 @@ class dbUtil {
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
+      'category': 'NEGOCIO',
       'name': business.name,
       'location': business.location,
       'description': business.description,
@@ -204,11 +205,39 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(1),
     });
   }
+  Future<void> addEvaluationsBusiness(EvaluationModel evaluation) async {
+ 
+    await _firestoreInstance.collection("evaluations").add({
+      'userID': evaluation.userID,
+      'publicationID': evaluation.publicationID,
+      'username': evaluation.username,
+      'score': evaluation.score,
+      'comment': evaluation.comment
+    });
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("business")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(scorenum),
+      'nevaluations': FieldValue.increment(1),
+    });
+  }
 
   Future<void> updateScore(EvaluationModel evaluation) async {
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
         .collection("publications")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(-scorenum),
+      'nevaluations': FieldValue.increment(-1),
+    });
+  }
+  Future<void> updateScoreBusiness(EvaluationModel evaluation) async {
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("business")
         .doc(evaluation.publicationID)
         .update({
       'score': FieldValue.increment(-scorenum),

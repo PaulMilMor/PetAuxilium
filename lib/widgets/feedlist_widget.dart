@@ -252,20 +252,22 @@ class _ListFeedState extends State<ListFeed> {
               List users = [];
               _selectedReason = null;
               _id = null;
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(publications, id);
-
-              selectedPublication.id = id;
+              
+              /*PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications, id);*/
+                print(publications);
+              //selectedPublication.id = id;
               _id = id;
               var found = false;
 
-              // _ReportMenu(/*publications*/);
+               //_ReportMenu(/*publications*/);
               await _firestoreInstance
                   .collection('reports')
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
-                  if (element.id == _id) {
+                  print(element.id);
+                  if (element.id == id) {
                     found = true;
 
                     users = element.get('userid');
@@ -285,7 +287,7 @@ class _ListFeedState extends State<ListFeed> {
               if (found == false) {
                 _ReportMenu(/*publications*/);
               }
-              print(selectedPublication.id);
+              print(id);
               break;
             case 5:
               _ClosePubMenu(publications);

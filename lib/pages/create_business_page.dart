@@ -35,6 +35,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   String _name = " ";
   String _desc;
   Future<File> _imageFile;
+  File imageFile;
+
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
@@ -355,12 +357,14 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Future _onAddImageClick(int index) async {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
+
     setState(() {
-      if (_imageFile != null) {
+      if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
 
-        print("xd" + _imageFile.toString());
+        print("xd" + imageFile.toString());
       } else {
         print("faros");
       }
@@ -378,24 +382,21 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   void getFileImage(int index) async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
-    _imageFile.then((file) async {
       setState(() {
-        if (file == null) {
+        if (imageFile == null) {
           images.remove("Add Image");
         }
       });
-      imagesRef.add(await _storage.uploadFile(file, 'BusinessImages'));
+      imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
 
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
         imageUpload.uploading = false;
-        imageUpload.imageFile = file;
+        imageUpload.imageFile = imageFile;
         imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
         images.replaceRange(index, index + 1, [imageUpload]);
       });
-    });
   }
 
   Widget _selectService() {

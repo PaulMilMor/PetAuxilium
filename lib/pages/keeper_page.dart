@@ -49,7 +49,7 @@ class KeeperPageState extends State<KeeperPage> {
   List<Object> images = [];
   Future<File> _imageFile;
   List<ImageUploadModel> _imgsFiles = [];
-  File imagefile;
+  File imageFile;
   List<File> _listImages = [];
   final picker = ImagePicker();
   FocusScopeNode _node;
@@ -58,10 +58,6 @@ class KeeperPageState extends State<KeeperPage> {
     super.initState();
     setState(() {
       images.add("Add Image");
-      /*images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");
-      images.add("Add Image");*/
     });
     _pricing = prefs.keeperPricing ?? ' ';
     _desc = prefs.keeperDescription;
@@ -137,13 +133,15 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    setState(() {
+    
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      final _imageFile = picker.getImage(source: ImageSource.gallery);
-      if (_imageFile != null) {
+      final _imageFile = await picker.getImage(source: ImageSource.gallery);
+      imageFile = File(_imageFile.path);
+      setState(() {
+      if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-        print("xd" + _imageFile.toString());
+        print("xd" + imageFile.toString());
       } else {
         print("faros");
       }
@@ -158,36 +156,24 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   void getFileImage(int index) async {
-    _imageFile.then((file) async {
       setState(() {
-        if (file == null) {
+        if (imageFile == null) {
           images.remove("Add Image");
         }
       });
-      imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
+      imagesRef.add(await _storage.uploadFile(imageFile, 'PublicationImages'));
 
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
         imageUpload.uploading = false;
-        imageUpload.imageFile = file;
+        imageUpload.imageFile = imageFile;
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
         images.replaceRange(index, index + 1, [imageUpload]);
       });
-    });
   }
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        imagefile = File(pickedFile.path);
-      } else {
-        print('No image selected');
-      }
-    });
-  }
 
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
