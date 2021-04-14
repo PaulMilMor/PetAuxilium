@@ -31,8 +31,8 @@ class _ServicePageState extends State<ServicePage> {
         ),
         body: Container(
           padding: EdgeInsets.only(top: 7),
-          child: FutureBuilder(
-            future: _db.getFollows(_prefs.userID),
+          child: StreamBuilder(
+            stream: _db.getFollows(_prefs.userID),
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> follow) {
               return StreamBuilder(

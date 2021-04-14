@@ -64,10 +64,6 @@ class PublicationPageState extends State<PublicationPage> {
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-    print(ModalRoute.of(context).settings.name);
-    getDir(_locations);
-    print("mm");
-    print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -83,7 +79,7 @@ class PublicationPageState extends State<PublicationPage> {
       children: List.generate(images.length, (index) {
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
-          print(uploadModel.imageUrl);
+
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -133,6 +129,10 @@ class PublicationPageState extends State<PublicationPage> {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
+      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
+      //_imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+
+      print(_imageFile);
       if (_imageFile != null) {
         print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
@@ -282,8 +282,6 @@ class PublicationPageState extends State<PublicationPage> {
                 // _nameTxtController.clear();
                 _name = value;
                 prefs.adoptionName = value;
-                print('NAME');
-                print(_name);
               });
             },
           ))
@@ -438,7 +436,6 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
-    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";

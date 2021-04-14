@@ -27,8 +27,8 @@ class PublicationModel {
       this.services,
       this.date});
 
-  PublicationModel.fromJsonMap(Map<String, dynamic> json, String id) {
-    id = id;
+  PublicationModel.fromJsonMap(Map<String, dynamic> json, String pid) {
+    id = pid;
     category = json['category'];
     name = json['name'];
     description = json['description'];

@@ -127,7 +127,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
     _initialcameraposition =
         LatLng(_currentPosition.latitude, _currentPosition.longitude);
     location.onLocationChanged.listen((LocationData currentLocation) {
-      print("${currentLocation.longitude} : ${currentLocation.longitude}");
+
       setState(() {
         _currentPosition = currentLocation;
         _initialcameraposition =

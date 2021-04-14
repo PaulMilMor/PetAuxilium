@@ -2,13 +2,12 @@
 //import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Opinions extends StatefulWidget {
   Opinions(
@@ -78,6 +77,7 @@ class _OpinionsState extends State<Opinions> {
     return StreamBuilder(
         stream: _db.getOpinions(this.widget.id),
         builder: (context, AsyncSnapshot<List<EvaluationModel>> snapshot) {
+          print(snapshot.data);
           _checkEvaluations(snapshot);
 
           if (snapshot.hasData) {

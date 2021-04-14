@@ -9,7 +9,7 @@ import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
-import 'package:pet_auxilium/widgets/ChatRoomListTile_widget.dart';
+
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
 
@@ -83,11 +83,10 @@ class _DetailPageState extends State<DetailPage> {
                                 SizedBox(
                                   width: 52,
                                 ),
-                           
                                 if (widget.detailDocument.category
                                     .toString()
-                                    .contains('CUIDADOR'))     _buttonChat()
-                               
+                                    .contains('CUIDADOR'))
+                                  _buttonChat()
                               ],
                             ),
                             SizedBox(
@@ -590,6 +589,7 @@ class _DetailPageState extends State<DetailPage> {
         category: widget.detailDocument.category,
         description: widget.detailDocument.description,
         date: widget.detailDocument.date,
+        userid: widget.detailDocument.userID,
       );
     }
   }
@@ -614,22 +614,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-  
-    //  Navigator.popUntil(context, (route) => true);
-WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
-    var myId = _prefs.userID;
-    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
-    Map<String, dynamic> chatRoomInfoMap = {
-      "users": [myId, widget.detailDocument.userID]
-    };
-    _db.createChatRoom(chatRoomId, chatRoomInfoMap);
-    Navigator.push(context,
 
-         MaterialPageRoute(
-
-           builder: (context) => ChatScreenPage(widget.detailDocument.userID,widget.detailDocument.name)));
-});
-     
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var myId = _prefs.userID;
+      var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
+      Map<String, dynamic> chatRoomInfoMap = {
+        "users": [myId, widget.detailDocument.userID]
+      };
+      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatScreenPage(
+                  widget.detailDocument.userID, widget.detailDocument.name)));
+    });
   }
 
   _getChatRoomIdByIds(String a, String b) {
@@ -641,13 +639,14 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
   }
 
   Widget _buttonChat() {
- return TextButton(
-   child: Icon(Icons.chat,color: Colors.grey,),
-   onPressed: (){
-
-    _chats();
-   },
- );
-
+    return TextButton(
+      child: Icon(
+        Icons.chat,
+        color: Colors.grey,
+      ),
+      onPressed: () {
+        _chats();
+      },
+    );
   }
 }

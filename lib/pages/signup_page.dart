@@ -556,8 +556,7 @@ class _SignupPageState extends State<SignupPage> {
 
   _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-    print(context);
-    print("dentro del registro google");
+
     if (_result == 'Ingresó') {
       _isGoogleLoading = false;
       Navigator.pushNamedAndRemoveUntil(
