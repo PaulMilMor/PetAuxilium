@@ -8,6 +8,7 @@ import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
+  final _push = PushNotificationUtil();
   void _onItemTapped(int index) {
     if ( index != 3) {
       setState(() {
@@ -31,6 +33,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   initState() {
+    _push.initialise();
     super.initState();
     // _prefs.selectedIndex =0;
   }

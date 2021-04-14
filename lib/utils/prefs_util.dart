@@ -114,6 +114,12 @@ class preferencesUtil {
   set keeperPricing(String desc) {
     _prefs.setString('kpricing', desc);
   }
+  set token(token){
+    _prefs.setString('token', token);
+  }
+  get token{
 
+    _prefs.getString('token');
+  }
  
 }
