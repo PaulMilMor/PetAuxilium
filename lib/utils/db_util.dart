@@ -51,9 +51,10 @@ class dbUtil {
           evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
-    Future<DocumentSnapshot> getUserById(String userID)=>FirebaseFirestore.instance.collection("users").doc(userID).get();
-  
-  
+
+  Future<DocumentSnapshot> getUserById(String userID) =>
+      FirebaseFirestore.instance.collection("users").doc(userID).get();
+
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
@@ -64,9 +65,10 @@ class dbUtil {
       'userID': business.userID,
       'imgRef': business.imgRef,
       'services': business.services,
-      'pricing': '',
       'nevaluations': 0,
       'score': 0,
+      'pricing': '',
+      'date': DateTime.now(),
     });
   }
 
@@ -78,6 +80,10 @@ class dbUtil {
       'description': complaint.description,
       'userID': complaint.userID,
       'imgRef': complaint.imgRef,
+      'nevaluations': 0,
+      'score': 0,
+      'pricing': "",
+      'date': DateTime.now(),
     });
   }
 
@@ -102,6 +108,7 @@ class dbUtil {
       'pricing': '',
       'nevaluations': 0,
       'score': 0,
+      'date': DateTime.now(),
     });
   }
 
@@ -176,6 +183,7 @@ class dbUtil {
       'nevaluations': 0,
       'score': 0,
       'services': ad.services,
+      'date': DateTime.now(),
     });
   }
 
@@ -188,7 +196,8 @@ print(docRef.documentID);*/
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
       'score': evaluation.score,
-      'comment': evaluation.comment
+      'comment': evaluation.comment,
+      'date': DateTime.now(),
     });
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
@@ -244,7 +253,8 @@ print(docRef.documentID);*/
       'userID': comment.userID,
       'publicationID': comment.publicationID,
       'username': comment.username,
-      'comment': comment.comment
+      'comment': comment.comment,
+      'date': DateTime.now(),
     });
     await _firestoreInstance
         .collection("publications")
@@ -630,13 +640,13 @@ print(docRef.documentID);*/
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getChatRooms()  {
+  Stream<QuerySnapshot> getChatRooms() {
     print('fafaaf');
     //print('El user es $myUsername');
     return FirebaseFirestore.instance
         .collection("chatrooms")
         // .orderBy("lastMessageSendTs", descending: true)
-       .where("users", arrayContains: _prefs.userID)
+        .where("users", arrayContains: _prefs.userID)
         .snapshots();
   }
 
