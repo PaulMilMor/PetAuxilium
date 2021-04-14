@@ -10,7 +10,6 @@ import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'button_widget.dart';
 
-
 enum ClosePub { option1, eliminar }
 
 class ListFeed extends StatefulWidget {
@@ -57,10 +56,8 @@ class _ListFeedState extends State<ListFeed> {
 
   @override
   Widget build(BuildContext context) {
-    print("POOOOOOOOOOOOL SNAPSHOTS");
-    print(this.widget.snapshot.data.length);
-    this.widget.snapshot.data.sort(
-        (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
+    //  this.widget.snapshot.data.sort(
+    //      (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -68,7 +65,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           PublicationModel _data = this.widget.snapshot.data[index];
-print('id p ${_data.id}');
+          print('id p ${_data.id}');
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
           _selectedReason = null;
@@ -242,7 +239,6 @@ print('id p ${_data.id}');
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
 
-            
               selectedPublication.id = id;
               print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
@@ -269,7 +265,6 @@ print('id p ${_data.id}');
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
-                 
                   if (element.id == _id) {
                     found = true;
 
@@ -324,7 +319,6 @@ print('id p ${_data.id}');
     Widget confirmButton = TextButton(
       child: Text("Confirmar"),
       onPressed: () async {
-      
         await _db.banUser(id);
         setState(() {});
       },
@@ -538,7 +532,6 @@ print('id p ${_data.id}');
                                         .get()
                                         .then((value) {
                                       value.docs.forEach((element) {
-                                       
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
@@ -551,7 +544,7 @@ print('id p ${_data.id}');
                                             //print("Ya existe el usuario");
                                           } else {*/
                                           users.add(_prefs.userID);
-                                       
+
                                           ReportModel update = ReportModel(
                                             publicationid: _id,
                                             userid: users,
@@ -570,7 +563,6 @@ print('id p ${_data.id}');
                                     });
 
                                     if (found == false) {
-                                    
                                       users.add(_prefs.userID);
                                       ReportModel addreport = ReportModel(
                                         publicationid: _id,
