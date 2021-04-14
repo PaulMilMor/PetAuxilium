@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'button_widget.dart';
 
 enum ClosePub { option1, eliminar }
@@ -48,7 +49,7 @@ class _ListFeedState extends State<ListFeed> {
   String _selectedReason;
   String _id;
   ClosePub _option = ClosePub.option1;
-
+ final _pushUtil=PushNotificationUtil();
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -63,7 +64,7 @@ class _ListFeedState extends State<ListFeed> {
           String _foto = _fotos.first;
           _selectedReason = null;
           return GestureDetector(
-            onTap: () {
+            onTap: ()  {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (BuildContext context) => DetailPage(

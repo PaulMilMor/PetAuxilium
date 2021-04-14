@@ -19,7 +19,7 @@ import 'package:pet_auxilium/pages/map_page.dart';
 import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -27,6 +27,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final prefs = preferencesUtil();
   await prefs.initPrefs();
+  final _push = PushNotificationUtil();
+
   runApp(MyApp());
 }
 
