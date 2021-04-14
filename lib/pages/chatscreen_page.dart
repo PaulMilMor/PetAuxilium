@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 import 'package:random_string/random_string.dart'; 
 class ChatScreenPage extends StatefulWidget {
@@ -14,14 +15,17 @@ class ChatScreenPage extends StatefulWidget {
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
   String userImg=" ";
+ String token='';
   String messageId='';
   Stream messageStream;
   final preferencesUtil _prefs=preferencesUtil();
   final dbUtil _db=dbUtil();
+  final _pushUtil=PushNotificationUtil();
 String chatRoomId;
 TextEditingController messageTextEdittingController = TextEditingController();
 @override
-void initState() { 
+void initState() {
+  _getUserInfo(); 
   super.initState();
   chatRoomId=getChatRoomIdByIds();
    getAndSetMessages();
@@ -32,7 +36,14 @@ void initState() {
   }
 
 
+ _getUserInfo() async{
+ 
+ DocumentSnapshot document= await _db.getUserById(widget.id);
 
+   token=document.data()["token"];
+ 
+
+ }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,8 +186,8 @@ addMessage(bool sendClicked)async{
        };
        _db.updateLastMessageSend(chatRoomId, lastMessageInfoMap);
   if (sendClicked) {
-          
-          
+      
+          _pushUtil.sendChatMensagge(_prefs.userID, _prefs.userName,msg, token);
           messageTextEdittingController.text = "";
         
           messageId = "";

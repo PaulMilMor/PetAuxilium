@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isGoogleLoading = false;
   FocusScopeNode node;
+  
   //UserModel user;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _pswdController = TextEditingController();
@@ -249,6 +250,8 @@ class _LoginPageState extends State<LoginPage> {
     print(prefs.userName);
     List<String> _bans = await _db.bansList();
     if (_result == 'Ingresó') {
+
+
       setState(() {
         _isLoading = false;
       });

@@ -6,6 +6,7 @@ import 'package:pet_auxilium/pages/report_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
 
 import 'package:pet_auxilium/pages/publication_page.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
@@ -18,6 +19,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   final _push = PushNotificationUtil();
+  final _db =dbUtil();
   void _onItemTapped(int index) {
     if ( index != 3) {
       setState(() {
@@ -27,15 +29,21 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _onItemTappedAdmin(int index) {
+   
     setState(() {
       _prefs.selectedIndex = index;
     });
   }
 
   initState() {
-    _push.initialise();
+  _push.initialise();
     super.initState();
     // _prefs.selectedIndex =0;
+  }
+
+  initToken()async{
+    
+
   }
 
   final List<String> _titles = [
@@ -58,6 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];
   @override
   Widget build(BuildContext context) {
+     print('este es el token ${_prefs.token}');
     return Scaffold(
       backgroundColor: Colors.white,
       //appBar: getAppbar(),

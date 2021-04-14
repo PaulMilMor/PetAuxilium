@@ -624,7 +624,7 @@ class _DetailPageState extends State<DetailPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatScreenPage(
-                  widget.detailDocument.userID, widget.detailDocument.name)));
+                  widget.detailDocument.userID, widget.detailDocument.name, )));
     });
   }
 

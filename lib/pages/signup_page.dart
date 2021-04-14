@@ -526,6 +526,7 @@ class _SignupPageState extends State<SignupPage> {
       name: _nameController.text + ' ' + _lastNameController.text,
       email: _emailController.text,
       pass: _passwordController.text,
+      
       //imgRef??
       //birthday??
     );

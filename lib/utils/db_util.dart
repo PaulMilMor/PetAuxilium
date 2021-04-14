@@ -611,4 +611,11 @@ print(docRef.documentID);*/
     // print('El user es $myUsername');
     return FirebaseFirestore.instance.collection("chatrooms").get();
   }
+
+  updateToken(id,  token)async{
+
+    await _firestoreInstance.collection('users').doc(id).update({
+      'token':token
+    });
+  }
 }
