@@ -12,6 +12,8 @@ class BusinessModel {
   String pricing;
   int nevaluations;
   var score;
+  DateTime date;
+  
   BusinessModel(
       {
       this.id,
@@ -24,7 +26,8 @@ class BusinessModel {
       this.services,
       this.pricing,
       this.nevaluations,
-      this.score});
+      this.score,//});
+      this.date});
   // LatLng getLatLng() {
 
   //   final latLng = this.location.substring(4).split(',');
@@ -40,5 +43,6 @@ class BusinessModel {
     description = json['description'];
     userID = json['userID'];
     this.services = json['services'];
+    this.date = json['date'].toDate();
   }
 }

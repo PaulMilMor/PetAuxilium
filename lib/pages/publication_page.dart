@@ -1,7 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -131,11 +130,9 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Future _onAddImageClick(int index) async {
+    //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
+    final _imageFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
-      print("La maldita imagen");
-      print(_imageFile);
       if (_imageFile != null) {
         print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
@@ -271,6 +268,8 @@ class PublicationPageState extends State<PublicationPage> {
           child: GrayTextFormField(
             controller: _nameTxtController,
             hintText: 'Nombre',
+            maxLength: 20,
+            textCapitalization: TextCapitalization.words,
             suffixIcon: IconButton(
               onPressed: () {
                 _nameTxtController.clear();

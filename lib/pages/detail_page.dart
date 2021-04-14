@@ -581,12 +581,14 @@ class _DetailPageState extends State<DetailPage> {
           sumscore: widget.detailDocument.score,
           nevaluations: widget.detailDocument.nevaluations,
           pricing: widget.detailDocument.pricing,
-          description: widget.detailDocument.description);
+          description: widget.detailDocument.description,
+          date: widget.detailDocument.date);
     } else {
       return Comments(
         id: widget.detailDocument.id,
         category: widget.detailDocument.category,
         description: widget.detailDocument.description,
+        date: widget.detailDocument.date,
       );
     }
   }

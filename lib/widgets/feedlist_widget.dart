@@ -57,6 +57,10 @@ class _ListFeedState extends State<ListFeed> {
 
   @override
   Widget build(BuildContext context) {
+    print("POOOOOOOOOOOOL SNAPSHOTS");
+    print(this.widget.snapshot.data.length);
+    this.widget.snapshot.data.sort(
+        (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,

@@ -139,7 +139,7 @@ class KeeperPageState extends State<KeeperPage> {
   Future _onAddImageClick(int index) async {
     setState(() {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      final _imageFile = picker.getImage(source: ImageSource.gallery);
       if (_imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
@@ -180,7 +180,6 @@ class KeeperPageState extends State<KeeperPage> {
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
     setState(() {
       if (pickedFile != null) {
         imagefile = File(pickedFile.path);

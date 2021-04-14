@@ -4,10 +4,10 @@ import 'package:pet_auxilium/pages/chatsrooms_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
 import 'package:pet_auxilium/pages/report_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
-
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/notifications_page.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
-    if ( index != 3) {
+    if (index != 3) {
       setState(() {
         _prefs.selectedIndex = index;
       });
@@ -49,7 +49,8 @@ class _NavigationPageState extends State<NavigationPage> {
     ChatRooms(),
     //Adoptionpage(),
     PublicationPage(),
-    null,
+    NotificationsPage(),
+    //CreateBusinessPage(),
     AccountPage()
   ];
   final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];
