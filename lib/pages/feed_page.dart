@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/utils/token_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -28,7 +27,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
-      child:StreamBuilder(
+      child: StreamBuilder(
         //FIXME: corregir follows para anonimos
         stream: _db.getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
@@ -44,7 +43,6 @@ class _FeedState extends State<Feed> {
                     voidCallback: callback,
                   );
                   // ignore: dead_code
-                  Token();
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

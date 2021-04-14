@@ -17,11 +17,9 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   void _onItemTapped(int index) {
-    if (index != 3) {
-      setState(() {
-        _prefs.selectedIndex = index;
-      });
-    }
+    setState(() {
+      _prefs.selectedIndex = index;
+    });
   }
 
   void _onItemTappedAdmin(int index) {
@@ -50,7 +48,6 @@ class _NavigationPageState extends State<NavigationPage> {
     //Adoptionpage(),
     PublicationPage(),
     NotificationsPage(),
-    CreateBusinessPage(),
     AccountPage()
   ];
   final List<Widget> _adminTabs = [StartupPage(), ReportPage(), AccountPage()];

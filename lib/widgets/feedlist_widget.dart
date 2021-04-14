@@ -5,7 +5,6 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/utils/token_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
