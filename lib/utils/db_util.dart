@@ -348,47 +348,65 @@ print(docRef.documentID);*/
     return _firestoreInstance.collection('publications').get();
   }
 
+  Stream searchedElements(String query) {
+    return Rx.combineLatest3(
+        streamPublication(query),
+        streamBusiness(query),
+        streamComplaints(query),
+        (List<PublicationModel> p, List<PublicationModel> b,
+                List<PublicationModel> c) =>
+            p + b + c);
+  }
+
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication(),
-      streamBusiness(),
-      streamComplaints(),
+      streamPublication(''),
+      streamBusiness(''),
+      streamComplaints(''),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
   //Stream get feedStream =>
-  Stream<List<PublicationModel>> streamPublication() =>
+  Stream<List<PublicationModel>> streamPublication(String query) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
-  Stream<List<PublicationModel>> streamComplaints() =>
+  Stream<List<PublicationModel>> streamComplaints(String query) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
 
-  Stream<List<PublicationModel>> streamBusiness() =>
+  Stream<List<PublicationModel>> streamBusiness(String query) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         //print(list);

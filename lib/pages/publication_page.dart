@@ -128,8 +128,6 @@ class PublicationPageState extends State<PublicationPage> {
   Future _onAddImageClick(int index) async {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
-    print('POOOOOOOOOOL IMAGE');
-    print(_imageFile);
     setState(() {
       //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
       //_imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
