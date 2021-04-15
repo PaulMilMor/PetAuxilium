@@ -205,14 +205,15 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(1),
     });
   }
+
   Future<void> addEvaluationsBusiness(EvaluationModel evaluation) async {
- 
     await _firestoreInstance.collection("evaluations").add({
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
       'score': evaluation.score,
-      'comment': evaluation.comment
+      'comment': evaluation.comment,
+      'date': DateTime.now(),
     });
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
@@ -234,6 +235,7 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(-1),
     });
   }
+
   Future<void> updateScoreBusiness(EvaluationModel evaluation) async {
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
