@@ -130,7 +130,7 @@ class PublicationPageState extends State<PublicationPage> {
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
     imagefile = File(_imageFile.path);
     setState(() {
-      if (imagefile != null) {
+      if (_imageFile != null) {
         print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);

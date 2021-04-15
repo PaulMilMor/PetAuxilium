@@ -5,11 +5,13 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final preferencesUtil _prefs = preferencesUtil();
+  final _pushUtil=PushNotificationUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -17,6 +19,7 @@ class AuthUtil {
       var result = await _auth.createUserWithEmailAndPassword(
           email: user.email, password: user.pass);
       user.id = result.user.uid;
+
       await _db.addUser(user);
     } catch (error) {
       print(error.toString());
@@ -49,9 +52,10 @@ class AuthUtil {
     
 
       UserModel userModel = await _db.getUser(result.user.uid);
-    
-
+     
+       
       _prefs.userID = result.user.uid;
+
       _prefs.selectedIndex = 0;
       return 'Ingresó';
    
@@ -151,7 +155,7 @@ class AuthUtil {
           break;
       }
       // assert(!user.isAnonymous);
-      // assert(await user.getIdToken() != null);
+      //assert(await user.getIdToken() != null);
 
       //return user;
     }

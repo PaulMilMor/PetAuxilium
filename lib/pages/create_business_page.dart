@@ -16,9 +16,6 @@ import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
-import 'package:image_picker/image_picker.dart';
-import 'package:pet_auxilium/models/ImageUploadModel.dart';
-
 class CreateBusinessPage extends StatefulWidget {
   @override
   _CreateBusinessPageState createState() => _CreateBusinessPageState();
@@ -40,7 +37,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
-
+  final picker = ImagePicker();
   List<LatLng> _locations;
   List<Object> images = [];
   List<String> _selectedServices = [];
@@ -52,14 +49,12 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     'VETERINARIA',
     'VENTAS'
   ];
-  final picker = ImagePicker();
   final MapsUtil mapsUtil = MapsUtil();
   @override
   void initState() {
     super.initState();
     setState(() {
       images.add("Add Image");
-   
     });
 //FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _name = prefs.businessName ?? ' ';
@@ -382,21 +377,21 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   void getFileImage(int index) async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
-      setState(() {
-        if (imageFile == null) {
-          images.remove("Add Image");
-        }
-      });
-      imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
+    setState(() {
+      if (imageFile == null) {
+        images.remove("Add Image");
+      }
+    });
+    imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
 
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imageFile;
-        imageUpload.imageUrl = '';
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imageFile;
+      imageUpload.imageUrl = '';
+      images.replaceRange(index, index + 1, [imageUpload]);
+    });
   }
 
   Widget _selectService() {

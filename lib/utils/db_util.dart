@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -244,6 +245,15 @@ print(docRef.documentID);*/
         .update({
       'score': FieldValue.increment(-scorenum),
       'nevaluations': FieldValue.increment(-1),
+    });
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    // Assume user is logged in for this example
+    String userId = FirebaseAuth.instance.currentUser.uid;
+
+    await _firestoreInstance.collection('users').doc(userId).update({
+      'token': FieldValue.arrayUnion([token]),
     });
   }
 
@@ -660,5 +670,12 @@ print(docRef.documentID);*/
   Future<QuerySnapshot> getAllChatRooms() async {
     // print('El user es $myUsername');
     return FirebaseFirestore.instance.collection("chatrooms").get();
+  }
+
+  updateToken(id, token) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(id)
+        .update({'token': token});
   }
 }

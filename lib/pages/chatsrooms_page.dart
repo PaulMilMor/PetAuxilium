@@ -20,12 +20,13 @@ class _ChatRoomsState extends State<ChatRooms> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Chat'),),
+      appBar: AppBar(
+        title: Text('Chats'),
+      ),
       body: Container(
         child: StreamBuilder(
           stream: _db.getChatRooms(),
           builder: (context, snapshot) {
-          
             if (snapshot.hasData) {
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
