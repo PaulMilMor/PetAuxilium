@@ -56,8 +56,8 @@ class _ListFeedState extends State<ListFeed> {
 
   @override
   Widget build(BuildContext context) {
-    //  this.widget.snapshot.data.sort(
-    //      (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
+    this.widget.snapshot.data.sort(
+        (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -252,15 +252,15 @@ class _ListFeedState extends State<ListFeed> {
               List users = [];
               _selectedReason = null;
               _id = null;
-              
+
               /*PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);*/
-                print(publications);
+              print(publications);
               //selectedPublication.id = id;
               _id = id;
               var found = false;
 
-               //_ReportMenu(/*publications*/);
+              //_ReportMenu(/*publications*/);
               await _firestoreInstance
                   .collection('reports')
                   .get()
