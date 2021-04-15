@@ -129,7 +129,6 @@ class _AccountPageState extends State<AccountPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           if (!isAdmin()) _editProfileBtn(),
-
           if (!isAdmin()) _myPostsButton(),
           if (!isAdmin()) _followListButton(),
           if (!isAdmin()) _postBusinessButton(),
@@ -139,6 +138,7 @@ class _AccountPageState extends State<AccountPage> {
           //_followedButton(),
           // _settingsButton(),
           _logoutButton(),
+          if (!isAdmin()) _switchB(),
         ],
       ),
     );
@@ -270,14 +270,38 @@ class _AccountPageState extends State<AccountPage> {
       icon: Icons.navigate_next,
       onPressed: () {
         _prefs.userID = ' ';
-        _prefs.userName = null;
-        _prefs.userImg = null;
-        _prefs.userEmail = null;
+        _prefs.userName = '';
+        _prefs.userImg = '';
+        _prefs.userEmail = '';
         _prefs.selectedIndex = 0;
         print('USER ID');
         print(_prefs.userID);
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       },
     );
+  }
+
+  bool isSwitched = false;
+  Widget _switchB() {
+    return Container(
+        child: Column(children: <Widget>[
+      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Text(
+          '    Recibir notificaciones',
+          style: TextStyle(fontSize: 15),
+        ),
+        Switch(
+          value: isSwitched,
+          onChanged: (value) {
+            setState(() {
+              isSwitched = value;
+              print(isSwitched);
+            });
+          },
+          activeTrackColor: Colors.greenAccent[400],
+          activeColor: Colors.greenAccent[600],
+        ),
+      ])
+    ]));
   }
 }

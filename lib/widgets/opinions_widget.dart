@@ -2,13 +2,12 @@
 //import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class Opinions extends StatefulWidget {
   Opinions(
@@ -79,7 +78,7 @@ class _OpinionsState extends State<Opinions> {
         stream: _db.getOpinions(this.widget.id),
         builder: ( context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
-              print(snapshot.data);
+          print(snapshot.data);
           _checkEvaluations(snapshot);
 
           if (snapshot.hasData) {
@@ -340,7 +339,8 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _serviceNumbers() {
-    if (this.widget.category == 'CUIDADOR' || this.widget.category == 'NEGOCIO') {
+    if (this.widget.category == 'CUIDADOR' ||
+        this.widget.category == 'NEGOCIO') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -488,19 +488,16 @@ class _OpinionsState extends State<Opinions> {
     setState(() {
       avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
-    if(this.widget.category == "CUIDADOR"){
-          _db.updateScore(evaluation);
-
-    }else{
-          _db.updateScoreBusiness(evaluation);
-
+    if (this.widget.category == "CUIDADOR") {
+      _db.updateScore(evaluation);
+    } else {
+      _db.updateScoreBusiness(evaluation);
     }
   }
 
   void _evaluacion() {
     //CollectionReference docRef = _firestoreInstance.collection('evaluations');
-    
-    
+
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -511,14 +508,12 @@ class _OpinionsState extends State<Opinions> {
     );
     this.widget.sumscore += double.parse(_score);
     this.widget.nevaluations++;
-    if(this.widget.category == "CUIDADOR"){
-        _db.addEvaluations(evaluation);
-    }else{
-        _db.addEvaluationsBusiness(evaluation);
-
+    if (this.widget.category == "CUIDADOR") {
+      _db.addEvaluations(evaluation);
+    } else {
+      _db.addEvaluationsBusiness(evaluation);
     }
-    
-    
+
     _addevaluation(/*detailDocument.id,*/ evaluations);
 
     setState(() {
@@ -529,19 +524,19 @@ class _OpinionsState extends State<Opinions> {
   void _addevaluation(evaluations) async {
     print("chingados");
     if (evaluations.contains(this.widget.id)) {
-      
       evaluations.remove(this.widget.id);
     } else {
       evaluations.add(this.widget.id);
     }
-    
+
     _db.updateEvaluations(evaluations);
   }
 
   Widget _opinion(snapshot) {
     print("checar la eval");
     print(_myEvaluation);
-    if (this.widget.category.toString().contains('CUIDADOR')|| this.widget.category.toString().contains('NEGOCIO')) {
+    if (this.widget.category.toString().contains('CUIDADOR') ||
+        this.widget.category.toString().contains('NEGOCIO')) {
       return SingleChildScrollView(
         child: Container(
           child: Column(

@@ -10,24 +10,23 @@ class ChatRooms extends StatefulWidget {
 }
 
 class _ChatRoomsState extends State<ChatRooms> {
-
   final preferencesUtil _prefs = preferencesUtil();
   final dbUtil _db = dbUtil();
 
   @override
   void initState() {
-  
     super.initState();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Chats'),
+      ),
       body: Container(
         child: StreamBuilder(
           stream: _db.getChatRooms(),
           builder: (context, snapshot) {
-            print("vuil");
-            // print(_prefs.userID)x;
             if (snapshot.hasData) {
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
@@ -35,19 +34,12 @@ class _ChatRoomsState extends State<ChatRooms> {
                   itemBuilder: (context, index) {
                     DocumentSnapshot ds = snapshot.data.docs[index];
 
-                    print('Necesito tugsteno');
-                    print(ds.id);
                     String otherId =
                         ds.id.replaceAll(_prefs.userID, "").replaceAll("_", "");
-                    print(otherId);
                     return ChatRoomListTile(
-                      ds["lastMessage"],
-                      otherId,
-                      _prefs.userID,
-                      (){setState(() {
-                        
-                      });}
-                    );
+                        ds["lastMessage"], otherId, _prefs.userID, () {
+                      setState(() {});
+                    });
                   });
             } else {
               return Center(child: CircularProgressIndicator());
@@ -57,6 +49,4 @@ class _ChatRoomsState extends State<ChatRooms> {
       ),
     );
   }
-
- 
 }

@@ -27,7 +27,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
         body: Container(
       padding: EdgeInsets.only(top: 7),
-      child:StreamBuilder(
+      child: StreamBuilder(
         //FIXME: corregir follows para anonimos
         stream: _db.getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {

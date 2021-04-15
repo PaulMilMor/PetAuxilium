@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -37,9 +38,6 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
 
-      print('IMG');
-      print(_prefs.userImg);
-      print(value.get("imgRef"));
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -208,14 +206,15 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(1),
     });
   }
+
   Future<void> addEvaluationsBusiness(EvaluationModel evaluation) async {
- 
     await _firestoreInstance.collection("evaluations").add({
       'userID': evaluation.userID,
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
       'score': evaluation.score,
-      'comment': evaluation.comment
+      'comment': evaluation.comment,
+      'date': DateTime.now(),
     });
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
@@ -237,6 +236,7 @@ print(docRef.documentID);*/
       'nevaluations': FieldValue.increment(-1),
     });
   }
+
   Future<void> updateScoreBusiness(EvaluationModel evaluation) async {
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
@@ -245,6 +245,15 @@ print(docRef.documentID);*/
         .update({
       'score': FieldValue.increment(-scorenum),
       'nevaluations': FieldValue.increment(-1),
+    });
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    // Assume user is logged in for this example
+    String userId = FirebaseAuth.instance.currentUser.uid;
+
+    await _firestoreInstance.collection('users').doc(userId).update({
+      'token': FieldValue.arrayUnion([token]),
     });
   }
 
@@ -284,10 +293,7 @@ print(docRef.documentID);*/
               " " +
               placemarks.first.locality +
               "\n";
-          print(place);
         });
-
-        print(lista.toString());
       });
     });
     return lista;
@@ -326,7 +332,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -344,7 +349,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -361,7 +365,6 @@ print(docRef.documentID);*/
           .map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
@@ -386,50 +389,65 @@ print(docRef.documentID);*/
     return _firestoreInstance.collection('publications').get();
   }
 
+  Stream searchedElements(String query) {
+    return Rx.combineLatest3(
+        streamPublication(query),
+        streamBusiness(query),
+        streamComplaints(query),
+        (List<PublicationModel> p, List<PublicationModel> b,
+                List<PublicationModel> c) =>
+            p + b + c);
+  }
+
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication(),
-      streamBusiness(),
-      streamComplaints(),
+      streamPublication(''),
+      streamBusiness(''),
+      streamComplaints(''),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
   //Stream get feedStream =>
-  Stream<List<PublicationModel>> streamPublication() =>
+  Stream<List<PublicationModel>> streamPublication(String query) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
-  Stream<List<PublicationModel>> streamComplaints() =>
+  Stream<List<PublicationModel>> streamComplaints(String query) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
 
-  Stream<List<PublicationModel>> streamBusiness() =>
+  Stream<List<PublicationModel>> streamBusiness(String query) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
-          print(element.id);
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         //print(list);
@@ -464,19 +482,19 @@ print(docRef.documentID);*/
     });
     return follows;
   }
-  Stream<List<String>> getFollows(id)=>
-   
-     _firestoreInstance.collection('users').doc(id).snapshots().map((value) {
-       List<String> follows = [];
-      UserModel user = UserModel.fromJsonMap(value.data());
-      if (user.follows != null) {
-        user.follows.forEach((element) {
-          follows.add(element);
-        });
-      }
-      return follows;
-    });
-    
+
+  Stream<List<String>> getFollows(id) =>
+      _firestoreInstance.collection('users').doc(id).snapshots().map((value) {
+        List<String> follows = [];
+        UserModel user = UserModel.fromJsonMap(value.data());
+        if (user.follows != null) {
+          user.follows.forEach((element) {
+            follows.add(element);
+          });
+        }
+        return follows;
+      });
+
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
     await _firestoreInstance
@@ -641,7 +659,6 @@ print(docRef.documentID);*/
   }
 
   Stream<QuerySnapshot> getChatRooms() {
-    print('fafaaf');
     //print('El user es $myUsername');
     return FirebaseFirestore.instance
         .collection("chatrooms")
@@ -651,8 +668,14 @@ print(docRef.documentID);*/
   }
 
   Future<QuerySnapshot> getAllChatRooms() async {
-    print('fafaaf');
     // print('El user es $myUsername');
     return FirebaseFirestore.instance.collection("chatrooms").get();
+  }
+
+  updateToken(id, token) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(id)
+        .update({'token': token});
   }
 }

@@ -64,10 +64,6 @@ class PublicationPageState extends State<PublicationPage> {
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
-    print(ModalRoute.of(context).settings.name);
-    getDir(_locations);
-    print("mm");
-    print(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -83,7 +79,7 @@ class PublicationPageState extends State<PublicationPage> {
       children: List.generate(images.length, (index) {
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
-          print(uploadModel.imageUrl);
+
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -134,7 +130,7 @@ class PublicationPageState extends State<PublicationPage> {
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
     imagefile = File(_imageFile.path);
     setState(() {
-      if (imagefile != null) {
+      if (_imageFile != null) {
         print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
@@ -152,28 +148,27 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getFileImage(int index) async {
+    print(imagefile);
+    print(images.length);
+    setState(() {
+      if (imagefile == null) {
+        images.remove("Add Image");
+      }
+    });
 
-      print(imagefile);
-      print(images.length);
-      setState(() {
-        if (imagefile == null) {
-          images.remove("Add Image");
-        }
-      });
+    imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
 
-      imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imagefile;
+      imageUpload.imageUrl = '';
+      // _imgsFiles.add(imageUpload);
+      print("en el file");
 
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imagefile;
-        imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
-        print("en el file");
-
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+      images.replaceRange(index, index + 1, [imageUpload]);
+    });
     /*});*/
   }
 
@@ -269,8 +264,6 @@ class PublicationPageState extends State<PublicationPage> {
                 // _nameTxtController.clear();
                 _name = value;
                 prefs.adoptionName = value;
-                print('NAME');
-                print(_name);
               });
             },
           ))
@@ -360,7 +353,6 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
-
         _nameTxtController.clear();
         _descTxtController.clear();
         _dirTxtController.clear();
@@ -419,7 +411,6 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getDir(List<LatLng> locations) {
-    print(locations);
     if (locations != null) {
       locations.forEach((LatLng element) async {
         String place = "";

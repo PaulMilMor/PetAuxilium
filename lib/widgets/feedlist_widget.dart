@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
@@ -8,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'button_widget.dart';
-
 
 enum ClosePub { option1, eliminar }
 
@@ -44,21 +46,12 @@ class _ListFeedState extends State<ListFeed> {
     'Suplantacion de identidad',
     'Fotos Inapropiadas'
   ];
-  List listItems2 = [
-    'La mascota ha sido dada en adopción',
-    'El animal callejero ha sido atendido',
-    'La mascota ya fue localizada',
-    'La denuncia ya fue atendida',
-    'Deseo eliminar esta publicación',
-  ];
   String _selectedReason;
   String _id;
   ClosePub _option = ClosePub.option1;
-
+  final _pushUtil = PushNotificationUtil();
   @override
   Widget build(BuildContext context) {
-    print("POOOOOOOOOOOOL SNAPSHOTS");
-    print(this.widget.snapshot.data.length);
     this.widget.snapshot.data.sort(
         (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
@@ -68,7 +61,7 @@ class _ListFeedState extends State<ListFeed> {
         itemCount: this.widget.snapshot.data.length,
         itemBuilder: (BuildContext context, index) {
           PublicationModel _data = this.widget.snapshot.data[index];
-print('id p ${_data.id}');
+          print('id p ${_data.id}');
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
           _selectedReason = null;
@@ -242,7 +235,6 @@ print('id p ${_data.id}');
               PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
 
-              print(publications);
               selectedPublication.id = id;
               print(selectedPublication);
               _deletePublication(id, "publications", selectedPublication);
@@ -256,22 +248,21 @@ print('id p ${_data.id}');
               List users = [];
               _selectedReason = null;
               _id = null;
-              
+
               /*PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);*/
-                print(publications);
+              print(publications);
               //selectedPublication.id = id;
               _id = id;
               var found = false;
 
-               //_ReportMenu(/*publications*/);
+              //_ReportMenu(/*publications*/);
               await _firestoreInstance
                   .collection('reports')
                   .get()
                   .then((value) {
                 value.docs.forEach((element) {
-                  print(element.id);
-                  if (element.id == id) {
+                  if (element.id == _id) {
                     found = true;
 
                     users = element.get('userid');
@@ -325,7 +316,6 @@ print('id p ${_data.id}');
     Widget confirmButton = TextButton(
       child: Text("Confirmar"),
       onPressed: () async {
-        print('entro adadadadad');
         await _db.banUser(id);
         setState(() {});
       },
@@ -539,7 +529,6 @@ print('id p ${_data.id}');
                                         .get()
                                         .then((value) {
                                       value.docs.forEach((element) {
-                                        print(element.id);
                                         if (element.id == _id) {
                                           found = true;
                                           users = element.get('userid');
@@ -552,7 +541,7 @@ print('id p ${_data.id}');
                                             //print("Ya existe el usuario");
                                           } else {*/
                                           users.add(_prefs.userID);
-                                          print(users);
+
                                           ReportModel update = ReportModel(
                                             publicationid: _id,
                                             userid: users,
@@ -571,7 +560,6 @@ print('id p ${_data.id}');
                                     });
 
                                     if (found == false) {
-                                      print(users);
                                       users.add(_prefs.userID);
                                       ReportModel addreport = ReportModel(
                                         publicationid: _id,

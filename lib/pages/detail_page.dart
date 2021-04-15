@@ -589,6 +589,7 @@ class _DetailPageState extends State<DetailPage> {
         category: widget.detailDocument.category,
         description: widget.detailDocument.description,
         date: widget.detailDocument.date,
+        userid: widget.detailDocument.userID,
       );
     }
   }
@@ -613,7 +614,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-    //  Navigator.popUntil(context, (route) => true);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var myId = _prefs.userID;
       var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
@@ -625,7 +626,7 @@ class _DetailPageState extends State<DetailPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatScreenPage(
-                  widget.detailDocument.userID, widget.detailDocument.name)));
+                  widget.detailDocument.userID, widget.detailDocument.name, )));
     });
   }
 

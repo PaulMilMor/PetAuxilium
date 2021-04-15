@@ -5,11 +5,13 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final preferencesUtil _prefs = preferencesUtil();
+  final _pushUtil=PushNotificationUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -17,6 +19,7 @@ class AuthUtil {
       var result = await _auth.createUserWithEmailAndPassword(
           email: user.email, password: user.pass);
       user.id = result.user.uid;
+
       await _db.addUser(user);
     } catch (error) {
       print(error.toString());
@@ -46,16 +49,16 @@ class AuthUtil {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      print(result);
+    
 
       UserModel userModel = await _db.getUser(result.user.uid);
-      print('SIGN IN');
-      print(result.user.uid);
-
+     
+       
       _prefs.userID = result.user.uid;
+
       _prefs.selectedIndex = 0;
       return 'Ingresó';
-      //_prefs.userName = userModel.name;
+   
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -90,7 +93,7 @@ class AuthUtil {
     try {
       //TODO:Poner img default para los anonimos
       var result = await _auth.signInAnonymously();
-      print(result.user);
+    
       return (UserModel(id: result.user.uid, name: "anonimo"));
     } catch (e) {
       print(e.toString());
@@ -129,7 +132,7 @@ class AuthUtil {
           email: user.email,
           imgRef: user.photoURL,
           follows: follows);
-      print(user);
+
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
       _prefs.userID = userModel.id;
@@ -152,7 +155,7 @@ class AuthUtil {
           break;
       }
       // assert(!user.isAnonymous);
-      // assert(await user.getIdToken() != null);
+      //assert(await user.getIdToken() != null);
 
       //return user;
     }

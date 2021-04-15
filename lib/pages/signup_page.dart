@@ -497,6 +497,7 @@ class _SignupPageState extends State<SignupPage> {
       name: _nameController.text + ' ' + _lastNameController.text,
       email: _emailController.text,
       pass: _passwordController.text,
+      
       //imgRef??
       //birthday??
     );
@@ -526,8 +527,7 @@ class _SignupPageState extends State<SignupPage> {
 
   _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-    print(context);
-    print("dentro del registro google");
+
     if (_result == 'Ingresó') {
       _isGoogleLoading = false;
       Navigator.pushNamedAndRemoveUntil(
