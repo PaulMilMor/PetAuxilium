@@ -52,6 +52,8 @@ class _ListFeedState extends State<ListFeed> {
   final _pushUtil = PushNotificationUtil();
   @override
   Widget build(BuildContext context) {
+    this.widget.snapshot.data.sort(
+        (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -251,14 +253,15 @@ class _ListFeedState extends State<ListFeed> {
               List users = [];
               _selectedReason = null;
               _id = null;
-              PublicationModel selectedPublication =
-                  PublicationModel.fromJsonMap(publications, id);
 
-              selectedPublication.id = id;
+              /*PublicationModel selectedPublication =
+                  PublicationModel.fromJsonMap(publications, id);*/
+              print(publications);
+              //selectedPublication.id = id;
               _id = id;
               var found = false;
 
-              // _ReportMenu(/*publications*/);
+              //_ReportMenu(/*publications*/);
               await _firestoreInstance
                   .collection('reports')
                   .get()
@@ -284,7 +287,7 @@ class _ListFeedState extends State<ListFeed> {
               if (found == false) {
                 _ReportMenu(/*publications*/);
               }
-              print(selectedPublication.id);
+              print(id);
               break;
             case 5:
               _ClosePubMenu(publications);
@@ -755,9 +758,7 @@ Widget _rating(publication) {
               size: 25,
             ),
             Text(
-              publication.nevaluations == 0
-                  ? 'N/A'
-                  : mean.toStringAsFixed(publication.nevaluations),
+              publication.nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(

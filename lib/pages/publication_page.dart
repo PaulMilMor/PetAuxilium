@@ -128,6 +128,7 @@ class PublicationPageState extends State<PublicationPage> {
   Future _onAddImageClick(int index) async {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imagefile = File(_imageFile.path);
     setState(() {
       if (_imageFile != null) {
         print("xd" + _imageFile.toString());
@@ -135,18 +136,6 @@ class PublicationPageState extends State<PublicationPage> {
         getFileImage(index);
       } else {
         print("faros");
-      }
-    });
-  }
-
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        imagefile = File(pickedFile.path);
-      } else {
-        print('No image selected');
       }
     });
   }
@@ -159,31 +148,28 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void getFileImage(int index) async {
-//    var dir = await path_provider.getTemporaryDirectory();
-
-    _imageFile.then((file) async {
-      print(file);
-      print(images.length);
-      setState(() {
-        if (file == null) {
-          images.remove("Add Image");
-        }
-      });
-
-      imagesRef.add(await _storage.uploadFile(file, 'PublicationImages'));
-
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = file;
-        imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
-        print("en el file");
-
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+    print(imagefile);
+    print(images.length);
+    setState(() {
+      if (imagefile == null) {
+        images.remove("Add Image");
+      }
     });
+
+    imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
+
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imagefile;
+      imageUpload.imageUrl = '';
+      // _imgsFiles.add(imageUpload);
+      print("en el file");
+
+      images.replaceRange(index, index + 1, [imageUpload]);
+    });
+    /*});*/
   }
 
   Widget _publicationForm(BuildContext context) {
@@ -264,6 +250,8 @@ class PublicationPageState extends State<PublicationPage> {
           child: GrayTextFormField(
             controller: _nameTxtController,
             hintText: 'Nombre',
+            maxLength: 20,
+            textCapitalization: TextCapitalization.words,
             suffixIcon: IconButton(
               onPressed: () {
                 _nameTxtController.clear();
@@ -324,10 +312,6 @@ class PublicationPageState extends State<PublicationPage> {
               readOnly: true,
               hintText: 'Dirección',
               focusNode: AlwaysDisabledFocusNode(),
-              /* suffixIcon: IconButton(
-              onPressed: () => _dirTxtController.clear(),
-              icon: Icon(Icons.clear),
-            ),*/
               maxLines: null,
               onTap: () {
                 Navigator.pushNamed(context, 'mapPublication',
@@ -369,9 +353,6 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
-        //Navigator.pop(context);
-        //_name = null;
-        //_desc = null;
         _nameTxtController.clear();
         _descTxtController.clear();
         _dirTxtController.clear();

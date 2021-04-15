@@ -36,13 +36,11 @@ class _FeedState extends State<Feed> {
               stream: _db.allFeedElements,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  print('hay info');
                   return ListFeed(
                     snapshot: snapshot,
                     follows: follow.data,
                     voidCallback: callback,
                   );
-                  // ignore: dead_code
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

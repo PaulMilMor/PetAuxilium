@@ -11,10 +11,12 @@ class Comments extends StatefulWidget {
       {@required this.id,
       @required this.category,
       @required this.description,
+      @required this.date,
       @required this.userid});
   String id;
   String category;
   String description;
+  DateTime date;
   String userid;
   @override
   _CommentsState createState() => _CommentsState();
@@ -78,6 +80,9 @@ class _CommentsState extends State<Comments> {
 //FIXME: Así como está, si un comentario tiene más de una linea, el
 //nombre del usuario sale en vertical
   Widget _listComments(snapshot) {
+    snapshot.data
+        .sort((CommentModel a, CommentModel b) => a.date.compareTo(b.date));
+
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -379,27 +384,64 @@ class _CommentsState extends State<Comments> {
             ],
           ),
         ),
-        // Flexible(
-        //   flex: 1,
-        //   fit: FlexFit.tight,
-        //   child: Text("Publicado el ${this.widget.date.day} de " +
-        //       "${_getMonth(this.widget.date.month)} de " +
-        //       "${this.widget.date.year}"),
-        // ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Text("Publicado el ${this.widget.date.day} de " +
+              "${_getMonth(this.widget.date.month)} de " +
+              "${this.widget.date.year}"),
+        ),
       ],
     );
   }
 
-  Widget _buttonChat() {
-    return TextButton(
-      child: Icon(
-        Icons.chat,
-        color: Colors.grey,
-      ),
-      onPressed: () {
-        _chats();
-      },
-    );
+  String _getMonth(month) {
+    switch (month) {
+      case 1:
+        return 'Enero';
+        break;
+      case 2:
+        return 'Febrero';
+        break;
+      case 3:
+        return 'Marzo';
+        break;
+      case 4:
+        return 'Abril';
+        break;
+      case 5:
+        return 'Mayo';
+        break;
+      case 6:
+        return 'Junio';
+        break;
+      case 7:
+        return 'Julio';
+        break;
+      case 8:
+        return 'Agosto';
+        break;
+      case 9:
+        return 'Septiembre';
+        break;
+      case 10:
+        return 'Octubre';
+        break;
+      case 11:
+        return 'Noviembre';
+        break;
+      case 12:
+        return 'Diciembre';
+        break;
+    }
+  }
+
+  _getChatRoomIdByIds(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return "$b\_$a";
+    } else {
+      return "$a\_$b";
+    }
   }
 
   _chats() {
@@ -418,12 +460,16 @@ class _CommentsState extends State<Comments> {
     });
   }
 
-  _getChatRoomIdByIds(String a, String b) {
-    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-      return "$b\_$a";
-    } else {
-      return "$a\_$b";
-    }
+  Widget _buttonChat() {
+    return TextButton(
+      child: Icon(
+        Icons.chat,
+        color: Colors.grey,
+      ),
+      onPressed: () {
+        _chats();
+      },
+    );
   }
 
   void _checkComments(snapshot) {

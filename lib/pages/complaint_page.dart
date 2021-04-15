@@ -34,6 +34,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   String _desc = "";
   String _direct = "";
   Future<File> _imageFile;
+  File imageFile;
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
@@ -107,6 +108,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
       child: GrayTextFormField(
           controller: _titleTxtController,
           hintText: 'Título',
+          maxLength: 20,
+          textCapitalization: TextCapitalization.words,
           onChanged: (value) {
             setState(() {
               //prefs.businessName = value;
@@ -204,8 +207,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
     return TextButton(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Text('Cancelar',
-            style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+        child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -311,30 +313,15 @@ class _ComplaintPageState extends State<ComplaintPage> {
         images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
       },
     );
-    /*return FlatButton(
-      onPressed: () {
-        images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
-      },
-      color: Colors.grey[200],
-      height: 85,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.add,
-            size: 48,
-            color: Color.fromRGBO(210, 210, 210, 1),
-          ),
-        ],
-      ),
-    );*/
+    
   }
 
   Future _onAddImageClick(int index) async {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
     setState(() {
-      if (_imageFile != null) {
+      if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
       } else {}
@@ -351,24 +338,22 @@ class _ComplaintPageState extends State<ComplaintPage> {
   void getFileImage(int index) async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
-    _imageFile.then((file) async {
       setState(() {
-        if (file == null) {
+        if (imageFile == null) {
           images.remove("Add Image");
         }
       });
-      imagesRef.add(await _storage.uploadFile(file, 'BusinessImages'));
+      imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
 
       setState(() {
         ImageUploadModel imageUpload = new ImageUploadModel();
         imageUpload.isUploaded = false;
         imageUpload.uploading = false;
-        imageUpload.imageFile = file;
+        imageUpload.imageFile = imageFile;
         imageUpload.imageUrl = '';
         // _imgsFiles.add(imageUpload);
         images.replaceRange(index, index + 1, [imageUpload]);
       });
-    });
   }
 
   void getDir(List<LatLng> locations) {

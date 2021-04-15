@@ -38,6 +38,8 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   final _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
   Future<File> _imageFile;
+  File imageFile;
+
   ImageUploadModel _image = null;
   var name;
   var imageload;
@@ -232,24 +234,25 @@ class _Edit_account_pageState extends State<Edit_account_page> {
 
   Future _onAddImageClick() async {
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
+
     setState(() {
-      if (_imageFile != null) {
+      if (imageFile != null) {
         print('NOT NULL');
-        print(_imageFile);
+        print(imageFile);
         getFileImage();
       }
     });
   }
 
   void getFileImage() async {
-    _imageFile.then((file) async {
       //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-      if (file != null) {
+      if (imageFile != null) {
         setState(() {
           ImageUploadModel imageUpload = new ImageUploadModel();
           imageUpload.isUploaded = false;
           imageUpload.uploading = false;
-          imageUpload.imageFile = file;
+          imageUpload.imageFile = imageFile;
           imageUpload.imageUrl = '';
           print('Image UPLOAD');
           _image = imageUpload;
@@ -262,7 +265,6 @@ class _Edit_account_pageState extends State<Edit_account_page> {
           }
         });
       }
-    });
   }
 
   Widget _nameTxt() {

@@ -100,8 +100,6 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   Widget _getBottomBar() {
-    print('ISADMIN');
-    print(isAdmin());
     if (isAdmin()) {
       return _bottomBarAdmin();
     } else {

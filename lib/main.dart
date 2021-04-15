@@ -36,9 +36,6 @@ class MyApp extends StatelessWidget {
   final _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
-    print('MAIN');
-    print(_prefs.userID);
-    print(_prefs.userID.toString().length > 0);
     return GestureDetector(
       onTap: () {
         FocusScopeNode _currentFocus = FocusScope.of(context);

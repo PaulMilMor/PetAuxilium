@@ -56,12 +56,17 @@ class dbUtil {
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     await _firestoreInstance.collection("business").add({
+      'category': 'NEGOCIO',
       'name': business.name,
       'location': business.location,
       'description': business.description,
       'userID': business.userID,
       'imgRef': business.imgRef,
       'services': business.services,
+      'nevaluations': 0,
+      'score': 0,
+      'pricing': '',
+      'date': DateTime.now(),
     });
   }
 
@@ -73,6 +78,10 @@ class dbUtil {
       'description': complaint.description,
       'userID': complaint.userID,
       'imgRef': complaint.imgRef,
+      'nevaluations': 0,
+      'score': 0,
+      'pricing': "",
+      'date': DateTime.now(),
     });
   }
 
@@ -97,6 +106,7 @@ class dbUtil {
       'pricing': '',
       'nevaluations': 0,
       'score': 0,
+      'date': DateTime.now(),
     });
   }
 
@@ -171,6 +181,7 @@ class dbUtil {
       'nevaluations': 0,
       'score': 0,
       'services': ad.services,
+      'date': DateTime.now(),
     });
   }
 
@@ -183,7 +194,8 @@ print(docRef.documentID);*/
       'publicationID': evaluation.publicationID,
       'username': evaluation.username,
       'score': evaluation.score,
-      'comment': evaluation.comment
+      'comment': evaluation.comment,
+      'date': DateTime.now(),
     });
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
@@ -195,10 +207,40 @@ print(docRef.documentID);*/
     });
   }
 
+  Future<void> addEvaluationsBusiness(EvaluationModel evaluation) async {
+    await _firestoreInstance.collection("evaluations").add({
+      'userID': evaluation.userID,
+      'publicationID': evaluation.publicationID,
+      'username': evaluation.username,
+      'score': evaluation.score,
+      'comment': evaluation.comment,
+      'date': DateTime.now(),
+    });
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("business")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(scorenum),
+      'nevaluations': FieldValue.increment(1),
+    });
+  }
+
   Future<void> updateScore(EvaluationModel evaluation) async {
     double scorenum = double.parse(evaluation.score);
     await _firestoreInstance
         .collection("publications")
+        .doc(evaluation.publicationID)
+        .update({
+      'score': FieldValue.increment(-scorenum),
+      'nevaluations': FieldValue.increment(-1),
+    });
+  }
+
+  Future<void> updateScoreBusiness(EvaluationModel evaluation) async {
+    double scorenum = double.parse(evaluation.score);
+    await _firestoreInstance
+        .collection("business")
         .doc(evaluation.publicationID)
         .update({
       'score': FieldValue.increment(-scorenum),
@@ -220,7 +262,8 @@ print(docRef.documentID);*/
       'userID': comment.userID,
       'publicationID': comment.publicationID,
       'username': comment.username,
-      'comment': comment.comment
+      'comment': comment.comment,
+      'date': DateTime.now(),
     });
     await _firestoreInstance
         .collection("publications")
@@ -346,47 +389,65 @@ print(docRef.documentID);*/
     return _firestoreInstance.collection('publications').get();
   }
 
+  Stream searchedElements(String query) {
+    return Rx.combineLatest3(
+        streamPublication(query),
+        streamBusiness(query),
+        streamComplaints(query),
+        (List<PublicationModel> p, List<PublicationModel> b,
+                List<PublicationModel> c) =>
+            p + b + c);
+  }
+
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication(),
-      streamBusiness(),
-      streamComplaints(),
+      streamPublication(''),
+      streamBusiness(''),
+      streamComplaints(''),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
   //Stream get feedStream =>
-  Stream<List<PublicationModel>> streamPublication() =>
+  Stream<List<PublicationModel>> streamPublication(String query) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
-  Stream<List<PublicationModel>> streamComplaints() =>
+  Stream<List<PublicationModel>> streamComplaints(String query) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         return list;
       });
 
-  Stream<List<PublicationModel>> streamBusiness() =>
+  Stream<List<PublicationModel>> streamBusiness(String query) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
 
-          list.add(p);
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
         });
 
         //print(list);
@@ -611,10 +672,10 @@ print(docRef.documentID);*/
     return FirebaseFirestore.instance.collection("chatrooms").get();
   }
 
-  updateToken(id,  token)async{
-
-    await _firestoreInstance.collection('users').doc(id).update({
-      'token':token
-    });
+  updateToken(id, token) async {
+    await _firestoreInstance
+        .collection('users')
+        .doc(id)
+        .update({'token': token});
   }
 }

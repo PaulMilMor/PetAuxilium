@@ -1,4 +1,3 @@
-
 class EvaluationModel {
   String id;
   String userID;
@@ -6,13 +5,15 @@ class EvaluationModel {
   String username;
   String score;
   String comment;
+  DateTime date;
   EvaluationModel(
       {this.id,
       this.userID,
       this.publicationID,
       this.username,
       this.score,
-      this.comment});
+      this.comment,
+      this.date});
 
   EvaluationModel.fromJsonMap(Map<String, dynamic> json) {
     id = json['id'];
@@ -21,5 +22,6 @@ class EvaluationModel {
     username = json['username'];
     score = json['score'];
     comment = json['comment'];
+    date = json['date'].toDate();
   }
 }

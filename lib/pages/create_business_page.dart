@@ -16,9 +16,6 @@ import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
-import 'package:image_picker/image_picker.dart';
-import 'package:pet_auxilium/models/ImageUploadModel.dart';
-
 class CreateBusinessPage extends StatefulWidget {
   @override
   _CreateBusinessPageState createState() => _CreateBusinessPageState();
@@ -35,6 +32,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   String _name = " ";
   String _desc;
   Future<File> _imageFile;
+  File imageFile;
+
   List<String> _dir;
   List<String> imagesRef = [];
   List<ImageUploadModel> _imgsFiles = [];
@@ -56,7 +55,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     super.initState();
     setState(() {
       images.add("Add Image");
-   
     });
 //FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _name = prefs.businessName ?? ' ';
@@ -119,6 +117,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: GrayTextFormField(
         controller: _nameTxtController,
         hintText: 'Nombre',
+        maxLength: 20,
+        textCapitalization: TextCapitalization.words,
         onChanged: (value) {
           setState(() {
             prefs.businessName = value;
@@ -352,12 +352,14 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Future _onAddImageClick(int index) async {
     //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
+
     setState(() {
-      if (_imageFile != null) {
+      if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
 
-        print("xd" + _imageFile.toString());
+        print("xd" + imageFile.toString());
       } else {
         print("faros");
       }
@@ -375,23 +377,20 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   void getFileImage(int index) async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
-    _imageFile.then((file) async {
-      setState(() {
-        if (file == null) {
-          images.remove("Add Image");
-        }
-      });
-      imagesRef.add(await _storage.uploadFile(file, 'BusinessImages'));
+    setState(() {
+      if (imageFile == null) {
+        images.remove("Add Image");
+      }
+    });
+    imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
 
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = file;
-        imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imageFile;
+      imageUpload.imageUrl = '';
+      images.replaceRange(index, index + 1, [imageUpload]);
     });
   }
 

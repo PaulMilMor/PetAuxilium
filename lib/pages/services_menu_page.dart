@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
 
@@ -8,6 +9,8 @@ class ServicesMenuPage extends StatefulWidget {
   @override
   _ServicesMenuPageState createState() => _ServicesMenuPageState();
 }
+
+final dbUtil _db = dbUtil();
 
 //FIXME: ¿Qué es exactamente lo q se busca? xdxd Actualmente busca servicios pero ya q algunos no tienen todos los campos se tuvo q limitar
 class _ServicesMenuPageState extends State<ServicesMenuPage> {
@@ -55,22 +58,20 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
   }
 
 //FIXME: Esto no hace scroll al tocar las cards
+//TODO: Ajustar la búsqueda para que busque en publicaciones, denuncias y negocios
   Widget _searchResults() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: (_query != "" && _query != null)
-            ? FirebaseFirestore.instance
-                .collection('publications')
-                //estas dos condiciones son para buscar cualquier string que contenga la query
-                //TODO: Hacer que la búsqueda sea insensible a Case (Mayus, minus)
-                .where('name', isGreaterThanOrEqualTo: _query)
-                .where('name', isLessThanOrEqualTo: '$_query\uF7FF')
-                .snapshots()
-            : FirebaseFirestore.instance.collection('business').snapshots(),
+    return StreamBuilder(
+        stream: _db.searchedElements(_query),
         builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? Center(child: CircularProgressIndicator())
-              : ListFeed(
-                  snapshot: snapshot, physics: NeverScrollableScrollPhysics());
+          if (snapshot.hasData && snapshot.data.length>0) {
+            return ListFeed(
+              snapshot: snapshot,
+            );
+          } else {
+            return Center(
+              child: Text('No se encontró nada'),
+            );
+          }
         });
   }
 

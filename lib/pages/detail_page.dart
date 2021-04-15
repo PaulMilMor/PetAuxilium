@@ -573,7 +573,8 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
-    if (widget.detailDocument.category.toString().contains('CUIDADOR')) {
+    if (widget.detailDocument.category.toString().contains('CUIDADOR') ||
+        widget.detailDocument.category.toString().contains('NEGOCIO')) {
       return Opinions(
           id: widget.detailDocument.id,
           services: widget.detailDocument.services,
@@ -582,12 +583,14 @@ class _DetailPageState extends State<DetailPage> {
           nevaluations: widget.detailDocument.nevaluations,
           pricing: widget.detailDocument.pricing,
           userID: widget.detailDocument.userID,
-          description: widget.detailDocument.description);
+          description: widget.detailDocument.description,
+          date: widget.detailDocument.date);
     } else {
       return Comments(
         id: widget.detailDocument.id,
         category: widget.detailDocument.category,
         description: widget.detailDocument.description,
+        date: widget.detailDocument.date,
         userid: widget.detailDocument.userID,
       );
     }

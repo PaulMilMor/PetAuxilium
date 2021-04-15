@@ -19,6 +19,7 @@ class Opinions extends StatefulWidget {
       @required this.description,
       @required this.services,
       @required this.userID,
+      @required this.date,
       this.callback});
   VoidCallback callback;
 
@@ -29,6 +30,7 @@ class Opinions extends StatefulWidget {
   var sumscore;
   var userID;
   String description;
+  DateTime date;
   AsyncSnapshot<QuerySnapshot> snapshot1;
   List<dynamic> services;
   @override
@@ -85,7 +87,8 @@ class _OpinionsState extends State<Opinions> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _db.getOpinions(this.widget.id),
-        builder: (context, AsyncSnapshot<List<EvaluationModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<EvaluationModel>> snapshot) {
           print(snapshot.data);
           _checkEvaluations(snapshot);
 
@@ -106,6 +109,8 @@ class _OpinionsState extends State<Opinions> {
 //FIXME: El área donde están los comentarios no se puede hacer scroll
   Widget _listEvaluations(snapshot) {
     suma = 0;
+    snapshot.data.sort(
+        (EvaluationModel a, EvaluationModel b) => a.date.compareTo(b.date));
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -351,7 +356,8 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _serviceNumbers() {
-    if (this.widget.category == 'CUIDADOR') {
+    if (this.widget.category == 'CUIDADOR' ||
+        this.widget.category == 'NEGOCIO') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -499,11 +505,16 @@ class _OpinionsState extends State<Opinions> {
     setState(() {
       avgscore = this.widget.sumscore / this.widget.nevaluations;
     });
-    _db.updateScore(evaluation);
+    if (this.widget.category == "CUIDADOR") {
+      _db.updateScore(evaluation);
+    } else {
+      _db.updateScoreBusiness(evaluation);
+    }
   }
 
   void _evaluacion() {
     //CollectionReference docRef = _firestoreInstance.collection('evaluations');
+
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -512,9 +523,14 @@ class _OpinionsState extends State<Opinions> {
       score: _score,
       comment: _commentController.text,
     );
-    _db.addEvaluations(evaluation);
     this.widget.sumscore += double.parse(_score);
     this.widget.nevaluations++;
+    if (this.widget.category == "CUIDADOR") {
+      _db.addEvaluations(evaluation);
+    } else {
+      _db.addEvaluationsBusiness(evaluation);
+    }
+
     _addevaluation(/*detailDocument.id,*/ evaluations);
 
     setState(() {
@@ -523,18 +539,21 @@ class _OpinionsState extends State<Opinions> {
   }
 
   void _addevaluation(evaluations) async {
+    print("chingados");
     if (evaluations.contains(this.widget.id)) {
       evaluations.remove(this.widget.id);
     } else {
       evaluations.add(this.widget.id);
     }
+
     _db.updateEvaluations(evaluations);
   }
 
   Widget _opinion(snapshot) {
     print("checar la eval");
     print(_myEvaluation);
-    if (this.widget.category.toString().contains('CUIDADOR')) {
+    if (this.widget.category.toString().contains('CUIDADOR') ||
+        this.widget.category.toString().contains('NEGOCIO')) {
       return SingleChildScrollView(
         child: Container(
           child: Column(
@@ -560,8 +579,18 @@ class _OpinionsState extends State<Opinions> {
               ),
               SizedBox(height: 5),
               _chipList(),
+              SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 36),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Publicado el ${this.widget.date.day} de " +
+                      "${_getMonth(this.widget.date.month)} de " +
+                      "${this.widget.date.year}"),
+                ),
+              ),
               SizedBox(
-                height: 31,
+                height: 35,
               ),
 
               const Divider(
@@ -607,6 +636,47 @@ class _OpinionsState extends State<Opinions> {
           ],
         ),
       );
+    }
+  }
+
+  String _getMonth(month) {
+    switch (month) {
+      case 1:
+        return 'Enero';
+        break;
+      case 2:
+        return 'Febrero';
+        break;
+      case 3:
+        return 'Marzo';
+        break;
+      case 4:
+        return 'Abril';
+        break;
+      case 5:
+        return 'Mayo';
+        break;
+      case 6:
+        return 'Junio';
+        break;
+      case 7:
+        return 'Julio';
+        break;
+      case 8:
+        return 'Agosto';
+        break;
+      case 9:
+        return 'Septiembre';
+        break;
+      case 10:
+        return 'Octubre';
+        break;
+      case 11:
+        return 'Noviembre';
+        break;
+      case 12:
+        return 'Diciembre';
+        break;
     }
   }
 

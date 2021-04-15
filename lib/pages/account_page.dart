@@ -270,9 +270,9 @@ class _AccountPageState extends State<AccountPage> {
       icon: Icons.navigate_next,
       onPressed: () {
         _prefs.userID = ' ';
-        _prefs.userName = null;
-        _prefs.userImg = null;
-        _prefs.userEmail = null;
+        _prefs.userName = '';
+        _prefs.userImg = '';
+        _prefs.userEmail = '';
         _prefs.selectedIndex = 0;
         print('USER ID');
         print(_prefs.userID);
