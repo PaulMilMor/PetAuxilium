@@ -154,7 +154,7 @@ class _ListFeedState extends State<ListFeed> {
       this.widget.follows.add(id);
     }
     _db.updateFollows(this.widget.follows);
-    setState(() {});
+    //setState(() {});
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
     }

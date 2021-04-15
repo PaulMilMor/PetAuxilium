@@ -78,16 +78,14 @@ class _OpinionsState extends State<Opinions> {
         stream: _db.getOpinions(this.widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<EvaluationModel>> snapshot) {
-          print(snapshot.data);
-          _checkEvaluations(snapshot);
+          /*  print(snapshot.data);
+          _checkEvaluations(snapshot);*/
 
           if (snapshot.hasData) {
+            _checkEvaluations(snapshot);
             return _opinion(snapshot);
-            print('POOL SNAPSHOT');
-            //print(snapshot.data[0].userID);
-            if (snapshot.connectionState == ConnectionState.done) {
-              _checkEvaluations(snapshot);
-            }
+          } else {
+            return _makeOpinion('0');
           }
         });
   }

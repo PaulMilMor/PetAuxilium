@@ -155,7 +155,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           children: [
             GrayTextFormField(
                 controller: _dirTxtController,
-                hintText: 'Direccion',
+                hintText: 'Dirección',
                 //Esto es para que no se pueda editar manualmente el texta de la ubicación
                 focusNode: AlwaysDisabledFocusNode(),
                 maxLines: null,
