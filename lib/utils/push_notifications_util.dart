@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
+import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -29,30 +30,24 @@ class PushNotificationUtil {
     await _db.updateToken(_prefs.userID, token);
 //    sendFcmMessage('espero que yes', 'ojala que si');
 
-    _fcm.configure(
-        onMessage: onMessage, onLaunch: onLaunch, onResume: onResume);
+    _fcm.configure(onMessage: (Map<String, dynamic> message) async {
+      print('onMessage: $message');
+    }, onLaunch: (Map<String, dynamic> message) async {
+      var notificationData = message['data'];
+      var type = notificationData['type'];
+
+      print(notificationData);
+      var id = notificationData['id'];
+      var name = notificationData['name'];
+      print('tiene que ir aqui con $id y $name');
+      _navigationKey.currentState.push(
+          MaterialPageRoute(builder: (context) => ChatScreenPage(id, name)));
+    }, onResume: (Map<String, dynamic> message) async {
+      print('onMessage: $message');
+    });
   }
+
 //PARA RECIBIR
-  onMessage(Map<String, dynamic> message) async {
-    print('onMessage: $message');
-  }
-
-  onResume(Map<String, dynamic> message) async {
-    print('onMessage: $message');
-  }
-
-  onLaunch(Map<String, dynamic> message) async {
-    var notificationData = message['data'];
-    var type = notificationData['type'];
-
-    print(notificationData);
-    var id = notificationData['id'];
-    var name = notificationData['name'];
-    print('tiene que ir aqui con $id y $name');
-    _navigationKey.currentState.push(
-        MaterialPageRoute(builder: (context) => ChatScreenPage(id, name)));
-  }
-
   void pop() {
     return _navigationKey.currentState.pop();
   }
@@ -60,7 +55,8 @@ class PushNotificationUtil {
   dispose() {
     _dataStream?.close();
   }
-/// PARA ENVIAR
+
+  /// PARA ENVIAR
   Future<bool> sendFcmMessage(
       String title, String message, String token, data) async {
     print('entro aqui');
@@ -87,6 +83,28 @@ class PushNotificationUtil {
   }
 
   sendChatMensagge(id, userName, message, token) {
+    var data = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'type': 'CHATMSG',
+      'id': id,
+      'name': userName
+    };
+    sendFcmMessage(userName, message, token, data);
+    print('ALFA' + token);
+  }
+
+  sendNewOpinionNotif(id, userName, message, token) {
+    var data = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'type': 'CHATMSG',
+      'id': id,
+      'name': userName
+    };
+    sendFcmMessage(userName, message, token, data);
+    print('ALFA01' + token);
+  }
+
+  sendNewCommentNotif(id, userName, message, token) {
     var data = {
       'click_action': 'FLUTTER_NOTIFICATION_CLICK',
       'type': 'CHATMSG',

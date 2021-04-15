@@ -581,6 +581,7 @@ class _DetailPageState extends State<DetailPage> {
           sumscore: widget.detailDocument.score,
           nevaluations: widget.detailDocument.nevaluations,
           pricing: widget.detailDocument.pricing,
+          userID: widget.detailDocument.userID,
           description: widget.detailDocument.description);
     } else {
       return Comments(
@@ -612,7 +613,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var myId = _prefs.userID;
       var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
@@ -624,7 +624,9 @@ class _DetailPageState extends State<DetailPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatScreenPage(
-                  widget.detailDocument.userID, widget.detailDocument.name, )));
+                    widget.detailDocument.userID,
+                    widget.detailDocument.name,
+                  )));
     });
   }
 

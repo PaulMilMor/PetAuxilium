@@ -36,6 +36,8 @@ class _SignupPageState extends State<SignupPage> {
   final _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
   Future<File> _imageFile;
+  File imageFile;
+
   ImageUploadModel _image = null;
   final picker = ImagePicker();
 
@@ -127,17 +129,6 @@ class _SignupPageState extends State<SignupPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /*Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-            child: Text(
-              'Crea una cuenta',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(49, 232, 93, 1),
-              ),
-            ),
-          ),*/
           _photo(),
           _nameTxt(),
           _lastNameTxt(),
@@ -186,23 +177,6 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _addPhoto() {
-    /*return FlatButton(
-      onPressed: () {
-        _onAddImageClick();
-      },
-      color: Colors.grey[200],
-      height: 85,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-      child: Column(
-        children: [
-          Icon(
-            Icons.add_a_photo,
-            size: 48,
-            color: Color.fromRGBO(210, 210, 210, 1),
-          ),
-        ],
-      ),
-    );*/
     return GestureDetector(
       onTap: _onAddImageClick,
       child: Container(
@@ -246,12 +220,6 @@ class _SignupPageState extends State<SignupPage> {
             ),
             onTap: () {
               _onAddImageClick();
-              /* setState(() {
-                images.removeAt(index);
-                // images.replaceRange(index, index + 1, ['Add Image']);
-                _imgsFiles.remove(index);
-                //         images.replaceRange(index, index + 1, ['Add Image']);
-              });*/
             },
           ),
         ),
@@ -261,37 +229,37 @@ class _SignupPageState extends State<SignupPage> {
 
   Future _onAddImageClick() async {
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
+
     setState(() {
-      if (_imageFile != null) {
+      if (imageFile != null) {
         print('NOT NULL');
-        print(_imageFile);
+        print(imageFile);
         getFileImage();
       }
     });
   }
 
   void getFileImage() async {
-    _imageFile.then((file) async {
-      //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-      if (file != null) {
-        setState(() {
-          ImageUploadModel imageUpload = new ImageUploadModel();
-          imageUpload.isUploaded = false;
-          imageUpload.uploading = false;
-          imageUpload.imageFile = file;
-          imageUpload.imageUrl = '';
-          print('Image UPLOAD');
-          _image = imageUpload;
-          _imageSelected = true;
-        });
-      } else {
-        setState(() {
-          if (_image == null) {
-            _imageSelected = false;
-          }
-        });
-      }
-    });
+    //  _imgRef = await _storage.uploadFile(file, 'usuarios');
+    if (imageFile != null) {
+      setState(() {
+        ImageUploadModel imageUpload = new ImageUploadModel();
+        imageUpload.isUploaded = false;
+        imageUpload.uploading = false;
+        imageUpload.imageFile = imageFile;
+        imageUpload.imageUrl = '';
+        print('Image UPLOAD');
+        _image = imageUpload;
+        _imageSelected = true;
+      });
+    } else {
+      setState(() {
+        if (_image == null) {
+          _imageSelected = false;
+        }
+      });
+    }
   }
 
   Widget _nameTxt() {
@@ -527,7 +495,6 @@ class _SignupPageState extends State<SignupPage> {
       name: _nameController.text + ' ' + _lastNameController.text,
       email: _emailController.text,
       pass: _passwordController.text,
-      
       //imgRef??
       //birthday??
     );
@@ -557,7 +524,8 @@ class _SignupPageState extends State<SignupPage> {
 
   _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-
+    print(context);
+    print("dentro del registro google");
     if (_result == 'Ingresó') {
       _isGoogleLoading = false;
       Navigator.pushNamedAndRemoveUntil(

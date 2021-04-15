@@ -49,7 +49,7 @@ class _ListFeedState extends State<ListFeed> {
   String _selectedReason;
   String _id;
   ClosePub _option = ClosePub.option1;
- final _pushUtil=PushNotificationUtil();
+  final _pushUtil = PushNotificationUtil();
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -64,7 +64,7 @@ class _ListFeedState extends State<ListFeed> {
           String _foto = _fotos.first;
           _selectedReason = null;
           return GestureDetector(
-            onTap: ()  {
+            onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (BuildContext context) => DetailPage(
@@ -158,19 +158,24 @@ class _ListFeedState extends State<ListFeed> {
     }
   }
 
-  Widget _optionsPopup(id, publications) {
+  Widget _optionsPopup(
+    id,
+    publications,
+  ) {
     return PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
           color: Color.fromRGBO(210, 210, 210, 1),
         ),
         itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
-                child: Column(
-                  children: [_CloseOption()],
-                ),
-                value: 5,
-              ),
+              _prefs.userID != publications.userID
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_CloseOption()],
+                      ),
+                      value: 5,
+                    ),
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
