@@ -82,6 +82,31 @@ class PushNotificationUtil {
     }
   }
 
+  Future<bool> topicMessage(
+      String title, String message, String topic01, data) async {
+    print('entro aqui');
+    try {
+      var url = 'https://fcm.googleapis.com/fcm/send';
+      var header = {
+        "Content-Type": "application/json",
+        "Authorization":
+            "key=AAAAj87I27w:APA91bGCzV1p-zm4UsqgivqItNvxcVWbUdmFmAMV1hJC7s1uKicoHrH5emW0iKQtW_C9xPWonUSJFlAsr3bAAlm7evVIbhX4XrJQD6_mY6shVH1srM_R9LZO_HfC7Iqc57RpBqqZtp8C",
+      };
+      var request = {
+        'notification': {'title': title, 'body': message},
+        'data': data,
+        "priority": "high",
+        "topic": topic01,
+        // 'to': 'f9x3Z6QFSqKVqWfHjBdnNd:APA91bHzsHYY2RH7iBxr0vj_2Q3wBzJpK5NdYqFPpKz-W5KA-YDleXjYxmnu3M64UhUX-8fl1mHDvt4Xg1aPHvhpn80mTZlXdE8bPUc9BrjQL4ll-cBNy7SKRvuk_OENE2XwhwO3F2iy'
+      };
+      http.post(url, headers: header, body: json.encode(request));
+      return true;
+    } catch (e, s) {
+      print(e);
+      return false;
+    }
+  }
+
   sendChatMensagge(id, userName, message, token) {
     var data = {
       'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -90,7 +115,6 @@ class PushNotificationUtil {
       'name': userName
     };
     sendFcmMessage(userName, message, token, data);
-    print('ALFA' + token);
   }
 
   sendNewOpinionNotif(id, userName, message, token) {
@@ -112,5 +136,16 @@ class PushNotificationUtil {
       'name': userName
     };
     sendFcmMessage(userName, message, token, data);
+  }
+
+  sendCloseNotif(id, userName, message, topic01) {
+    var data = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'type': 'FCM Message',
+      'id': id,
+      'name': userName
+    };
+    topicMessage(userName, message, topic01, data);
+    print('WWWWWWWWWWWWWWWW' + topic01);
   }
 }

@@ -39,6 +39,7 @@ class _ListFeedState extends State<ListFeed> {
   dbUtil _db = dbUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
   final preferencesUtil _prefs = preferencesUtil();
+  final FirebaseMessaging _fcm = FirebaseMessaging();
   String nose;
   List listItems = [
     'Spam',
@@ -50,6 +51,7 @@ class _ListFeedState extends State<ListFeed> {
   String _id;
   ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
+  String msg = 'La publicación que seguías ha sido cerrada';
   @override
   Widget build(BuildContext context) {
     this.widget.snapshot.data.sort(
@@ -137,7 +139,7 @@ class _ListFeedState extends State<ListFeed> {
                   Spacer(),
                   _prefs.userID == ' '
                       ? Text('')
-                      : _optionsPopup(_data.id, _data),
+                      : _optionsPopup(_foto, _data.id, _data),
                 ],
               ),
             ),
@@ -161,6 +163,7 @@ class _ListFeedState extends State<ListFeed> {
   }
 
   Widget _optionsPopup(
+    _foto,
     id,
     publications,
   ) {
@@ -234,6 +237,7 @@ class _ListFeedState extends State<ListFeed> {
         onSelected: (value) async {
           switch (value) {
             case 1:
+              await _fcm.subscribeToTopic(publications.userID);
               _addFollow(id);
               break;
             case 2:
@@ -290,6 +294,13 @@ class _ListFeedState extends State<ListFeed> {
               print(id);
               break;
             case 5:
+              String topic01 = publications.userID;
+              _pushUtil.sendCloseNotif(
+                _prefs.userID,
+                _prefs.userName,
+                msg,
+                topic01,
+              );
               _ClosePubMenu(publications);
           }
         });
