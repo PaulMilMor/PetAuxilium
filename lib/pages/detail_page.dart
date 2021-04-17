@@ -129,9 +129,10 @@ class _DetailPageState extends State<DetailPage> {
   ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
-      
+      await  _fcm.unsubscribeFromTopic(id);
     } else {
       this.widget.follows.add(id);
+       await _fcm.subscribeToTopic(id);
     }
     _db.updateFollows(this.widget.follows);
     setState(() {});
