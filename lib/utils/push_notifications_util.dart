@@ -23,7 +23,7 @@ class PushNotificationUtil {
   final _dataStream = StreamController<String>.broadcast();
   Stream<String> get msgsStream => _dataStream.stream;
   Future initialise() async {
-    await _fcm.requestNotificationPermissions();
+    
     final token = await _fcm.getToken();
 
     await _db.updateToken(_prefs.userID, token);
