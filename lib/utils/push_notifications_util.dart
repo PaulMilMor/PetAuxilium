@@ -29,7 +29,7 @@ class PushNotificationUtil {
 
     await _db.updateToken(_prefs.userID, token);
 //    sendFcmMessage('espero que yes', 'ojala que si');
-
+    sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
     _fcm.configure(onMessage: (Map<String, dynamic> message) async {
       print('onMessage: $message');
     }, onLaunch: (Map<String, dynamic> message) async {
@@ -95,8 +95,8 @@ class PushNotificationUtil {
       var request = {
         'notification': {'title': title, 'body': message},
         'data': data,
-        "priority": "high",
-        "topic": topic01,
+        //"priority": "high",
+        "to": '/topics/$topic01',
         // 'to': 'f9x3Z6QFSqKVqWfHjBdnNd:APA91bHzsHYY2RH7iBxr0vj_2Q3wBzJpK5NdYqFPpKz-W5KA-YDleXjYxmnu3M64UhUX-8fl1mHDvt4Xg1aPHvhpn80mTZlXdE8bPUc9BrjQL4ll-cBNy7SKRvuk_OENE2XwhwO3F2iy'
       };
       http.post(url, headers: header, body: json.encode(request));

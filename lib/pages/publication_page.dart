@@ -64,6 +64,7 @@ class PublicationPageState extends State<PublicationPage> {
     // TODO: implement build
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
+    getDir(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,

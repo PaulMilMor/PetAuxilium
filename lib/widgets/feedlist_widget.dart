@@ -38,6 +38,7 @@ class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
   dbUtil _db = dbUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
+  final _fcm=FirebaseMessaging();
   final preferencesUtil _prefs = preferencesUtil();
   final FirebaseMessaging _fcm = FirebaseMessaging();
   String nose;
@@ -83,8 +84,8 @@ class _ListFeedState extends State<ListFeed> {
                     borderRadius: BorderRadius.circular(5.0),
                     child: Image.network(
                       _foto,
-                      width: 145,
-                      height: 150,
+                      width: 100,
+                      height: 100,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -152,7 +153,9 @@ class _ListFeedState extends State<ListFeed> {
   ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
+      await _fcm.unsubscribeFromTopic(id);
     } else {
+    await  _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
     _db.updateFollows(this.widget.follows);
