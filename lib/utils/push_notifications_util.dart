@@ -41,6 +41,14 @@ class PushNotificationUtil {
     print('onMessage: $message');
   }
 
+  /*onoffNotifications(bool isSwitched){
+    if(isSwitched==true){
+        _fcm.subscribeToTopic ('notifications');
+    }else{
+      _fcm.unsubscribeFromTopic ('notifications');
+    }
+  }*/
+
   onLaunch(Map<String, dynamic> message) async {
     var notificationData = message['data'];
     var type = notificationData['type'];
