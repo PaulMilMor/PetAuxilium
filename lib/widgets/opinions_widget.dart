@@ -87,8 +87,7 @@ class _OpinionsState extends State<Opinions> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _db.getOpinions(this.widget.id),
-        builder: ( context,
-            AsyncSnapshot<List<EvaluationModel>> snapshot) {
+        builder: (context, AsyncSnapshot<List<EvaluationModel>> snapshot) {
           /*  print(snapshot.data);
           _checkEvaluations(snapshot);*/
 
@@ -424,24 +423,30 @@ class _OpinionsState extends State<Opinions> {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Column(children: <Widget>[
-                            Row(children: [
-                              Text(
-                                prefs.userName,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.justify,
-                              ),
-                              Icon(
-                                Icons.star_rate_rounded,
-                                color: Colors.greenAccent[400],
-                                size: 20,
-                              ),
-                              Text(
-                                _score,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.justify,
-                              ),
-                            ]),
+                            Flexible(
+                              child: Row(children: [
+                                Flexible(
+                                  child: Text(
+                                    prefs.userName,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.star_rate_rounded,
+                                  color: Colors.greenAccent[400],
+                                  size: 20,
+                                ),
+                                Text(
+                                  _score,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ]),
+                            ),
                             Text(
                               _comment,
                               textAlign: TextAlign.left,

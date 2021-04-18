@@ -338,6 +338,15 @@ class _CommentsState extends State<Comments> {
             padding: const EdgeInsets.symmetric(horizontal: 36),
             child: _infoRow(),
           ),
+          if (widget.userid != _prefs.userID)
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(66, 0, 0, 0),
+                child: _buttonChat(),
+              ),
+            ),
+
           SizedBox(
             height: 35,
           ),
@@ -369,27 +378,42 @@ class _CommentsState extends State<Comments> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Flexible(
-          flex: 1,
+          flex: 3,
           fit: FlexFit.tight,
           child: Row(
             children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.network(_userImg, height: 40, width: 40)),
+              CircleAvatar(
+                backgroundImage: NetworkImage(_userImg),
+                backgroundColor: Colors.white,
+                radius: 20,
+              ),
+              // ClipRRect(
+              //     borderRadius: BorderRadius.circular(30),
+              //     child: Image.network(_userImg, height: 40, width: 40)),
               SizedBox(
                 width: 10,
               ),
-              Text(_userName),
-              _buttonChat()
+              Flexible(
+                child: Text(
+                  _userName,
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
             ],
           ),
         ),
+        SizedBox(
+          width: 5,
+        ),
         Flexible(
-          flex: 1,
+          flex: 2,
           fit: FlexFit.tight,
-          child: Text("Publicado el ${this.widget.date.day} de " +
-              "${_getMonth(this.widget.date.month)} de " +
-              "${this.widget.date.year}"),
+          child: Text(
+            "Publicado el ${this.widget.date.day} de " +
+                "${_getMonth(this.widget.date.month)} de " +
+                "${this.widget.date.year}",
+            style: TextStyle(fontSize: 12),
+          ),
         ),
       ],
     );

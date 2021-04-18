@@ -85,8 +85,10 @@ class _DetailPageState extends State<DetailPage> {
                                   width: 52,
                                 ),
                                 if (widget.detailDocument.category
-                                    .toString()
-                                    .contains('CUIDADOR') && widget.detailDocument.userID!=_prefs.userID)
+                                        .toString()
+                                        .contains('CUIDADOR') &&
+                                    widget.detailDocument.userID !=
+                                        _prefs.userID)
                                   _buttonChat()
                               ],
                             ),
@@ -129,10 +131,10 @@ class _DetailPageState extends State<DetailPage> {
   ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
-      await  _fcm.unsubscribeFromTopic(id);
+      await _fcm.unsubscribeFromTopic(id);
     } else {
       this.widget.follows.add(id);
-       await _fcm.subscribeToTopic(id);
+      await _fcm.subscribeToTopic(id);
     }
     _db.updateFollows(this.widget.follows);
     setState(() {});

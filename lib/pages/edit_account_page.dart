@@ -246,25 +246,25 @@ class _Edit_account_pageState extends State<Edit_account_page> {
   }
 
   void getFileImage() async {
-      //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-      if (imageFile != null) {
-        setState(() {
-          ImageUploadModel imageUpload = new ImageUploadModel();
-          imageUpload.isUploaded = false;
-          imageUpload.uploading = false;
-          imageUpload.imageFile = imageFile;
-          imageUpload.imageUrl = '';
-          print('Image UPLOAD');
-          _image = imageUpload;
-          _imageSelected = true;
-        });
-      } else {
-        setState(() {
-          if (_image == null) {
-            _imageSelected = false;
-          }
-        });
-      }
+    //  _imgRef = await _storage.uploadFile(file, 'usuarios');
+    if (imageFile != null) {
+      setState(() {
+        ImageUploadModel imageUpload = new ImageUploadModel();
+        imageUpload.isUploaded = false;
+        imageUpload.uploading = false;
+        imageUpload.imageFile = imageFile;
+        imageUpload.imageUrl = '';
+        print('Image UPLOAD');
+        _image = imageUpload;
+        _imageSelected = true;
+      });
+    } else {
+      setState(() {
+        if (_image == null) {
+          _imageSelected = false;
+        }
+      });
+    }
   }
 
   Widget _nameTxt() {
@@ -433,21 +433,21 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
-      await _imageFile.then((file) async {
-        _user.imgRef = await _storage.uploadFile(file, 'usuarios');
-        _prefs.userImg = _user.imgRef;
-        _prefs.userName = _user.name;
-        _prefs.userEmail = _user.email;
-        await _auth.updateEmail(_emailController.text);
-        if (_passwordController.text != "") {
-          await _auth.updatePassword(_passwordController.text);
-        }
-        print('IMGREF');
-        print(_user.imgRef);
-        _db.addUser(_user);
-        Navigator.pushNamedAndRemoveUntil(
-            context, 'navigation', (Route<dynamic> route) => false);
-      });
+      // await _imageFile.then((file) async {
+      _user.imgRef = await _storage.uploadFile(imageFile, 'usuarios');
+      _prefs.userImg = _user.imgRef;
+      _prefs.userName = _user.name;
+      _prefs.userEmail = _user.email;
+      await _auth.updateEmail(_emailController.text);
+      if (_passwordController.text != "") {
+        await _auth.updatePassword(_passwordController.text);
+      }
+      print('IMGREF');
+      print(_user.imgRef);
+      _db.addUser(_user);
+      Navigator.pushNamedAndRemoveUntil(
+          context, 'navigation', (Route<dynamic> route) => false);
+      // });
     }
   }
 
