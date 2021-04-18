@@ -38,9 +38,9 @@ class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
   dbUtil _db = dbUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
-  final _fcm=FirebaseMessaging();
+  final _fcm = FirebaseMessaging();
   final preferencesUtil _prefs = preferencesUtil();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging fcm = FirebaseMessaging();
   String nose;
   List listItems = [
     'Spam',
@@ -155,7 +155,7 @@ class _ListFeedState extends State<ListFeed> {
       this.widget.follows.remove(id);
       await _fcm.unsubscribeFromTopic(id);
     } else {
-    await  _fcm.subscribeToTopic(id);
+      await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
     _db.updateFollows(this.widget.follows);
@@ -701,6 +701,7 @@ class _ListFeedState extends State<ListFeed> {
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromRGBO(49, 232, 93, 1),
                                 ),
+                                onPressed: () {},
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text('Continuar'),
