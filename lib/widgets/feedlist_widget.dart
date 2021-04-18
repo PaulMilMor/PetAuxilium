@@ -38,7 +38,9 @@ class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
   dbUtil _db = dbUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
+  final _fcm = FirebaseMessaging();
   final preferencesUtil _prefs = preferencesUtil();
+  final FirebaseMessaging fcm = FirebaseMessaging();
   String nose;
   List listItems = [
     'Spam',
@@ -50,6 +52,7 @@ class _ListFeedState extends State<ListFeed> {
   String _id;
   ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
+  String msg = 'La publicación que seguías ha sido cerrada';
   @override
   Widget build(BuildContext context) {
     this.widget.snapshot.data.sort(
@@ -81,8 +84,8 @@ class _ListFeedState extends State<ListFeed> {
                     borderRadius: BorderRadius.circular(5.0),
                     child: Image.network(
                       _foto,
-                      width: 145,
-                      height: 150,
+                      width: 100,
+                      height: 100,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -137,7 +140,7 @@ class _ListFeedState extends State<ListFeed> {
                   Spacer(),
                   _prefs.userID == ' '
                       ? Text('')
-                      : _optionsPopup(_data.id, _data),
+                      : _optionsPopup(_foto, _data.id, _data),
                 ],
               ),
             ),
@@ -150,7 +153,9 @@ class _ListFeedState extends State<ListFeed> {
   ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
+      await _fcm.unsubscribeFromTopic(id);
     } else {
+      await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
     _db.updateFollows(this.widget.follows);
@@ -160,19 +165,25 @@ class _ListFeedState extends State<ListFeed> {
     }
   }
 
-  Widget _optionsPopup(id, publications) {
+  Widget _optionsPopup(
+    _foto,
+    id,
+    publications,
+  ) {
     return PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
           color: Color.fromRGBO(210, 210, 210, 1),
         ),
         itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
-                child: Column(
-                  children: [_CloseOption()],
-                ),
-                value: 5,
-              ),
+              _prefs.userID != publications.userID
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_CloseOption()],
+                      ),
+                      value: 5,
+                    ),
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
@@ -229,6 +240,7 @@ class _ListFeedState extends State<ListFeed> {
         onSelected: (value) async {
           switch (value) {
             case 1:
+              await _fcm.subscribeToTopic(publications.userID);
               _addFollow(id);
               break;
             case 2:
@@ -285,6 +297,13 @@ class _ListFeedState extends State<ListFeed> {
               print(id);
               break;
             case 5:
+              String topic01 = publications.userID;
+              _pushUtil.sendCloseNotif(
+                _prefs.userID,
+                _prefs.userName,
+                msg,
+                topic01,
+              );
               _ClosePubMenu(publications);
           }
         });
@@ -682,6 +701,7 @@ class _ListFeedState extends State<ListFeed> {
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromRGBO(49, 232, 93, 1),
                                 ),
+                                onPressed: () {},
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text('Continuar'),

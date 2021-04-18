@@ -4,6 +4,7 @@ import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 class Comments extends StatefulWidget {
   Comments(
@@ -24,15 +25,22 @@ class Comments extends StatefulWidget {
 class _CommentsState extends State<Comments> {
   final dbUtil _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
+  final _pushUtil = PushNotificationUtil();
   String _userName = '', _userImg = '';
   String _comment;
   FocusNode _focusNode;
 
   @override
   void initState() {
+    _getUserInfo();
     super.initState();
     _focusNode = FocusNode();
     _getUser();
+  }
+
+  _getUserInfo() async {
+    DocumentSnapshot document = await _db.getUserById(widget.userid);
+    token = document.data()["token"];
   }
 
   @override
@@ -49,6 +57,8 @@ class _CommentsState extends State<Comments> {
 
   final prefs = new preferencesUtil();
   List<String> comments;
+  String token = '';
+  String msg = 'Alguien comentó sobre una de tus publicaciones';
   var _commentController = TextEditingController();
   CommentModel _myComment;
   @override
@@ -244,6 +254,8 @@ class _CommentsState extends State<Comments> {
           onTap: () {
             _comentar();
             _commentController.clear();
+            _pushUtil.sendNewCommentNotif(
+                prefs.userID, prefs.userName, msg, token);
           },
           child: Align(
             alignment: Alignment.centerRight,

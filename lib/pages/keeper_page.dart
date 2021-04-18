@@ -133,11 +133,10 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   Future _onAddImageClick(int index) async {
-    
-      //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
-      final _imageFile = await picker.getImage(source: ImageSource.gallery);
-      imageFile = File(_imageFile.path);
-      setState(() {
+    //FIXME: cambiar .pickimage a -getimage para evitar errores futuros
+    final _imageFile = await picker.getImage(source: ImageSource.gallery);
+    imageFile = File(_imageFile.path);
+    setState(() {
       if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
@@ -156,24 +155,23 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   void getFileImage(int index) async {
-      setState(() {
-        if (imageFile == null) {
-          images.remove("Add Image");
-        }
-      });
-      imagesRef.add(await _storage.uploadFile(imageFile, 'PublicationImages'));
+    setState(() {
+      if (imageFile == null) {
+        images.remove("Add Image");
+      }
+    });
+    imagesRef.add(await _storage.uploadFile(imageFile, 'PublicationImages'));
 
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imageFile;
-        imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imageFile;
+      imageUpload.imageUrl = '';
+      // _imgsFiles.add(imageUpload);
+      images.replaceRange(index, index + 1, [imageUpload]);
+    });
   }
-
 
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
