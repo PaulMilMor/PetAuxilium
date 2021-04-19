@@ -2,7 +2,7 @@
 //import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
@@ -18,6 +18,7 @@ class Opinions extends StatefulWidget {
       @required this.nevaluations,
       @required this.description,
       @required this.services,
+      @required this.userID,
       @required this.date,
       this.callback});
   VoidCallback callback;
@@ -27,6 +28,7 @@ class Opinions extends StatefulWidget {
   String category;
   var nevaluations;
   var sumscore;
+  var userID;
   String description;
   DateTime date;
   AsyncSnapshot<QuerySnapshot> snapshot1;
@@ -39,12 +41,15 @@ class Opinions extends StatefulWidget {
 
 class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
+  String token = '';
   String _score;
+  String msg = 'Alguien realizó una opinión sobre tu perfil de cuidador';
   String _comment;
   String _id = '';
   FocusNode _focusNode;
   double avgscore;
   final prefs = new preferencesUtil();
+  final _pushUtil = PushNotificationUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
   List<String> evaluations;
   var _commentController = TextEditingController();
@@ -55,9 +60,15 @@ class _OpinionsState extends State<Opinions> {
   DocumentSnapshot detailDocument;
   @override
   void initState() {
+    _getUserInfo();
     super.initState();
     _focusNode = FocusNode();
     avgscore = this.widget.sumscore / this.widget.nevaluations;
+  }
+
+  _getUserInfo() async {
+    DocumentSnapshot document = await _db.getUserById(widget.userID);
+    token = document.data()["token"];
   }
 
   @override
@@ -76,18 +87,15 @@ class _OpinionsState extends State<Opinions> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _db.getOpinions(this.widget.id),
-        builder: ( context,
-            AsyncSnapshot<List<EvaluationModel>> snapshot) {
-          print(snapshot.data);
-          _checkEvaluations(snapshot);
+        builder: (context, AsyncSnapshot<List<EvaluationModel>> snapshot) {
+          /*  print(snapshot.data);
+          _checkEvaluations(snapshot);*/
 
           if (snapshot.hasData) {
+            _checkEvaluations(snapshot);
             return _opinion(snapshot);
-            print('POOL SNAPSHOT');
-            //print(snapshot.data[0].userID);
-            if (snapshot.connectionState == ConnectionState.done) {
-              _checkEvaluations(snapshot);
-            }
+          } else {
+            return _makeOpinion('0');
           }
         });
   }
@@ -282,9 +290,15 @@ class _OpinionsState extends State<Opinions> {
                                         _score = _score;
                                       }
                                       print('PUBLICAR');
+
                                       _evaluacion();
                                       if (this.widget.callback != null)
                                         this.widget.callback();
+                                      _pushUtil.sendNewOpinionNotif(
+                                          prefs.userID,
+                                          prefs.userName,
+                                          msg,
+                                          token);
                                     },
                                     child: Align(
                                       alignment: Alignment.topRight,
@@ -409,24 +423,30 @@ class _OpinionsState extends State<Opinions> {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Column(children: <Widget>[
-                            Row(children: [
-                              Text(
-                                prefs.userName,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.justify,
-                              ),
-                              Icon(
-                                Icons.star_rate_rounded,
-                                color: Colors.greenAccent[400],
-                                size: 20,
-                              ),
-                              Text(
-                                _score,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.justify,
-                              ),
-                            ]),
+                            Flexible(
+                              child: Row(children: [
+                                Flexible(
+                                  child: Text(
+                                    prefs.userName,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.star_rate_rounded,
+                                  color: Colors.greenAccent[400],
+                                  size: 20,
+                                ),
+                                Text(
+                                  _score,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ]),
+                            ),
                             Text(
                               _comment,
                               textAlign: TextAlign.left,

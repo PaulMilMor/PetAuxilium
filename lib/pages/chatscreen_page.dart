@@ -58,7 +58,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             //     width:40
             //   )
             // ),
-            Text(widget.name),
+            Flexible(child: Text(widget.name, overflow: TextOverflow.fade))
           ],
         ),
       ),

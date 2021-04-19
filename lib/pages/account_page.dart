@@ -95,24 +95,26 @@ class _AccountPageState extends State<AccountPage> {
                 radius: 50,
               ),
             ]),*/
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 11.0),
-                  child: Text(
-                    this._user.name,
-                    style: TextStyle(fontSize: 16),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 11.0),
+                    child: Text(
+                      this._user.name,
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 12.0),
-                  child: Text(this._user.email),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 12.0),
+                    child: Text(this._user.email),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

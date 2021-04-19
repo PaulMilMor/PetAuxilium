@@ -85,8 +85,10 @@ class _DetailPageState extends State<DetailPage> {
                                   width: 52,
                                 ),
                                 if (widget.detailDocument.category
-                                    .toString()
-                                    .contains('CUIDADOR') && widget.detailDocument.userID!=_prefs.userID)
+                                        .toString()
+                                        .contains('CUIDADOR') &&
+                                    widget.detailDocument.userID !=
+                                        _prefs.userID)
                                   _buttonChat()
                               ],
                             ),
@@ -129,10 +131,10 @@ class _DetailPageState extends State<DetailPage> {
   ) async {
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
-      await  _fcm.unsubscribeFromTopic(id);
+      await _fcm.unsubscribeFromTopic(id);
     } else {
       this.widget.follows.add(id);
-       await _fcm.subscribeToTopic(id);
+      await _fcm.subscribeToTopic(id);
     }
     _db.updateFollows(this.widget.follows);
     setState(() {});
@@ -576,7 +578,8 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _bottomSection() {
-    if (widget.detailDocument.category.toString().contains('CUIDADOR') || widget.detailDocument.category.toString().contains('NEGOCIO')) {
+    if (widget.detailDocument.category.toString().contains('CUIDADOR') ||
+        widget.detailDocument.category.toString().contains('NEGOCIO')) {
       return Opinions(
           id: widget.detailDocument.id,
           services: widget.detailDocument.services,
@@ -584,6 +587,7 @@ class _DetailPageState extends State<DetailPage> {
           sumscore: widget.detailDocument.score,
           nevaluations: widget.detailDocument.nevaluations,
           pricing: widget.detailDocument.pricing,
+          userID: widget.detailDocument.userID,
           description: widget.detailDocument.description,
           date: widget.detailDocument.date);
     } else {
@@ -617,7 +621,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   _chats() {
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var myId = _prefs.userID;
       var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
@@ -629,7 +632,9 @@ class _DetailPageState extends State<DetailPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatScreenPage(
-                  widget.detailDocument.userID, widget.detailDocument.name, )));
+                    widget.detailDocument.userID,
+                    widget.detailDocument.name,
+                  )));
     });
   }
 

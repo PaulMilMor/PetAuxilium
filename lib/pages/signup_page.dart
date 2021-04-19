@@ -177,7 +177,6 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _addPhoto() {
-    
     return GestureDetector(
       onTap: _onAddImageClick,
       child: Container(
@@ -221,7 +220,6 @@ class _SignupPageState extends State<SignupPage> {
             ),
             onTap: () {
               _onAddImageClick();
-              
             },
           ),
         ),
@@ -235,33 +233,31 @@ class _SignupPageState extends State<SignupPage> {
 
     setState(() {
       if (imageFile != null) {
-        print('NOT NULL');
-        print(imageFile);
         getFileImage();
       }
     });
   }
 
   void getFileImage() async {
-      //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-      if (imageFile != null) {
-        setState(() {
-          ImageUploadModel imageUpload = new ImageUploadModel();
-          imageUpload.isUploaded = false;
-          imageUpload.uploading = false;
-          imageUpload.imageFile = imageFile;
-          imageUpload.imageUrl = '';
-          print('Image UPLOAD');
-          _image = imageUpload;
-          _imageSelected = true;
-        });
-      } else {
-        setState(() {
-          if (_image == null) {
-            _imageSelected = false;
-          }
-        });
-      }
+    //  _imgRef = await _storage.uploadFile(file, 'usuarios');
+    if (imageFile != null) {
+      setState(() {
+        ImageUploadModel imageUpload = new ImageUploadModel();
+        imageUpload.isUploaded = false;
+        imageUpload.uploading = false;
+        imageUpload.imageFile = imageFile;
+        imageUpload.imageUrl = '';
+        print('Image UPLOAD');
+        _image = imageUpload;
+        _imageSelected = true;
+      });
+    } else {
+      setState(() {
+        if (_image == null) {
+          _imageSelected = false;
+        }
+      });
+    }
   }
 
   Widget _nameTxt() {
@@ -394,8 +390,6 @@ class _SignupPageState extends State<SignupPage> {
           if (_confirmController.text.trim().isNotEmpty &&
               _confirmController.text == _passwordController.text) {
             if (_formKey.currentState.validate()) {
-              print('VALIDATE');
-              print(_imageFile);
               if (_image == null) {
                 node.unfocus();
 
@@ -443,8 +437,6 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    print('VALIDATE');
-                    print(_imageFile);
                     if (_image == null) {
                       setState(() {
                         _imageSelected = false;
@@ -497,7 +489,6 @@ class _SignupPageState extends State<SignupPage> {
       name: _nameController.text + ' ' + _lastNameController.text,
       email: _emailController.text,
       pass: _passwordController.text,
-      
       //imgRef??
       //birthday??
     );
@@ -505,13 +496,11 @@ class _SignupPageState extends State<SignupPage> {
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
-    await _imageFile.then((file) async {
-      _user.imgRef = await _storage.uploadFile(file, 'usuarios');
-      _prefs.userImg = _user.imgRef;
-      print('IMGREF');
-      print(_user.imgRef);
-      _db.addUser(_user);
-    });
+    _user.imgRef = await _storage.uploadFile(imageFile, 'usuarios');
+    _prefs.userImg = _user.imgRef;
+    print('IMGREF');
+    print(_user.imgRef);
+    _db.addUser(_user);
 
     if (_result == 'Ingresó') {
       _isLoading = false;
@@ -527,7 +516,8 @@ class _SignupPageState extends State<SignupPage> {
 
   _signUpGoogle(BuildContext context) async {
     String _result = await _auth.signInWithGoogle();
-
+    print(context);
+    print("dentro del registro google");
     if (_result == 'Ingresó') {
       _isGoogleLoading = false;
       Navigator.pushNamedAndRemoveUntil(
