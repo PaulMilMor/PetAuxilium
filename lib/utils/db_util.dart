@@ -73,11 +73,12 @@ class dbUtil {
 //Guarda denuncia
   Future<void> addComplaint(ComplaintModel complaint) async {
     await _firestoreInstance.collection("complaints").add({
-      'title': complaint.title,
+      'name': complaint.name,
       'location': complaint.location,
       'description': complaint.description,
       'userID': complaint.userID,
       'imgRef': complaint.imgRef,
+      'category':complaint.category,
       'nevaluations': 0,
       'score': 0,
       'pricing': "",

@@ -53,7 +53,7 @@ final PushNotificationUtil _pushUtil=PushNotificationUtil();
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     QueryDocumentSnapshot msg = snapshot.data.docs[index];
-                      print(msg.data());
+                      print(msg.id);
                       
                              return GestureDetector(
 
@@ -68,6 +68,7 @@ final PushNotificationUtil _pushUtil=PushNotificationUtil();
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                          
                             Text(msg.data()['notification'],
                                 style: TextStyle(
                                   fontSize: 14,
@@ -84,6 +85,14 @@ final PushNotificationUtil _pushUtil=PushNotificationUtil();
                           ],
                         )),
                   ),
+
+                  GestureDetector(
+                    child: Icon(Icons.close),
+                    onTap: () {
+
+                      _db.deleteDocument(msg.id, 'notifications');
+                    },
+                    )
                                    ]
                                  ),
                                ),
