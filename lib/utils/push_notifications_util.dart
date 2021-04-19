@@ -29,7 +29,7 @@ class PushNotificationUtil {
 
     await _db.updateToken(_prefs.userID, token);
 //    sendFcmMessage('espero que yes', 'ojala que si');
-    sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
+    //sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
     _fcm.configure(onMessage: (Map<String, dynamic> message) async {
       print('onMessage: $message');
     }, onLaunch: (Map<String, dynamic> message) async {

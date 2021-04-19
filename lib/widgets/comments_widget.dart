@@ -471,12 +471,8 @@ class _CommentsState extends State<Comments> {
   _chats() {
     //  Navigator.popUntil(context, (route) => true);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var myId = _prefs.userID;
-      var chatRoomId = _getChatRoomIdByIds(myId, widget.userid);
-      Map<String, dynamic> chatRoomInfoMap = {
-        "users": [myId, widget.userid]
-      };
-      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+  
+    
       Navigator.push(
           context,
           MaterialPageRoute(
