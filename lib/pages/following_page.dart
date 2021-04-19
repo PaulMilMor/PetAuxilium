@@ -48,7 +48,7 @@ class _FollowingPageState extends State<FollowingPage> {
                   child: Text('No sigues ninguna publicación'),
                 )
               : StreamBuilder(
-                  stream: _db.getFollowPublications(follow.data),
+                  stream: _db.followedElements(follow.data),
                   builder: (context, snapshot) {
                     return (snapshot.connectionState == ConnectionState.waiting)
                         ? Center(child: CircularProgressIndicator())

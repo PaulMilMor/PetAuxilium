@@ -233,8 +233,6 @@ class _SignupPageState extends State<SignupPage> {
 
     setState(() {
       if (imageFile != null) {
-        print('NOT NULL');
-        print(imageFile);
         getFileImage();
       }
     });
@@ -392,8 +390,6 @@ class _SignupPageState extends State<SignupPage> {
           if (_confirmController.text.trim().isNotEmpty &&
               _confirmController.text == _passwordController.text) {
             if (_formKey.currentState.validate()) {
-              print('VALIDATE');
-              print(_imageFile);
               if (_image == null) {
                 node.unfocus();
 
@@ -441,8 +437,6 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    print('VALIDATE');
-                    print(_imageFile);
                     if (_image == null) {
                       setState(() {
                         _imageSelected = false;
@@ -502,13 +496,11 @@ class _SignupPageState extends State<SignupPage> {
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
-    await _imageFile.then((file) async {
-      _user.imgRef = await _storage.uploadFile(file, 'usuarios');
-      _prefs.userImg = _user.imgRef;
-      print('IMGREF');
-      print(_user.imgRef);
-      _db.addUser(_user);
-    });
+    _user.imgRef = await _storage.uploadFile(imageFile, 'usuarios');
+    _prefs.userImg = _user.imgRef;
+    print('IMGREF');
+    print(_user.imgRef);
+    _db.addUser(_user);
 
     if (_result == 'Ingresó') {
       _isLoading = false;

@@ -89,54 +89,57 @@ class _ListFeedState extends State<ListFeed> {
                       fit: BoxFit.fitWidth,
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(_data.name,
+                  Flexible(
+                    flex: 5,
+                    child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_data.name,
+                                style: TextStyle(
+                                  fontSize: 21,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis),
+                            Text(
+                              _data.category,
                               style: TextStyle(
-                                fontSize: 21,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis),
-                          Text(
-                            _data.category,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.green,
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            width: 150,
-                            child: Text(
-                              _data.pricing,
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey[700],
+                                fontSize: 11,
+                                color: Colors.green,
                               ),
                             ),
-                          ),
 
-                          Container(
-                              alignment: Alignment.centerLeft,
-                              width: 171,
-                              child: mapsUtil
-                                  .getLocationText(_data.location.first)),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //Aquí está el promedio we
-                          // if (_data['category'] == 'CUIDADOR')
-                          //   _rating(_data['nevaluations'], _data['score']),
-                          _rating(_data),
-                        ],
-                      )),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              width: 150,
+                              child: Text(
+                                _data.pricing,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                width: 171,
+                                child: mapsUtil
+                                    .getLocationText(_data.location.first)),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //Aquí está el promedio we
+                            // if (_data['category'] == 'CUIDADOR')
+                            //   _rating(_data['nevaluations'], _data['score']),
+                            _rating(_data),
+                          ],
+                        )),
+                  ),
                   Spacer(),
                   _prefs.userID == ' '
                       ? Text('')
@@ -159,7 +162,7 @@ class _ListFeedState extends State<ListFeed> {
       this.widget.follows.add(id);
     }
     _db.updateFollows(this.widget.follows);
-    setState(() {});
+    //setState(() {});
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
     }
@@ -818,7 +821,8 @@ _optionSection(publications) {
 }
 
 Widget _rating(publication) {
-  bool isCuidador = publication.category == 'CUIDADOR';
+  bool isCuidador =
+      publication.category == 'CUIDADOR' || publication.category == 'NEGOCIO';
   double mean = 0;
   if (isCuidador) mean = publication.score / publication.nevaluations;
   return Row(

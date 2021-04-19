@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final preferencesUtil _prefs = preferencesUtil();
-
+  PushNotificationUtil notifications = PushNotificationUtil();
   UserModel _user;
   void initState() {
     super.initState();
@@ -89,24 +90,26 @@ class _AccountPageState extends State<AccountPage> {
                 radius: 50,
               ),
             ]),*/
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 11.0),
-                  child: Text(
-                    this._user.name,
-                    style: TextStyle(fontSize: 16),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 11.0),
+                    child: Text(
+                      this._user.name,
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 12.0),
-                  child: Text(this._user.email),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 12.0),
+                    child: Text(this._user.email),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -295,6 +298,7 @@ class _AccountPageState extends State<AccountPage> {
           onChanged: (value) {
             setState(() {
               isSwitched = value;
+              //notifications.onoffNotifications(isSwitched);
               print(isSwitched);
             });
           },

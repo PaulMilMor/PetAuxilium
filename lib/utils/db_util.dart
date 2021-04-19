@@ -391,23 +391,34 @@ print(docRef.documentID);*/
 
   Stream searchedElements(String query) {
     return Rx.combineLatest3(
-        streamPublication(query),
-        streamBusiness(query),
-        streamComplaints(query),
+        streamPublication(query, null),
+        streamBusiness(query, null),
+        streamComplaints(query, null),
+        (List<PublicationModel> p, List<PublicationModel> b,
+                List<PublicationModel> c) =>
+            p + b + c);
+  }
+
+  Stream followedElements(List<String> follow) {
+    return Rx.combineLatest3(
+        streamPublication('', follow),
+        streamBusiness('', follow),
+        streamComplaints('', follow),
         (List<PublicationModel> p, List<PublicationModel> b,
                 List<PublicationModel> c) =>
             p + b + c);
   }
 
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication(''),
-      streamBusiness(''),
-      streamComplaints(''),
+      streamPublication('', null),
+      streamBusiness('', null),
+      streamComplaints('', null),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
   //Stream get feedStream =>
-  Stream<List<PublicationModel>> streamPublication(String query) =>
+  Stream<List<PublicationModel>> streamPublication(
+          String query, List<String> follow) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
@@ -417,11 +428,15 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
         });
 
         return list;
       });
-  Stream<List<PublicationModel>> streamComplaints(String query) =>
+  Stream<List<PublicationModel>> streamComplaints(
+          String query, List<String> follow) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
@@ -432,12 +447,16 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
         });
 
         return list;
       });
 
-  Stream<List<PublicationModel>> streamBusiness(String query) =>
+  Stream<List<PublicationModel>> streamBusiness(
+          String query, List<String> follow) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
@@ -448,6 +467,9 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
         });
 
         //print(list);
