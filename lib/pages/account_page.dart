@@ -1,8 +1,13 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
+import 'package:app_settings/app_settings.dart';
+
 
 class AccountPage extends StatefulWidget {
   @override
@@ -138,8 +143,10 @@ class _AccountPageState extends State<AccountPage> {
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
+          if (!isAdmin()) _settingsButton(),
           _logoutButton(),
-          if (!isAdmin()) _switchB(),
+           
+          //if (!isAdmin()) _switchB(),
         ],
       ),
     );
@@ -245,7 +252,9 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Ajustes',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () async {
+            openAppSettings();
+        },
       ),
     );
   }
