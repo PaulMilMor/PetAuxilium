@@ -232,7 +232,9 @@ class _ComplaintPageState extends State<ComplaintPage> {
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             ComplaintModel complaint = ComplaintModel(
-                title: _title,
+               name: _title,
+               
+               category:'DENUNCIA',
                 //location: [_direct],
                 location: mapsUtil.locationtoString(_locations),
                 userID: prefs.userID,

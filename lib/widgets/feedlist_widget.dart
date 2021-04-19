@@ -155,9 +155,11 @@ class _ListFeedState extends State<ListFeed> {
     String id,
   ) async {
     if (this.widget.follows.contains(id)) {
-      this.widget.follows.remove(id);
       await _fcm.unsubscribeFromTopic(id);
+      this.widget.follows.remove(id);
+      
     } else {
+      
       await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
@@ -300,7 +302,7 @@ class _ListFeedState extends State<ListFeed> {
               print(id);
               break;
             case 5:
-              _ClosePubMenu(publications);
+              _ClosePubMenu(publications,id);
           }
         });
   }
@@ -609,7 +611,7 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-  void _ClosePubMenu(publications) {
+  void _ClosePubMenu(publications, id) {
     String topic01 = publications.userID;
     showModalBottomSheet(
         context: context,
@@ -706,6 +708,7 @@ class _ListFeedState extends State<ListFeed> {
                                 ),
                                 onPressed: () {
                                   if (_option == ClosePub.eliminar) {
+                               
                                     _msg = 'El usuario ' +
                                         _prefs.userName +
                                         ' ha eliminado una de sus publicaciones';
@@ -758,6 +761,17 @@ class _ListFeedState extends State<ListFeed> {
                                     );
                                   }
                                   Navigator.of(context).pop();
+                                   if (publications.category == 'DENUNCIA') {
+                                    _deletePublication(
+                                        id, "complaints", publications);
+                                  } else if (publications.category ==
+                                      'NEGOCIO') {
+                                    _deletePublication(
+                                        id, "business", publications);
+                                  } else {
+                                    _deletePublication(
+                                        id, "publications", publications);
+                                  }
                                   ScaffoldMessenger.of(context)
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(SnackBar(
