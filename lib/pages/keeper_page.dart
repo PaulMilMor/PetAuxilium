@@ -365,6 +365,8 @@ class KeeperPageState extends State<KeeperPage> {
             primary: Color.fromRGBO(49, 232, 93, 1),
           ),
           onPressed: () {
+            bool _isTarifa = _isNumeric(_pricing[0]) &&
+                _isNumeric(_pricing[_pricing.length - 1]);
             if (_pricing.isEmpty ||
                 _desc.isEmpty ||
                 imagesRef.isEmpty ||
@@ -375,27 +377,34 @@ class KeeperPageState extends State<KeeperPage> {
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               print(_imgsFiles.toString());
-
-              PublicationModel ad = PublicationModel(
-                  category: 'CUIDADOR',
-                  name: prefs.userName,
-                  location: ['29.115967, -111.025490'],
-                  userID: prefs.userID,
-                  description: _desc,
-                  pricing: '\$$_pricing por hora',
-                  imgRef: imagesRef,
-                  services: _selectedServices);
-              _db.addKeeper(ad).then((value) {
-                prefs.keeperPricing = '';
-                prefs.keeperDescription = '';
-                //prefs.keeperCategory = 'ENTRENAMIENTO';
-                Navigator.popAndPushNamed(context, 'navigation');
+              if (_isTarifa) {
+                PublicationModel ad = PublicationModel(
+                    category: 'CUIDADOR',
+                    name: prefs.userName,
+                    location: ['29.115967, -111.025490'],
+                    userID: prefs.userID,
+                    description: _desc,
+                    pricing: '\$$_pricing por hora',
+                    imgRef: imagesRef,
+                    services: _selectedServices);
+                _db.addKeeper(ad).then((value) {
+                  prefs.keeperPricing = '';
+                  prefs.keeperDescription = '';
+                  //prefs.keeperCategory = 'ENTRENAMIENTO';
+                  Navigator.popAndPushNamed(context, 'navigation');
+                  ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                        content: Text(
+                            'Te registraste correctamente como cuidador')));
+                });
+              } else {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
                       content:
-                          Text('Te registraste correctamente como cuidador')));
-              });
+                          Text('La tarifa debe tener un formato numérico')));
+              }
             }
           },
           child: Padding(
@@ -403,6 +412,13 @@ class KeeperPageState extends State<KeeperPage> {
             child: Text('Publicar'),
           )),
     );
+  }
+
+  bool _isNumeric(String str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
   }
 }
 
