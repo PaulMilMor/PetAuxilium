@@ -52,7 +52,7 @@ class _ListFeedState extends State<ListFeed> {
   String _id;
   ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
-  String msg = 'La publicación que seguías ha sido cerrada';
+  String _msg = 'La publicación que seguías ha sido cerrada';
   @override
   Widget build(BuildContext context) {
     this.widget.snapshot.data.sort(
@@ -240,7 +240,7 @@ class _ListFeedState extends State<ListFeed> {
         onSelected: (value) async {
           switch (value) {
             case 1:
-              await _fcm.subscribeToTopic(publications.userID);
+              //await _fcm.subscribeToTopic(publications.userID);
               _addFollow(id);
               break;
             case 2:
@@ -297,13 +297,6 @@ class _ListFeedState extends State<ListFeed> {
               print(id);
               break;
             case 5:
-              String topic01 = publications.userID;
-              _pushUtil.sendCloseNotif(
-                _prefs.userID,
-                _prefs.userName,
-                msg,
-                topic01,
-              );
               _ClosePubMenu(publications);
           }
         });
@@ -614,6 +607,7 @@ class _ListFeedState extends State<ListFeed> {
   }
 
   void _ClosePubMenu(publications) {
+    String topic01 = publications.userID;
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -635,7 +629,7 @@ class _ListFeedState extends State<ListFeed> {
                       Center(
                         child: Text("Cerrar publicación",
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
+                                fontSize: 19, fontWeight: FontWeight.bold)),
                       ),
                       SizedBox(
                         height: 15,
@@ -652,7 +646,7 @@ class _ListFeedState extends State<ListFeed> {
                         child: Center(
                           child: Text(
                               "¿Por qué quieres cerrar esta publicación?",
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 15)),
                         ),
                       ),
                       Column(
@@ -670,8 +664,8 @@ class _ListFeedState extends State<ListFeed> {
                             ),
                           ),
                           ListTile(
-                            title:
-                                const Text('Deseo eliminar esta publicación'),
+                            title: const Text('Deseo eliminar esta publicación',
+                                style: TextStyle(fontSize: 14)),
                             leading: Radio<ClosePub>(
                               value: ClosePub.eliminar,
                               groupValue: _option,
@@ -691,7 +685,7 @@ class _ListFeedState extends State<ListFeed> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                              child: Text('Cancelar',
+                              child: Text('Cancelar    ',
                                   style: TextStyle(color: Colors.black)),
                               onPressed: () {
                                 Navigator.of(context).pop();
@@ -701,7 +695,66 @@ class _ListFeedState extends State<ListFeed> {
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromRGBO(49, 232, 93, 1),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (_option == ClosePub.eliminar) {
+                                    _msg = 'El usuario ' +
+                                        _prefs.userName +
+                                        ' ha eliminado una de sus publicaciones';
+                                    _pushUtil.sendCloseNotif(
+                                      _prefs.userID,
+                                      _prefs.userName,
+                                      _msg,
+                                      topic01,
+                                    );
+                                  } else {
+                                    if (publications.category == 'ADOPCIÓN') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ' +
+                                          publications.name +
+                                          ' fue dado en adopción :)';
+                                    } else if (publications.category ==
+                                        'ANIMAL PERDIDO') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ' +
+                                          publications.name +
+                                          ' ha sido encontrado ;)';
+                                    } else if (publications.category ==
+                                        'CUIDADOR') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ya no continuará siendo cuidador';
+                                    } else if (publications.category ==
+                                        'NEGOCIO') {
+                                      _msg = 'El negocio ' +
+                                          publications.name +
+                                          ' decidió cerrar la publicación que seguías';
+                                    } else if (publications.category ==
+                                        'SITUACIÓN DE CALLE') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque el animal callejero fue atendido';
+                                    } else if (publications.category ==
+                                        'DENUNCIA') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la denuncia porque esta ya ha sido atendida/resuelta';
+                                    }
+                                    _pushUtil.sendCloseNotif(
+                                      _prefs.userID,
+                                      _prefs.userName,
+                                      _msg,
+                                      topic01,
+                                    );
+                                  }
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context)
+                                    ..removeCurrentSnackBar()
+                                    ..showSnackBar(SnackBar(
+                                        content: Text(
+                                            'La publicación se ha cerrado exitosamente.')));
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text('Continuar'),
@@ -724,35 +777,41 @@ _optionSection(publications) {
   switch (categoria) {
     case "ANIMAL PERDIDO":
       {
-        return const Text('La mascota perdida ya ha sido localizada');
+        return const Text('La mascota perdida ya ha sido localizada',
+            style: TextStyle(fontSize: 14));
       }
       break;
 
     case "ADOPCIÓN":
       {
-        return const Text('La mascota ya fue dada en adopción');
+        return const Text('La mascota ya fue dada en adopción',
+            style: TextStyle(fontSize: 14));
       }
       break;
 
     case "CUIDADOR":
       {
-        return const Text('Al chile ya me harté de andar cuidando animales');
+        return const Text('Ya no deseo mantener mi perfil de cuidador',
+            style: TextStyle(fontSize: 14));
       }
       break;
 
     case "NEGOCIO":
       {
-        return const Text('Ya no me interesa publicitar este negocio');
+        return const Text('Ya no me interesa publicitar este negocio',
+            style: TextStyle(fontSize: 14));
       }
       break;
     case "SITUACIÓN DE CALLE":
       {
-        return const Text('El animal callejero ya ha sido atendido');
+        return const Text('El animal callejero ya ha sido atendido',
+            style: TextStyle(fontSize: 14));
       }
       break;
     case "DENUNCIA":
       {
-        return const Text('La denuncia ya ha sido atendida');
+        return const Text('La denuncia ya ha sido atendida',
+            style: TextStyle(fontSize: 14));
       }
       break;
   }

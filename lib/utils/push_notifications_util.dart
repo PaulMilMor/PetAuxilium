@@ -93,7 +93,7 @@ class PushNotificationUtil {
             "key=AAAAj87I27w:APA91bGCzV1p-zm4UsqgivqItNvxcVWbUdmFmAMV1hJC7s1uKicoHrH5emW0iKQtW_C9xPWonUSJFlAsr3bAAlm7evVIbhX4XrJQD6_mY6shVH1srM_R9LZO_HfC7Iqc57RpBqqZtp8C",
       };
       var request = {
-        'notification': {'title': title, 'body': message},
+        'notification': {'title': 'Publicaciones que sigues', 'body': message},
         'data': data,
         //"priority": "high",
         "to": '/topics/$topic01',
