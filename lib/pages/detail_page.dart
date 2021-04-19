@@ -9,10 +9,13 @@ import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
+
+enum ClosePub { option1, eliminar }
 
 class DetailPage extends StatefulWidget {
   PublicationModel detailDocument;
@@ -32,6 +35,9 @@ class _DetailPageState extends State<DetailPage> {
   final _firestoreInstance = FirebaseFirestore.instance;
   final MapsUtil _mapsUtil = MapsUtil();
   double avgscore;
+  ClosePub _option = ClosePub.option1;
+  final _pushUtil = PushNotificationUtil();
+  String msg = 'La publicación que seguías ha sido cerrada';
   List listItems = [
     'Spam',
     'Informacion fraudulenta',
@@ -159,6 +165,14 @@ class _DetailPageState extends State<DetailPage> {
                 color: Color.fromRGBO(210, 210, 210, 1),
               ),
               itemBuilder: (BuildContext context) => [
+                    _prefs.userID != widget.detailDocument.userID
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_CloseOption()],
+                      ),
+                      value: 5,
+                    ),
                     _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                         ? null
                         : PopupMenuItem(
@@ -276,6 +290,15 @@ class _DetailPageState extends State<DetailPage> {
                     }
                     print(selectedPublication.id);
                     break;
+                    case 5:
+                    String topic01 = widget.detailDocument.userID;
+                    _pushUtil.sendCloseNotif(
+                      _prefs.userID,
+                      _prefs.userName,
+                      msg,
+                      topic01,
+                    );
+                    _ClosePubMenu(widget.detailDocument);
                 }
               })
       ],
@@ -558,7 +581,169 @@ class _DetailPageState extends State<DetailPage> {
           );
         });
   }
+  Widget _CloseOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.check,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Cerrar publicación',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+  void _ClosePubMenu(publications) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+        ),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                height: 350,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Padding(
+                      //padding: const EdgeInsets.only(bottom: 42),
+                      Center(
+                        child: Text("Cerrar publicación",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ), //),
+                      const Divider(
+                        color: Colors.grey,
+                        height: 5,
+                        thickness: 1,
+                        indent: 50,
+                        endIndent: 50,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30, bottom: 10),
+                        child: Center(
+                          child: Text(
+                              "¿Por qué quieres cerrar esta publicación?",
+                              style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                      
+                      Column(
+                        
+                        children: <Widget>[
+                          ListTile(
+                            title: _optionSection(publications),
+                            
+                            leading: Radio<ClosePub>(
+                              
+                              value: ClosePub.option1,
+                              groupValue: _option,
+                              activeColor: Color.fromRGBO(49, 232, 93, 1),
+                              onChanged: (ClosePub value) {
+                                setState(() {
+                                  _option = value;
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title:
+                                const Text('Deseo eliminar esta publicación'),
+                            leading: Radio<ClosePub>(
+                              value: ClosePub.eliminar,
+                              groupValue: _option,
+                              activeColor: Color.fromRGBO(49, 232, 93, 1),
+                              onChanged: (ClosePub value) {
+                                setState(() {
+                                  _option = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              child: Text('Cancelar',
+                                  style: TextStyle(color: Colors.black)),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromRGBO(49, 232, 93, 1),
+                                ),
+                                onPressed: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('Continuar'),
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+_optionSection(publications) {
+  String categoria = publications.category;
+  switch (categoria) {
+    case "ANIMAL PERDIDO":
+      {
+        return const Text('La mascota perdida ya ha sido localizada');
+      }
+      break;
 
+    case "ADOPCIÓN":
+      {
+        return const Text('La mascota ya fue dada en adopción');
+      }
+      break;
+
+    case "CUIDADOR":
+      {
+        return const Text('Al chile ya me harté de andar cuidando animales');
+      }
+      break;
+
+    case "NEGOCIO":
+      {
+        return const Text('Ya no me interesa publicitar este negocio');
+      }
+      break;
+    case "SITUACIÓN DE CALLE":
+      {
+        return const Text('El animal callejero ya ha sido atendido');
+      }
+      break;
+    case "DENUNCIA":
+      {
+        return const Text('La denuncia ya ha sido atendida');
+      }
+      break;
+  }
+}
   Widget _setBackIcon(context2) {
     return Positioned(
         right: 0.0,

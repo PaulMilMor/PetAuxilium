@@ -658,13 +658,18 @@ class _ListFeedState extends State<ListFeed> {
                               style: TextStyle(fontSize: 16)),
                         ),
                       ),
+                      
                       Column(
+                        
                         children: <Widget>[
                           ListTile(
                             title: _optionSection(publications),
+                            
                             leading: Radio<ClosePub>(
+                              
                               value: ClosePub.option1,
                               groupValue: _option,
+                              activeColor: Color.fromRGBO(49, 232, 93, 1),
                               onChanged: (ClosePub value) {
                                 setState(() {
                                   _option = value;
@@ -678,6 +683,7 @@ class _ListFeedState extends State<ListFeed> {
                             leading: Radio<ClosePub>(
                               value: ClosePub.eliminar,
                               groupValue: _option,
+                              activeColor: Color.fromRGBO(49, 232, 93, 1),
                               onChanged: (ClosePub value) {
                                 setState(() {
                                   _option = value;
