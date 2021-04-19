@@ -37,7 +37,7 @@ class _DetailPageState extends State<DetailPage> {
   double avgscore;
   ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
-  String msg = 'La publicación que seguías ha sido cerrada';
+  String _msg = 'La publicación que seguías ha sido cerrada';
   List listItems = [
     'Spam',
     'Informacion fraudulenta',
@@ -291,13 +291,13 @@ class _DetailPageState extends State<DetailPage> {
                     print(selectedPublication.id);
                     break;
                     case 5:
-                    String topic01 = widget.detailDocument.userID;
+                    /*String topic01 = widget.detailDocument.userID;
                     _pushUtil.sendCloseNotif(
                       _prefs.userID,
                       _prefs.userName,
-                      msg,
+                      _msg,
                       topic01,
-                    );
+                    );*/
                     _ClosePubMenu(widget.detailDocument);
                 }
               })
@@ -597,6 +597,7 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
   void _ClosePubMenu(publications) {
+    String topic01 = publications.userID;
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -690,7 +691,67 @@ class _DetailPageState extends State<DetailPage> {
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromRGBO(49, 232, 93, 1),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (_option == ClosePub.eliminar) {
+                                    _msg = 'El usuario ' +
+                                        _prefs.userName +
+                                        ' ha eliminado una de sus publicaciones';
+                                    _pushUtil.sendCloseNotif(
+                                      _prefs.userID,
+                                      _prefs.userName,
+                                      _msg,
+                                      topic01,
+                                    );
+                                    
+                                  } else {
+                                    if (publications.category == 'ADOPCIÓN') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ' +
+                                          publications.name +
+                                          ' fue dado en adopción :)';
+                                    } else if (publications.category ==
+                                        'ANIMAL PERDIDO') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ' +
+                                          publications.name +
+                                          ' ha sido encontrado ;)';
+                                    } else if (publications.category ==
+                                        'CUIDADOR') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque ya no continuará siendo cuidador';
+                                    } else if (publications.category ==
+                                        'NEGOCIO') {
+                                      _msg = 'El negocio ' +
+                                          publications.name +
+                                          ' decidió cerrar la publicación que seguías';
+                                    } else if (publications.category ==
+                                        'SITUACIÓN DE CALLE') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la publicación porque el animal callejero fue atendido';
+                                    } else if (publications.category ==
+                                        'DENUNCIA') {
+                                      _msg = 'El usuario ' +
+                                          _prefs.userName +
+                                          ' cerró la denuncia porque esta ya ha sido atendida/resuelta';
+                                    }
+                                    _pushUtil.sendCloseNotif(
+                                      _prefs.userID,
+                                      _prefs.userName,
+                                      _msg,
+                                      topic01,
+                                    );
+                                  }
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context)
+                                    ..removeCurrentSnackBar()
+                                    ..showSnackBar(SnackBar(
+                                        content: Text(
+                                            'La publicación se ha cerrado exitosamente.')));
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text('Continuar'),
