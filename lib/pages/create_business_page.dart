@@ -324,7 +324,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                       setState(() {
                         images.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
-                        _imgsFiles.remove(index);
+                        imagesRef.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },

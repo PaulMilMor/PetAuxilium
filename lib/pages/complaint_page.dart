@@ -288,7 +288,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
                       setState(() {
                         images.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
-                        _imgsFiles.remove(index);
+                        imagesRef.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
@@ -313,7 +313,6 @@ class _ComplaintPageState extends State<ComplaintPage> {
         images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
       },
     );
-    
   }
 
   Future _onAddImageClick(int index) async {
@@ -338,22 +337,22 @@ class _ComplaintPageState extends State<ComplaintPage> {
   void getFileImage(int index) async {
 //    var dir = await path_provider.getTemporaryDirectory();
 
-      setState(() {
-        if (imageFile == null) {
-          images.remove("Add Image");
-        }
-      });
-      imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
+    setState(() {
+      if (imageFile == null) {
+        images.remove("Add Image");
+      }
+    });
+    imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
 
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imageFile;
-        imageUpload.imageUrl = '';
-        // _imgsFiles.add(imageUpload);
-        images.replaceRange(index, index + 1, [imageUpload]);
-      });
+    setState(() {
+      ImageUploadModel imageUpload = new ImageUploadModel();
+      imageUpload.isUploaded = false;
+      imageUpload.uploading = false;
+      imageUpload.imageFile = imageFile;
+      imageUpload.imageUrl = '';
+      // _imgsFiles.add(imageUpload);
+      images.replaceRange(index, index + 1, [imageUpload]);
+    });
   }
 
   void getDir(List<LatLng> locations) {

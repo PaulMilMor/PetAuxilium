@@ -102,8 +102,9 @@ class PublicationPageState extends State<PublicationPage> {
                     onTap: () {
                       setState(() {
                         images.removeAt(index);
+                        imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
-                        _imgsFiles.remove(index);
+                        //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },

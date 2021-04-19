@@ -283,6 +283,8 @@ class _OpinionsState extends State<Opinions> {
                                 )
                               : Container(
                                   child: GestureDetector(
+                                    onDoubleTap: () {},
+                                    behavior: HitTestBehavior.opaque,
                                     onTap: () {
                                       if (_score == null) {
                                         _score = '2.5';
@@ -456,6 +458,8 @@ class _OpinionsState extends State<Opinions> {
                       ),
                       Container(
                         child: GestureDetector(
+                          onDoubleTap: () {},
+                          behavior: HitTestBehavior.opaque,
                           onTap: () {
                             print('Eliminar comentario');
                             _scoredelete();
@@ -466,8 +470,8 @@ class _OpinionsState extends State<Opinions> {
 
                             _commentController.clear();
 
-                            this.widget.sumscore -= double.parse(_score);
-                            this.widget.nevaluations--;
+                            //this.widget.sumscore -= double.parse(_score);
+                            //this.widget.nevaluations--;
 
                             _commentController.clear();
 
@@ -517,7 +521,6 @@ class _OpinionsState extends State<Opinions> {
 
   void _evaluacion() {
     //CollectionReference docRef = _firestoreInstance.collection('evaluations');
-
     EvaluationModel evaluation = EvaluationModel(
       //id: docRef.doc().id,
       userID: prefs.userID,
@@ -555,6 +558,7 @@ class _OpinionsState extends State<Opinions> {
   Widget _opinion(snapshot) {
     print("checar la eval");
     print(_myEvaluation);
+
     if (this.widget.category.toString().contains('CUIDADOR') ||
         this.widget.category.toString().contains('NEGOCIO')) {
       return SingleChildScrollView(

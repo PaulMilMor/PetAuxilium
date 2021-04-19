@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
+import 'package:rxdart/rxdart.dart';
+
 
 GlobalKey<NavigatorState> _navigationKey = GlobalKey<NavigatorState>();
 GlobalKey<NavigatorState> get navigationKey => _navigationKey;
@@ -29,7 +32,7 @@ class PushNotificationUtil {
 
     await _db.updateToken(_prefs.userID, token);
 //    sendFcmMessage('espero que yes', 'ojala que si');
-    sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
+    //sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
     _fcm.configure(onMessage: (Map<String, dynamic> message) async {
       print('onMessage: $message');
     }, onLaunch: (Map<String, dynamic> message) async {
