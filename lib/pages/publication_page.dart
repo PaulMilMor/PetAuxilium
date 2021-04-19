@@ -101,9 +101,15 @@ class PublicationPageState extends State<PublicationPage> {
                     ),
                     onTap: () {
                       setState(() {
+                        print('POOOOOOOOOOOOOOOOOOOL REMOV IMAG');
+                        print(index);
+                        print(images.length);
+                        print(imagesRef.length);
+
                         images.removeAt(index);
+                        imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
-                        _imgsFiles.remove(index);
+                        //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
@@ -119,6 +125,10 @@ class PublicationPageState extends State<PublicationPage> {
               images.length < 6
                   ? _onAddImageClick(index)
                   : _limitImages(context);
+              print('POOOOOOOOOOL ADED IMAGE');
+              print(index);
+              print(images.length);
+              print(imagesRef.length);
             }),
           );
         }

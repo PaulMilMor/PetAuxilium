@@ -109,7 +109,7 @@ class KeeperPageState extends State<KeeperPage> {
                       setState(() {
                         images.removeAt(index);
 
-                        _imgsFiles.remove(index);
+                        imagesRef.removeAt(index);
                         //
                       });
                     },
