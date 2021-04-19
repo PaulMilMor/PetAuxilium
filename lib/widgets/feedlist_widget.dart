@@ -155,9 +155,11 @@ class _ListFeedState extends State<ListFeed> {
     String id,
   ) async {
     if (this.widget.follows.contains(id)) {
-      this.widget.follows.remove(id);
       await _fcm.unsubscribeFromTopic(id);
+      this.widget.follows.remove(id);
+      
     } else {
+      
       await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
@@ -706,6 +708,7 @@ class _ListFeedState extends State<ListFeed> {
                                 ),
                                 onPressed: () {
                                   if (_option == ClosePub.eliminar) {
+                               
                                     _msg = 'El usuario ' +
                                         _prefs.userName +
                                         ' ha eliminado una de sus publicaciones';
