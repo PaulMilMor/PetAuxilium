@@ -807,12 +807,9 @@ _optionSection(publications) {
 
   _chats() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var myId = _prefs.userID;
-      var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
-      Map<String, dynamic> chatRoomInfoMap = {
-        "users": [myId, widget.detailDocument.userID]
-      };
-      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+      //var myId = _prefs.userID;
+  //    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
+  
       Navigator.push(
           context,
           MaterialPageRoute(

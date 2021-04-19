@@ -171,6 +171,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     if (messageTextEdittingController.text != "") {
       String msg = messageTextEdittingController.text;
       var lastMessageTs = DateTime.now();
+          Map<String, dynamic> chatRoomInfoMap = {
+        "users": [_prefs.userID, widget.id]
+      };
+      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
       Map<String, dynamic> messageInfoMap = {
         "message": msg,
         "sendBy": _prefs.userID,
