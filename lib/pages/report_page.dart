@@ -23,12 +23,13 @@ class _ReportPageState extends State<ReportPage> {
         builder:
             (BuildContext context, AsyncSnapshot<List<ReportModel>> reports) {
           if (reports.hasData) {
+            print(reports);
             return ListView.builder(
                 itemCount: reports.data.length,
                 itemBuilder: (BuildContext context, index) {
                   var report = reports.data[index];
                   var id = report.publicationid;
-
+                    print(report);
                   return FutureBuilder(
                     future: _db.getPublication(id),
                     builder: (BuildContext context,

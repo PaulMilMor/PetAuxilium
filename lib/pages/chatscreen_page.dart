@@ -82,7 +82,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Escribe lo que quieras decir hdtpsm",
+                          hintText: "Escribe lo que quieras decir ",
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.6))),
                     )),

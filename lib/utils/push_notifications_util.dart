@@ -124,6 +124,7 @@ class PushNotificationUtil {
       'id': id,
       'name': userName
     };
+     _db.updateNotifications('$userName Te envio un mensaje');
     sendFcmMessage(userName, message, token, data);
   }
 

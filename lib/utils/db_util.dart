@@ -41,12 +41,12 @@ class dbUtil {
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
-      return UserModel(
-          name: value.get("name"),
-          //birthday: value.get("birthday"),
-          imgRef: value.get("imgRef"),
-          follows: value.get("follows") ?? [],
-          evaluationsID: value.get("evaluationsID") ?? []);
+      // return UserModel(
+      //     name: value.get("name"),
+      //     //birthday: value.get("birthday"),
+      //     imgRef: value.get("imgRef"),
+      //     follows: value.get("follows") ?? [],
+      //     evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
 
