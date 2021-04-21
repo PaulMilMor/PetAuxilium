@@ -2,11 +2,11 @@ class ReportModel {
   String id;
   String publicationid;
   List userid;
-  String nreports;
-  String nspam;
-  String nfalseinfo;
-  String nidentityfraud;
-  String nbadphotos;
+  num nreports;
+  num nspam;
+  num nfalseinfo;
+  num nidentityfraud;
+  num nbadphotos;
 
 
   ReportModel({this.id, this.publicationid, this.nreports,this.nspam,this.nfalseinfo,this.nidentityfraud,this.nbadphotos, this.userid});

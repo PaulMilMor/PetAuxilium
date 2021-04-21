@@ -29,7 +29,7 @@ class _ReportPageState extends State<ReportPage> {
                 itemBuilder: (BuildContext context, index) {
                   var report = reports.data[index];
                   var id = report.publicationid;
-                    print(report);
+                  print('el id desde el menu $id');
                   return FutureBuilder(
                     future: _db.getPublication(id),
                     builder: (BuildContext context,
@@ -69,64 +69,66 @@ class _ReportPageState extends State<ReportPage> {
                                       fit: BoxFit.fitWidth,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          publication.name,
-                                          style: TextStyle(
-                                            fontSize: 21,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          publication.category,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          width: 150,
-                                          child: Text(
-                                            publication.pricing,
+                                  Flexible(
+                                    flex: 5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(publication.name,
+                                              style: TextStyle(
+                                                fontSize: 21,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis),
+                                          Text(
+                                            publication.category,
                                             style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.grey[700],
+                                              fontSize: 11,
+                                              color: Colors.green,
                                             ),
                                           ),
-                                        ),
-                                        _getLocationText(lat, long),
-                                        SizedBox(
-                                          height: 34,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.comment,
-                                              size: 15,
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            width: 150,
+                                            child: Text(
+                                              publication.pricing,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.grey[700],
+                                              ),
                                             ),
-                                            SizedBox(width: 150),
-                                            Icon(
-                                              Icons.error,
-                                              color: Colors.red,
-                                              size: 15,
-                                            ),
-                                            Text(
-                                              report.nreports,
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            )
-                                          ],
-                                        )
-                                      ],
+                                          ),
+                                          _getLocationText(lat, long),
+                                          SizedBox(
+                                            height: 34,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.comment,
+                                                size: 15,
+                                              ),
+                                              SizedBox(width: 150),
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                report.nreports.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
