@@ -155,8 +155,8 @@ class _ListFeedState extends State<ListFeed> {
     String id,
   ) async {
     if (this.widget.follows.contains(id)) {
-      this.widget.follows.remove(id);
       await _fcm.unsubscribeFromTopic(id);
+      this.widget.follows.remove(id);
     } else {
       await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
@@ -653,15 +653,12 @@ class _ListFeedState extends State<ListFeed> {
                               style: TextStyle(fontSize: 15)),
                         ),
                       ),
-                      
+
                       Column(
-                        
                         children: <Widget>[
                           ListTile(
                             title: _optionSection(publications),
-                            
                             leading: Radio<ClosePub>(
-                              
                               value: ClosePub.option1,
                               groupValue: _option,
                               activeColor: Color.fromRGBO(49, 232, 93, 1),

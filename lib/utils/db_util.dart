@@ -41,12 +41,12 @@ class dbUtil {
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
-      return UserModel(
-          name: value.get("name"),
-          //birthday: value.get("birthday"),
-          imgRef: value.get("imgRef"),
-          follows: value.get("follows") ?? [],
-          evaluationsID: value.get("evaluationsID") ?? []);
+      // return UserModel(
+      //     name: value.get("name"),
+      //     //birthday: value.get("birthday"),
+      //     imgRef: value.get("imgRef"),
+      //     follows: value.get("follows") ?? [],
+      //     evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
 
@@ -73,11 +73,12 @@ class dbUtil {
 //Guarda denuncia
   Future<void> addComplaint(ComplaintModel complaint) async {
     await _firestoreInstance.collection("complaints").add({
-      'title': complaint.title,
+      'name': complaint.name,
       'location': complaint.location,
       'description': complaint.description,
       'userID': complaint.userID,
       'imgRef': complaint.imgRef,
+      'category':complaint.category,
       'nevaluations': 0,
       'score': 0,
       'pricing': "",
@@ -489,6 +490,12 @@ print(docRef.documentID);*/
         .doc(_prefs.userID)
         .update({'follows': follows});
   }
+  
+  void updateNotifications(String notification) async {
+    await _firestoreInstance
+        .collection('notifications')
+        .add({'notification':notification});
+  }
 
   Future<List<String>> getFollowsFuture(id) async {
     List<String> follows = [];
@@ -516,7 +523,21 @@ print(docRef.documentID);*/
         }
         return follows;
       });
-
+  Stream<QuerySnapshot> getNotifications() =>
+      _firestoreInstance.collection('notifications').snapshots(); 
+//        Future<List<String>> getNotificationsFuture() async{
+//      List<String> notifications = [];
+//      await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value) {
+      
+//         UserModel user = UserModel.fromJsonMap(value.data());
+//         if (user.notifications != null) {
+//           user.follows.forEach((element) {
+//             notifications.add(element);
+//           });
+//         }
+        
+// });
+// return notifications;}
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
     await _firestoreInstance
@@ -568,15 +589,16 @@ print(docRef.documentID);*/
     List<ReportModel> reports = [];
     await _firestoreInstance.collection('reports').get().then((value) {
       value.docs.forEach((element) {
-        print(element.id);
+     
         ReportModel report =
             ReportModel.fromJsonMap(element.data(), element.id);
-        print(report.nreports);
+        
+           print('El reporte es ${report.id}');
         reports.add(report);
       });
     });
 
-    print(reports.first.id);
+
     return reports;
   }
 
