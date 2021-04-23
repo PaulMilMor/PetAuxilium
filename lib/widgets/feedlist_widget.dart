@@ -157,9 +157,7 @@ class _ListFeedState extends State<ListFeed> {
     if (this.widget.follows.contains(id)) {
       await _fcm.unsubscribeFromTopic(id);
       this.widget.follows.remove(id);
-      
     } else {
-      
       await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
     }
@@ -302,7 +300,7 @@ class _ListFeedState extends State<ListFeed> {
               print(id);
               break;
             case 5:
-              _ClosePubMenu(publications,id);
+              _ClosePubMenu(publications, id);
           }
         });
   }
@@ -613,6 +611,7 @@ class _ListFeedState extends State<ListFeed> {
 
   void _ClosePubMenu(publications, id) {
     String topic01 = publications.userID;
+
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -654,15 +653,12 @@ class _ListFeedState extends State<ListFeed> {
                               style: TextStyle(fontSize: 15)),
                         ),
                       ),
-                      
+
                       Column(
-                        
                         children: <Widget>[
                           ListTile(
                             title: _optionSection(publications),
-                            
                             leading: Radio<ClosePub>(
-                              
                               value: ClosePub.option1,
                               groupValue: _option,
                               activeColor: Color.fromRGBO(49, 232, 93, 1),
@@ -708,7 +704,6 @@ class _ListFeedState extends State<ListFeed> {
                                 ),
                                 onPressed: () {
                                   if (_option == ClosePub.eliminar) {
-                               
                                     _msg = 'El usuario ' +
                                         _prefs.userName +
                                         ' ha eliminado una de sus publicaciones';
@@ -761,7 +756,7 @@ class _ListFeedState extends State<ListFeed> {
                                     );
                                   }
                                   Navigator.of(context).pop();
-                                   if (publications.category == 'DENUNCIA') {
+                                  if (publications.category == 'DENUNCIA') {
                                     _deletePublication(
                                         id, "complaints", publications);
                                   } else if (publications.category ==
@@ -780,7 +775,7 @@ class _ListFeedState extends State<ListFeed> {
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text('Continuar'),
+                                  child: Text('Confirmar'),
                                 )),
                           ],
                         ),

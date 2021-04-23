@@ -41,12 +41,12 @@ class dbUtil {
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
-      return UserModel(
-          name: value.get("name"),
-          //birthday: value.get("birthday"),
-          imgRef: value.get("imgRef"),
-          follows: value.get("follows") ?? [],
-          evaluationsID: value.get("evaluationsID") ?? []);
+      // return UserModel(
+      //     name: value.get("name"),
+      //     //birthday: value.get("birthday"),
+      //     imgRef: value.get("imgRef"),
+      //     follows: value.get("follows") ?? [],
+      //     evaluationsID: value.get("evaluationsID") ?? []);
     });
   }
 
@@ -525,19 +525,19 @@ print(docRef.documentID);*/
       });
   Stream<QuerySnapshot> getNotifications() =>
       _firestoreInstance.collection('notifications').snapshots(); 
-       Future<List<String>> getNotificationsFuture() async{
-     List<String> notifications = [];
-     await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value) {
+//        Future<List<String>> getNotificationsFuture() async{
+//      List<String> notifications = [];
+//      await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value) {
       
-        UserModel user = UserModel.fromJsonMap(value.data());
-        if (user.notifications != null) {
-          user.follows.forEach((element) {
-            notifications.add(element);
-          });
-        }
+//         UserModel user = UserModel.fromJsonMap(value.data());
+//         if (user.notifications != null) {
+//           user.follows.forEach((element) {
+//             notifications.add(element);
+//           });
+//         }
         
-});
-return notifications;}
+// });
+// return notifications;}
   Future<void> banUser(String id) async {
     await _firestoreInstance.collection('bans').doc(id).set({});
     await _firestoreInstance
@@ -589,15 +589,16 @@ return notifications;}
     List<ReportModel> reports = [];
     await _firestoreInstance.collection('reports').get().then((value) {
       value.docs.forEach((element) {
-        print(element.id);
+     
         ReportModel report =
             ReportModel.fromJsonMap(element.data(), element.id);
-        print(report.nreports);
+        
+           print('El reporte es ${report.id}');
         reports.add(report);
       });
     });
 
-    print(reports.first.id);
+
     return reports;
   }
 

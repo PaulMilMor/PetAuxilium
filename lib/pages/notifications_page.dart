@@ -1,5 +1,4 @@
-
-
+import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ final dbUtil _db = dbUtil();
 
 class _NotificationsState extends State<NotificationsPage> {
   final preferencesUtil _prefs = preferencesUtil();
-final PushNotificationUtil _pushUtil=PushNotificationUtil();
+  final PushNotificationUtil _pushUtil = PushNotificationUtil();
   UserModel _user;
   void initState() {
     super.initState();
@@ -42,69 +41,59 @@ final PushNotificationUtil _pushUtil=PushNotificationUtil();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Notificaciones'),),
-        body: SingleChildScrollView(
-             child: StreamBuilder(
-          stream: _db.getNotifications(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    QueryDocumentSnapshot msg = snapshot.data.docs[index];
-                      print(msg.id);
-                      
-                             return GestureDetector(
-
-                               child: Card(
-                                 child: Row(
-                                   children:[
-                                   
-                                            Flexible(
-                    flex: 5,
-                    child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                          
-                            Text(msg.data()['notification'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                              
-                                ),
-                                overflow: TextOverflow.clip),
-                          
-
-                            SizedBox(
-                              height: 5,
-                            ),
-                        
-                          ],
-                        )),
-                  ),
-
-                  GestureDetector(
-                    child: Icon(Icons.close),
-                    onTap: () {
-
-                      _db.deleteDocument(msg.id, 'notifications');
-                    },
-                    )
-                                   ]
-                                 ),
-                               ),
-                             );
-                   
-                  
-                  });
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+        appBar: AppBar(
+          title: Text('Notificaciones'),
         ),
-            ));
+        body: SingleChildScrollView(
+          child: StreamBuilder(
+            stream: _db.getNotifications(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      QueryDocumentSnapshot msg = snapshot.data.docs[index];
+                      print(msg.id);
+
+                      return GestureDetector(
+                        child: Card(
+                          child: Row(children: [
+                            Flexible(
+                              flex: 5,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(msg.data()['notification'],
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.clip),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            GestureDetector(
+                              child: Icon(Icons.close),
+                              onTap: () {
+                                _db.deleteDocument(msg.id, 'notifications');
+                              },
+                            )
+                          ]),
+                        ),
+                      );
+                    });
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ));
   }
 }

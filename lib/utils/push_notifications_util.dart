@@ -25,7 +25,7 @@ class PushNotificationUtil {
   Future initialise() async {
     await _fcm.requestNotificationPermissions();
     final token = await _fcm.getToken();
-    final List<String> listNotifications=await _db.getNotificationsFuture()??[];
+    // final List<String> listNotifications=await _db.getNotificationsFuture()??[];
     await _db.updateToken(_prefs.userID, token);
 //    sendFcmMessage('espero que yes', 'ojala que si');
     //sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
@@ -124,6 +124,7 @@ class PushNotificationUtil {
       'id': id,
       'name': userName
     };
+     _db.updateNotifications('$userName Te envio un mensaje');
     sendFcmMessage(userName, message, token, data);
   }
 

@@ -82,7 +82,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Escribe lo que quieras decir hdtpsm",
+                          hintText: "Escribe lo que quieras decir ",
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.6))),
                     )),
@@ -170,7 +170,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   addMessage(bool sendClicked) async {
     if (messageTextEdittingController.text != "") {
       String msg = messageTextEdittingController.text;
-      var lastMessageTs = DateTime.now();
+      var lastMessageTs = Timestamp.now();
           Map<String, dynamic> chatRoomInfoMap = {
         "users": [_prefs.userID, widget.id]
       };
