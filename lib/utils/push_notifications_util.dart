@@ -30,18 +30,16 @@ class PushNotificationUtil {
 //    sendFcmMessage('espero que yes', 'ojala que si');
     //sendCloseNotif('id', 'rayos en', 'xd', 'UGbWiTbD6tiPhVnQjO0g');
     _fcm.configure(onMessage: (Map<String, dynamic> message) async {
-        print('message: $message');
-     
-       _dataStream.sink.add(message['notification']['title'] +
+      print('message: $message');
+
+      _dataStream.sink.add(message['notification']['title'] +
           ': ' +
           message['notification']['body']);
-          print(_dataStream.stream.length);
-    
+      print(_dataStream.stream.length);
     }, onLaunch: (Map<String, dynamic> message) async {
       var notificationData = message['data'];
       var type = notificationData['type'];
-     
-     
+
       var id = notificationData['id'];
       var name = notificationData['name'];
 
@@ -81,7 +79,7 @@ class PushNotificationUtil {
         "to": token,
         // 'to': 'f9x3Z6QFSqKVqWfHjBdnNd:APA91bHzsHYY2RH7iBxr0vj_2Q3wBzJpK5NdYqFPpKz-W5KA-YDleXjYxmnu3M64UhUX-8fl1mHDvt4Xg1aPHvhpn80mTZlXdE8bPUc9BrjQL4ll-cBNy7SKRvuk_OENE2XwhwO3F2iy'
       };
-           
+
       //_db.updateNotifications(title+' '+message);
       http.post(url, headers: header, body: json.encode(request));
       return true;
@@ -108,7 +106,7 @@ class PushNotificationUtil {
         "to": '/topics/$topic01',
         // 'to': 'f9x3Z6QFSqKVqWfHjBdnNd:APA91bHzsHYY2RH7iBxr0vj_2Q3wBzJpK5NdYqFPpKz-W5KA-YDleXjYxmnu3M64UhUX-8fl1mHDvt4Xg1aPHvhpn80mTZlXdE8bPUc9BrjQL4ll-cBNy7SKRvuk_OENE2XwhwO3F2iy'
       };
-      _db.updateNotifications(message);
+      //_db.updateNotifications(message);
       http.post(url, headers: header, body: json.encode(request));
       return true;
     } catch (e, s) {
@@ -118,46 +116,26 @@ class PushNotificationUtil {
   }
 
   sendChatMensagge(id, userName, message, token) {
-    var data = {
-
-      'type': 'CHATMSG',
-      'id': id,
-      'name': userName
-    };
-     _db.updateNotifications('$userName Te envio un mensaje');
+    var data = {'type': 'CHATMSG', 'id': id, 'name': userName};
+    // _db.updateNotifications('$userName te envió un mensaje');
     sendFcmMessage(userName, message, token, data);
   }
 
   sendNewOpinionNotif(id, userName, message, token) {
-    var data = {
-  
-      'type': 'CHATMSG',
-      'id': id,
-      'name': userName
-    };
-    _db.updateNotifications(message);
+    var data = {'type': 'CHATMSG', 'id': id, 'name': userName};
+    // _db.updateNotifications(message);
     sendFcmMessage(userName, message, token, data);
     print('ALFA01' + token);
   }
 
   sendNewCommentNotif(id, userName, message, token) {
-    var data = {
-     
-      'type': 'CHATMSG',
-      'id': id,
-      'name': userName
-    };
-    _db.updateNotifications(message);
+    var data = {'type': 'CHATMSG', 'id': id, 'name': userName};
+    // _db.updateNotifications(message);
     sendFcmMessage(userName, message, token, data);
   }
 
   sendCloseNotif(id, userName, message, topic01) {
-    var data = {
- 
-      'type': 'FCM Message',
-      'id': id,
-      'name': userName
-    };
+    var data = {'type': 'FCM Message', 'id': id, 'name': userName};
     topicMessage(userName, message, topic01, data);
     print('WWWWWWWWWWWWWWWW' + topic01);
   }

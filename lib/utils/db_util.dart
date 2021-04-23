@@ -11,6 +11,8 @@ import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+
+import 'package:pet_auxilium/models/notification_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -78,7 +80,7 @@ class dbUtil {
       'description': complaint.description,
       'userID': complaint.userID,
       'imgRef': complaint.imgRef,
-      'category':complaint.category,
+      'category': complaint.category,
       'nevaluations': 0,
       'score': 0,
       'pricing': "",
@@ -490,11 +492,23 @@ print(docRef.documentID);*/
         .doc(_prefs.userID)
         .update({'follows': follows});
   }
-  
-  void updateNotifications(String notification) async {
+
+  /*void updateNotifications(String notification) async {
     await _firestoreInstance
         .collection('notifications')
         .add({'notification':notification});
+  }*/
+
+  void updateNotifications(
+      String notification, List<dynamic> userID, String publicationID) async {
+    await _firestoreInstance.collection('notifications').add({
+      'notification': notification,
+      'receiverID': userID,
+      'senderID': _prefs.userID,
+      'publicationID': publicationID,
+      'date': DateTime.now(),
+      'senderName': _prefs.userName,
+    });
   }
 
   Future<List<String>> getFollowsFuture(id) async {
@@ -523,19 +537,43 @@ print(docRef.documentID);*/
         }
         return follows;
       });
-  Stream<QuerySnapshot> getNotifications() =>
-      _firestoreInstance.collection('notifications').snapshots(); 
+  Stream<List<NotificationModel>> getNotifications() => _firestoreInstance
+          .collection('notifications')
+          .where('receiverID', arrayContains: _prefs.userID)
+          .snapshots()
+          .map((event) {
+        List<NotificationModel> list = [];
+        event.docs.forEach((element) {
+          var data = element.data();
+          print('POOOOOOOOOOOOL getNOT');
+          print(data);
+          NotificationModel n = NotificationModel.fromJsonMap(data, element.id);
+          print(n);
+          list.add(n);
+          print('List $list');
+        });
+        return list;
+        /*[
+          NotificationModel(
+              id: 'a',
+              notification: 'b',
+              receiverID: ['c'],
+              senderID: 'd',
+              publicationID: 'e',
+              chatID: 'f')
+        ];*/
+      });
 //        Future<List<String>> getNotificationsFuture() async{
 //      List<String> notifications = [];
 //      await _firestoreInstance.collection('users').doc(_prefs.userID).get().then((value) {
-      
+
 //         UserModel user = UserModel.fromJsonMap(value.data());
 //         if (user.notifications != null) {
 //           user.follows.forEach((element) {
 //             notifications.add(element);
 //           });
 //         }
-        
+
 // });
 // return notifications;}
   Future<void> banUser(String id) async {
@@ -589,15 +627,13 @@ print(docRef.documentID);*/
     List<ReportModel> reports = [];
     await _firestoreInstance.collection('reports').get().then((value) {
       value.docs.forEach((element) {
-     
         ReportModel report =
             ReportModel.fromJsonMap(element.data(), element.id);
-        
-           print('El reporte es ${report.id}');
+
+        print('El reporte es ${report.id}');
         reports.add(report);
       });
     });
-
 
     return reports;
   }
