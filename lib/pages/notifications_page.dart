@@ -70,6 +70,8 @@ class _NotificationsState extends State<NotificationsPage> {
               if (snapshot.hasData) {
                 print('POOOOOOOOOOOOOOOL HASDATA');
                 print(snapshot.data.length);
+                snapshot.data.sort((NotificationModel a, NotificationModel b) =>
+                    b.date.compareTo(a.date));
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     shrinkWrap: true,
@@ -117,37 +119,44 @@ class _NotificationsState extends State<NotificationsPage> {
                           }
                         },
                         child: Card(
-                          child: Row(children: [
-                            Flexible(
-                              flex: 5,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                          msg.notification == null
-                                              ? 'what'
-                                              : msg.notification,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  flex: 5,
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                              msg.notification == null
+                                                  ? 'what'
+                                                  : msg.notification,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.clip),
+                                          SizedBox(
+                                            height: 5,
                                           ),
-                                          overflow: TextOverflow.clip),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            GestureDetector(
-                              child: Icon(Icons.close),
-                              onTap: () {
-                                _db.deleteDocument(msg.id, 'notifications');
-                              },
-                            )
-                          ]),
+                                        ],
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: GestureDetector(
+                                    child: Icon(Icons.close),
+                                    onTap: () {
+                                      _db.deleteDocument(
+                                          msg.id, 'notifications');
+                                    },
+                                  ),
+                                )
+                              ]),
                         ),
                       );
                     });
