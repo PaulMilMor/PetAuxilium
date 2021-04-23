@@ -92,15 +92,28 @@ class _NotificationsState extends State<NotificationsPage> {
                                     builder: (context) => ChatScreenPage(
                                         msg.senderID, msg.senderName)));
                           } else {
+                            print('POOOOOOOOOOOOOOOL ONE STEP CLOSER');
+
                             PublicationModel _data =
                                 await _db.getPublication(msg.publicationID);
                             List<String> follows =
                                 await _db.getFollowsFuture(_prefs.userID);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      DetailPage(_data, follows, callback)),
-                            );
+                            print('POOOOOOOOOOOOOOOL ONE STEP CLOSER');
+                            print(_data);
+                            if (_data != null) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        DetailPage(_data, follows, callback)),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                ..removeCurrentSnackBar()
+                                ..showSnackBar(SnackBar(
+                                  content: Text(
+                                      'La publicación que buscabas ya no está disponible.'),
+                                ));
+                            }
                           }
                         },
                         child: Card(

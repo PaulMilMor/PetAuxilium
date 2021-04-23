@@ -5,6 +5,8 @@ class ComplaintModel {
   String category;
   String userID;
   List<dynamic> imgRef;
+
+  List<dynamic> followers;
   DateTime date;
   ComplaintModel(
       {this.name,
@@ -13,7 +15,8 @@ class ComplaintModel {
       this.userID,
       this.imgRef,
       this.date,
-      this.category});
+      this.category,
+      this.followers});
 
   ComplaintModel.fromJsonMap(Map<String, dynamic> json) {
     name = json['title'];
@@ -22,5 +25,7 @@ class ComplaintModel {
     userID = json['userID'];
     category = json['category'];
     date = json['date'].toDate();
+
+    followers = json['followers'];
   }
 }

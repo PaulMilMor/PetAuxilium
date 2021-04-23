@@ -135,14 +135,19 @@ class _DetailPageState extends State<DetailPage> {
   _addFollow(
     String id,
   ) async {
+    if (this.widget.detailDocument.followers == null)
+      this.widget.detailDocument.followers = [];
+
     if (this.widget.follows.contains(id)) {
       this.widget.follows.remove(id);
+      this.widget.detailDocument.followers.remove(_prefs.userID);
       await _fcm.unsubscribeFromTopic(id);
     } else {
       this.widget.follows.add(id);
+      this.widget.detailDocument.followers.add(_prefs.userID);
       await _fcm.subscribeToTopic(id);
     }
-    _db.updateFollows(this.widget.follows);
+    _db.updateFollows(this.widget.follows, this.widget.detailDocument);
     setState(() {});
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
@@ -166,13 +171,13 @@ class _DetailPageState extends State<DetailPage> {
               ),
               itemBuilder: (BuildContext context) => [
                     _prefs.userID != widget.detailDocument.userID
-                  ? null
-                  : PopupMenuItem(
-                      child: Column(
-                        children: [_CloseOption()],
-                      ),
-                      value: 5,
-                    ),
+                        ? null
+                        : PopupMenuItem(
+                            child: Column(
+                              children: [_CloseOption()],
+                            ),
+                            value: 5,
+                          ),
                     _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                         ? null
                         : PopupMenuItem(
@@ -290,7 +295,7 @@ class _DetailPageState extends State<DetailPage> {
                     }
                     print(selectedPublication.id);
                     break;
-                    case 5:
+                  case 5:
                     /*String topic01 = widget.detailDocument.userID;
                     _pushUtil.sendCloseNotif(
                       _prefs.userID,
@@ -581,6 +586,7 @@ class _DetailPageState extends State<DetailPage> {
           );
         });
   }
+
   Widget _CloseOption() {
     return Row(
       children: [
@@ -596,6 +602,7 @@ class _DetailPageState extends State<DetailPage> {
       ],
     );
   }
+
   void _ClosePubMenu(publications) {
     String topic01 = publications.userID;
     showModalBottomSheet(
@@ -639,15 +646,12 @@ class _DetailPageState extends State<DetailPage> {
                               style: TextStyle(fontSize: 16)),
                         ),
                       ),
-                      
+
                       Column(
-                        
                         children: <Widget>[
                           ListTile(
                             title: _optionSection(publications),
-                            
                             leading: Radio<ClosePub>(
-                              
                               value: ClosePub.option1,
                               groupValue: _option,
                               activeColor: Color.fromRGBO(49, 232, 93, 1),
@@ -702,7 +706,6 @@ class _DetailPageState extends State<DetailPage> {
                                       _msg,
                                       topic01,
                                     );
-                                    
                                   } else {
                                     if (publications.category == 'ADOPCIÓN') {
                                       _msg = 'El usuario ' +
@@ -751,6 +754,8 @@ class _DetailPageState extends State<DetailPage> {
                                     ..showSnackBar(SnackBar(
                                         content: Text(
                                             'La publicación se ha cerrado exitosamente.')));
+                                  _db.updateNotifications(_msg,
+                                      publications.followers, publications.id);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -767,44 +772,46 @@ class _DetailPageState extends State<DetailPage> {
           );
         });
   }
-_optionSection(publications) {
-  String categoria = publications.category;
-  switch (categoria) {
-    case "ANIMAL PERDIDO":
-      {
-        return const Text('La mascota perdida ya ha sido localizada');
-      }
-      break;
 
-    case "ADOPCIÓN":
-      {
-        return const Text('La mascota ya fue dada en adopción');
-      }
-      break;
+  _optionSection(publications) {
+    String categoria = publications.category;
+    switch (categoria) {
+      case "ANIMAL PERDIDO":
+        {
+          return const Text('La mascota perdida ya ha sido localizada');
+        }
+        break;
 
-    case "CUIDADOR":
-      {
-        return const Text('Al chile ya me harté de andar cuidando animales');
-      }
-      break;
+      case "ADOPCIÓN":
+        {
+          return const Text('La mascota ya fue dada en adopción');
+        }
+        break;
 
-    case "NEGOCIO":
-      {
-        return const Text('Ya no me interesa publicitar este negocio');
-      }
-      break;
-    case "SITUACIÓN DE CALLE":
-      {
-        return const Text('El animal callejero ya ha sido atendido');
-      }
-      break;
-    case "DENUNCIA":
-      {
-        return const Text('La denuncia ya ha sido atendida');
-      }
-      break;
+      case "CUIDADOR":
+        {
+          return const Text('Al chile ya me harté de andar cuidando animales');
+        }
+        break;
+
+      case "NEGOCIO":
+        {
+          return const Text('Ya no me interesa publicitar este negocio');
+        }
+        break;
+      case "SITUACIÓN DE CALLE":
+        {
+          return const Text('El animal callejero ya ha sido atendido');
+        }
+        break;
+      case "DENUNCIA":
+        {
+          return const Text('La denuncia ya ha sido atendida');
+        }
+        break;
+    }
   }
-}
+
   Widget _setBackIcon(context2) {
     return Positioned(
         right: 0.0,
@@ -869,8 +876,8 @@ _optionSection(publications) {
   _chats() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       //var myId = _prefs.userID;
-  //    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
-  
+      //    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
+
       Navigator.push(
           context,
           MaterialPageRoute(

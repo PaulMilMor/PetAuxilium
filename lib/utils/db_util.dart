@@ -486,11 +486,30 @@ print(docRef.documentID);*/
         .snapshots();
   }
 
-  void updateFollows(List follows) async {
+  void updateFollows(List follows, PublicationModel publication) async {
     await _firestoreInstance
         .collection('users')
         .doc(_prefs.userID)
         .update({'follows': follows});
+    String _collection = 'publications';
+    switch (publication.category) {
+      case 'CUIDADOR':
+        _collection = 'cuidador';
+        break;
+      case 'NEGOCIO':
+        _collection = 'business';
+        break;
+      case 'DENUNCIA':
+        _collection = 'complaints';
+        break;
+      default:
+        _collection = 'publications';
+        break;
+    }
+    await _firestoreInstance
+        .collection(_collection)
+        .doc(publication.id)
+        .update({'followers': publication.followers});
   }
 
   /*void updateNotifications(String notification) async {
@@ -672,7 +691,11 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      publication = PublicationModel.fromJsonMap(value.data(), id);
+      print('POOOOOOOOOOOOOOOOOOOOOOOLOOOOOOOOOOO');
+      print(value.data());
+      value.data() == null
+          ? publication = null
+          : publication = PublicationModel.fromJsonMap(value.data(), id);
     });
     return publication;
   }
