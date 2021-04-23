@@ -305,11 +305,10 @@ class _OpinionsState extends State<Opinions> {
                                           msg,
                                           token);
                                       if (this.widget.userID != prefs.userID) {
-                                        _db.updateNotifications(
-                                            msg,
-                                            [this.widget.userID],
-                                            this.widget.id);
-                                      }
+            
+                                      _db.updateNotifications(msg,
+                                          [this.widget.userID], this.widget.id);
+                                    }
                                     },
                                     child: Align(
                                       alignment: Alignment.topRight,
