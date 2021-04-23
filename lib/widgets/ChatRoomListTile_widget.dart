@@ -37,10 +37,6 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('POOOOOOOOOOOOOOOOOOL CHAT');
-        print(userID);
-        print(name);
-        print('dssds');
         Navigator.push(
             context,
             MaterialPageRoute(

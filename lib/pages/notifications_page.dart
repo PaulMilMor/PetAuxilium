@@ -65,11 +65,7 @@ class _NotificationsState extends State<NotificationsPage> {
           child: StreamBuilder(
             stream: _db.getNotifications(),
             builder: (context, snapshot) {
-              print('POOOOOOOOOOOOOOOL HASDATA');
-              print(snapshot);
               if (snapshot.hasData) {
-                print('POOOOOOOOOOOOOOOL HASDATA');
-                print(snapshot.data.length);
                 snapshot.data.sort((NotificationModel a, NotificationModel b) =>
                     b.date.compareTo(a.date));
                 return ListView.builder(
@@ -78,15 +74,8 @@ class _NotificationsState extends State<NotificationsPage> {
                     itemBuilder: (context, index) {
                       NotificationModel msg = snapshot.data[index];
                       //print(msg.id);
-                      print('POOOOOOOOOOL IDK');
-                      print(snapshot.data);
                       return GestureDetector(
                         onTap: () async {
-                          print('POOOOOOOOOOOOOOOOOOL CHAT');
-                          print(msg.senderID);
-                          print(msg.senderName);
-
-                          print('dafaqw');
                           if (msg.publicationID == null) {
                             Navigator.push(
                                 context,
@@ -94,14 +83,10 @@ class _NotificationsState extends State<NotificationsPage> {
                                     builder: (context) => ChatScreenPage(
                                         msg.senderID, msg.senderName)));
                           } else {
-                            print('POOOOOOOOOOOOOOOL ONE STEP CLOSER');
-
                             PublicationModel _data =
                                 await _db.getPublication(msg.publicationID);
                             List<String> follows =
                                 await _db.getFollowsFuture(_prefs.userID);
-                            print('POOOOOOOOOOOOOOOL ONE STEP CLOSER');
-                            print(_data);
                             if (_data != null) {
                               Navigator.of(context).push(
                                 MaterialPageRoute(

@@ -42,10 +42,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     DocumentSnapshot document = await _db.getUserById(widget.id);
 
     token = document.data()["token"];
-    print('POOOOOOOOOOOOOOL TOKEN');
-    print('id ${widget.id}');
-    print('token $token');
-    print('chatroom $chatRoomId');
   }
 
   @override

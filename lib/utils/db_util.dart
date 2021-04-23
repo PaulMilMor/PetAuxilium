@@ -564,12 +564,8 @@ print(docRef.documentID);*/
         List<NotificationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
-          print('POOOOOOOOOOOOL getNOT');
-          print(data);
           NotificationModel n = NotificationModel.fromJsonMap(data, element.id);
-          print(n);
           list.add(n);
-          print('List $list');
         });
         return list;
         /*[
@@ -691,8 +687,6 @@ print(docRef.documentID);*/
         .doc(id)
         .get()
         .then((value) {
-      print('POOOOOOOOOOOOOOOOOOOOOOOLOOOOOOOOOOO');
-      print(value.data());
       value.data() == null
           ? publication = null
           : publication = PublicationModel.fromJsonMap(value.data(), id);
