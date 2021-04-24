@@ -63,13 +63,13 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
     return StreamBuilder(
         stream: _db.searchedElements(_query),
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data.length>0) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             return ListFeed(
               snapshot: snapshot,
             );
           } else {
             return Center(
-              child: Text('No se encontró nada'),
+              child: Text('No se encontró nada.'),
             );
           }
         });
