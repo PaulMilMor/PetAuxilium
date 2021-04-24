@@ -69,7 +69,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
             );
           } else {
             return Center(
-              child: Text('No se encontró nada'),
+              child: Text('No se encontró nada.'),
             );
           }
         });
