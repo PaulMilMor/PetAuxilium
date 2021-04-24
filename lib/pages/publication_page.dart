@@ -2,9 +2,11 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -24,11 +26,8 @@ class PublicationPageState extends State<PublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-  var _nameTxtController = TextEditingController();
-  //TextEditingController _nameTxtController;
-  var _dirTxtController = TextEditingController();
-  var _descTxtController = TextEditingController();
-  var _catController = TextEditingController();
+
+  CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
@@ -36,7 +35,7 @@ class PublicationPageState extends State<PublicationPage> {
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   String _name;
   String _desc;
-
+  var _dirTxtController = TextEditingController();
   List<LatLng> _locations;
   List<String> imagesRef = [];
   List<Object> images = [];
@@ -51,12 +50,6 @@ class PublicationPageState extends State<PublicationPage> {
     setState(() {
       images.add("Add Image");
     });
-    _name = prefs.adoptionName ?? ' ';
-    _desc = prefs.adoptionDescription;
-    _selectedCategory = 'ADOPCIÓN';
-    _nameTxtController = TextEditingController(text: _name);
-    _dirTxtController = TextEditingController();
-    _descTxtController = TextEditingController(text: _desc);
   }
 
   @override
@@ -65,6 +58,7 @@ class PublicationPageState extends State<PublicationPage> {
     _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
+    createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -204,104 +198,103 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Widget _category() {
-    return Container(
-      // height: 100.0,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
-      child: Center(
-          child: Column(children: [
-        Container(
-          margin: const EdgeInsets.only(right: 4.5),
-          child: Text(
-            'Categoría:',
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-        GrayDropdownButton(
-          hint: Text("Selecciona una categoria"),
-          value: _selectedCategory,
-          onChanged: (newValue) {
-            prefs.adoptionCategory = newValue;
-            setState(() {
-              _selectedCategory = newValue;
-            });
-          },
-          items: listItems.map((valueItem) {
-            return DropdownMenuItem(
-              value: valueItem,
-              child: Text(valueItem),
-            );
-          }).toList(),
-        )
-      ])),
+    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+      builder: (context, state) {
+        return Container(
+          // height: 100.0,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
+          child: Center(
+              child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(right: 4.5),
+              child: Text(
+                'Categoría:',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            GrayDropdownButton(
+              hint: Text("Selecciona una categoria"),
+              value: state.category,
+              onChanged: (newValue) {
+                createpublicationBloc.add(UpdateCategory(newValue));
+              },
+              items: listItems.map((valueItem) {
+                return DropdownMenuItem(
+                  value: valueItem,
+                  child: Text(valueItem),
+                );
+              }).toList(),
+            )
+          ])),
+        );
+      },
     );
   }
 
   Widget _nameTxt() {
-    return Container(
-        //height: 100.0,
+    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+      builder: (context, state) {
+        return Container(
+            //height: 100.0,
 
-        child: Column(children: [
-      Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          child: Text(
-            'Completa los siguientes campos',
-            style: TextStyle(fontSize: 18),
-          )),
-      Container(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
-          child: GrayTextFormField(
-            controller: _nameTxtController,
-            hintText: 'Nombre',
-            maxLength: 20,
-            textCapitalization: TextCapitalization.words,
-            suffixIcon: IconButton(
-              onPressed: () {
-                _nameTxtController.clear();
-                prefs.adoptionName = '';
-              },
-              icon: Icon(Icons.clear),
-            ),
-            onChanged: (value) {
-              setState(() {
-                // _nameTxtController.clear();
-                _name = value;
-                prefs.adoptionName = value;
-              });
-            },
-          ))
-    ]));
+            child: Column(children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: Text(
+                'Completa los siguientes campos',
+                style: TextStyle(fontSize: 18),
+              )),
+          Container(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+              child: GrayTextFormField(
+                initialvalue: state.name,
+                hintText: 'Nombre',
+                maxLength: 20,
+                textCapitalization: TextCapitalization.words,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    createpublicationBloc.add(UpdateName(''));
+                  },
+                  icon: Icon(Icons.clear),
+                ),
+                onChanged: (value) {
+                  createpublicationBloc.add(UpdateName(value));
+                },
+              ))
+        ]));
+      },
+    );
   }
 
   Widget _descTxt() {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: TextField(
-          controller: _descTxtController,
-          decoration: InputDecoration(
-              labelText: 'Descripción',
-              labelStyle: TextStyle(
-                color: Colors.grey,
-                // color: Color.fromRGBO(49, 232, 93, 1),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey)),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _descTxtController.clear();
-                  prefs.adoptionDescription = '';
-                },
-                icon: Icon(Icons.clear),
-              )),
-          maxLength: 500,
-          maxLines: 4,
-          keyboardType: TextInputType.multiline,
-          onChanged: (value) {
-            setState(() {
-              prefs.adoptionDescription = value;
-              _desc = value;
-            });
-          },
-        ));
+    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+        builder: (context, state) {
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          child: TextField(
+            controller: TextEditingController(text: state.desc),
+            decoration: InputDecoration(
+                labelText: 'Descripción',
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  // color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    prefs.adoptionDescription = '';
+                  },
+                  icon: Icon(Icons.clear),
+                )),
+            maxLength: 500,
+            maxLines: 4,
+            keyboardType: TextInputType.multiline,
+            onChanged: (value) {
+              createpublicationBloc.add(UpdateDesc(value));
+            },
+          ));
+    });
   }
 
   Widget _dirTxt() {
@@ -355,61 +348,63 @@ class PublicationPageState extends State<PublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
-        _nameTxtController.clear();
-        _descTxtController.clear();
-        _dirTxtController.clear();
+        createpublicationBloc.add(CleanData());
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
       ),
     );
   }
-
+//TODO: Posiblemente mover el proceso al bloc o por lo menos adaptar lo de los validadores
   Widget _saveBtn() {
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
-        ),
-        onPressed: () {
-          if (_selectedCategory == 'SITUACIÓN DE CALLE') {
-            _name = 'Animal Callejero';
-            prefs.adoptionName = 'Animal Callejero';
-          }
-          if (_name.isEmpty ||
-              _desc.isEmpty ||
-              imagesRef.isEmpty ||
-              _locations.isEmpty) {
-            ScaffoldMessenger.of(context)
-              ..removeCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                  content: Text('Es necesario llenar todos los campos')));
-          } else {
-            print(_imgsFiles.toString());
-            //print(mapsUtil.locationtoString(_locations));
-            PublicationModel ad = PublicationModel(
-                category: _selectedCategory,
-                name: _name,
-                location: mapsUtil.locationtoString(_locations),
-                userID: prefs.userID,
-                description: _desc,
-                imgRef: imagesRef);
-            _db.addPublication(ad).then((value) {
-              prefs.adoptionCategory = 'ADOPCIÓN';
-              prefs.adoptionDescription = '';
-              prefs.adoptionName = '';
-              Navigator.popAndPushNamed(context, 'navigation');
-              ScaffoldMessenger.of(context)
-                ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Se ha creado tu publicación.')));
-            });
-            print(_name);
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text('Publicar'),
-        ));
+    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+      builder: (context, state) {
+    String name=state.name;
+        
+        return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            onPressed: () {
+              if (state.category == 'SITUACIÓN DE CALLE') {
+                name = 'Animal Callejero';
+                
+              }
+              if (name.isEmpty ||
+                  state.desc.isEmpty ||
+                  imagesRef.isEmpty ||
+                  _locations.isEmpty) {
+                ScaffoldMessenger.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                      content: Text('Es necesario llenar todos los campos')));
+              } else {
+                print(_imgsFiles.toString());
+                //print(mapsUtil.locationtoString(_locations));
+                PublicationModel ad = PublicationModel(
+                    category: state.category,
+                    name:name,
+                    location: mapsUtil.locationtoString(_locations),
+                    userID: prefs.userID,
+                    description: state.desc,
+                    imgRef: imagesRef);
+                _db.addPublication(ad).then((value) {
+              createpublicationBloc.add(CleanData());
+                  Navigator.popAndPushNamed(context, 'navigation');
+                  ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                        content: Text('Se ha creado tu publicación.')));
+                });
+                print(_name);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text('Publicar'),
+            ));
+      },
+    );
   }
 
   void getDir(List<LatLng> locations) {
