@@ -183,7 +183,9 @@ class _AccountPageState extends State<AccountPage> {
       child: GrayFlatButton(
         text: 'Mis publicaciones',
         icon: Icons.navigate_next,
-        onPressed: () {},
+        onPressed: () {
+            Navigator.pushNamed(context, 'mypublicationsPage');
+        },
       ),
     );
   }

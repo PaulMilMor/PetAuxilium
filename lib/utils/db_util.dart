@@ -389,46 +389,59 @@ print(docRef.documentID);*/
   Future<QuerySnapshot> getAllPublications() {
     return _firestoreInstance.collection('publications').get();
   }
-
   Stream searchedElements(String query) {
     return Rx.combineLatest3(
-        streamPublication(query, null),
-        streamBusiness(query, null),
-        streamComplaints(query, null),
+        streamPublication(query, null,''),
+        streamBusiness(query, null,''),
+        streamComplaints(query, null,''),
+        (List<PublicationModel> p, List<PublicationModel> b,
+                List<PublicationModel> c) =>
+            p + b + c);
+  }
+  Stream mypublic(List<PublicationModel> query) {
+    return Rx.combineLatest3(
+        streamPublication('', null,_prefs.userID),
+        streamBusiness('', null,_prefs.userID),
+        streamComplaints('', null,_prefs.userID),
         (List<PublicationModel> p, List<PublicationModel> b,
                 List<PublicationModel> c) =>
             p + b + c);
   }
 
+ 
   Stream followedElements(List<String> follow) {
     return Rx.combineLatest3(
-        streamPublication('', follow),
-        streamBusiness('', follow),
-        streamComplaints('', follow),
+        streamPublication('', follow,''),
+        streamBusiness('', follow,''),
+        streamComplaints('', follow,''),
         (List<PublicationModel> p, List<PublicationModel> b,
                 List<PublicationModel> c) =>
             p + b + c);
   }
 
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication('', null),
-      streamBusiness('', null),
-      streamComplaints('', null),
+      streamPublication('', null,''),
+      streamBusiness('', null,''),
+      streamComplaints('', null,''),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
   //Stream get feedStream =>
   Stream<List<PublicationModel>> streamPublication(
-          String query, List<String> follow) =>
+          String query, List<String> follow, String id) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+         
           if (p.name
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+            if(!id.contains(p.userID)){
+              list.remove(p);
+              }
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
@@ -437,7 +450,7 @@ print(docRef.documentID);*/
         return list;
       });
   Stream<List<PublicationModel>> streamComplaints(
-          String query, List<String> follow) =>
+          String query, List<String> follow,String id) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
@@ -448,6 +461,9 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+            if(!id.contains(p.userID)){
+              list.remove(p);
+              }
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
@@ -457,7 +473,7 @@ print(docRef.documentID);*/
       });
 
   Stream<List<PublicationModel>> streamBusiness(
-          String query, List<String> follow) =>
+          String query, List<String> follow, String id) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
@@ -468,12 +484,13 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+            if(!id.contains(p.userID)){
+              list.remove(p);
+              }
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
         });
-
-        //print(list);
 
         return list;
       });
@@ -523,6 +540,25 @@ print(docRef.documentID);*/
         }
         return follows;
       });
+
+   Stream<List<PublicationModel>> getMypublications(id) =>
+      _firestoreInstance
+      .collection('publications')
+      .where('userID',isEqualTo: id).snapshots().map((event){
+      List<PublicationModel> mypublications = [];
+      
+        event.docs.forEach((element) {
+          var data = element.data();
+          PublicationModel publication = PublicationModel.fromJsonMap(data,element.id);
+            
+              mypublications.add(publication);
+              print(publication);
+            
+          });
+          return mypublications;
+      });
+        
+
   Stream<QuerySnapshot> getNotifications() =>
       _firestoreInstance.collection('notifications').snapshots(); 
 //        Future<List<String>> getNotificationsFuture() async{
