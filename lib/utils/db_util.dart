@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:path/path.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/complaint_model.dart';
+import 'package:pet_auxilium/models/donations_model.dart';
 import 'package:pet_auxilium/models/evaluation_model.dart';
 import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
@@ -419,6 +420,7 @@ print(docRef.documentID);*/
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
+
   //Stream get feedStream =>
   Stream<List<PublicationModel>> streamPublication(
           String query, List<String> follow) =>
@@ -438,6 +440,7 @@ print(docRef.documentID);*/
 
         return list;
       });
+
   Stream<List<PublicationModel>> streamComplaints(
           String query, List<String> follow) =>
       _firestoreInstance.collection('complaints').snapshots().map((event) {
@@ -763,6 +766,17 @@ print(docRef.documentID);*/
         .where("users", arrayContains: _prefs.userID)
         .snapshots();
   }
+
+  Stream<List<DonationModel>> getDonations() =>
+      _firestoreInstance.collection('donations').snapshots().map((value) {
+        List<DonationModel> donations = [];
+        value.docs.forEach((element) {
+          var data = element.data();
+          DonationModel d = DonationModel.fromJsonMap(data);
+          donations.add(d);
+        });
+        return donations;
+      });
 
   Future<QuerySnapshot> getAllChatRooms() async {
     // print('El user es $myUsername');

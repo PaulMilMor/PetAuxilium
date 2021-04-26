@@ -37,6 +37,7 @@ dependencies:
   email_validator: ^1.0.0
   flutter_rating_bar: ^4.0.0
   multi_select_flutter: ^4.0.0
+  flutter_web_browser: ^0.14.0
  
   http:
   flutter:

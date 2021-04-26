@@ -9,6 +9,7 @@ import 'package:pet_auxilium/pages/notifications_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/complaint_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/donations_page.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/pages/home_page.dart';
 import 'package:pet_auxilium/pages/login_page.dart';
@@ -33,17 +34,20 @@ Future<void> main() async {
 
   runApp(AppState());
 }
-class AppState extends StatelessWidget{
-   @override
+
+class AppState extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CreatepublicationBloc>(create: (_)=>CreatepublicationBloc())
+        BlocProvider<CreatepublicationBloc>(
+            create: (_) => CreatepublicationBloc())
       ],
       child: MyApp(),
     );
   }
 }
+
 class MyApp extends StatelessWidget {
   final _prefs = preferencesUtil();
   @override
@@ -84,6 +88,7 @@ class MyApp extends StatelessWidget {
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
+          'donationsPage': (BuildContext context) => DonationsPage(),
         },
       ),
     );

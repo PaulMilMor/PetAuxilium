@@ -8,7 +8,6 @@ import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'package:app_settings/app_settings.dart';
 
-
 class AccountPage extends StatefulWidget {
   @override
   _AccountPageState createState() => _AccountPageState();
@@ -142,12 +141,13 @@ class _AccountPageState extends State<AccountPage> {
           if (!isAdmin()) _postBusinessButton(),
           if (!isAdmin()) _caretakerButton(),
           if (!isAdmin()) _complaintButton(),
+          _donationsButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
           if (!isAdmin()) _settingsButton(),
           _logoutButton(),
-           
+
           //if (!isAdmin()) _switchB(),
         ],
       ),
@@ -255,7 +255,7 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Ajustes',
         icon: Icons.navigate_next,
         onPressed: () async {
-            openAppSettings();
+          openAppSettings();
         },
       ),
     );
@@ -271,6 +271,21 @@ class _AccountPageState extends State<AccountPage> {
         icon: Icons.navigate_next,
         onPressed: () {
           Navigator.pushNamed(context, 'complaintPage');
+        },
+      ),
+    );
+  }
+
+  Widget _donationsButton() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
+      child: GrayFlatButton(
+        text: 'Donaciones',
+        icon: Icons.navigate_next,
+        onPressed: () {
+          Navigator.pushNamed(context, 'donationsPage');
         },
       ),
     );
