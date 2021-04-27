@@ -391,9 +391,9 @@ print(docRef.documentID);*/
   }
   Stream searchedElements(String query) {
     return Rx.combineLatest3(
-        streamPublication(query, null,''),
-        streamBusiness(query, null,''),
-        streamComplaints(query, null,''),
+        streamPublication(query, null,null),
+        streamBusiness(query, null,null),
+        streamComplaints(query, null,null),
         (List<PublicationModel> p, List<PublicationModel> b,
                 List<PublicationModel> c) =>
             p + b + c);
@@ -411,18 +411,18 @@ print(docRef.documentID);*/
  
   Stream followedElements(List<String> follow) {
     return Rx.combineLatest3(
-        streamPublication('', follow,''),
-        streamBusiness('', follow,''),
-        streamComplaints('', follow,''),
+        streamPublication('', follow,null),
+        streamBusiness('', follow,null),
+        streamComplaints('', follow,null),
         (List<PublicationModel> p, List<PublicationModel> b,
                 List<PublicationModel> c) =>
             p + b + c);
   }
 
   Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication('', null,''),
-      streamBusiness('', null,''),
-      streamComplaints('', null,''),
+      streamPublication('', null,null),
+      streamBusiness('', null,null),
+      streamComplaints('', null,null),
       (List<PublicationModel> p, List<PublicationModel> b,
               List<PublicationModel> c) =>
           p + b + c);
@@ -439,11 +439,15 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+            
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
+          
+          if(id!=null){
             if(!id.contains(p.userID)){
               list.remove(p);
               }
-          if (follow != null) {
-            if (!follow.contains(p.id)) list.remove(p);
           }
         });
 
@@ -461,11 +465,15 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
+            
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
+         
+          if(id!=null){
             if(!id.contains(p.userID)){
               list.remove(p);
               }
-          if (follow != null) {
-            if (!follow.contains(p.id)) list.remove(p);
           }
         });
 
@@ -484,12 +492,16 @@ print(docRef.documentID);*/
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
             list.add(p);
-            if(!id.contains(p.userID)){
-              list.remove(p);
-              }
+            
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
+          if(id!=null){
+            if(!id.contains(p.userID)){
+              list.remove(p);
+              }
+          }
+          
         });
 
         return list;

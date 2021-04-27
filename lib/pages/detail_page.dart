@@ -173,6 +173,15 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                       value: 5,
                     ),
+                    _prefs.userID != widget.detailDocument.userID
+                  ? null
+                  :
+                    PopupMenuItem(
+                      child: Column(
+                        children: [_EditOption()],
+                      ),
+                      value: 6,
+                    ),
                     _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                         ? null
                         : PopupMenuItem(
@@ -591,6 +600,21 @@ class _DetailPageState extends State<DetailPage> {
         ),
         Text(
           '  Cerrar publicación',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+  Widget _EditOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.edit,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Editar publicación',
           style: TextStyle(fontSize: 14),
         ),
       ],

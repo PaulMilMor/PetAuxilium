@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
+import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
@@ -52,6 +53,7 @@ class _ListFeedState extends State<ListFeed> {
   String _id;
   ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
+  //PublicationModel _data;
   String _msg = 'La publicación que seguías ha sido cerrada';
   @override
   Widget build(BuildContext context) {
@@ -187,6 +189,15 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 5,
                     ),
+                     _prefs.userID != publications.userID
+                  ? null
+                  :
+                    PopupMenuItem(
+                      child: Column(
+                        children: [_EditOption()],
+                      ),
+                      value: 6,
+                    ),
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
@@ -301,6 +312,24 @@ class _ListFeedState extends State<ListFeed> {
               break;
             case 5:
               _ClosePubMenu(publications, id);
+              break;
+            case 6:
+            String temp=publications.category;
+            if(temp == 'ADOPCIÓN' || temp == 'ANIMAL PERDIDO' || temp == 'SITUACIÓN DE CALLE'){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => EditPublicationPage(
+                        publications)),
+              );
+              //Navigator.pushNamed(context, 'EditPublicationPage');
+            }else if(publications.category == 'DENUNCIA'){
+              Navigator.pushNamed(context, 'complaintPage');
+            }else if(publications.category == 'CUIDADOR'){
+              Navigator.pushNamed(context, 'caretakerPage');
+            }else if(publications.category == 'NEGOCIO'){
+              Navigator.pushNamed(context, 'CreateBusiness');
+            }
+              
           }
         });
   }
@@ -448,7 +477,21 @@ class _ListFeedState extends State<ListFeed> {
       ],
     );
   }
-
+Widget _EditOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.edit,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Editar publicación',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
   void _ReportMenu(/*reports*/) {
     showModalBottomSheet(
         context: context,

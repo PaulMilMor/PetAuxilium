@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
+import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/mypublications_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
@@ -73,8 +74,8 @@ class MyApp extends StatelessWidget {
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
           'mypublicationsPage': (BuildContext context) => MypublicationsPage(),
-
           'complaintPage': (BuildContext context) => ComplaintPage(),
+          //'EditPublicationPage': (BuildContext context) => EditPublicationPage(),
         },
       ),
     );
