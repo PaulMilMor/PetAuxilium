@@ -7,6 +7,7 @@ class PublicationModel {
   String description;
   List<dynamic> location;
   List<dynamic> imgRef;
+  List<dynamic> followers;
   String userID;
   String pricing;
   int nevaluations;
@@ -25,7 +26,8 @@ class PublicationModel {
       this.nevaluations,
       this.score,
       this.services,
-      this.date});
+      this.date,
+      this.followers});
 
   PublicationModel.fromJsonMap(Map<String, dynamic> json, String pid) {
     id = pid;
@@ -42,5 +44,6 @@ class PublicationModel {
     score = json['score'];
     nevaluations = json['nevaluations'];
     date = json['date'].toDate();
+    followers = json['followers'];
   }
 }

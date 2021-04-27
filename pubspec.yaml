@@ -37,6 +37,7 @@ dependencies:
   email_validator: ^1.0.0
   flutter_rating_bar: ^4.0.0
   multi_select_flutter: ^4.0.0
+ 
   http:
   flutter:
     sdk: flutter
@@ -56,6 +57,7 @@ dependencies:
   location: ^3.0.0
   random_string:
   firebase_messaging: 
+  flutter_bloc: ^6.1.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -153,17 +153,18 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-  _addFollow(
-    String id,
-  ) async {
+  _addFollow(String id, PublicationModel publication) async {
+    if (publication.followers == null) publication.followers = [];
     if (this.widget.follows.contains(id)) {
       await _fcm.unsubscribeFromTopic(id);
       this.widget.follows.remove(id);
+      publication.followers.remove(_prefs.userID);
     } else {
       await _fcm.subscribeToTopic(id);
       this.widget.follows.add(id);
+      publication.followers.add(_prefs.userID);
     }
-    _db.updateFollows(this.widget.follows);
+    _db.updateFollows(this.widget.follows, publication);
     //setState(() {});
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
@@ -255,7 +256,7 @@ class _ListFeedState extends State<ListFeed> {
           switch (value) {
             case 1:
               //await _fcm.subscribeToTopic(publications.userID);
-              _addFollow(id);
+              _addFollow(id, publications);
               break;
             case 2:
               PublicationModel selectedPublication =
@@ -815,6 +816,8 @@ Widget _EditOption() {
                                     ..showSnackBar(SnackBar(
                                         content: Text(
                                             'La publicación se ha cerrado exitosamente.')));
+                                  _db.updateNotifications(_msg,
+                                      publications.followers, publications.id);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),

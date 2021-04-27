@@ -101,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
                   alignment: Alignment.topRight,
                   child: Image.asset(
                     'assets/logo_asset.png',
-                    width: 100,
+                    width: 55,
                     //width: 120,
                   ),
                 ),

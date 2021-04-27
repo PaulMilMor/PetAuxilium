@@ -43,7 +43,7 @@ class _OpinionsState extends State<Opinions> {
   final dbUtil _db = dbUtil();
   String token = '';
   String _score;
-  String msg = 'Alguien realizó una opinión sobre tu perfil de cuidador';
+  String msg;
   String _comment;
   String _id = '';
   FocusNode _focusNode;
@@ -64,6 +64,9 @@ class _OpinionsState extends State<Opinions> {
     super.initState();
     _focusNode = FocusNode();
     avgscore = this.widget.sumscore / this.widget.nevaluations;
+    msg = this.widget.category == 'CUIDADOR'
+        ? 'Alguien realizó una opinión sobre tu perfil de cuidador'
+        : 'Alguien realizó una opinión sobre tu negocio';
   }
 
   _getUserInfo() async {
@@ -301,6 +304,11 @@ class _OpinionsState extends State<Opinions> {
                                           prefs.userName,
                                           msg,
                                           token);
+                                      if (this.widget.userID != prefs.userID) {
+            
+                                      _db.updateNotifications(msg,
+                                          [this.widget.userID], this.widget.id);
+                                    }
                                     },
                                     child: Align(
                                       alignment: Alignment.topRight,

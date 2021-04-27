@@ -126,6 +126,10 @@ class _HomePageState extends State<HomePage> {
       style: ElevatedButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
         elevation: 0,
+        // side: BorderSide(
+        //   width: 1.0,
+        //   color: Colors.white,
+        // )),)
       ),
       onPressed: () {
         Navigator.pushNamed(context, 'login');
