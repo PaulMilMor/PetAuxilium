@@ -66,15 +66,30 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('EDITAR PUBLICACIÓN'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Color.fromRGBO(49, 232, 93, 1),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: _body(context),
+    );
+  }
+  Widget _body(BuildContext context) {
+  _markers = ModalRoute.of(context).settings.arguments;
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
     );
-  }
 
+  }
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -185,14 +200,14 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15),
+            /*SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
                 'EDITAR PUBLICACIÓN' ,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-            ),
+            ),*/
             _category(),
             if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
             _dirTxt(),
