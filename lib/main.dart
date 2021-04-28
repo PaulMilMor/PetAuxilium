@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/pages/add_donation_page.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
@@ -89,6 +90,7 @@ class MyApp extends StatelessWidget {
           'followingPage': (BuildContext context) => FollowingPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
           'donationsPage': (BuildContext context) => DonationsPage(),
+          'add_donation_page': (BuildContext context) => AddDonationsPage(),
         },
       ),
     );

@@ -772,11 +772,20 @@ print(docRef.documentID);*/
         List<DonationModel> donations = [];
         value.docs.forEach((element) {
           var data = element.data();
-          DonationModel d = DonationModel.fromJsonMap(data);
+          DonationModel d = DonationModel.fromJsonMap(data, element.id);
           donations.add(d);
         });
         return donations;
       });
+
+  Future<void> addDonation(DonationModel dm) async {
+    await _firestoreInstance.collection("donations").doc(dm.id).set({
+      'name':dm.name,
+      'description':dm.description,
+      'img':dm.img,
+      'website':dm.website,
+    });
+  }
 
   Future<QuerySnapshot> getAllChatRooms() async {
     // print('El user es $myUsername');

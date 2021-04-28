@@ -187,7 +187,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             ),
             suffixIcon: IconButton(
               onPressed: () {
-                _titleTxtController.clear();
+                _descTxtController.clear();
               },
               icon: Icon(Icons.clear),
             ),
@@ -232,9 +232,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             ComplaintModel complaint = ComplaintModel(
-               name: _title,
-               
-               category:'DENUNCIA',
+                name: _title,
+                category: 'DENUNCIA',
                 //location: [_direct],
                 location: mapsUtil.locationtoString(_locations),
                 userID: prefs.userID,

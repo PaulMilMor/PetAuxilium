@@ -13,7 +13,8 @@ class DonationModel {
     this.website,
   });
 
-  DonationModel.fromJsonMap(Map<String, dynamic> json) {
+  DonationModel.fromJsonMap(Map<String, dynamic> json, String id) {
+    this.id = id;
     name = json['name'];
     description = json['description'];
     img = json['img'];

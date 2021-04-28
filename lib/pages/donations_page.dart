@@ -3,9 +3,12 @@ import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 import 'package:pet_auxilium/models/donations_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class DonationsPage extends StatelessWidget {
   final dbUtil _db = dbUtil();
+  final preferencesUtil _prefs = preferencesUtil();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +22,17 @@ class DonationsPage extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
           elevation: 0,
+          /*actions: [
+            if(_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2')
+            PopupMenuButton(
+              icon: Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210,210,210,1),
+              )
+              itemBuilder: ()
+            ),
+                      
+          ]*/
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -32,7 +46,19 @@ class DonationsPage extends StatelessWidget {
               Expanded(child: Container(child: _donationsList())),
             ],
           ),
-        ));
+        ),
+        floatingActionButton: Builder(
+            builder: (context) =>
+                _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                    ? Container()
+                    : FloatingActionButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, 'add_donation_page');
+                        },
+                        tooltip: 'Añadir Organización',
+                        child: Icon(Icons.add),
+                        backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                      )));
   }
 
   Widget _donationsList() {
@@ -41,6 +67,8 @@ class DonationsPage extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<List<DonationModel>> snapshot) {
           if (snapshot.hasData) {
+            snapshot.data.sort(
+                (DonationModel a, DonationModel b) => a.name.compareTo(b.name));
             return GridView.count(
               childAspectRatio: 0.75,
               physics: AlwaysScrollableScrollPhysics(),
@@ -49,7 +77,7 @@ class DonationsPage extends StatelessWidget {
               shrinkWrap: true,
               children: List.generate(snapshot.data.length, (index) {
                 DonationModel donation = snapshot.data.elementAt(index);
-                return _donationCard(donation);
+                return _donationCard(donation, context);
               }),
               /*itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, index) {
@@ -72,7 +100,9 @@ class DonationsPage extends StatelessWidget {
         });
   }
 
-  Widget _donationCard(DonationModel donation) {
+  Widget _donationCard(DonationModel donation, BuildContext context) {
+    print('POOOOOOOOOOOOOOL ADMINID');
+    print(_prefs.userID);
     return Column(
       children: [
         Container(
@@ -80,72 +110,96 @@ class DonationsPage extends StatelessWidget {
           width: 250,
           child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(50),
-                  bottomLeft: Radius.circular(50)),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
             child: Column(
               children: [
-                Image.network(
-                  donation.img,
-                  height: 100,
-                  width: 175,
-                  fit: BoxFit.cover,
+                Flexible(
+                  flex: 10,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50)),
+                    child: Image.network(
+                      donation.img,
+                      height: 100,
+                      width: 175,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          donation.name,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                Flexible(
+                  flex: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 5,
                         ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            donation.name,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            donation.description,
+                            style: TextStyle(
+                              fontSize: 8,
+                              color: Color.fromRGBO(105, 105, 105, 1),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                          ? SizedBox()
+                          : IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                _deleteDonation(donation, context);
+                              },
+                            ),
                       Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          donation.description,
-                          style: TextStyle(
-                            fontSize: 8,
-                            color: Color.fromRGBO(105, 105, 105, 1),
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                          onPressed: () {
+                            FlutterWebBrowser.openWebPage(
+                                url: donation.website);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'VER MÁS',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10),
+                              ),
+                              Icon(
+                                Icons.navigate_next,
+                                color: Color.fromRGBO(49, 232, 93, 1),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () {
-                        FlutterWebBrowser.openWebPage(url: donation.website);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'VER MÁS',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10),
-                          ),
-                          Icon(
-                            Icons.navigate_next,
-                            color: Color.fromRGBO(49, 232, 93, 1),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -157,6 +211,24 @@ class DonationsPage extends StatelessWidget {
         )
       ],
     );
+  }
+
+  _deleteDonation(DonationModel donation, BuildContext context) {
+    _db.deleteDocument(donation.id, 'donations');
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Se eliminó la organización'),
+          action: SnackBarAction(
+            label: "DESHACER",
+            textColor: Color.fromRGBO(49, 232, 93, 1),
+            onPressed: () {
+              _db.addDonation(donation);
+            },
+          ),
+        ),
+      );
   }
 
   /*_openBrowserTab(String url) {
