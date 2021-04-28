@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
+import 'package:pet_auxilium/pages/edit_map_page.dart';
 import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/mypublications_page.dart';
@@ -87,7 +88,8 @@ class MyApp extends StatelessWidget {
           'followingPage': (BuildContext context) => FollowingPage(),
           'mypublicationsPage': (BuildContext context) => MypublicationsPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
-          //'EditPublicationPage': (BuildContext context) => EditPublicationPage(),
+          'Map_edit_Page': (BuildContext context) => Map_edit_Page(),
+          'EditPublicationPage': (BuildContext context) => EditPublicationPage(null),
         },
       ),
     );

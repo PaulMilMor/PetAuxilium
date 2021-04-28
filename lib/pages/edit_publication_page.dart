@@ -38,9 +38,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   String _name;
   String _desc;
-  String _location;
+  var _location;
   final MapsUtil _mapsUtil = MapsUtil();
-  List<LatLng> _locations;
+  List <LatLng>_locations;
+  //List <String>_location;
   List<String> imagesRef = [];
   List<Object> images = [];
   List<ImageUploadModel> _imgsFiles = [];
@@ -57,10 +58,16 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
+    //List<String>latLng = _location.split(",");
+    //double latitude =double.parse(latLng[0]);
+    //double longitude =double.parse(latLng[1]);
+    //_locations = [latitude,longitude];
     images = widget.detailDocument.imgRef;
     _nameTxtController = TextEditingController(text: _name);
-    _dirTxtController = TextEditingController(text: _location);
+    //getDir(_location);
+    //_dirTxtController = TextEditingController(text: _location);
     _descTxtController = TextEditingController(text: _desc);
+    print(images);
   }
 
   @override
@@ -99,7 +106,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       children: List.generate(images.length, (index) {
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
-
+          print(images.length);
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -132,7 +139,45 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               ],
             ),
           );
-        } else {
+        } 
+          else if (images[index] is String) {
+          //ImageUploadModel uploadModel = images[index];
+          print(images.length);
+          //images.add("Add Image");
+          return Card(
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              children: <Widget>[
+                
+                Image(image: NetworkImage(images[index].toString()),
+                width: 300,
+                  height: 300),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 20,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        images.removeAt(index);
+                        imagesRef.removeAt(index);
+                        // images.replaceRange(index, index + 1, ['Add Image']);
+                        //_imgsFiles.removeAt(index);
+                        //         images.replaceRange(index, index + 1, ['Add Image']);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+          else {
+          print(images.length);
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: AddImageButton(onTap: () {
@@ -335,7 +380,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               focusNode: AlwaysDisabledFocusNode(),
               maxLines: null,
               onTap: () {
-                Navigator.pushNamed(context, 'mapPublication',
+                Navigator.pushNamed(context, 'Map_edit_Page',
                     arguments: _markers);
               },
             ),
