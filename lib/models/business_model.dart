@@ -9,14 +9,14 @@ class BusinessModel {
   String userID;
   List<dynamic> imgRef;
   List<dynamic> services;
+  List<dynamic> followers;
   String pricing;
   int nevaluations;
   var score;
   DateTime date;
-  
+
   BusinessModel(
-      {
-      this.id,
+      {this.id,
       this.category,
       this.name,
       this.description,
@@ -26,8 +26,9 @@ class BusinessModel {
       this.services,
       this.pricing,
       this.nevaluations,
-      this.score,//});
-      this.date});
+      this.score, //});
+      this.date,
+      this.followers});
   // LatLng getLatLng() {
 
   //   final latLng = this.location.substring(4).split(',');
@@ -44,5 +45,7 @@ class BusinessModel {
     userID = json['userID'];
     this.services = json['services'];
     this.date = json['date'].toDate();
+
+    followers = json['followers'];
   }
 }

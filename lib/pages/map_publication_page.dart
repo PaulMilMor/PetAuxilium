@@ -123,16 +123,16 @@ class _MapPagePublicationState extends State<MapPagePublication> {
       }
     }
 
-    _currentPosition = await location.getLocation();
-    _initialcameraposition =
-        LatLng(_currentPosition.latitude, _currentPosition.longitude);
-    location.onLocationChanged.listen((LocationData currentLocation) {
+    // _currentPosition = await location.getLocation();
+    // _initialcameraposition =
+    //     LatLng(_currentPosition.latitude, _currentPosition.longitude);
+    // location.onLocationChanged.listen((LocationData currentLocation) {
 
-      setState(() {
-        _currentPosition = currentLocation;
-        _initialcameraposition =
-            LatLng(_currentPosition.latitude, _currentPosition.longitude);
-      });
-    });
+    //   setState(() {
+    //     _currentPosition = currentLocation;
+    //     _initialcameraposition =
+    //         LatLng(_currentPosition.latitude, _currentPosition.longitude);
+    //   });
+    // });
   }
 }

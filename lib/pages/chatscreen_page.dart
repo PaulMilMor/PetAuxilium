@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/models/notification_model.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
@@ -82,7 +83,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Escribe lo que quieras decir hdtpsm",
+                          hintText: "Escribe lo que quieras decir ",
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.6))),
                     )),
@@ -170,8 +171,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   addMessage(bool sendClicked) async {
     if (messageTextEdittingController.text != "") {
       String msg = messageTextEdittingController.text;
-      var lastMessageTs = DateTime.now();
-          Map<String, dynamic> chatRoomInfoMap = {
+      var lastMessageTs = Timestamp.now();
+      Map<String, dynamic> chatRoomInfoMap = {
         "users": [_prefs.userID, widget.id]
       };
       _db.createChatRoom(chatRoomId, chatRoomInfoMap);
@@ -195,7 +196,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           _pushUtil.sendChatMensagge(
               _prefs.userID, _prefs.userName, msg, token);
           messageTextEdittingController.text = "";
-
+          _db.updateNotifications(
+              '${_prefs.userName} te envió un mensaje', [widget.id], null);
           messageId = "";
         }
       });

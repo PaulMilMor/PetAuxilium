@@ -34,19 +34,26 @@ class _ChatRoomsState extends State<ChatRooms> {
                   itemBuilder: (context, index) {
                     DocumentSnapshot ds = snapshot.data.docs[index];
 
-                   
-                        if (ds["lastMessage"]!=null) {
-                           String otherId =
-                        ds.id.replaceAll(_prefs.userID, "").replaceAll("_", "");
-                              return ChatRoomListTile(
-                        ds["lastMessage"], otherId, _prefs.userID, () {
-                      setState(() {});
-                    });
-                        }else{
-
-                          return Container();
-                        }
-                
+                    if (ds["lastMessage"] != null) {
+                      String otherId = ds.id
+                          .replaceAll(_prefs.userID, "")
+                          .replaceAll("_", "");
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 6),
+                            child: ChatRoomListTile(
+                                ds["lastMessage"], otherId, _prefs.userID, () {
+                              setState(() {});
+                            }),
+                          ),
+                          Divider(),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
                   });
             } else {
               return Center(child: CircularProgressIndicator());

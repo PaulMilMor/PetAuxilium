@@ -256,6 +256,12 @@ class _CommentsState extends State<Comments> {
             _commentController.clear();
             _pushUtil.sendNewCommentNotif(
                 prefs.userID, prefs.userName, msg, token);
+            if (this.widget.userid != _prefs.userID) {
+              _db.updateNotifications(
+                  'Alguien comentó sobre una de tus publicaciones',
+                  [this.widget.userid],
+                  this.widget.id);
+            }
           },
           child: Align(
             alignment: Alignment.centerRight,
@@ -471,8 +477,6 @@ class _CommentsState extends State<Comments> {
   _chats() {
     //  Navigator.popUntil(context, (route) => true);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  
-    
       Navigator.push(
           context,
           MaterialPageRoute(
