@@ -373,6 +373,18 @@ print(docRef.documentID);*/
 
         return list;
       });
+  Stream<List<PublicationModel>> streamComplaintsServices(String category) =>
+      _firestoreInstance.collection('complaints').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          list.add(p);
+        });
+
+        return list;
+      });
   Stream serviceFeed(String category) => Rx.combineLatest2(
       streamKeepersServices(category),
       streamBusinessServices(category),

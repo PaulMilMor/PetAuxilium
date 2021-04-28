@@ -90,6 +90,9 @@ class _ServicePageState extends State<ServicePage> {
       case 'Veterinarias':
         return 'VETERINARIA';
         break;
+      case 'Denuncias':
+        return 'DENUNCIA';
+        break;
       default:
         return '';
     }
@@ -98,7 +101,6 @@ class _ServicePageState extends State<ServicePage> {
   Stream _getFeed(String service) {
     switch (service) {
       case 'ADOPCIÓN':
-
       case 'ANIMAL PERDIDO':
       case 'SITUACIÓN DE CALLE':
         return _db.streamPubsServices(service);
@@ -120,6 +122,8 @@ class _ServicePageState extends State<ServicePage> {
       case 'VENTAS':
         return _db.streamBusinessServices(service);
         break;
+      case 'DENUNCIA':
+        return _db.streamComplaintsServices(service);
     }
   }
 
