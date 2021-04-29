@@ -58,7 +58,7 @@ class dbUtil {
 
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
-    await _firestoreInstance.collection("business").add({
+    await _firestoreInstance.collection("business").doc(business.id).set({
       'category': 'NEGOCIO',
       'name': business.name,
       'location': business.location,
@@ -66,16 +66,16 @@ class dbUtil {
       'userID': business.userID,
       'imgRef': business.imgRef,
       'services': business.services,
-      'nevaluations': 0,
-      'score': 0,
+      'nevaluations': business.nevaluations == null ? 0 : business.nevaluations,
+      'score': business.score == null ? 0 : business.score,
       'pricing': '',
-      'date': DateTime.now(),
+      'date': business.date == null ? DateTime.now() : business.date,
     });
   }
 
 //Guarda denuncia
   Future<void> addComplaint(ComplaintModel complaint) async {
-    await _firestoreInstance.collection("complaints").add({
+    await _firestoreInstance.collection("complaints").doc(complaint.id).set({
       'name': complaint.name,
       'location': complaint.location,
       'description': complaint.description,
@@ -85,7 +85,7 @@ class dbUtil {
       'nevaluations': 0,
       'score': 0,
       'pricing': "",
-      'date': DateTime.now(),
+      'date': complaint.date == null ? DateTime.now() : complaint.date,
     });
   }
 
@@ -108,9 +108,9 @@ class dbUtil {
       'imgRef': ad.imgRef,
       'userID': ad.userID,
       'pricing': '',
-      'nevaluations': 0,
-      'score': 0,
-      'date': DateTime.now(),
+      'nevaluations': ad.nevaluations == null ? 0 : ad.nevaluations,
+      'score': ad.score == null ? 0 : ad.score,
+      'date': ad.date == null ? DateTime.now() : ad.date,
     });
   }
 
@@ -780,10 +780,10 @@ print(docRef.documentID);*/
 
   Future<void> addDonation(DonationModel dm) async {
     await _firestoreInstance.collection("donations").doc(dm.id).set({
-      'name':dm.name,
-      'description':dm.description,
-      'img':dm.img,
-      'website':dm.website,
+      'name': dm.name,
+      'description': dm.description,
+      'img': dm.img,
+      'website': dm.website,
     });
   }
 

@@ -1,4 +1,5 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
 
 class BusinessModel {
   String id;
@@ -47,5 +48,21 @@ class BusinessModel {
     this.date = json['date'].toDate();
 
     followers = json['followers'];
+  }
+
+  BusinessModel.fromPublication(PublicationModel publication) {
+    id = publication.id;
+    category = publication.category;
+    name = publication.name;
+    location = publication.location;
+    imgRef = publication.imgRef;
+    description = publication.description;
+    userID = publication.userID;
+    services = publication.services;
+    date = publication.date;
+    followers = publication.followers;
+    pricing = publication.pricing;
+    score = publication.score;
+    nevaluations = publication.nevaluations;
   }
 }

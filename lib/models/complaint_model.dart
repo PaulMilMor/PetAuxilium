@@ -1,4 +1,7 @@
+import 'package:pet_auxilium/models/publication_model.dart';
+
 class ComplaintModel {
+  String id;
   String name;
   List<dynamic> location;
   String description;
@@ -9,7 +12,8 @@ class ComplaintModel {
   List<dynamic> followers;
   DateTime date;
   ComplaintModel(
-      {this.name,
+      {this.id,
+      this.name,
       this.description,
       this.location,
       this.userID,
@@ -18,7 +22,8 @@ class ComplaintModel {
       this.category,
       this.followers});
 
-  ComplaintModel.fromJsonMap(Map<String, dynamic> json) {
+  ComplaintModel.fromJsonMap(Map<String, dynamic> json, String cid) {
+    id = cid;
     name = json['title'];
     location = json['location'];
     description = json['description'];
@@ -27,5 +32,20 @@ class ComplaintModel {
     date = json['date'].toDate();
 
     followers = json['followers'];
+  }
+  ComplaintModel.fromPublication(PublicationModel publication) {
+    id = publication.id;
+    category = publication.category;
+    name = publication.name;
+    location = publication.location;
+    imgRef = publication.imgRef;
+    description = publication.description;
+    userID = publication.userID;
+    date = publication.date;
+    followers = publication.followers;
+    //FIXME: Debería poderse comentar estas cosas?
+/*    pricing = publication.pricing;
+    score = publication.score;
+    nevaluations = publication.nevaluations;*/
   }
 }

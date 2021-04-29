@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
+
+import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
@@ -234,12 +237,14 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 3,
                     ),
-              PopupMenuItem(
-                child: Column(
-                  children: [_ReportOption()],
-                ),
-                value: 4,
-              ),
+              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_ReportOption()],
+                      ),
+                      value: 4,
+                    ),
             ],
         onSelected: (value) async {
           switch (value) {
@@ -248,17 +253,18 @@ class _ListFeedState extends State<ListFeed> {
               _addFollow(id, publications);
               break;
             case 2:
-              PublicationModel selectedPublication =
+              /*PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
 
               selectedPublication.id = id;
-              print(selectedPublication);
-              _deletePublication(id, "publications", selectedPublication);
+              print(selectedPublication);*/
+              _deletePublication(id, publications);
               break;
             case 3:
-              PublicationModel selectedPublication =
+              /*PublicationModel selectedPublication =
                   PublicationModel.fromJsonMap(publications, id);
-              _banUser(selectedPublication.userID);
+             */
+              _banUser(publications.userID);
               break;
             case 4:
               List users = [];
@@ -287,7 +293,7 @@ class _ListFeedState extends State<ListFeed> {
                         ..removeCurrentSnackBar()
                         ..showSnackBar(SnackBar(
                             content:
-                                Text('Usted ya reporto esta publicación')));
+                                Text('Usted ya reportó esta publicación')));
                       //print("Ya existe el usuario");
                     } else {
                       _ReportMenu(/*publications*/);
@@ -306,7 +312,19 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-  _deletePublication(id, collection, selectedPublication) {
+  _deletePublication(String id, PublicationModel selectedPublication) {
+    String collection = 'publications';
+    switch (selectedPublication.category) {
+      case 'DENUNCIA':
+        collection = 'complaints';
+        break;
+      case 'NEGOCIO':
+        collection = 'business';
+        break;
+      default:
+        collection = 'publications';
+        break;
+    }
     _db.deleteDocument(id, collection);
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
@@ -320,7 +338,20 @@ class _ListFeedState extends State<ListFeed> {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              _db.addPublication(selectedPublication);
+              switch (selectedPublication.category) {
+                case 'DENUNCIA':
+                  _db.addComplaint(
+                      ComplaintModel.fromPublication(selectedPublication));
+                  break;
+                case 'NEGOCIO':
+                  _db.addBusiness(
+                      BusinessModel.fromPublication(selectedPublication));
+                  break;
+                default:
+                  _db.addPublication(selectedPublication);
+                  break;
+              }
+              //_db.addPublication(selectedPublication);
               this.widget.voidCallback();
             },
           ),
@@ -757,17 +788,22 @@ class _ListFeedState extends State<ListFeed> {
                                     );
                                   }
                                   Navigator.of(context).pop();
-                                  if (publications.category == 'DENUNCIA') {
+                                  _deletePublication(id, publications);
+                                  /*if (publications.category == 'DENUNCIA') {
                                     _deletePublication(
                                         id, "complaints", publications);
                                   } else if (publications.category ==
                                       'NEGOCIO') {
                                     _deletePublication(
                                         id, "business", publications);
+                                  } else if (publications.category ==
+                                      'DENUNCIA') {
+                                    _deletePublication(
+                                        id, "complaints", publications);
                                   } else {
                                     _deletePublication(
                                         id, "publications", publications);
-                                  }
+                                  }*/
                                   ScaffoldMessenger.of(context)
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(SnackBar(

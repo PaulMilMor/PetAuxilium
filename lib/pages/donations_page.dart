@@ -35,7 +35,7 @@ class DonationsPage extends StatelessWidget {
           ]*/
         ),
         body: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
           child: Column(
             children: [
               Text(
@@ -56,7 +56,7 @@ class DonationsPage extends StatelessWidget {
                           Navigator.pushNamed(context, 'add_donation_page');
                         },
                         tooltip: 'Añadir Organización',
-                        child: Icon(Icons.add),
+                        child: Icon(Icons.add, color: Colors.white),
                         backgroundColor: Color.fromRGBO(49, 232, 93, 1),
                       )));
   }
@@ -95,14 +95,15 @@ class DonationsPage extends StatelessWidget {
               },*/
             );
           } else {
-            return Text('noay');
+            return Center(
+                child: CircularProgressIndicator(
+              backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+            ));
           }
         });
   }
 
   Widget _donationCard(DonationModel donation, BuildContext context) {
-    print('POOOOOOOOOOOOOOL ADMINID');
-    print(_prefs.userID);
     return Column(
       children: [
         Container(
@@ -110,7 +111,7 @@ class DonationsPage extends StatelessWidget {
           width: 250,
           child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
+              borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
             child: Column(
               children: [
@@ -118,8 +119,8 @@ class DonationsPage extends StatelessWidget {
                   flex: 10,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        topRight: Radius.circular(50)),
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25)),
                     child: Image.network(
                       donation.img,
                       height: 100,
@@ -177,6 +178,10 @@ class DonationsPage extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateColor.resolveWith(
+                                (states) => Color.fromRGBO(49, 232, 93, 0.5)),
+                          ),
                           onPressed: () {
                             FlutterWebBrowser.openWebPage(
                                 url: donation.website);

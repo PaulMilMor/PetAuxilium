@@ -29,19 +29,16 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   String _name = '';
   String _desc = '';
   String _web = '';
+  bool _isLoading = false;
   Future<File> _imageFile;
-  File imageFile;
-  String imageRef;
-  ImageUploadModel imgFile;
-  Object image = 'Add Image';
+  File _file;
+  ImageUploadModel _imageUpload = null;
   final picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      image = 'Add Image';
-    });
+
     _nameController = TextEditingController(text: _name);
     _descriptionController = TextEditingController(text: _desc);
     _websiteController = TextEditingController(text: _web);
@@ -58,7 +55,7 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
 
   _donationForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      padding: const EdgeInsets.fromLTRB(36, 10, 36, 50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -151,9 +148,10 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
-        maxLength: 50,
-        maxLines: 4,
+        maxLength: 100,
+        maxLines: 1,
         controller: _descriptionController,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
             labelText: "Describa la organización",
             labelStyle: TextStyle(
@@ -179,40 +177,73 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   }
 
   Widget _picture() {
-    return imgFile == null ? _addPhoto() : _removePhoto();
+    return Center(child: _imageUpload == null ? _addPhoto() : _removePhoto());
   }
 
   Widget _addPhoto() {
-    return AddImageButton(
-      onTap: _onAddImageClick,
+    return Container(
+      height: 100,
+      width: 175,
+      child: AddImageButton(
+        onTap: _onAddImageClick,
+      ),
     );
   }
 
   Widget _removePhoto() {
-    return Container();
+    return Stack(
+      children: [
+        Image.file(
+          _imageUpload.imageFile,
+          width: 175,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+        Positioned(
+          right: -7,
+          bottom: -7,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+              child: Icon(
+                Icons.edit,
+                size: 25,
+                color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+              onTap: () {
+                _onAddImageClick();
+              },
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future _onAddImageClick() async {
     final _imageFile = await picker.getImage(source: ImageSource.gallery);
-    imageFile = File(_imageFile.path);
+    _file = File(_imageFile.path);
 
     setState(() {
-      if (imageFile != null) {
+      if (_file != null) {
         getFileImage();
       }
     });
   }
 
   void getFileImage() async {
-    if (imageFile != null) {
+    if (_file != null) {
       setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imageFile;
-        imageUpload.imageUrl = '';
-        /* _image = imageUpload;
-      _imageSelected = true;*/
+        ImageUploadModel imageUpload2 = new ImageUploadModel();
+        imageUpload2.isUploaded = false;
+        imageUpload2.uploading = false;
+        imageUpload2.imageFile = _file;
+        imageUpload2.imageUrl = '';
+        _imageUpload = imageUpload2;
       });
     }
   }
@@ -233,41 +264,62 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   }
 
   Widget _saveBtn() {
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
-        ),
-        onPressed: () async {
-          // print(mapsUtil.locationtoString(_locations));
-          if (_name.isEmpty || _web.isEmpty || _desc.isEmpty) {
-            ScaffoldMessenger.of(context)
-              ..removeCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                  content: Text('Es necesario llenar todos los campos')));
-          } else {
-            DonationModel donation = DonationModel(
-                name: _name,
-                website: _web,
-                description: _desc,
-                img:
-                    'https://firebasestorage.googleapis.com/v0/b/millanes-frontend.appspot.com/o/logo_asset.png?alt=media&token=0bf4be90-8002-4821-8531-97c8bcf4e340');
-            _db.addDonation(donation).then((value) {
-              /*prefs.businessName = '';
-              prefs.businessDescription = '';*/
-              Navigator.popAndPushNamed(context, 'donationsPage');
-              ScaffoldMessenger.of(context)
-                ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Se añadió la organización')));
-            });
-          }
+    return _isLoading
+        ? Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+            child: CircularProgressIndicator(
+              backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+            ),
+          )
+        : ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            onPressed: () {
+              setState(() {
+                _isLoading = true;
+              });
 
-          //print(_dir);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text('Añadir'),
-        ));
+              _addOrganization(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text('Añadir'),
+            ));
+  }
+
+  _addOrganization(context) async {
+    if (_name.isEmpty ||
+        _web.isEmpty ||
+        _desc.isEmpty ||
+        _imageUpload == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+            SnackBar(content: Text('Es necesario llenar todos los campos')));
+    } else {
+      if (!_web.contains('http')) _web = 'http://' + _web;
+      String imgRef = await _storage.uploadFile(_file, 'OrganizationsImages');
+      DonationModel donation = DonationModel(
+          name: _name, website: _web, description: _desc, img: imgRef);
+      _db.addDonation(donation).then((value) {
+        /*prefs.businessName = '';
+              prefs.businessDescription = '';*/
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text('Se añadió la organización')));
+      });
+    }
+
+    //print(_dir);
   }
 
   Widget _buttons() {

@@ -96,7 +96,6 @@ class MyApp extends StatelessWidget {
     );
   }
 
-//delete me
 //Esta función es para perder el focus en un elemento al tocar cualquier parte vacía de la app
   void _unfocus(FocusScopeNode _currentFocus) {
     if (!_currentFocus.hasPrimaryFocus && _currentFocus.focusedChild != null) {

@@ -3,6 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
+import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
@@ -225,12 +228,14 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             value: 3,
                           ),
-                    PopupMenuItem(
-                      child: Column(
-                        children: [_ReportOption()],
-                      ),
-                      value: 4,
-                    ),
+                    _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                        ? null
+                        : PopupMenuItem(
+                            child: Column(
+                              children: [_ReportOption()],
+                            ),
+                            value: 4,
+                          ),
                   ],
               onSelected: (value) async {
                 switch (value) {
@@ -238,22 +243,22 @@ class _DetailPageState extends State<DetailPage> {
                     _addFollow(widget.detailDocument.id);
                     break;
                   case 2:
-                    PublicationModel selectedPublication =
+                    /*PublicationModel selectedPublication =
                         widget.detailDocument;
                     //   PublicationModel.fromJsonMap(widget.detailDocument.data());
 
                     // print(widget.detailDocument.data());
                     selectedPublication.id = widget.detailDocument.id;
-                    print(selectedPublication);
-                    _deletePublication(widget.detailDocument.id, "publications",
-                        selectedPublication);
+                    print(selectedPublication);*/
+                    _deletePublication(
+                        widget.detailDocument.id, widget.detailDocument);
                     break;
                   case 3:
-                    PublicationModel selectedPublication =
+                    /*PublicationModel selectedPublication =
                         widget.detailDocument;
                     /* PublicationModel.fromJsonMap(
-                            widget.detailDocument.data());*/
-                    _banUser(selectedPublication.userID);
+                            widget.detailDocument.data());*/*/
+                    _banUser(widget.detailDocument.userID);
                     break;
                   case 4:
                     List users = [];
@@ -267,6 +272,7 @@ class _DetailPageState extends State<DetailPage> {
                     _id = widget.detailDocument.id;
                     var found = false;
                     print(selectedPublication.id);
+                    //FIXME: Por qué está esto aquí??
                     await _firestoreInstance
                         .collection('reports')
                         .get()
@@ -328,11 +334,24 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  _deletePublication(id, collection, selectedPublication) {
+  _deletePublication(String id, PublicationModel selectedPublication) {
+    String collection = 'publications';
+    switch (selectedPublication.category) {
+      case 'DENUNCIA':
+        collection = 'complaints';
+        break;
+      case 'NEGOCIO':
+        collection = 'business';
+        break;
+      default:
+        collection = 'publications';
+        break;
+    }
     _db.deleteDocument(id, collection);
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
     }
+    Navigator.pop(context);
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(
@@ -342,7 +361,20 @@ class _DetailPageState extends State<DetailPage> {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              _db.addPublication(selectedPublication);
+              switch (selectedPublication.category) {
+                case 'DENUNCIA':
+                  _db.addComplaint(
+                      ComplaintModel.fromPublication(selectedPublication));
+                  break;
+                case 'NEGOCIO':
+                  _db.addBusiness(
+                      BusinessModel.fromPublication(selectedPublication));
+                  break;
+                default:
+                  _db.addPublication(selectedPublication);
+                  break;
+              }
+              //_db.addPublication(selectedPublication);
               this.widget.voidCallback();
             },
           ),
