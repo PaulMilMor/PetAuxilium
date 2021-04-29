@@ -52,7 +52,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   void initState() {
     super.initState();
     setState(() {
-      images.add("Add Image");
+      //images.add("Add Image");
     });
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
@@ -63,6 +63,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     //double longitude =double.parse(latLng[1]);
     //_locations = [latitude,longitude];
     images = widget.detailDocument.imgRef;
+    images.add("Add Image");
     _nameTxtController = TextEditingController(text: _name);
     //getDir(_location);
     //_dirTxtController = TextEditingController(text: _location);
@@ -104,6 +105,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
+        
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
           print(images.length);
@@ -140,9 +142,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         } 
-          else if (images[index] is String) {
+          else if (images[index] != "Add Image") {
           //ImageUploadModel uploadModel = images[index];
           print(images.length);
+          print(images);
           //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -163,6 +166,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                     ),
                     onTap: () {
                       setState(() {
+                        //images.add("Add Image");
                         images.removeAt(index);
                         imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
@@ -176,7 +180,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         }
-          else {
+          //else {
           print(images.length);
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -187,7 +191,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             }),
           );
         }
-      }),
+      /*}*/),
     );
   }
 

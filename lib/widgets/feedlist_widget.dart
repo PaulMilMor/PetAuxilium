@@ -199,9 +199,11 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 6,
                     ),
-              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                  ? null
-                  : PopupMenuItem(
+                    this.widget.follows == null 
+                    ? null
+                    :_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                    ? null
+                    : PopupMenuItem(
                       child: Column(
                         children: [
                           _isFollowedOption(id, this.widget.follows),
@@ -209,6 +211,7 @@ class _ListFeedState extends State<ListFeed> {
                       ),
                       value: 1,
                     ),
+              
               _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
@@ -416,6 +419,7 @@ class _ListFeedState extends State<ListFeed> {
   }
 
   Widget _isFollowedOption(String id, List<String> follow) {
+    //if(follow != null){
     if (follow.contains(id)) {
       return Row(
         children: [
@@ -445,6 +449,7 @@ class _ListFeedState extends State<ListFeed> {
         ],
       );
     }
+    //}
   }
 
   Widget _ReportOption() {

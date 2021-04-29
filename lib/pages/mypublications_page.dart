@@ -35,11 +35,11 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: _followedList(),
+      body: _MypublicationsList(),
     );
   }
 
-  Widget _followedList() {
+  Widget _MypublicationsList() {
     return StreamBuilder(
       stream: _db.getMypublications(_prefs.userID),
       builder: (BuildContext context, AsyncSnapshot<List<PublicationModel>> publications) {
@@ -55,7 +55,7 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
                         ? Center(child: CircularProgressIndicator())
                         : ListFeed(
                             snapshot: snapshot,
-                            //follows: follow.data,
+                            //follows: ,
                             voidCallback: callback);
                   },
                 );
