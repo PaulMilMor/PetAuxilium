@@ -26,15 +26,12 @@ class PublicationPageState extends State<PublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-
+ 
   CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
   Set<Marker> _markers = new Set<Marker>();
-  String _selectedCategory;
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
-  String _name;
-  String _desc;
   var _dirTxtController = TextEditingController();
   List<LatLng> _locations;
   List<String> imagesRef = [];
@@ -44,9 +41,10 @@ class PublicationPageState extends State<PublicationPage> {
   File imagefile;
   List<File> _listImages = [];
   final picker = ImagePicker();
-
+  final nameKey=UniqueKey();
   void initState() {
     super.initState();
+   
     setState(() {
       images.add("Add Image");
     });
@@ -60,6 +58,7 @@ class PublicationPageState extends State<PublicationPage> {
     getDir(_locations);
     createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
+      
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
     );
@@ -170,36 +169,41 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
+     
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                'CREAR PUBLICACIÓN',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-            _category(),
-            if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
-            _dirTxt(),
-            _descTxt(),
-            //_images(),
-            buildGridView(),
-            //_boton(),
-            _buttons()
-          ],
+        child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  child: Text(
+                    'CREAR PUBLICACIÓN',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                _category(state),
+                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
+                _dirTxt(),
+                _descTxt(state),
+                //_images(),
+                buildGridView(),
+                //_boton(),
+                _buttons(state)
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _category() {
-    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-      builder: (context, state) {
+  Widget _category(state) {
+   
         return Container(
           // height: 100.0,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
@@ -227,13 +231,12 @@ class PublicationPageState extends State<PublicationPage> {
             )
           ])),
         );
-      },
-    );
+     
   }
 
-  Widget _nameTxt() {
-    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-      builder: (context, state) {
+  Widget _nameTxt(state) {
+    
+ var txtController=TextEditingController(text: state.name);
         return Container(
             //height: 100.0,
 
@@ -247,13 +250,18 @@ class PublicationPageState extends State<PublicationPage> {
           Container(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
               child: GrayTextFormField(
-                initialvalue: state.name,
+                key: nameKey,
+               initialvalue: state.name,
                 hintText: 'Nombre',
                 maxLength: 20,
                 textCapitalization: TextCapitalization.words,
                 suffixIcon: IconButton(
-                  onPressed: () {
-                    createpublicationBloc.add(UpdateName(''));
+                   
+                  onPressed: ()  {
+                 
+                  
+                        createpublicationBloc.add(UpdateName(''));
+                   
                   },
                   icon: Icon(Icons.clear),
                 ),
@@ -262,19 +270,19 @@ class PublicationPageState extends State<PublicationPage> {
                 },
               ))
         ]));
-      },
-    );
+    
   }
 
-  Widget _descTxt() {
-    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-        builder: (context, state) {
+  Widget _descTxt(state) {
+ var txtController=TextEditingController(text: state.desc);
       return Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-          child: TextField(
-            controller: TextEditingController(text: state.desc),
+          child: TextFormField(
+              //key: UniqueKey(),
+           controller: txtController,
             decoration: InputDecoration(
                 labelText: 'Descripción',
+                
                 labelStyle: TextStyle(
                   color: Colors.grey,
                   // color: Color.fromRGBO(49, 232, 93, 1),
@@ -283,7 +291,7 @@ class PublicationPageState extends State<PublicationPage> {
                     borderSide: BorderSide(color: Colors.grey)),
                 suffixIcon: IconButton(
                   onPressed: () {
-                    prefs.adoptionDescription = '';
+                   createpublicationBloc.add(UpdateDesc(''));
                   },
                   icon: Icon(Icons.clear),
                 )),
@@ -294,7 +302,7 @@ class PublicationPageState extends State<PublicationPage> {
               createpublicationBloc.add(UpdateDesc(value));
             },
           ));
-    });
+  
   }
 
   Widget _dirTxt() {
@@ -331,12 +339,12 @@ class PublicationPageState extends State<PublicationPage> {
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_cancelBtn(), _saveBtn()],
+        children: [_cancelBtn(), _saveBtn(state)],
       ),
     );
   }
@@ -355,56 +363,54 @@ class PublicationPageState extends State<PublicationPage> {
       ),
     );
   }
+
 //TODO: Posiblemente mover el proceso al bloc o por lo menos adaptar lo de los validadores
-  Widget _saveBtn() {
-    return BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-      builder: (context, state) {
-    String name=state.name;
-        
+  Widget _saveBtn(state) {
+    
+        String name = state.name;
+
         return ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Color.fromRGBO(49, 232, 93, 1),
             ),
             onPressed: () {
-              if (state.category == 'SITUACIÓN DE CALLE') {
-                name = 'Animal Callejero';
-                
-              }
-              if (name.isEmpty ||
-                  state.desc.isEmpty ||
-                  imagesRef.isEmpty ||
-                  _locations.isEmpty) {
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                      content: Text('Es necesario llenar todos los campos')));
-              } else {
-                print(_imgsFiles.toString());
-                //print(mapsUtil.locationtoString(_locations));
-                PublicationModel ad = PublicationModel(
-                    category: state.category,
-                    name:name,
-                    location: mapsUtil.locationtoString(_locations),
-                    userID: prefs.userID,
-                    description: state.desc,
-                    imgRef: imagesRef);
-                _db.addPublication(ad).then((value) {
-              createpublicationBloc.add(CleanData());
-                  Navigator.popAndPushNamed(context, 'navigation');
-                  ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                        content: Text('Se ha creado tu publicación.')));
-                });
-                print(_name);
-              }
+               Navigator.pushNamed(context, 'paidOptionsPage');
+              // if (state.category == 'SITUACIÓN DE CALLE') {
+              //   name = 'Animal Callejero';
+              // }
+              // if (name.isEmpty ||
+              //     state.desc.isEmpty ||
+              //     imagesRef.isEmpty ||
+              //     _locations.isEmpty) {
+              //   ScaffoldMessenger.of(context)
+              //     ..removeCurrentSnackBar()
+              //     ..showSnackBar(SnackBar(
+              //         content: Text('Es necesario llenar todos los campos')));
+              // } else {
+     
+              //   PublicationModel ad = PublicationModel(
+              //       category: state.category,
+              //       name: name,
+              //       location: mapsUtil.locationtoString(_locations),
+              //       userID: prefs.userID,
+              //       description: state.desc,
+              //       imgRef: imagesRef);
+              //   _db.addPublication(ad).then((value) {
+              //     createpublicationBloc.add(CleanData());
+              //     Navigator.popAndPushNamed(context, 'navigation');
+              //     ScaffoldMessenger.of(context)
+              //       ..removeCurrentSnackBar()
+              //       ..showSnackBar(SnackBar(
+              //           content: Text('Se ha creado tu publicación.')));
+              //   });
+             
+              // }
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text('Publicar'),
             ));
-      },
-    );
+      
   }
 
   void getDir(List<LatLng> locations) {

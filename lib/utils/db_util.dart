@@ -775,4 +775,15 @@ print(docRef.documentID);*/
         .doc(id)
         .update({'token': token});
   }
+
+  setPatreon(time) async{
+    var days=30*time;
+    var hours=10*time;
+     var date=Timestamp.now().toDate().add(Duration(days: days, hours: hours));
+      await _firestoreInstance
+        .collection('users')
+        .doc(_prefs.userID)
+        .update({'patreon': date});
+
+  }
 }

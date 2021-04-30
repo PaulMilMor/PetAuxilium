@@ -6,6 +6,7 @@ import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
+import 'package:pet_auxilium/pages/paid_options_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/complaint_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
+          'paidOptionsPage':(BuildContext context)=>PaidOptionsPage()
         },
       ),
     );

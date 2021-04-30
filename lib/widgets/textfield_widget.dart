@@ -25,7 +25,8 @@ class GrayTextFormField extends StatelessWidget {
     this.onEditingComplete,
     //FIXME: Vease detail_page
     InputDecoration decoration,
-    this.initialvalue
+    this.initialvalue,
+    this.key
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -49,6 +50,7 @@ class GrayTextFormField extends StatelessWidget {
   final String labelText;
   final void Function() onEditingComplete;
   final String initialvalue;
+  final Key key;
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -56,6 +58,7 @@ class GrayTextFormField extends StatelessWidget {
         primaryColor: Color.fromRGBO(49, 232, 93, 1),
       ),
       child: TextFormField(
+        key: this.key,
         onEditingComplete: this.onEditingComplete,
         keyboardType: this.keyboardType,
         textCapitalization: this.textCapitalization,
