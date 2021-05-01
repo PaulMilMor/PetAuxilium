@@ -138,10 +138,10 @@ class _AccountPageState extends State<AccountPage> {
           if (!isAdmin()) _editProfileBtn(),
           if (!isAdmin()) _myPostsButton(),
           if (!isAdmin()) _followListButton(),
-          if (!isAdmin()) _postBusinessButton(),
-          if (!isAdmin()) _caretakerButton(),
-          if (!isAdmin()) _complaintButton(),
-          _donationsButton(),
+          //if (!isAdmin()) _postBusinessButton(),
+          //if (!isAdmin()) _caretakerButton(),
+          //if (!isAdmin()) _complaintButton(),
+          if (isAdmin()) _donationsButton(),
           //_createPostButton(),
           //_followedButton(),
           // _settingsButton(),
@@ -184,7 +184,7 @@ class _AccountPageState extends State<AccountPage> {
         text: 'Mis publicaciones',
         icon: Icons.navigate_next,
         onPressed: () {
-            Navigator.pushNamed(context, 'mypublicationsPage');
+          Navigator.pushNamed(context, 'mypublicationsPage');
         },
       ),
     );
@@ -284,7 +284,7 @@ class _AccountPageState extends State<AccountPage> {
           border: Border(
               bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
       child: GrayFlatButton(
-        text: 'Donaciones',
+        text: 'Asociaciones animalistas',
         icon: Icons.navigate_next,
         onPressed: () {
           Navigator.pushNamed(context, 'donationsPage');

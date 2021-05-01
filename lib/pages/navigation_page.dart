@@ -43,7 +43,7 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<String> _titles = [
     'INICIO',
     'CHAT',
-    'CREAR PUBLICACIÓN',
+    //'CREAR PUBLICACIÓN',
     'NOTIFICACIONES',
     'PERFIL'
   ];
@@ -51,6 +51,7 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<Widget> _tabs = [
     // Feed(),
     StartupPage(),
+    ChatRooms(),
     ChatRooms(),
     //Adoptionpage(),
     //CreatePage(),
@@ -330,7 +331,7 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            Navigator.pushNamed(context, 'complaintPage');
+                            Navigator.pushNamed(context, 'donationsPage');
                           },
                           child: Row(children: [
                             Icon(
