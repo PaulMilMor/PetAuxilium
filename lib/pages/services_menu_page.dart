@@ -46,7 +46,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
       padding: const EdgeInsets.fromLTRB(6, 16, 6, 28),
       child: GrayTextFormField(
         prefixIcon: Icon(Icons.search),
-        hintText: 'Buscar',
+        hintText: 'Buscar publicación',
         controller: _searchTxtController,
         onChanged: (value) {
           setState(() {
@@ -102,7 +102,14 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
           _btnService('Ventas', context),
           _btnService('Veterinarias', context)
         ]),
+        TableRow(children: [_btnService('Denuncias', context), _complaint()]),
       ],
+    );
+  }
+
+  Widget _complaint() {
+    return Container(
+      height: 40,
     );
   }
 
@@ -122,26 +129,94 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // SizedBox(height:5.0),
-            CircleAvatar(
-                radius: 25.0,
-                backgroundColor: Color.fromRGBO(49, 232, 93, 1),
-                child: Icon(
-                  Icons.pets,
-                  color: Colors.black,
-                  size: 30.0,
-                )),
+            Image(
+              image: _serviceIcon(service),
+              width: 45,
+              height: 45,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
                 service,
                 style: TextStyle(color: Colors.black),
               ),
-            ),
-            //SizedBox(height:5.0)
+            ), //SizedBox(height:5.0)
           ],
         ),
       ),
     );
+  }
+
+  _serviceIcon(service) {
+    String servicio = service;
+    switch (servicio) {
+      case "Animales\nPerdidos":
+        {
+          return AssetImage('assets/icons/animales_perdidos.png');
+        }
+        break;
+      case "Adopción":
+        {
+          return AssetImage('assets/icons/adopcion.png');
+        }
+        break;
+
+      case "Animales\nCallejeros":
+        {
+          return AssetImage('assets/icons/animales_callejeros.png');
+        }
+        break;
+
+      case "Cuidados\nEspeciales":
+        {
+          return AssetImage('assets/icons/cuidados_especiales.png');
+        }
+        break;
+      case "Consultoría":
+        {
+          return AssetImage('assets/icons/consultoria.png');
+        }
+        break;
+      case "Estética":
+        {
+          return AssetImage('assets/icons/estetica.png');
+        }
+        break;
+      case "Entrenamiento":
+        {
+          return AssetImage('assets/icons/entrenamiento.png');
+        }
+        break;
+      case "Guardería/Hotel\nde animales":
+        {
+          return AssetImage('assets/icons/guarderia_hotel.png');
+        }
+        break;
+      case "Servicios de\nSalud":
+        {
+          return AssetImage('assets/icons/servicios_de_salud.png');
+        }
+        break;
+      case "Servicios de\nLimpieza":
+        {
+          return AssetImage('assets/icons/servicios_de_limpieza.png');
+        }
+        break;
+      case "Ventas":
+        {
+          return AssetImage('assets/icons/ventas.png');
+        }
+        break;
+      case "Veterinarias":
+        {
+          return AssetImage('assets/icons/veterinarias.png');
+        }
+        break;
+      case "Denuncias":
+        {
+          return AssetImage('assets/icons/denuncias.png');
+        }
+        break;
+    }
   }
 }

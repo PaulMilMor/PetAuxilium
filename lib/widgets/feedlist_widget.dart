@@ -80,6 +80,8 @@ class _ListFeedState extends State<ListFeed> {
               );
             },
             child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -101,7 +103,7 @@ class _ListFeedState extends State<ListFeed> {
                           children: <Widget>[
                             Text(_data.name,
                                 style: TextStyle(
-                                  fontSize: 21,
+                                  fontSize: 19,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),

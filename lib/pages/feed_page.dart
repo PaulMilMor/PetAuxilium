@@ -25,30 +25,31 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     print(ModalRoute.of(context).settings.name);
     return Scaffold(
-        body: Container(
-      padding: EdgeInsets.only(top: 7),
-      child: StreamBuilder(
-        //FIXME: corregir follows para anonimos
-        stream: _db.getFollows(_prefs.userID),
-        builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
-          print(follow.data);
-          return StreamBuilder(
-              stream: _db.allFeedElements,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListFeed(
-                    snapshot: snapshot,
-                    follows: follow.data,
-                    voidCallback: callback,
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              });
-        },
+      body: Container(
+        padding: EdgeInsets.only(top: 7),
+        child: StreamBuilder(
+          //FIXME: corregir follows para anonimos
+          stream: _db.getFollows(_prefs.userID),
+          builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
+            print(follow.data);
+            return StreamBuilder(
+                stream: _db.allFeedElements,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListFeed(
+                      snapshot: snapshot,
+                      follows: follow.data,
+                      voidCallback: callback,
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                });
+          },
+        ),
       ),
-    ));
+    );
   }
 }

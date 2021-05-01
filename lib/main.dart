@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/pages/add_donation_page.dart';
+//FIXME: What the f is this thing?
+//import 'package:pet_auxilium/pages/create_page.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
@@ -91,6 +93,7 @@ class MyApp extends StatelessWidget {
           'complaintPage': (BuildContext context) => ComplaintPage(),
           'donationsPage': (BuildContext context) => DonationsPage(),
           'add_donation_page': (BuildContext context) => AddDonationsPage(),
+//          'createPage': (BuildContext context) => CreatePage(),
         },
       ),
     );
