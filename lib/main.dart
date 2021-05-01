@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/pages/create_page.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
@@ -33,17 +34,20 @@ Future<void> main() async {
 
   runApp(AppState());
 }
-class AppState extends StatelessWidget{
-   @override
+
+class AppState extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CreatepublicationBloc>(create: (_)=>CreatepublicationBloc())
+        BlocProvider<CreatepublicationBloc>(
+            create: (_) => CreatepublicationBloc())
       ],
       child: MyApp(),
     );
   }
 }
+
 class MyApp extends StatelessWidget {
   final _prefs = preferencesUtil();
   @override
@@ -84,6 +88,7 @@ class MyApp extends StatelessWidget {
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
+          'createPage': (BuildContext context) => CreatePage(),
         },
       ),
     );

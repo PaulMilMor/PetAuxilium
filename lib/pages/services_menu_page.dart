@@ -140,8 +140,7 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
                 service,
                 style: TextStyle(color: Colors.black),
               ),
-            ),
-            //SizedBox(height:5.0)
+            ), //SizedBox(height:5.0)
           ],
         ),
       ),
@@ -156,7 +155,6 @@ class _ServicesMenuPageState extends State<ServicesMenuPage> {
           return AssetImage('assets/icons/animales_perdidos.png');
         }
         break;
-
       case "Adopción":
         {
           return AssetImage('assets/icons/adopcion.png');

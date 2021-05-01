@@ -53,7 +53,7 @@ class _NavigationPageState extends State<NavigationPage> {
     StartupPage(),
     ChatRooms(),
     //Adoptionpage(),
-    PublicationPage(),
+    //CreatePage(),
     NotificationsPage(),
     AccountPage()
   ];
@@ -66,6 +66,26 @@ class _NavigationPageState extends State<NavigationPage> {
       //appBar: getAppbar(),
       body: _getTabs()[_prefs.selectedIndex],
       bottomNavigationBar: _getBottomBar(),
+
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 55.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            _CreateMenu();
+          },
+          child: Icon(
+            Icons.add,
+          ),
+          backgroundColor: Colors.white,
+          foregroundColor: Color.fromRGBO(49, 232, 93, 1),
+          elevation: 5.0,
+          mini: true,
+          shape: StadiumBorder(
+            side: BorderSide(color: Color.fromRGBO(49, 232, 93, 1), width: 2),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -131,7 +151,7 @@ class _NavigationPageState extends State<NavigationPage> {
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_box),
+          icon: Icon(Icons.add),
           label: 'Nuevo',
         ),
         BottomNavigationBarItem(
@@ -209,6 +229,125 @@ class _NavigationPageState extends State<NavigationPage> {
         automaticallyImplyLeading: false,
       );
     }
+  }
+
+  void _CreateMenu() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+        ),
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Container(
+                height: 350,
+                child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // PublicationPage();
+                            Navigator.pushNamed(context, 'PublicationPage');
+                          },
+                          child: Row(children: [
+                            Icon(
+                              Icons.navigate_next,
+                              color: Color.fromRGBO(210, 210, 210, 1),
+                              size: 27,
+                            ),
+                            Text("   Crear una publicación",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.normal)),
+                          ]),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // PublicationPage();
+                            Navigator.pushNamed(context, 'CreateBusiness');
+                          },
+                          child: Row(children: [
+                            Icon(
+                              Icons.navigate_next,
+                              color: Color.fromRGBO(210, 210, 210, 1),
+                              size: 25,
+                            ),
+                            Text("   Publicar mi negocio",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.normal)),
+                          ]),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // PublicationPage();
+                            Navigator.pushNamed(context, 'caretakerPage');
+                          },
+                          child: Row(children: [
+                            Icon(
+                              Icons.navigate_next,
+                              color: Color.fromRGBO(210, 210, 210, 1),
+                              size: 25,
+                            ),
+                            Text("   Registrarme como cuidador",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.normal)),
+                          ]),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // PublicationPage();
+                            Navigator.pushNamed(context, 'complaintPage');
+                          },
+                          child: Row(children: [
+                            Icon(
+                              Icons.navigate_next,
+                              color: Color.fromRGBO(210, 210, 210, 1),
+                              size: 25,
+                            ),
+                            Text("   Hacer una denuncia",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.normal)),
+                          ]),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // PublicationPage();
+                            Navigator.pushNamed(context, 'complaintPage');
+                          },
+                          child: Row(children: [
+                            Icon(
+                              Icons.navigate_next,
+                              color: Color.fromRGBO(210, 210, 210, 1),
+                              size: 25,
+                            ),
+                            Text("   Apoyar asociación animalista",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.normal)),
+                          ]),
+                        ),
+                      ],
+                    )));
+          });
+        });
   }
 
   List<String> _getTitles() {
