@@ -7,7 +7,10 @@ import 'package:pet_auxilium/pages/add_donation_page.dart';
 //FIXME: What the f is this thing?
 //import 'package:pet_auxilium/pages/create_page.dart';
 import 'package:pet_auxilium/pages/edit_account_page.dart';
+import 'package:pet_auxilium/pages/edit_map_page.dart';
+import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
+import 'package:pet_auxilium/pages/mypublications_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/complaint_page.dart';
@@ -90,10 +93,14 @@ class MyApp extends StatelessWidget {
           'service': (BuildContext context) => ServicePage(),
           'edit_account_page': (BuildContext context) => Edit_account_page(),
           'followingPage': (BuildContext context) => FollowingPage(),
+          'mypublicationsPage': (BuildContext context) => MypublicationsPage(),
           'complaintPage': (BuildContext context) => ComplaintPage(),
           'donationsPage': (BuildContext context) => DonationsPage(),
           'add_donation_page': (BuildContext context) => AddDonationsPage(),
 //          'createPage': (BuildContext context) => CreatePage(),
+          'Map_edit_Page': (BuildContext context) => Map_edit_Page(),
+          'EditPublicationPage': (BuildContext context) =>
+              EditPublicationPage(null),
         },
       ),
     );

@@ -174,13 +174,22 @@ class _DetailPageState extends State<DetailPage> {
               ),
               itemBuilder: (BuildContext context) => [
                     _prefs.userID != widget.detailDocument.userID
-                        ? null
-                        : PopupMenuItem(
-                            child: Column(
-                              children: [_CloseOption()],
-                            ),
-                            value: 5,
-                          ),
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_CloseOption()],
+                      ),
+                      value: 5,
+                    ),
+                    _prefs.userID != widget.detailDocument.userID
+                  ? null
+                  :
+                    PopupMenuItem(
+                      child: Column(
+                        children: [_EditOption()],
+                      ),
+                      value: 6,
+                    ),
                     _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                         ? null
                         : PopupMenuItem(
@@ -634,7 +643,21 @@ class _DetailPageState extends State<DetailPage> {
       ],
     );
   }
-
+  Widget _EditOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.edit,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Editar publicación',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
   void _ClosePubMenu(publications) {
     String topic01 = publications.userID;
     showModalBottomSheet(
