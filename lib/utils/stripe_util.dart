@@ -28,7 +28,7 @@ class StripeUtil{
     );
   }
 
-  static Future<StripeTransactionResponse> payViaCard({String amount, String currency, CreditCard card, String pack}) async{
+  static Future<StripeTransactionResponse> payViaCard({String amount, String currency, CreditCard card,int pack}) async{
     try {
       var paymentMethod = await StripePayment.createPaymentMethod(
         PaymentMethodRequest(card: card)
@@ -47,7 +47,7 @@ class StripeUtil{
         
         dbUtil().setPatreon(pack);
         return new StripeTransactionResponse(
-          message: 'Transaction Realizada Correctamente',
+          message: 'hecho',
           success: true
         );
       } else {
