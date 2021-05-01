@@ -12,6 +12,7 @@ import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/keeper_page.dart';
 import 'package:pet_auxilium/pages/mypublications_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
+import 'package:pet_auxilium/pages/paid_options_page.dart';
 import 'package:pet_auxilium/pages/publication_page.dart';
 import 'package:pet_auxilium/pages/complaint_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
           'Map_edit_Page': (BuildContext context) => Map_edit_Page(),
           'EditPublicationPage': (BuildContext context) =>
               EditPublicationPage(null),
+          'paidOptionsPage': (BuildContext context) => PaidOptionsPage()
         },
       ),
     );
