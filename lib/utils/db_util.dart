@@ -424,13 +424,16 @@ print(docRef.documentID);*/
           String query, List<String> follow) =>
       _firestoreInstance.collection('publications').snapshots().map((event) {
         List<PublicationModel> list = [];
-        event.docs.forEach((element) {
+        event.docs.forEach((element) async {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
           if (p.name
               .substring(0, query.length)
               .contains(new RegExp('$query', caseSensitive: false)))
+            
+      
             list.add(p);
+
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
