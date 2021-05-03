@@ -39,7 +39,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   String _name;
   String _desc;
   var _location;
-  var _locationss;
   List <LatLng>_locations =[];
   //List <String>_location;
   List<String> imagesRef = [];
@@ -51,9 +50,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
   void initState() {
     super.initState();
-    setState(() {
-      //images.add("Add Image");
-    });
+    
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
@@ -67,7 +64,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     print(temp);
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
-    images.add("Add Image");
+    
+    print(widget.detailDocument.id);
+    //images.add("Add Image");
+    setState(() {
+      images.add("Add Image");
+    });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
     //_dirTxtController = TextEditingController(text: _location);
@@ -94,8 +96,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   }
   Widget _body(BuildContext context) {
   _markers = ModalRoute.of(context).settings.arguments;
+  if(_locations== null){
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
+  }
+    
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
@@ -148,8 +153,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         } 
           else if (images[index] != "Add Image") {
           //ImageUploadModel uploadModel = images[index];
+          print("tuperra madre");
           print(images.length);
           print(images);
+          //imagesRef.add(images[index].toString());
+          // imagesRef.remove("Add Image");
           //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -231,7 +239,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     });
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
-
+    print("chingado");
+    print(imagesRef.length);
+    print(imagesRef);
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
       imageUpload.isUploaded = false;
@@ -447,10 +457,13 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             _name = 'Animal Callejero';
             prefs.adoptionName = 'Animal Callejero';
           }
+          print(_locations);
           if (_name.isEmpty ||
               _desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {
+                print("images");
+              print(imagesRef);
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -459,11 +472,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             print(_imgsFiles.toString());
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
+                id: widget.detailDocument.id,
                 category: _selectedCategory,
-                name: _name,
+                name: _nameTxtController.text,
                 location: mapsUtil.locationtoString(_locations),
                 userID: prefs.userID,
-                description: _desc,
+                description: _descTxtController.text,
                 imgRef: imagesRef);
             _db.addPublication(ad).then((value) {
               prefs.adoptionCategory = 'ADOPCIÓN';
@@ -473,7 +487,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
-                    SnackBar(content: Text('Se ha creado tu publicación.')));
+                    SnackBar(content: Text('Has editado tu publicación.')));
             });
             print(_name);
           }
