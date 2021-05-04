@@ -66,6 +66,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     _descTxtController = TextEditingController(text: _desc);
     
     setState(() {
+      images.remove("Add Image");
       images.add("Add Image");
     });
 

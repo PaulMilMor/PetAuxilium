@@ -32,11 +32,13 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
+  //CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
+
   String _name = " ";
   String _desc;
   File imageFile;
   var _location;
-  List<String> imagesRef = [];
+  List imagesRef = [];
   final picker = ImagePicker();
   List<LatLng> _locations =[];
   List<Object> images = [];
@@ -65,8 +67,10 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
     LatLng temp = LatLng(latitude,longitude);
     _locations.add(temp);
     images = widget.detailDocument.imgRef;
+    //imagesRef = widget.detailDocument.imgRef;
 
     setState(() {
+      images.remove("Add Image");
       images.add("Add Image");
     });
 
