@@ -19,6 +19,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
 var bloc;
+
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -28,9 +29,12 @@ var bloc;
   // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
-    if (prefs.selectedIndex==2) {
-      bloc= BlocProvider.of<CreatepublicationBloc>(context);
-    }
+    // if(prefs.previousPage=='publication'){
+    //   bloc= BlocProvider.of<CreatepublicationBloc>(context);
+    // print('xd');
+
+    // }
+    
     super.initState();
     getLoc();
   }
@@ -48,8 +52,8 @@ var bloc;
 
   @override
   Widget build(BuildContext context) {
-    //_name=ModalRoute.of(context).settings.arguments;
-    if (ModalRoute.of(context).settings.arguments != null)
+  bloc=ModalRoute.of(context).settings.arguments;
+    //if (ModalRoute.of(context).settings.arguments != null)
       _markers =bloc.state.locations??this._markers;
 
     return Scaffold(
@@ -59,11 +63,10 @@ var bloc;
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                if (prefs.selectedIndex == 2) {
+                if (bloc.runtimeType==CreatepublicationBloc) {
                    bloc.add(UpdateLocations(_markers));
                    print(bloc.state.locations);
-                  Navigator.popAndPushNamed(context, 'navigation',
-                    );
+                 Navigator.popAndPushNamed(context, 'PublicationPage');
                 } else if (prefs.selectedIndex == 4) {
                   Navigator.popAndPushNamed(context, 'complaintPage',
                       arguments: _markers);
