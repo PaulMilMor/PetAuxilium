@@ -203,6 +203,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
   _bottomMenu() {
     return showModalBottomSheet(
         context: context,
+           isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
         ),
@@ -319,7 +320,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('\$ $_price'),
+                              Text('\$ ${(int.parse(_price)/100).toString()}'),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       primary: Color.fromRGBO(49, 232, 93, 1)),
@@ -377,10 +378,12 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         cvc: _cvv);
       if(_packSelected=='1 mes') pack=1;
         if(_packSelected=='4 meses') pack=4;
-          if(_packSelected=='6 meses') pack=6;
+          if(_packSelected=='12 meses') pack=6;
     StripeTransactionResponse response = await StripeUtil.payViaCard(
         amount: _price, currency: 'USD', card: card, pack: pack);
 
+
+     if(response.success) Navigator.popAndPushNamed(context, 'navigation');
     print(response.message);
   }
 

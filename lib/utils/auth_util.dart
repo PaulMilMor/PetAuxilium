@@ -50,9 +50,8 @@ class AuthUtil {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
     
-
-      UserModel userModel = await _db.getUser(result.user.uid);
-     
+      await _db.getUser(result.user.uid);
+      
        
       _prefs.userID = result.user.uid;
 
@@ -124,20 +123,28 @@ class AuthUtil {
 
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
-
-      List<String> follows = await _db.getFollowsFuture(user.uid);
+       final data= await _db.getUser(user.uid);
+    
       UserModel userModel = UserModel(
           id: user.uid,
           name: user.displayName,
           email: user.email,
           imgRef: user.photoURL,
-          follows: follows);
-
+          follows: data.follows,
+          notifications: data.notifications,
+          patreon: data.patreon
+          );
+  if (userModel.patreon!=null) {
+        _prefs.patreonUser=true;
+      }else{
+        _prefs.patreonUser=false;
+      }
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
       _prefs.userID = userModel.id;
       _prefs.userImg = userModel.imgRef;
       _prefs.userEmail = userModel.email;
+      
       return 'Ingresó';
     } on FirebaseAuthException catch (e) {
       switch (e.code) {

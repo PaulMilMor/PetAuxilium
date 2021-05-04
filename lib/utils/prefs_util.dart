@@ -12,6 +12,14 @@ class preferencesUtil {
     this._prefs = await SharedPreferences.getInstance();
   }
 
+  set patreonUser(bool patreon) {
+    _prefs.setBool('patreonUser', patreon);
+  }
+
+  get patreonUser {
+    return _prefs.getBool('patreonUser');
+  }
+
   get businessName {
     return _prefs.getString('name') ?? '';
   }
@@ -68,6 +76,10 @@ class preferencesUtil {
     _prefs.setString('aname', name);
   }
 
+  get selectedIndex {
+    return _prefs.getInt('selectedIndex') ?? 0;
+  }
+
   get adoptionDescription {
     return _prefs.getString('pdescription') ?? '';
   }
@@ -84,14 +96,10 @@ class preferencesUtil {
     _prefs.setString('pcategory', desc);
   }
 
-  get selectedIndex {
-    return _prefs.getInt('selectedIndex') ?? 0;
-    
-  }
-
   set selectedIndex(int selectedIndex) {
     _prefs.setInt('selectedIndex', selectedIndex);
   }
+
   get keeperDescription {
     return _prefs.getString('kdescription') ?? '';
   }
@@ -107,6 +115,7 @@ class preferencesUtil {
   set keeperCategory(String desc) {
     _prefs.setString('kcategory', desc);
   }
+
   get keeperPricing {
     return _prefs.getString('kpricing') ?? '';
   }
@@ -114,12 +123,12 @@ class preferencesUtil {
   set keeperPricing(String desc) {
     _prefs.setString('kpricing', desc);
   }
-  set token(token){
+
+  set token(token) {
     _prefs.setString('token', token);
   }
-  get token{
 
+  get token {
     _prefs.getString('token');
   }
- 
 }

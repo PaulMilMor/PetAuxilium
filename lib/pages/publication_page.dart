@@ -26,22 +26,18 @@ class PublicationPageState extends State<PublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
   final prefs = new preferencesUtil();
-
   CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
+
   Set<Marker> _markers = new Set<Marker>();
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   var _dirTxtController = TextEditingController();
   List<LatLng> _locations;
   List<String> imagesRef = [];
   List<Object> images = [];
-  Future<File> _imageFile;
-  List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
-  List<File> _listImages = [];
   final picker = ImagePicker();
-  final nameKey = UniqueKey();
   void initState() {
     super.initState();
 
@@ -52,10 +48,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
+    //_markers = ModalRoute.of(context).settings.arguments;
     createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
@@ -63,6 +56,168 @@ class PublicationPageState extends State<PublicationPage> {
     );
   }
 
+  Widget _publicationForm(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+        child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+          builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+            getDir(_locations);
+            images = state.imgRef ?? this.images;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  child: Text(
+                    'CREAR PUBLICACIÓN',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                _category(state),
+                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
+                _dirTxt(),
+                _descTxt(state),
+                buildGridView(),
+                _buttons(state)
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+//Formulario
+  Widget _category(state) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
+      child: Center(
+          child: Column(children: [
+        Container(
+          margin: const EdgeInsets.only(right: 4.5),
+          child: Text(
+            'Categoría:',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+        GrayDropdownButton(
+          hint: Text("Selecciona una categoria"),
+          value: state.category,
+          onChanged: (newValue) {
+            createpublicationBloc.add(UpdateCategory(newValue));
+          },
+          items: listItems.map((valueItem) {
+            return DropdownMenuItem(
+              value: valueItem,
+              child: Text(valueItem),
+            );
+          }).toList(),
+        )
+      ])),
+    );
+  }
+
+  Widget _nameTxt(state) {
+    return Container(
+        child: Column(children: [
+      Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          child: Text(
+            'Completa los siguientes campos',
+            style: TextStyle(fontSize: 18),
+          )),
+      Container(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+          child: GrayTextFormField(
+            initialvalue: state.name,
+            hintText: 'Nombre',
+            maxLength: 20,
+            textCapitalization: TextCapitalization.words,
+            // suffixIcon: IconButton(
+            //   onPressed: () {
+            //     createpublicationBloc.add(UpdateName(''));
+            //   },
+            //   icon: Icon(Icons.clear),
+            // ),
+            onChanged: (value) {
+              createpublicationBloc.add(UpdateName(value));
+            },
+          ))
+    ]));
+  }
+
+  Widget _descTxt(state) {
+    var txtController = TextEditingController(text: state.desc);
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: TextFormField(
+          //key: UniqueKey(),
+          initialValue: state.desc,
+          decoration: InputDecoration(
+            labelText: 'Descripción',
+            labelStyle: TextStyle(
+              color: Colors.grey,
+              // color: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+            // suffixIcon: IconButton(
+            //   onPressed: () {
+            //     createpublicationBloc.add(UpdateDesc(''));
+            //   },
+            //   icon: Icon(Icons.clear),
+            // )
+          ),
+          maxLength: 500,
+          maxLines: 4,
+          keyboardType: TextInputType.multiline,
+          onChanged: (value) {
+            createpublicationBloc.add(UpdateDesc(value));
+          },
+        ));
+  }
+
+  Widget _dirTxt() {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        child: Stack(
+          children: [
+            GrayTextFormField(
+              key: UniqueKey(),
+              controller: _dirTxtController,
+              readOnly: true,
+              hintText: 'Dirección',
+              focusNode: AlwaysDisabledFocusNode(),
+              maxLines: null,
+              onTap: () {
+                Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);
+              },
+            ),
+            Positioned(
+              right: 1,
+              top: 5,
+              child: IconButton(
+                color: Colors.grey[600],
+                onPressed: _cleanDir,
+                icon: Icon(Icons.clear),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  void _cleanDir() {
+    createpublicationBloc.add(UpdateLocations(Set<Marker>()));
+    _dirTxtController.clear();
+    _markers.clear();
+  }
+
+// Sistema de imageness
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -95,9 +250,6 @@ class PublicationPageState extends State<PublicationPage> {
                       setState(() {
                         images.removeAt(index);
                         imagesRef.removeAt(index);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
-                        //_imgsFiles.removeAt(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -125,12 +277,9 @@ class PublicationPageState extends State<PublicationPage> {
     imagefile = File(_imageFile.path);
     setState(() {
       if (_imageFile != null) {
-        print("xd" + _imageFile.toString());
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-      } else {
-        print("faros");
-      }
+      } else {}
     });
   }
 
@@ -158,185 +307,14 @@ class PublicationPageState extends State<PublicationPage> {
       imageUpload.uploading = false;
       imageUpload.imageFile = imagefile;
       imageUpload.imageUrl = '';
-      // _imgsFiles.add(imageUpload);
+
       print("en el file");
 
       images.replaceRange(index, index + 1, [imageUpload]);
+      createpublicationBloc.add(UpdateImgs(images));
     });
-    /*});*/
   }
-
-  Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 10),
-        child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 1, vertical: 15),
-                  child: Text(
-                    'CREAR PUBLICACIÓN',
-                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                _category(state),
-                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
-                _dirTxt(),
-                _descTxt(state),
-                //_images(),
-                buildGridView(),
-                //_boton(),
-                _buttons(state)
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _category(state) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 20),
-      child: Column(children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(bottom: 5),
-          child: Text(
-            'Categoría:',
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
-        Container(
-            alignment: Alignment.centerLeft,
-            height: 50,
-            child: GrayDropdownButton(
-              hint: Text("Selecciona una categoría"),
-              value: state.category,
-              onChanged: (newValue) {
-                createpublicationBloc.add(UpdateCategory(newValue));
-              },
-              items: listItems.map((valueItem) {
-                return DropdownMenuItem(
-                  value: valueItem,
-                  child: Text(valueItem, style: TextStyle(fontSize: 14)),
-                );
-              }).toList(),
-            )),
-      ]),
-    );
-  }
-
-  Widget _nameTxt(state) {
-    var txtController = TextEditingController(text: state.name);
-    return Container(
-        child: Column(children: [
-      Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Text(
-            'Completa los siguientes campos',
-            style: TextStyle(fontSize: 16),
-          )),
-      Container(
-          height: 77,
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.fromLTRB(1, 4, 12, 1), //width: 300.0,
-          child: GrayTextFormField(
-            key: nameKey,
-            initialvalue: state.name,
-            hintText: 'Nombre',
-            maxLength: 20,
-            textCapitalization: TextCapitalization.words,
-            suffixIcon: IconButton(
-              onPressed: () {
-                createpublicationBloc.add(UpdateName(''));
-              },
-              icon: Icon(Icons.clear),
-            ),
-            onChanged: (value) {
-              createpublicationBloc.add(UpdateName(value));
-            },
-          ))
-    ]));
-  }
-
-  Widget _descTxt(state) {
-    var txtController = TextEditingController(text: state.desc);
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
-        child: Container(
-            alignment: Alignment.centerLeft,
-            height: 140,
-            //padding: const EdgeInsets.fromLTRB(1, 0, 12, 0),
-            child: TextFormField(
-              //key: UniqueKey(),
-              controller: txtController,
-              decoration: InputDecoration(
-                  labelText: 'Descripción',
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    // color: Color.fromRGBO(49, 232, 93, 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      createpublicationBloc.add(UpdateDesc(''));
-                    },
-                    icon: Icon(Icons.clear),
-                  )),
-              maxLength: 400,
-              maxLines: 3,
-              keyboardType: TextInputType.multiline,
-              onChanged: (value) {
-                createpublicationBloc.add(UpdateDesc(value));
-              },
-            )));
-  }
-
-  Widget _dirTxt() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(1, 9, 13, 0),
-        child: Stack(
-          children: [
-            Container(
-                height: 52,
-                alignment: Alignment.centerLeft,
-                //padding: const EdgeInsets.fromLTRB(1, 1, 1, 5),
-                child: GrayTextFormField(
-                  controller: _dirTxtController,
-                  readOnly: true,
-                  hintText: 'Dirección',
-                  focusNode: AlwaysDisabledFocusNode(),
-                  maxLines: null,
-                  onTap: () {
-                    Navigator.pushNamed(context, 'mapPublication',
-                        arguments: _markers);
-                  },
-                )),
-            Positioned(
-              right: 1,
-              top: 2,
-              child: IconButton(
-                color: Colors.grey[600],
-                onPressed: _cleanDir,
-                icon: Icon(Icons.clear),
-              ),
-            ),
-          ],
-        ));
-  }
-
-  void _cleanDir() {
-    _dirTxtController.clear();
-    _markers.clear();
-  }
+  //BOTONES
 
   Widget _buttons(state) {
     return Container(
@@ -366,44 +344,45 @@ class PublicationPageState extends State<PublicationPage> {
 
 //TODO: Posiblemente mover el proceso al bloc o por lo menos adaptar lo de los validadores
   Widget _saveBtn(state) {
-    String name = state.name;
-
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(30, 215, 96, 1),
+          primary: Color.fromRGBO(49, 232, 93, 1),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, 'paidOptionsPage');
-          // if (state.category == 'SITUACIÓN DE CALLE') {
-          //   name = 'Animal Callejero';
-          // }
-          // if (name.isEmpty ||
-          //     state.desc.isEmpty ||
-          //     imagesRef.isEmpty ||
-          //     _locations.isEmpty) {
-          //   ScaffoldMessenger.of(context)
-          //     ..removeCurrentSnackBar()
-          //     ..showSnackBar(SnackBar(
-          //         content: Text('Es necesario llenar todos los campos')));
-          // } else {
-
-          //   PublicationModel ad = PublicationModel(
-          //       category: state.category,
-          //       name: name,
-          //       location: mapsUtil.locationtoString(_locations),
-          //       userID: prefs.userID,
-          //       description: state.desc,
-          //       imgRef: imagesRef);
-          //   _db.addPublication(ad).then((value) {
-          //     createpublicationBloc.add(CleanData());
-          //     Navigator.popAndPushNamed(context, 'navigation');
-          //     ScaffoldMessenger.of(context)
-          //       ..removeCurrentSnackBar()
-          //       ..showSnackBar(SnackBar(
-          //           content: Text('Se ha creado tu publicación.')));
-          //   });
-
-          // }
+          if (state.category == 'SITUACIÓN DE CALLE') {
+            state.name = 'Animal Callejero';
+          }
+          if (state.name.isEmpty ||
+              state.desc.isEmpty ||
+              imagesRef.isEmpty ||
+              _locations.isEmpty) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text('Es necesario llenar todos los campos')));
+          } else {
+            PublicationModel ad = PublicationModel(
+                category: state.category,
+                name: state.name,
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
+                description: state.desc,
+                imgRef: imagesRef);
+            _db.addPublication(ad).then((value) {
+              createpublicationBloc.add(CleanData());
+              _dirTxtController.clear();
+              //Navigator.popAndPushNamed(context, 'navigation');
+              ScaffoldMessenger.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(
+                    SnackBar(content: Text('Se ha creado tu publicación.')));
+              if (prefs.patreonUser) {
+                Navigator.popAndPushNamed(context, 'navigation');
+              } else {
+                Navigator.pushNamed(context, 'paidOptionsPage');
+              }
+            });
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
