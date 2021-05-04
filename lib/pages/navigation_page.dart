@@ -67,7 +67,7 @@ class _NavigationPageState extends State<NavigationPage> {
       //appBar: getAppbar(),
       body: _getTabs()[_prefs.selectedIndex],
       bottomNavigationBar: _getBottomBar(),
-
+      // if (_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 55.0),
         child: FloatingActionButton(
@@ -78,11 +78,11 @@ class _NavigationPageState extends State<NavigationPage> {
             Icons.add,
           ),
           backgroundColor: Colors.white,
-          foregroundColor: Color.fromRGBO(49, 232, 93, 1),
+          foregroundColor: Color.fromRGBO(30, 215, 96, 1),
           elevation: 5.0,
           mini: true,
           shape: StadiumBorder(
-            side: BorderSide(color: Color.fromRGBO(49, 232, 93, 1), width: 2),
+            side: BorderSide(color: Color.fromRGBO(30, 215, 96, 1), width: 2),
           ),
         ),
       ),
@@ -195,7 +195,7 @@ class _NavigationPageState extends State<NavigationPage> {
       currentIndex: _prefs.selectedIndex,
       backgroundColor: Colors.white,
       unselectedItemColor: Color.fromRGBO(210, 210, 210, 1),
-      selectedItemColor: Color.fromRGBO(49, 232, 93, 1),
+      selectedItemColor: Color.fromRGBO(30, 215, 96, 1),
       onTap: _onItemTappedAdmin,
     );
   }
