@@ -2,33 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
+import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
+
+import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
+
 enum ClosePub { option1, eliminar }
+
 class OptionPopup extends StatefulWidget {
- OptionPopup({@required this.publication, this.follows,this.voidCallback});
-   List<String> follows;
- PublicationModel publication;
-VoidCallback voidCallback;
+  OptionPopup({@required this.publication, this.follows, this.voidCallback});
+  List<String> follows;
+  PublicationModel publication;
+  VoidCallback voidCallback;
   @override
   _OptionPopupState createState() => _OptionPopupState();
 }
 
 class _OptionPopupState extends State<OptionPopup> {
-   dbUtil _db = dbUtil();
+  dbUtil _db = dbUtil();
   final _firestoreInstance = FirebaseFirestore.instance;
   final _fcm = FirebaseMessaging();
-  
+
   final preferencesUtil _prefs = preferencesUtil();
   final FirebaseMessaging fcm = FirebaseMessaging();
-    String _selectedReason;
-      ClosePub _option = ClosePub.option1;
+  String _selectedReason;
+  ClosePub _option = ClosePub.option1;
   final _pushUtil = PushNotificationUtil();
   String _msg = 'La publicación que seguías ha sido cerrada';
-    List listItems = [
+  List listItems = [
     'Spam',
     'Informacion fraudulenta',
     'Suplantacion de identidad',
@@ -50,12 +56,21 @@ class _OptionPopupState extends State<OptionPopup> {
                       ),
                       value: 5,
                     ),
+              _prefs.userID != widget.publication.userID
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_EditOption()],
+                      ),
+                      value: 6,
+                    ),
               _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
                       child: Column(
                         children: [
-                          _isFollowedOption(widget.publication.id, this.widget.follows),
+                          _isFollowedOption(
+                              widget.publication.id, this.widget.follows),
                         ],
                       ),
                       value: 1,
@@ -96,15 +111,17 @@ class _OptionPopupState extends State<OptionPopup> {
                       ),
                       value: 3,
                     ),
-              PopupMenuItem(
-                child: Column(
-                  children: [_ReportOption()],
-                ),
-                value: 4,
-              ),
+              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                  ? null
+                  : PopupMenuItem(
+                      child: Column(
+                        children: [_ReportOption()],
+                      ),
+                      value: 4,
+                    ),
             ],
         onSelected: (value) async {
-      PublicationModel p=widget.publication;
+          PublicationModel p = widget.publication;
 
           switch (value) {
             case 1:
@@ -112,8 +129,7 @@ class _OptionPopupState extends State<OptionPopup> {
               _addFollow(p);
               break;
             case 2:
-
-              _deletePublication(p,'publications');
+              _deletePublication(p);
               break;
             case 3:
               _banUser(p);
@@ -152,11 +168,31 @@ class _OptionPopupState extends State<OptionPopup> {
               break;
             case 5:
               _ClosePubMenu(p);
+              break;
+            case 6:
+              String temp = p.category;
+              if (temp == 'ADOPCIÓN' ||
+                  temp == 'ANIMAL PERDIDO' ||
+                  temp == 'SITUACIÓN DE CALLE') {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          EditPublicationPage(p)),
+                );
+                //Navigator.pushNamed(context, 'EditPublicationPage');
+              } else if (p.category == 'DENUNCIA') {
+                Navigator.pushNamed(context, 'complaintPage');
+              } else if (p.category == 'CUIDADOR') {
+                Navigator.pushNamed(context, 'caretakerPage');
+              } else if (p.category == 'NEGOCIO') {
+                Navigator.pushNamed(context, 'CreateBusiness');
+              }
           }
         });
   }
-    _addFollow(p) async {
-      PublicationModel p=widget.publication;
+
+  _addFollow(p) async {
+    PublicationModel p = widget.publication;
     if (p.followers == null) p.followers = [];
     if (this.widget.follows.contains(p.id)) {
       await _fcm.unsubscribeFromTopic(p.id);
@@ -174,8 +210,20 @@ class _OptionPopupState extends State<OptionPopup> {
     }
   }
 
-  _deletePublication(PublicationModel p, String collection) {
-        _db.deleteDocument(p.id, collection);
+  _deletePublication(PublicationModel p) {
+    String collection = 'publications';
+    switch (p.category) {
+      case 'DENUNCIA':
+        collection = 'complaints';
+        break;
+      case 'NEGOCIO':
+        collection = 'business';
+        break;
+      default:
+        collection = 'publications';
+        break;
+    }
+    _db.deleteDocument(p.id, collection);
     if (this.widget.voidCallback != null) {
       this.widget.voidCallback();
     }
@@ -188,7 +236,17 @@ class _OptionPopupState extends State<OptionPopup> {
             label: "DESHACER",
             textColor: Color.fromRGBO(49, 232, 93, 1),
             onPressed: () {
-              _db.addPublication(p);
+              switch (p.category) {
+                case 'DENUNCIA':
+                  _db.addComplaint(ComplaintModel.fromPublication(p));
+                  break;
+                case 'NEGOCIO':
+                  _db.addBusiness(BusinessModel.fromPublication(p));
+                  break;
+                default:
+                  _db.addPublication(p);
+                  break;
+              }
               this.widget.voidCallback();
             },
           ),
@@ -218,8 +276,6 @@ class _OptionPopupState extends State<OptionPopup> {
     );
     //_db.banUser(id);
   }
-
- 
 
   Widget _isFollowedOption(String id, List<String> follow) {
     if (follow.contains(id)) {
@@ -285,7 +341,23 @@ class _OptionPopupState extends State<OptionPopup> {
     );
   }
 
-  void _ReportMenu(/*reports*/PublicationModel p) {
+  Widget _EditOption() {
+    return Row(
+      children: [
+        Icon(
+          Icons.edit,
+          size: 18,
+          color: Colors.grey,
+        ),
+        Text(
+          '  Editar publicación',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  void _ReportMenu(/*reports*/ PublicationModel p) {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -403,7 +475,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                             ..removeCurrentSnackBar()
                                             ..showSnackBar(SnackBar(
                                                 content: Text(
-                                                    'Se reporto esta publicación')));
+                                                    'Se reportó esta publicación')));
                                         }
                                       }
                                           //}
@@ -423,7 +495,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                         ..removeCurrentSnackBar()
                                         ..showSnackBar(SnackBar(
                                             content: Text(
-                                                'Se reporto esta publicación')));
+                                                'Se reportó esta publicación')));
                                     }
                                     //Navigator.of(context).pop();
                                   }
@@ -556,20 +628,17 @@ class _OptionPopupState extends State<OptionPopup> {
                                           ' cerró la publicación porque ' +
                                           p.name +
                                           ' fue dado en adopción :)';
-                                    } else if (p.category ==
-                                        'ANIMAL PERDIDO') {
+                                    } else if (p.category == 'ANIMAL PERDIDO') {
                                       _msg = 'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la publicación porque ' +
                                           p.name +
                                           ' ha sido encontrado ;)';
-                                    } else if (p.category ==
-                                        'CUIDADOR') {
+                                    } else if (p.category == 'CUIDADOR') {
                                       _msg = 'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la publicación porque ya no continuará siendo cuidador';
-                                    } else if (p.category ==
-                                        'NEGOCIO') {
+                                    } else if (p.category == 'NEGOCIO') {
                                       _msg = 'El negocio ' +
                                           p.name +
                                           ' decidió cerrar la publicación que seguías';
@@ -578,8 +647,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                       _msg = 'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la publicación porque el animal callejero fue atendido';
-                                    } else if (p.category ==
-                                        'DENUNCIA') {
+                                    } else if (p.category == 'DENUNCIA') {
                                       _msg = 'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la denuncia porque esta ya ha sido atendida/resuelta';
@@ -593,23 +661,19 @@ class _OptionPopupState extends State<OptionPopup> {
                                   }
                                   Navigator.of(context).pop();
                                   if (p.category == 'DENUNCIA') {
-                                    _deletePublication(
-                                        p, "complaints");
-                                  } else if (p.category ==
-                                      'NEGOCIO') {
-                                    _deletePublication(
-                                        p, "business");
+                                    _deletePublication(p);
+                                  } else if (p.category == 'NEGOCIO') {
+                                    _deletePublication(p);
                                   } else {
-                                    _deletePublication(
-                                        p, "publications");
+                                    _deletePublication(p);
                                   }
                                   ScaffoldMessenger.of(context)
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(SnackBar(
                                         content: Text(
                                             'La publicación se ha cerrado exitosamente.')));
-                                  _db.updateNotifications(_msg,
-                                      p.followers, p.id);
+                                  _db.updateNotifications(
+                                      _msg, p.followers, p.id);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -671,5 +735,4 @@ _optionSection(publications) {
       }
       break;
   }
-
 }
