@@ -19,7 +19,7 @@ class UpdateCategory extends CreatepublicationEvent{
 }
 
 class UpdateLocations extends CreatepublicationEvent{
-  final List<LatLng> locations;
+  final Set<Marker> locations;
 
   UpdateLocations(this.locations);
 }

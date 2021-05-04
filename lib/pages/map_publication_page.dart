@@ -13,7 +13,8 @@ class MapPagePublication extends StatefulWidget {
   _MapPagePublicationState createState() => _MapPagePublicationState();
 }
 
-//TODO: asignar punto inicial
+//TODO: asignar punto inicial 
+//TODO: solo utilizar un mapa
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
@@ -49,7 +50,7 @@ var bloc;
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
     if (ModalRoute.of(context).settings.arguments != null)
-      _markers = ModalRoute.of(context).settings.arguments;
+      _markers =bloc.state.locations??this._markers;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,8 +60,10 @@ var bloc;
               icon: Icon(Icons.save),
               onPressed: () async {
                 if (prefs.selectedIndex == 2) {
+                   bloc.add(UpdateLocations(_markers));
+                   print(bloc.state.locations);
                   Navigator.popAndPushNamed(context, 'navigation',
-                      arguments: _markers);
+                    );
                 } else if (prefs.selectedIndex == 4) {
                   Navigator.popAndPushNamed(context, 'complaintPage',
                       arguments: _markers);
@@ -97,6 +100,7 @@ var bloc;
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
+                bloc.add(UpdateLocations(_markers));
           },
           infoWindow: InfoWindow(
             title: bloc.state.name,

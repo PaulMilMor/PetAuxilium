@@ -12,10 +12,10 @@ class UpdateDesc extends CreatebusinessEvent{
 
   UpdateDesc(this.desc);
 }
-class UpdateCategory extends CreatebusinessEvent{
-  final String category;
+class UpdateServices extends CreatebusinessEvent{
+  final List<String> services;
 
-  UpdateCategory(this.category);
+  UpdateServices(this.services);
 }
 
 class UpdateLocations extends CreatebusinessEvent{

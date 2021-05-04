@@ -49,9 +49,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
+    //_markers = ModalRoute.of(context).settings.arguments;
     createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
@@ -65,7 +63,9 @@ class PublicationPageState extends State<PublicationPage> {
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
         child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
           builder: (context, state) {
-         //   images=state.imgRef??[];
+            _locations = mapsUtil.getLocations(state.locations);
+           getDir(_locations);     
+          images=state.imgRef??this.images;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -188,6 +188,7 @@ class PublicationPageState extends State<PublicationPage> {
         child: Stack(
           children: [
             GrayTextFormField(
+              key: UniqueKey(),
               controller: _dirTxtController,
               readOnly: true,
               hintText: 'Dirección',
@@ -212,6 +213,7 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void _cleanDir() {
+    createpublicationBloc.add(UpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
