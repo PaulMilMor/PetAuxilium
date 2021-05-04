@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,13 +42,16 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
-      print(value.get("patreon"));
-      if (value.get("patreon") != null) {
-        _prefs.patreonUser = true;
-      } else {
-        _prefs.patreonUser = false;
+      UserModel userModel=UserModel.fromJsonMap(value.data(), id);
+
+
+      if(userModel.patreon==null){
+        _prefs.patreonUser=false;
+      }else{
+        _prefs.patreonUser=true;
       }
-      return UserModel.fromJsonMap(value.data(), id);
+    
+      return userModel;
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -340,6 +345,20 @@ print(docRef.documentID);*/
         .collection(collection)
         .where('category', isEqualTo: category)
         .get();
+  }
+
+  Future<Void> setPatreonPublications(
+      String collection, String userID) async {
+    await _firestoreInstance.collection(collection).where('userID', isEqualTo: userID).get().then((value){
+      print('object');
+          value.docs.forEach((element) async { 
+            print(element.id);
+           _firestoreInstance.collection(collection).doc(element.id).update({
+              'patreon':true
+            });
+          });
+        });
+        
   }
 
 //STREAM SERVICES
