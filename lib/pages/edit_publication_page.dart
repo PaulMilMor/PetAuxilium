@@ -68,7 +68,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     print(widget.detailDocument.id);
     //images.add("Add Image");
     setState(() {
+      images.remove("Add Image");
       images.add("Add Image");
+      
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
@@ -180,7 +182,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                       setState(() {
                         //images.add("Add Image");
                         images.removeAt(index);
-                        imagesRef.removeAt(index);
+                        //imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
