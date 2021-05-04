@@ -106,113 +106,118 @@ class DonationsPage extends StatelessWidget {
   Widget _donationCard(DonationModel donation, BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: 226,
-          width: 250,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Column(
-              children: [
-                Flexible(
-                  flex: 10,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25)),
-                    child: Image.network(
-                      donation.img,
-                      height: 100,
-                      width: 175,
-                      fit: BoxFit.cover,
+        Flexible(
+          flex: 9,
+          child: Container(
+            //height: 226,
+            // width: 250,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+              ),
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 10,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25)),
+                      child: Image.network(
+                        donation.img,
+                        height: 100,
+                        width: 175,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            donation.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                  Flexible(
+                    flex: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              donation.name,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              donation.description,
+                              style: TextStyle(
+                                fontSize: 8,
+                                color: Color.fromRGBO(105, 105, 105, 1),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                            ? SizedBox()
+                            : IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _deleteDonation(donation, context);
+                                },
+                              ),
                         Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            donation.description,
-                            style: TextStyle(
-                              fontSize: 8,
-                              color: Color.fromRGBO(105, 105, 105, 1),
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              overlayColor: MaterialStateColor.resolveWith(
+                                  (states) => Color.fromRGBO(49, 232, 93, 0.5)),
+                            ),
+                            onPressed: () {
+                              FlutterWebBrowser.openWebPage(
+                                  url: donation.website);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'VER MÁS',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10),
+                                ),
+                                Icon(
+                                  Icons.navigate_next,
+                                  color: Color.fromRGBO(49, 232, 93, 1),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                          ? SizedBox()
-                          : IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                _deleteDonation(donation, context);
-                              },
-                            ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateColor.resolveWith(
-                                (states) => Color.fromRGBO(49, 232, 93, 0.5)),
-                          ),
-                          onPressed: () {
-                            FlutterWebBrowser.openWebPage(
-                                url: donation.website);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                'VER MÁS',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10),
-                              ),
-                              Icon(
-                                Icons.navigate_next,
-                                color: Color.fromRGBO(49, 232, 93, 1),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-        SizedBox(
-          height: 24,
+        Flexible(
+          child: Container(
+              // height: 24,
+              ),
         )
       ],
     );
