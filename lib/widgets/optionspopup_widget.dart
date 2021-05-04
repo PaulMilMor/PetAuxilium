@@ -7,6 +7,10 @@ import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 
 import 'package:pet_auxilium/pages/edit_publication_page.dart';
+import 'package:pet_auxilium/pages/edit_business_page.dart';
+import 'package:pet_auxilium/pages/edit_keeper_page.dart';
+import 'package:pet_auxilium/pages/edit_publication_page.dart';
+import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
@@ -183,9 +187,15 @@ class _OptionPopupState extends State<OptionPopup> {
               } else if (p.category == 'DENUNCIA') {
                 Navigator.pushNamed(context, 'complaintPage');
               } else if (p.category == 'CUIDADOR') {
-                Navigator.pushNamed(context, 'caretakerPage');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditKeeperPage(p)),
+                );
               } else if (p.category == 'NEGOCIO') {
-                Navigator.pushNamed(context, 'CreateBusiness');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditBusinessPage(p)),
+                );
               }
           }
         });
