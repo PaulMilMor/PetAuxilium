@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -11,11 +13,12 @@ class MapPagePublication extends StatefulWidget {
   _MapPagePublicationState createState() => _MapPagePublicationState();
 }
 
-//TODO: asignar punto inicial
+//TODO: asignar punto inicial 
+//TODO: solo utilizar un mapa
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-
+var bloc;
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -25,6 +28,9 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
+    if (prefs.selectedIndex==2) {
+      bloc= BlocProvider.of<CreatepublicationBloc>(context);
+    }
     super.initState();
     getLoc();
   }
@@ -44,7 +50,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
     if (ModalRoute.of(context).settings.arguments != null)
-      _markers = ModalRoute.of(context).settings.arguments;
+      _markers =bloc.state.locations??this._markers;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,8 +60,10 @@ class _MapPagePublicationState extends State<MapPagePublication> {
               icon: Icon(Icons.save),
               onPressed: () async {
                 if (prefs.selectedIndex == 2) {
+                   bloc.add(UpdateLocations(_markers));
+                   print(bloc.state.locations);
                   Navigator.popAndPushNamed(context, 'navigation',
-                      arguments: _markers);
+                    );
                 } else if (prefs.selectedIndex == 4) {
                   Navigator.popAndPushNamed(context, 'complaintPage',
                       arguments: _markers);
@@ -92,9 +100,10 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
+                bloc.add(UpdateLocations(_markers));
           },
           infoWindow: InfoWindow(
-            title: prefs.adoptionName,
+            title: bloc.state.name,
           ),
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),

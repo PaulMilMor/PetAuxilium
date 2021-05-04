@@ -14,6 +14,7 @@ class PublicationModel {
   DateTime date;
   var score;
   List<dynamic> services;
+  bool patreon;
   PublicationModel(
       {this.id,
       this.category,
@@ -27,7 +28,9 @@ class PublicationModel {
       this.score,
       this.services,
       this.date,
-      this.followers});
+      this.followers,
+      this.patreon
+      });
 
   PublicationModel.fromJsonMap(Map<String, dynamic> json, String pid) {
     id = pid;
@@ -45,5 +48,7 @@ class PublicationModel {
     nevaluations = json['nevaluations'];
     date = json['date'].toDate();
     followers = json['followers'];
+    patreon=json['patreon'];
+
   }
 }

@@ -29,7 +29,7 @@ class PublicationPageState extends State<PublicationPage> {
   CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
-  
+
   Set<Marker> _markers = new Set<Marker>();
   List listItems = ['ADOPCIÓN', 'ANIMAL PERDIDO', 'SITUACIÓN DE CALLE'];
   var _dirTxtController = TextEditingController();
@@ -49,10 +49,7 @@ class PublicationPageState extends State<PublicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
+    //_markers = ModalRoute.of(context).settings.arguments;
     createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
@@ -60,14 +57,15 @@ class PublicationPageState extends State<PublicationPage> {
     );
   }
 
-
-
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
         child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
           builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+           getDir(_locations);     
+          images=state.imgRef??this.images;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -84,9 +82,7 @@ class PublicationPageState extends State<PublicationPage> {
                 if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
                 _dirTxt(),
                 _descTxt(state),
-                
                 buildGridView(),
-            
                 _buttons(state)
               ],
             );
@@ -96,9 +92,9 @@ class PublicationPageState extends State<PublicationPage> {
     );
   }
 
+//Formulario
   Widget _category(state) {
     return Container(
-
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
       child: Center(
           child: Column(children: [
@@ -161,22 +157,22 @@ class PublicationPageState extends State<PublicationPage> {
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
         child: TextFormField(
           //key: UniqueKey(),
-          controller: txtController,
+         initialValue: state.desc,
           decoration: InputDecoration(
-              labelText: 'Descripción',
-              labelStyle: TextStyle(
-                color: Colors.grey,
-                // color: Color.fromRGBO(49, 232, 93, 1),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey)),
-              // suffixIcon: IconButton(
-              //   onPressed: () {
-              //     createpublicationBloc.add(UpdateDesc(''));
-              //   },
-              //   icon: Icon(Icons.clear),
-              // )
-              ),
+            labelText: 'Descripción',
+            labelStyle: TextStyle(
+              color: Colors.grey,
+              // color: Color.fromRGBO(49, 232, 93, 1),
+            ),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+            // suffixIcon: IconButton(
+            //   onPressed: () {
+            //     createpublicationBloc.add(UpdateDesc(''));
+            //   },
+            //   icon: Icon(Icons.clear),
+            // )
+          ),
           maxLength: 500,
           maxLines: 4,
           keyboardType: TextInputType.multiline,
@@ -192,6 +188,7 @@ class PublicationPageState extends State<PublicationPage> {
         child: Stack(
           children: [
             GrayTextFormField(
+              key: UniqueKey(),
               controller: _dirTxtController,
               readOnly: true,
               hintText: 'Dirección',
@@ -216,21 +213,14 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   void _cleanDir() {
+    createpublicationBloc.add(UpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons(state) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [_cancelBtn(), _saveBtn(state)],
-      ),
-    );
-  }
-
-   Widget buildGridView() {
+// Sistema de imageness
+  Widget buildGridView() {
+    
     return GridView.count(
       shrinkWrap: true,
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
@@ -262,7 +252,6 @@ class PublicationPageState extends State<PublicationPage> {
                       setState(() {
                         images.removeAt(index);
                         imagesRef.removeAt(index);
-                        
                       });
                     },
                   ),
@@ -290,12 +279,9 @@ class PublicationPageState extends State<PublicationPage> {
     imagefile = File(_imageFile.path);
     setState(() {
       if (_imageFile != null) {
-     
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-      } else {
-     
-      }
+      } else {}
     });
   }
 
@@ -327,10 +313,21 @@ class PublicationPageState extends State<PublicationPage> {
       print("en el file");
 
       images.replaceRange(index, index + 1, [imageUpload]);
+      createpublicationBloc.add(UpdateImgs(images));
     });
- 
   }
- 
+  //BOTONES
+
+  Widget _buttons(state) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [_cancelBtn(), _saveBtn(state)],
+      ),
+    );
+  }
+
   Widget _cancelBtn() {
     return TextButton(
       child: Padding(
@@ -348,14 +345,11 @@ class PublicationPageState extends State<PublicationPage> {
 
 //TODO: Posiblemente mover el proceso al bloc o por lo menos adaptar lo de los validadores
   Widget _saveBtn(state) {
-
-
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: Color.fromRGBO(49, 232, 93, 1),
         ),
         onPressed: () {
-        
           if (state.category == 'SITUACIÓN DE CALLE') {
             state.name = 'Animal Callejero';
           }
@@ -368,7 +362,6 @@ class PublicationPageState extends State<PublicationPage> {
               ..showSnackBar(SnackBar(
                   content: Text('Es necesario llenar todos los campos')));
           } else {
-
             PublicationModel ad = PublicationModel(
                 category: state.category,
                 name: state.name,
@@ -378,15 +371,20 @@ class PublicationPageState extends State<PublicationPage> {
                 imgRef: imagesRef);
             _db.addPublication(ad).then((value) {
               createpublicationBloc.add(CleanData());
-              Navigator.popAndPushNamed(context, 'navigation');
+              _dirTxtController.clear();
+              //Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                    content: Text('Se ha creado tu publicación.')));
+                ..showSnackBar(
+                    SnackBar(content: Text('Se ha creado tu publicación.')));
+          if(prefs.patreonUser){
+         Navigator.popAndPushNamed(context, 'navigation');
+          }else{
 
-                      Navigator.pushNamed(context, 'paidOptionsPage');
+             Navigator.pushNamed(context, 'paidOptionsPage');
+          }
+              
             });
-
           }
         },
         child: Padding(
