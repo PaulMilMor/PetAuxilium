@@ -56,7 +56,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
   void initState() {
     super.initState();
-    
+
     _pricing = widget.detailDocument.pricing;
     _desc = widget.detailDocument.description;
 
@@ -64,12 +64,11 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
     _pricingTxtController = TextEditingController(text: _pricing);
     _descTxtController = TextEditingController(text: _desc);
-    
+
     setState(() {
       images.remove("Add Image");
       images.add("Add Image");
     });
-
   }
 
   @override
@@ -89,14 +88,15 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       ),
       body: _body(context),
     );
-   
   }
-Widget _body(BuildContext context) {
-  return Scaffold(
+
+  Widget _body(BuildContext context) {
+    return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
     );
   }
+
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -138,17 +138,17 @@ Widget _body(BuildContext context) {
               ],
             ),
           );
-        }else if (images[index] != "Add Image") {
+        } else if (images[index] != "Add Image") {
           print(images.length);
           print(images);
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -173,8 +173,7 @@ Widget _body(BuildContext context) {
               ],
             ),
           );
-        } 
-         else {
+        } else {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: AddImageButton(onTap: () {
@@ -256,10 +255,18 @@ Widget _body(BuildContext context) {
   }
 
   Widget _services() {
+    print('POOOOOOOOOOOOL INITIAL VALUE');
+    print(this.widget.detailDocument.services[0]);
     return Container(
       // height: 100.0,
       margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
       child: MultiSelectBottomSheetField<String>(
+        initialValue: this
+            .widget
+            .detailDocument
+            .services
+            .map((item) => item.toString())
+            .toList(),
         //key: _multiSelectKey,
         initialChildSize: 0.7,
         maxChildSize: 0.95,

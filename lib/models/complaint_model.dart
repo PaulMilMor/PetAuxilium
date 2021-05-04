@@ -8,7 +8,8 @@ class ComplaintModel {
   String category;
   String userID;
   List<dynamic> imgRef;
-
+  int nevaluations;
+  var score;
   List<dynamic> followers;
   DateTime date;
   ComplaintModel(
@@ -20,7 +21,9 @@ class ComplaintModel {
       this.imgRef,
       this.date,
       this.category,
-      this.followers});
+      this.followers,
+      this.score,
+      this.nevaluations});
 
   ComplaintModel.fromJsonMap(Map<String, dynamic> json, String cid) {
     id = cid;
@@ -30,7 +33,8 @@ class ComplaintModel {
     userID = json['userID'];
     category = json['category'];
     date = json['date'].toDate();
-
+    score = json['score'];
+    nevaluations = json['nevaluations'];
     followers = json['followers'];
   }
   ComplaintModel.fromPublication(PublicationModel publication) {
@@ -42,6 +46,8 @@ class ComplaintModel {
     description = publication.description;
     userID = publication.userID;
     date = publication.date;
+    score = publication.score;
+    nevaluations = publication.nevaluations;
     followers = publication.followers;
     //FIXME: Debería poderse comentar estas cosas?
 /*    pricing = publication.pricing;
