@@ -40,13 +40,14 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
-      print(value.get("patreon"));
+//FIXME: No jala con esta madre de abajo por eso lo comenté, acuerdense descomentarlo
+/*      print(value.get("patreon"));
       if (value.get("patreon") != null) {
         _prefs.patreonUser = true;
       } else {
         _prefs.patreonUser = false;
       }
-      return UserModel.fromJsonMap(value.data(), id);
+      return UserModel.fromJsonMap(value.data(), id);*/
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -275,7 +276,7 @@ print(docRef.documentID);*/
     });
   }
 
-  Future<void> addComments(CommentModel comment) async {
+  Future<void> addComments(CommentModel comment, String collection) async {
     await _firestoreInstance.collection("comments").add({
       'userID': comment.userID,
       'publicationID': comment.publicationID,
@@ -284,7 +285,7 @@ print(docRef.documentID);*/
       'date': DateTime.now(),
     });
     await _firestoreInstance
-        .collection("publications")
+        .collection(collection)
         .doc(comment.publicationID)
         .update({
       'nevaluations': FieldValue.increment(1),

@@ -139,12 +139,15 @@ class _CommentsState extends State<Comments> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          prefs.userID == ' '
+                          prefs.userID == ' ' ||
+                                  prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                               ? Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 16),
                                   child: Text(
-                                      'Inicia sesión para unirte a la conversación.',
+                                      prefs.userID == ' '
+                                          ? 'Inicia sesión para unirte a la conversación.'
+                                          : '',
                                       style: TextStyle(fontSize: 16)),
                                 )
                               : Container(
@@ -303,7 +306,13 @@ class _CommentsState extends State<Comments> {
       username: prefs.userName,
       comment: _commentController.text,
     );
-    _db.addComments(comentar);
+    String collection;
+    if (this.widget.category == 'DENUNCIA') {
+      collection = 'complaints';
+    } else {
+      collection = 'publications';
+    }
+    _db.addComments(comentar, collection);
     setState(() {});
     _addcomment(/*detailDocument.id,*/ comments);
   }
