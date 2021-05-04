@@ -18,7 +18,7 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class EditBusinessPage extends StatefulWidget {
-  PublicationModel/*BusinessModel*/ detailDocument;
+  PublicationModel /*BusinessModel*/ detailDocument;
   EditBusinessPage(this.detailDocument);
   @override
   _EditBusinessPageState createState() => _EditBusinessPageState();
@@ -38,7 +38,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   var _location;
   List<String> imagesRef = [];
   final picker = ImagePicker();
-  List<LatLng> _locations =[];
+  List<LatLng> _locations = [];
   List<Object> images = [];
   List _selectedServices = [];
   List listItems = [
@@ -53,23 +53,22 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   @override
   void initState() {
     super.initState();
-    
+
 //FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _selectedServices = widget.detailDocument.services;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
-    List<String>latLng = _location.split(",");
+    List<String> latLng = _location.split(",");
     double latitude = double.parse(latLng[0]);
     double longitude = double.parse(latLng[1]);
-    LatLng temp = LatLng(latitude,longitude);
+    LatLng temp = LatLng(latitude, longitude);
     _locations.add(temp);
     images = widget.detailDocument.imgRef;
 
     setState(() {
       images.add("Add Image");
     });
-
 
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
@@ -93,13 +92,14 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
     );
     //  _dir=mapsUtil.getDir(_locations);
   }
+
   Widget _body(BuildContext context) {
-  _markers = ModalRoute.of(context).settings.arguments;
-  if(_locations== null){
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-  }
-  return Scaffold(
+    _markers = ModalRoute.of(context).settings.arguments;
+    if (_locations == null) {
+      _locations = mapsUtil.getLocations(_markers);
+      getDir(_locations);
+    }
+    return Scaffold(
       body: SingleChildScrollView(child: _businessForm(context)),
       backgroundColor: Colors.white,
     );
@@ -365,17 +365,17 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               ],
             ),
           );
-        }else if (images[index] != "Add Image") {
+        } else if (images[index] != "Add Image") {
           print(images.length);
           print(images);
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -400,8 +400,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               ],
             ),
           );
-        } 
-        else {
+        } else {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: _addBtn(index),
@@ -467,6 +466,12 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       // height: 100.0,
       margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
       child: MultiSelectBottomSheetField<String>(
+        initialValue: this
+            .widget
+            .detailDocument
+            .services
+            .map((item) => item.toString())
+            .toList(),
         //key: _multiSelectKey,
         initialChildSize: 0.7,
         maxChildSize: 0.95,
