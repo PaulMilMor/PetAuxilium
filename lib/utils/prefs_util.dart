@@ -12,6 +12,14 @@ class preferencesUtil {
     this._prefs = await SharedPreferences.getInstance();
   }
 
+  set patreonUser(bool patreon){
+       
+     _prefs.setBool('patreonUser', patreon);
+  }
+  get patreonUser {
+    return _prefs.getBool('patreonUser');
+  }
+
   get businessName {
     return _prefs.getString('name') ?? '';
   }
@@ -64,25 +72,7 @@ class preferencesUtil {
     return _prefs.getString('aname') ?? '';
   }
 
-  set adoptionName(String name) {
-    _prefs.setString('aname', name);
-  }
 
-  get adoptionDescription {
-    return _prefs.getString('pdescription') ?? '';
-  }
-
-  set adoptionDescription(String desc) {
-    _prefs.setString('pdescription', desc);
-  }
-
-  get adoptionCategory {
-    return _prefs.getString('pcategory') ?? 'Adopción';
-  }
-
-  set adoptionCategory(String desc) {
-    _prefs.setString('pcategory', desc);
-  }
 
   get selectedIndex {
     return _prefs.getInt('selectedIndex') ?? 0;

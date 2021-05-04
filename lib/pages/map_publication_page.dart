@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -15,7 +17,7 @@ class MapPagePublication extends StatefulWidget {
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-
+var bloc;
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -25,6 +27,9 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   // BusinessModel business = BusinessModel(location: 'geo:29,-111');
   @override
   void initState() {
+    if (prefs.selectedIndex==2) {
+      bloc= BlocProvider.of<CreatepublicationBloc>(context);
+    }
     super.initState();
     getLoc();
   }
@@ -94,7 +99,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
                 .firstWhere((Marker marker) => marker.position == point));
           },
           infoWindow: InfoWindow(
-            title: prefs.adoptionName,
+            title: bloc.state.name,
           ),
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),

@@ -24,7 +24,7 @@ class UpdateLocations extends CreatepublicationEvent{
   UpdateLocations(this.locations);
 }
 class UpdateImgs extends CreatepublicationEvent{
-  final List imgRef;
+  final  List<Object>  imgRef;
 
   UpdateImgs(this.imgRef);
 }

@@ -5,7 +5,7 @@ part of 'createpublication_bloc.dart';
    final String category;
    final String desc;
    final List<LatLng> locations;
-   final List imgRef;
+   final  List<Object>  imgRef;
 
   CreatepublicationState({this.name='', this.category='ADOPCIÓN', this.desc='', this.locations, this.imgRef});
   CreatepublicationState copyWith({

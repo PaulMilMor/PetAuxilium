@@ -23,7 +23,7 @@ class dbUtil {
   Future<void> addUser(UserModel user) async {
     await _firestoreInstance.collection("users").doc(user.id).set({
       "name": user.name,
-      "birthday": user.birthday,
+   
       "imgRef": user.imgRef,
       "email": user.email,
       "follows": user.follows,
@@ -39,7 +39,14 @@ class dbUtil {
       _prefs.userID = id;
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
-
+      print('xxxxxxx');
+      print(value.get("patreon"));
+      if (value.get("patreon")!=null) {
+        _prefs.patreonUser=true;
+      }else{
+        _prefs.patreonUser=false;
+      }
+      return UserModel.fromJsonMap(value.data(), id);
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -57,6 +64,8 @@ class dbUtil {
 
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
+     bool patreonValue=false;
+     if(_prefs.patreonUser) patreonValue=true;
     await _firestoreInstance.collection("business").add({
       'category': 'NEGOCIO',
       'name': business.name,
@@ -69,6 +78,7 @@ class dbUtil {
       'score': 0,
       'pricing': '',
       'date': DateTime.now(),
+       'patreon':patreonValue
     });
   }
 
@@ -99,6 +109,10 @@ class dbUtil {
   }
 
   Future<void> addPublication(PublicationModel ad) async {
+     print('xxxxx');
+     print(_prefs.patreonUser);
+     bool patreonValue=false;
+     if(_prefs.patreonUser) patreonValue=true;
     await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,
@@ -110,6 +124,7 @@ class dbUtil {
       'nevaluations': 0,
       'score': 0,
       'date': DateTime.now(),
+      'patreon':patreonValue
     });
   }
 
@@ -326,7 +341,7 @@ print(docRef.documentID);*/
         .where('category', isEqualTo: category)
         .get();
   }
-
+//STREAM SERVICES
   Stream<List<PublicationModel>> streamPubsServices(String category) =>
       _firestoreInstance
           .collection('publications')
@@ -412,13 +427,6 @@ print(docRef.documentID);*/
             p + b + c);
   }
 
-  Stream get allFeedElements => Rx.combineLatest3(
-      streamPublication('', null),
-      streamBusiness('', null),
-      streamComplaints('', null),
-      (List<PublicationModel> p, List<PublicationModel> b,
-              List<PublicationModel> c) =>
-          p + b + c);
   //Stream get feedStream =>
   Stream<List<PublicationModel>> streamPublication(
           String query, List<String> follow) =>
@@ -427,18 +435,14 @@ print(docRef.documentID);*/
         event.docs.forEach((element) async {
           var data = element.data();
           PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
-          if (p.name
-              .substring(0, query.length)
-              .contains(new RegExp('$query', caseSensitive: false)))
-            
-      
-            list.add(p);
+          if (p.name.substring(0, query.length).contains(new RegExp('$query', caseSensitive: false)))
+              list.add(p);
 
           if (follow != null) {
             if (!follow.contains(p.id)) list.remove(p);
           }
         });
-
+           
         return list;
       });
   Stream<List<PublicationModel>> streamComplaints(
@@ -464,6 +468,59 @@ print(docRef.documentID);*/
   Stream<List<PublicationModel>> streamBusiness(
           String query, List<String> follow) =>
       _firestoreInstance.collection('business').snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) {
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+
+          if (p.name
+              .substring(0, query.length)
+              .contains(new RegExp('$query', caseSensitive: false)))
+            list.add(p);
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
+        });
+
+        //print(list);
+
+        return list;
+      });
+      //FIXME: Estos streams son temporales(Cambiarlos en el futuro)
+      
+  Stream get allFeedElements => Rx.combineLatest3(
+      streamFeedPublication('', null, false),
+      streamFeedBusiness('', null, false),
+      streamComplaints('', null),
+      (List<PublicationModel> p, List<PublicationModel> b,
+              List<PublicationModel> c) =>
+          p + b + c);
+           Stream get PatreonFeedElements => Rx.combineLatest2(
+      streamFeedPublication('', null, true),
+      streamFeedBusiness('', null, true),
+      (List<PublicationModel> p, List<PublicationModel> b,
+       ) =>
+          p + b );
+        Stream<List<PublicationModel>> streamFeedPublication(
+          String query, List<String> follow, bool isPatreon) =>
+      _firestoreInstance.collection('publications').where('patreon', isEqualTo:isPatreon).snapshots().map((event) {
+        List<PublicationModel> list = [];
+        event.docs.forEach((element) async {
+          var data = element.data();
+          PublicationModel p = PublicationModel.fromJsonMap(data, element.id);
+          if (p.name.substring(0, query.length).contains(new RegExp('$query', caseSensitive: false)))
+              list.add(p);
+
+          if (follow != null) {
+            if (!follow.contains(p.id)) list.remove(p);
+          }
+        });
+           
+        return list;
+      });
+  Stream<List<PublicationModel>> streamFeedBusiness(
+          String query, List<String> follow, bool isPatreon) =>
+      _firestoreInstance.collection('business').where('patreon', isEqualTo:isPatreon).snapshots().map((event) {
         List<PublicationModel> list = [];
         event.docs.forEach((element) {
           var data = element.data();
@@ -536,7 +593,7 @@ print(docRef.documentID);*/
   Future<List<String>> getFollowsFuture(id) async {
     List<String> follows = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
-      UserModel user = UserModel.fromJsonMap(value.data());
+      UserModel user = UserModel.fromJsonMap(value.data(), id);
       if (user.follows != null) {
         user.follows.forEach((element) {
           follows.add(element);
@@ -547,11 +604,14 @@ print(docRef.documentID);*/
     });
     return follows;
   }
+Future<Timestamp> getPatreon(id){
 
+
+}
   Stream<List<String>> getFollows(id) =>
       _firestoreInstance.collection('users').doc(id).snapshots().map((value) {
         List<String> follows = [];
-        UserModel user = UserModel.fromJsonMap(value.data());
+        UserModel user = UserModel.fromJsonMap(value.data(), id);
         if (user.follows != null) {
           user.follows.forEach((element) {
             follows.add(element);
@@ -700,7 +760,7 @@ print(docRef.documentID);*/
   Future<List<String>> getEvaluations(id) async {
     List<String> evaluationsID = [];
     await _firestoreInstance.collection('users').doc(id).get().then((value) {
-      UserModel user = UserModel.fromJsonMap(value.data());
+      UserModel user = UserModel.fromJsonMap(value.data(), id);
       if (user.evaluationsID != null) {
         user.evaluationsID.forEach((element) {
           evaluationsID.add(element);

@@ -1,20 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
-import 'package:pet_auxilium/models/report_model.dart';
-
-import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/pages/detail_page.dart';
 import 'package:flutter/material.dart';
-
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/utils/push_notifications_util.dart';
 import 'package:pet_auxilium/widgets/optionspopup_widget.dart';
-import 'button_widget.dart';
-
-enum ClosePub { option1, eliminar }
 
 class ListFeed extends StatefulWidget {
   ListFeed(
@@ -39,20 +28,13 @@ class _ListFeedState extends State<ListFeed> {
   MapsUtil mapsUtil = MapsUtil();
 
   final preferencesUtil _prefs = preferencesUtil();
-  final FirebaseMessaging fcm = FirebaseMessaging();
-  String nose;
-  List listItems = [
-    'Spam',
-    'Informacion fraudulenta',
-    'Suplantacion de identidad',
-    'Fotos Inapropiadas'
-  ];
 
   @override
   Widget build(BuildContext context) {
     this.widget.snapshot.data.sort(
         (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
     return ListView.builder(
+      
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: this.widget.physics,
@@ -62,7 +44,7 @@ class _ListFeedState extends State<ListFeed> {
 
           List<dynamic> _fotos = _data.imgRef;
           String _foto = _fotos.first;
-         
+
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -150,40 +132,40 @@ class _ListFeedState extends State<ListFeed> {
         });
   }
 
-Widget _rating(publication) {
-  bool isCuidador =
-      publication.category == 'CUIDADOR' || publication.category == 'NEGOCIO';
-  double mean = 0;
-  if (isCuidador) mean = publication.score / publication.nevaluations;
-  return Row(
-    children: [
-      if (isCuidador)
-        Row(
-          children: [
-            Icon(
-              Icons.star_rate_rounded,
-              color: Color.fromRGBO(210, 210, 210, 1),
-              size: 25,
-            ),
-            Text(
-              publication.nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
-              style: TextStyle(fontSize: 12),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-          ],
+  Widget _rating(publication) {
+    bool isCuidador =
+        publication.category == 'CUIDADOR' || publication.category == 'NEGOCIO';
+    double mean = 0;
+    if (isCuidador) mean = publication.score / publication.nevaluations;
+    return Row(
+      children: [
+        if (isCuidador)
+          Row(
+            children: [
+              Icon(
+                Icons.star_rate_rounded,
+                color: Color.fromRGBO(210, 210, 210, 1),
+                size: 25,
+              ),
+              Text(
+                publication.nevaluations == 0 ? 'N/A' : mean.toStringAsFixed(1),
+                style: TextStyle(fontSize: 12),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
+        Icon(
+          Icons.comment,
+          color: Color.fromRGBO(210, 210, 210, 1),
+          size: 20,
         ),
-      Icon(
-        Icons.comment,
-        color: Color.fromRGBO(210, 210, 210, 1),
-        size: 20,
-      ),
-      Text(
-        " ${publication.nevaluations}",
-        style: TextStyle(fontSize: 12),
-      ),
-    ],
-  );
-}
+        Text(
+          " ${publication.nevaluations}",
+          style: TextStyle(fontSize: 12),
+        ),
+      ],
+    );
+  }
 }
