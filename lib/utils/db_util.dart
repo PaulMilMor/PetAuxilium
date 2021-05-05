@@ -978,9 +978,8 @@ print(docRef.documentID);*/
   Future<BusinessModel> getBusinessByUserID() async {
     BusinessModel bus;
     await _firestoreInstance
-        .collection('publications')
+        .collection('business')
         .where('userID', isEqualTo: _prefs.userID)
-        .where('category', isEqualTo: 'CUIDADOR')
         .get()
         .then((value) {
       value.docs.forEach((element) {

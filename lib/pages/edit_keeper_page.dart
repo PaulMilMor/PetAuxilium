@@ -56,8 +56,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
   void initState() {
     super.initState();
-
-    _pricing = widget.detailDocument.pricing;
+    
+    _pricing = widget.detailDocument.pricing.replaceAll('\$', '').replaceAll(' por hora', '');
     _desc = widget.detailDocument.description;
 
     images = widget.detailDocument.imgRef;
@@ -423,7 +423,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       ),
     );
   }
-
+//FIXME: No detecta las imagenes
   Widget _saveBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
@@ -464,7 +464,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
                         content: Text(
-                            'Te registraste correctamente como cuidador')));
+                            'Se ha editado correctamente')));
                 });
               } else {
                 ScaffoldMessenger.of(context)
