@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 import 'package:pet_auxilium/pages/add_donation_page.dart';
 //FIXME: What the f is this thing?
 //import 'package:pet_auxilium/pages/create_page.dart';
@@ -48,7 +49,8 @@ class AppState extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CreatepublicationBloc>(
-            create: (_) => CreatepublicationBloc())
+            create: (_) => CreatepublicationBloc()),
+        BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc())
       ],
       child: MyApp(),
     );
@@ -100,10 +102,9 @@ class MyApp extends StatelessWidget {
           'add_donation_page': (BuildContext context) => AddDonationsPage(),
 //          'createPage': (BuildContext context) => CreatePage(),
           'Map_edit_Page': (BuildContext context) => Map_edit_Page(),
-          'EditPublicationPage': (BuildContext context) =>
-              EditPublicationPage(null),
-          'paidOptionsPage': (BuildContext context) => PaidOptionsPage(),
-          
+          /*'EditPublicationPage': (BuildContext context) =>
+              EditPublicationPage(null),*/
+          'paidOptionsPage': (BuildContext context) => PaidOptionsPage()
         },
       ),
     );
