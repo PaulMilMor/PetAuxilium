@@ -63,6 +63,7 @@ var bloc;
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
+                prefs.selectedIndex==2;
                 if (bloc.runtimeType==CreatepublicationBloc) {
                    bloc.add(UpdateLocations(_markers));
                    print(bloc.state.locations);

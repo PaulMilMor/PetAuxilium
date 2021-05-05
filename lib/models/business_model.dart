@@ -39,14 +39,14 @@ class BusinessModel {
   //   return LatLng( lat, lng );
   // }
 
-  BusinessModel.fromJsonMap(Map<String, dynamic> json) {
+  BusinessModel.fromJsonMap(Map<String, dynamic> json, bid) {
+    id=bid;
     name = json['name'];
     location = json['location'];
     description = json['description'];
     userID = json['userID'];
     this.services = json['services'];
     this.date = json['date'].toDate();
-
     followers = json['followers'];
   }
 

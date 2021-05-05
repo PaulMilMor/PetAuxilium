@@ -65,7 +65,7 @@ class PublicationPageState extends State<PublicationPage> {
           builder: (context, state) {
             _locations = mapsUtil.getLocations(state.locations);
            getDir(_locations);     
-          //images=state.imgRef??this.images;
+          images=state.imgRef??this.images;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -378,8 +378,9 @@ class PublicationPageState extends State<PublicationPage> {
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                     SnackBar(content: Text('Se ha creado tu publicación.')));
+                    Navigator.popAndPushNamed(context, 'navigation');
           if(prefs.patreonUser){
-         Navigator.popAndPushNamed(context, 'navigation');
+         
           }else{
 
              Navigator.pushNamed(context, 'paidOptionsPage');
