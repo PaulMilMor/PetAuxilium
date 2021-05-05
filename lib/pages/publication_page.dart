@@ -207,8 +207,9 @@ class PublicationPageState extends State<PublicationPage> {
                   focusNode: AlwaysDisabledFocusNode(),
                   maxLines: null,
                   onTap: () {
+                    prefs.previousPage = 'publication';
                     Navigator.pushNamed(context, 'mapPublication',
-                        arguments: _markers);
+                        arguments: createpublicationBloc);
                   },
                 )),
             Positioned(
