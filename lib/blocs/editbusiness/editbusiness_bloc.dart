@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -16,36 +15,40 @@ class EditbusinessBloc extends Bloc<EditbusinessEvent, EditbusinessState> {
     EditbusinessEvent event,
   ) async* {
     // TODO: implement mapEventToState
-    if(event is UpdateName){
-  yield* this._updateName(event);
-   }else if(event is UpdateDesc){
-  yield* this._updateDesc(event);
-   }/*else if(event is UpdateCategory){
+    if (event is UpdateName) {
+      yield* this._updateName(event);
+    } else if (event is UpdateDesc) {
+      yield* this._updateDesc(event);
+    } /*else if(event is UpdateCategory){
   yield* this._updateCategory(event);
-   }*/else if(event is EditUpdateLocations){
-  yield* this._updateLocations(event);   
-   }else if(event is UpdateImgs){
-  yield* this._updateImgs(event);
-   }else if(event is CleanData){
-  yield* this._cleanData(); 
-   }
+   }*/
+    else if (event is EditUpdateLocations) {
+      yield* this._updateLocations(event);
+    } else if (event is UpdateImgs) {
+      yield* this._updateImgs(event);
+    } else if (event is CleanData) {
+      yield* this._cleanData();
+    }
   }
 
-  Stream<EditbusinessState> _updateName(event)async*{
-    yield state.copyWith(name:event.name);
+  Stream<EditbusinessState> _updateName(event) async* {
+    yield state.copyWith(name: event.name);
   }
-  
-  Stream<EditbusinessState> _updateDesc(event)async*{
-    yield state.copyWith(desc:event.desc);
+
+  Stream<EditbusinessState> _updateDesc(event) async* {
+    yield state.copyWith(desc: event.desc);
   }
-  
-  Stream<EditbusinessState> _updateImgs(event)async*{
-    yield state.copyWith(imgRef:event.imgRef);
+
+  Stream<EditbusinessState> _updateImgs(event) async* {
+    yield state.copyWith(imgRef: event.imgRef);
   }
-  Stream<EditbusinessState> _updateLocations(event)async*{
-    yield state.copyWith(locations:event.locations);
+
+  Stream<EditbusinessState> _updateLocations(event) async* {
+    yield state.copyWith(locations: event.locations);
   }
-  Stream<EditbusinessState> _cleanData()async*{
-    yield EditbusinessState(name: '',desc:'', imgRef: [], locations:Set<Marker>());
+
+  Stream<EditbusinessState> _cleanData() async* {
+    yield EditbusinessState(
+        name: '', desc: '', imgRef: [], locations: Set<Marker>());
   }
 }
