@@ -44,7 +44,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   String _name;
   String _desc;
   var _location;
-  List <LatLng>_locations =[];
+  List<LatLng> _locations = [];
   //List <String>_location;
   List imagesRef = [];
   List<Object> images = [];
@@ -54,19 +54,18 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   PublicationModel publication;
 
   void initState() {
-    
     super.initState();
-    
+
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
-    List<String>latLng = _location.split(",");
+    List<String> latLng = _location.split(",");
     double latitude = double.parse(latLng[0]);
     double longitude = double.parse(latLng[1]);
     print(latitude);
     print(longitude);
-    LatLng temp = LatLng(latitude,longitude);
+    LatLng temp = LatLng(latitude, longitude);
     print(temp);
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
@@ -78,7 +77,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       images.remove("Add Image");
       //images.clear();
       images.add("Add Image");
-      
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
@@ -98,7 +96,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color.fromRGBO(49, 232, 93, 1),
+            color: Color.fromRGBO(30, 215, 96, 1),
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -106,19 +104,20 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       body: _body(context),
     );
   }
+
   Widget _body(BuildContext context) {
-  _markers = ModalRoute.of(context).settings.arguments;
-  if(_locations== null){
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-  }
-    
+    _markers = ModalRoute.of(context).settings.arguments;
+    if (_locations == null) {
+      _locations = mapsUtil.getLocations(_markers);
+      getDir(_locations);
+    }
+
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
     );
-
   }
+
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -126,7 +125,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
-        
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
           print(images.length);
@@ -162,8 +160,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               ],
             ),
           );
-        } 
-          else if (images[index] != "Add Image") {
+        } else if (images[index] != "Add Image") {
           //ImageUploadModel uploadModel = images[index];
           print("tuperra madre");
           print(images.length);
@@ -176,10 +173,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -205,18 +202,16 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         }
-          //else {
-          print(images.length);
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AddImageButton(onTap: () {
-              images.length < 6
-                  ? _onAddImageClick(index)
-                  : _limitImages(context);
-            }),
-          );
-        }
-      /*}*/),
+        //else {
+        print(images.length);
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AddImageButton(onTap: () {
+            images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+          }),
+        );
+      }
+          /*}*/),
     );
   }
 
@@ -268,7 +263,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
       images.replaceRange(index, index + 1, [imageUpload]);
       editpublicationBloc.add(UpdateImgs(images));
-
     });
     /*});*/
   }
@@ -278,14 +272,14 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
         child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
-        builder: (context, state) {
-        _locations = mapsUtil.getLocations(state.locations);
-           getDir(_locations);     
-          images=state.imgRef??this.images;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*SizedBox(height: 15),
+          builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+            getDir(_locations);
+            images = state.imgRef ?? this.images;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
@@ -293,21 +287,21 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),*/
-            _category(state),
-            if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
-            _dirTxt(),
-            _descTxt(state),
-            //_images(),
-            buildGridView(),
-            //_boton(),
-            _buttons(state)
-          ],
-        );
-        },
+                _category(state),
+                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
+                _dirTxt(),
+                _descTxt(state),
+                //_images(),
+                buildGridView(),
+                //_boton(),
+                _buttons(state)
+              ],
+            );
+          },
         ),
       ),
-      );
-    }
+    );
+  }
 
   Widget _category(state) {
     return Container(
@@ -423,9 +417,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               onTap: () {
                 /*Navigator.pushNamed(context, 'Map_edit_Page',
                     arguments: _markers);*/
-                prefs.previousPage='publication';
+                prefs.previousPage = 'publication';
                 Navigator.pushNamed(context, 'mapPublication',
-                    arguments:editpublicationBloc);
+                    arguments: editpublicationBloc);
               },
             ),
             Positioned(
@@ -468,7 +462,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         _descTxtController.clear();
         _dirTxtController.clear();*/
         editpublicationBloc.add(CleanData());
-
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -479,7 +472,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () {
           if (_selectedCategory == 'SITUACIÓN DE CALLE') {
@@ -491,8 +484,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               _desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {
-                print("images");
-              print(imagesRef);
+            print("images");
+            print(imagesRef);
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(

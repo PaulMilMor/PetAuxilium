@@ -23,7 +23,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   final _push = PushNotificationUtil();
-  
+
   final _db = dbUtil();
   BusinessModel myBusiness;
   PublicationModel myKeeperProfile;
@@ -40,18 +40,17 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   initState() {
-   initBusinessAndKeeper();
+    initBusinessAndKeeper();
     _push.initialise();
     super.initState();
     // _prefs.selectedIndex =0;
   }
-    initBusinessAndKeeper() async{
- myBusiness=await _db.getBusinessByUserID();
-    myKeeperProfile=await _db.getKeeperByUserID();
- 
 
-    }
-     
+  initBusinessAndKeeper() async {
+    myBusiness = await _db.getBusinessByUserID();
+    myKeeperProfile = await _db.getKeeperByUserID();
+  }
+
   final List<String> _titles = [
     'INICIO',
     'CHAT',
@@ -154,7 +153,6 @@ class _NavigationPageState extends State<NavigationPage> {
       return false;
     }
   }
-  
 
   Widget _bottomBar() {
     return BottomNavigationBar(
@@ -253,19 +251,17 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _CreateMenu() {
-String txtKeeper, txtBusiness;
-if(myKeeperProfile.imgRef==null){
-      txtKeeper="   Registrarme como cuidador";
-}else{
-      txtKeeper="   Editar perfil de cuidador";          
-}
- if(myBusiness.imgRef==null){
-      txtBusiness="   Publicar mi negocio";
- }else{
-      txtBusiness="   Editar mi negocio";
-
-
- }
+    String txtKeeper, txtBusiness;
+    if (myKeeperProfile.imgRef == null) {
+      txtKeeper = "   Registrarme como cuidador";
+    } else {
+      txtKeeper = "   Editar perfil de cuidador";
+    }
+    if (myBusiness.imgRef == null) {
+      txtBusiness = "   Publicar mi negocio";
+    } else {
+      txtBusiness = "   Editar mi negocio";
+    }
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -301,19 +297,19 @@ if(myKeeperProfile.imgRef==null){
                         SizedBox(
                           height: 30,
                         ),
-                        
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if (myBusiness.imgRef==null) {
-                             Navigator.pushNamed(context, 'CreateBusiness');                
-                            }else{
-                               Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => EditBusinessPage(PublicationModel.fromBusiness(myBusiness))),
-                );
-                                   
-
+                            if (myBusiness.imgRef == null) {
+                              Navigator.pushNamed(context, 'CreateBusiness');
+                            } else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EditBusinessPage(
+                                            PublicationModel.fromBusiness(
+                                                myBusiness))),
+                              );
                             }
                           },
                           child: Row(children: [
@@ -334,15 +330,14 @@ if(myKeeperProfile.imgRef==null){
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if(myKeeperProfile.imgRef==null){
-                            Navigator.pushNamed(context, 'caretakerPage');
-                               
-
-                            }else{
-                               Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => EditKeeperPage(myKeeperProfile)),
-                );
+                            if (myKeeperProfile.imgRef == null) {
+                              Navigator.pushNamed(context, 'caretakerPage');
+                            } else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EditKeeperPage(myKeeperProfile)),
+                              );
                             }
                           },
                           child: Row(children: [
