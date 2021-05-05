@@ -68,7 +68,9 @@ class _OptionPopupState extends State<OptionPopup> {
                       ),
                       value: 6,
                     ),
-              _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+               this.widget.follows == null
+                  ? null
+                  :_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
                       child: Column(

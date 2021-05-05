@@ -41,7 +41,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   var _location;
   List <LatLng>_locations =[];
   //List <String>_location;
-  List<String> imagesRef = [];
+  List imagesRef = [];
   List<Object> images = [];
   List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
@@ -49,6 +49,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   PublicationModel publication;
 
   void initState() {
+    
     super.initState();
     
     _selectedCategory = widget.detailDocument.category;
@@ -64,11 +65,13 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     print(temp);
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
-    
+    imagesRef = widget.detailDocument.imgRef;
+
     print(widget.detailDocument.id);
     //images.add("Add Image");
     setState(() {
       images.remove("Add Image");
+      //images.clear();
       images.add("Add Image");
       
     });
@@ -158,6 +161,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           print("tuperra madre");
           print(images.length);
           print(images);
+          print(imagesRef);
           //imagesRef.add(images[index].toString());
           // imagesRef.remove("Add Image");
           //images.add("Add Image");
@@ -241,6 +245,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     });
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
+    imagesRef.removeLast();
+
     print("chingado");
     print(imagesRef.length);
     print(imagesRef);
