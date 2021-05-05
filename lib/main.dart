@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
+import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 import 'package:pet_auxilium/pages/add_donation_page.dart';
 //FIXME: What the f is this thing?
@@ -50,7 +52,9 @@ class AppState extends StatelessWidget {
       providers: [
         BlocProvider<CreatepublicationBloc>(
             create: (_) => CreatepublicationBloc()),
-        BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc())
+        BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc()),
+        BlocProvider<EditbusinessBloc>(create: (_) => EditbusinessBloc()),
+        BlocProvider<EditcomplaintBloc>(create: (_) => EditcomplaintBloc())
       ],
       child: MyApp(),
     );

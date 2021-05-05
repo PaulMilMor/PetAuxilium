@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -14,6 +15,7 @@ class MapPage extends StatefulWidget {
 //TODO: asignar punto inicial
 class _MapPageState extends State<MapPage> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
+  var bloc;
   // String _name;
   String _dateTime;
   LocationData _currentPosition;
@@ -43,8 +45,9 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
-    if (ModalRoute.of(context).settings.arguments != null)
-      _markers = ModalRoute.of(context).settings.arguments;
+    bloc=ModalRoute.of(context).settings.arguments;
+    //if (ModalRoute.of(context).settings.arguments != null)
+      _markers =bloc.state.locations??this._markers;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,8 +56,14 @@ class _MapPageState extends State<MapPage> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                Navigator.popAndPushNamed(context, 'CreateBusiness',
-                    arguments: _markers);
+              if (bloc.runtimeType==EditbusinessBloc) {
+                   bloc.add(EditUpdateLocations(_markers));
+                   print(bloc.state.locations);
+                 Navigator.pop(context);
+
+                }
+                /*Navigator.popAndPushNamed(context, 'CreateBusiness',
+                    arguments: _markers);*/
                 // final GoogleMapController controller =
                 //     await _controller.future;
                 // controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -71,7 +80,7 @@ class _MapPageState extends State<MapPage> {
           target: _initialcameraposition,
           zoom: 17.5,
         ),
-        onMapCreated: _onMapCreated,
+        //onMapCreated: _onMapCreated,
       ),
     );
   }
@@ -117,7 +126,7 @@ class _MapPageState extends State<MapPage> {
       }
     }
 
-    _currentPosition = await location.getLocation();
+    /*_currentPosition = await location.getLocation();
     _initialcameraposition =
         LatLng(_currentPosition.latitude, _currentPosition.longitude);
     location.onLocationChanged.listen((LocationData currentLocation) {
@@ -127,6 +136,6 @@ class _MapPageState extends State<MapPage> {
         _initialcameraposition =
             LatLng(_currentPosition.latitude, _currentPosition.longitude);
       });
-    });
+    });*/
   }
 }

@@ -189,7 +189,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                       setState(() {
                         //images.add("Add Image");
                         images.removeAt(index);
-                        //imagesRef.removeAt(index);
+                        imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);

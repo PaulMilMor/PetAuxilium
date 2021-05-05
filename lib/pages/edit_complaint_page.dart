@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
 
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
@@ -31,6 +33,8 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   TextEditingController _descTxtController;
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
+  EditcomplaintBloc editcomplaintBloc = EditcomplaintBloc();
+
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
   String _title = "";
@@ -70,6 +74,8 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    editcomplaintBloc = BlocProvider.of<EditcomplaintBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR DENUNCIA'),
@@ -101,10 +107,15 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*SizedBox(
+        child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
+          builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+            getDir(_locations);
+            images = state.imgRef ?? this.images;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*SizedBox(
               height: 15,
             ),
             Padding(
@@ -114,28 +125,32 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),*/
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: Text(
-                'Completa los siguientes campos',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            _titleTxt(),
-            _dirTxt(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            ),
-            _descriptionTxt(),
-            _buildGridView(),
-            _buttons(),
-          ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  child: Text(
+                    'Completa los siguientes campos',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                _titleTxt(state),
+                _dirTxt(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                ),
+                _descriptionTxt(state),
+                _buildGridView(),
+                _buttons(state),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _titleTxt() {
+  Widget _titleTxt(state) {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
@@ -144,10 +159,11 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
           maxLength: 20,
           textCapitalization: TextCapitalization.words,
           onChanged: (value) {
-            setState(() {
+            editcomplaintBloc.add(UpdateName(value));
+            /*setState(() {
               //prefs.businessName = value;
               _title = value;
-            });
+            });*/
           },
           suffixIcon: IconButton(
             onPressed: () {
@@ -169,8 +185,11 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
               focusNode: AlwaysDisabledFocusNode(),
               maxLines: null,
               onTap: () {
+                /*Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);*/
+                prefs.previousPage='publication';
                 Navigator.pushNamed(context, 'mapPublication',
-                    arguments: _markers);
+                    arguments:editcomplaintBloc);
               },
               /* onChanged: (value) {
                 setState(() {
@@ -193,19 +212,20 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   }
 
   void _cleanDir() {
+    editcomplaintBloc.add(EditUpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [_cancelBtn(), _saveBtn()],
+      children: [_cancelBtn(), _saveBtn(state)],
     );
   }
 
-  Widget _descriptionTxt() {
+  Widget _descriptionTxt(state) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
@@ -227,10 +247,12 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
-          setState(() {
+          editcomplaintBloc.add(UpdateDesc(value));
+
+          /*setState(() {
             //   prefs.businessDescription = value;
             _desc = value;
-          });
+          });*/
         },
       ),
     );
@@ -243,6 +265,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
+        editcomplaintBloc.add(CleanData());
         Navigator.pop(context);
       },
       style: TextButton.styleFrom(
@@ -251,7 +274,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
     );
   }
 
-  Widget _saveBtn() {
+  Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: Color.fromRGBO(49, 232, 93, 1),
@@ -275,8 +298,10 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
                 description: _desc,
                 imgRef: imagesRef);
             _db.addComplaint(complaint).then((value) {
+              editcomplaintBloc.add(CleanData());
               /*prefs.businessName = '';
               prefs.businessDescription = '';*/
+              _dirTxtController.clear();
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
@@ -290,7 +315,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text('Publicar'),
+          child: Text('Guardar cambios'),
         ));
   }
 
@@ -416,6 +441,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
+    imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();

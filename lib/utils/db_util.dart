@@ -64,8 +64,8 @@ class dbUtil {
 //Guarda negocio
   Future<void> addBusiness(BusinessModel business) async {
     bool patreonValue = false;
-    if (_prefs.patreonUser) patreonValue = true;
-    await _firestoreInstance.collection("business").add({
+    //if (_prefs.patreonUser) patreonValue = true;
+    await _firestoreInstance.collection("business").doc(business.id).set({
       'category': 'NEGOCIO',
       'name': business.name,
       'location': business.location,
