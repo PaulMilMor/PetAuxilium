@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
 
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
@@ -32,7 +34,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
-  //CreatepublicationBloc createpublicationBloc = CreatepublicationBloc();
+  EditbusinessBloc editbusinessBloc = EditbusinessBloc();
 
   String _name = " ";
   String _desc;
@@ -67,7 +69,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
     LatLng temp = LatLng(latitude, longitude);
     _locations.add(temp);
     images = widget.detailDocument.imgRef;
-    //imagesRef = widget.detailDocument.imgRef;
+    imagesRef = widget.detailDocument.imgRef;
 
     setState(() {
       images.remove("Add Image");
@@ -81,6 +83,8 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   @override
   Widget build(BuildContext context) {
+    
+    editbusinessBloc = BlocProvider.of<EditbusinessBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR NEGOCIO'),
@@ -113,7 +117,12 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-        child: Column(
+        child: BlocBuilder<EditbusinessBloc, EditbusinessState>(
+        builder: (context, state) {
+          _locations = mapsUtil.getLocations(state.locations);
+           getDir(_locations);     
+          images=state.imgRef??this.images;
+          return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /*SizedBox(height: 15),
@@ -130,22 +139,24 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               child: Text('Completa los siguientes campos',
                   style: TextStyle(fontSize: 18)),
             ),
-            _nameTxt(),
+            _nameTxt(state),
             _dirTxt(),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
               //child: Text('Describa los servicios que ofrece'),
             ),
-            _descriptionTxt(),
+            _descriptionTxt(state),
             _buildGridView(),
-            _buttons()
+            _buttons(state)
           ],
-        ),
+        );
+        },
+      ),
       ),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _nameTxt(state) {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
@@ -154,10 +165,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
         maxLength: 20,
         textCapitalization: TextCapitalization.words,
         onChanged: (value) {
-          setState(() {
-            prefs.businessName = value;
-            _name = value;
-          });
+          editbusinessBloc.add(UpdateName(value));
         },
         suffixIcon: IconButton(
           onPressed: () {
@@ -189,13 +197,16 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           children: [
             GrayTextFormField(
                 controller: _dirTxtController,
-                //readOnly: true,
+                readOnly: true,
                 hintText: 'Dirección',
                 //Esto es para que no se pueda editar manualmente el texta de la ubicación
                 focusNode: AlwaysDisabledFocusNode(),
                 maxLines: null,
                 onTap: () {
-                  Navigator.pushNamed(context, 'map', arguments: _markers);
+                  //Navigator.pushNamed(context, 'map', arguments: _markers);
+                  prefs.previousPage='publication';
+                  Navigator.pushNamed(context, 'map',
+                    arguments:editbusinessBloc);
                 }),
             Positioned(
               right: 1,
@@ -219,19 +230,20 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   }
 
   void _cleanDir() {
+    editbusinessBloc.add(EditUpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [_cancelBtn(), _saveBtn()],
+      children: [_cancelBtn(), _saveBtn(state)],
     );
   }
 
-  Widget _descriptionTxt() {
+  Widget _descriptionTxt(state) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
@@ -255,10 +267,8 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               icon: Icon(Icons.clear),
             )),
         onChanged: (value) {
-          setState(() {
-            prefs.businessDescription = value;
-            _desc = value;
-          });
+            editbusinessBloc.add(UpdateDesc(value));
+
         },
       ),
     );
@@ -283,7 +293,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
 // ignore: todo
 //TODO: cambiar el userID por el que este usando el usuario
-  Widget _saveBtn() {
+  Widget _saveBtn(state) {
     return Container(
       child: ElevatedButton(
           onPressed: () async {
@@ -299,15 +309,17 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
             } else {
               BusinessModel business = BusinessModel(
                   id: widget.detailDocument.id,
-                  name: _name,
+                  name: _nameTxtController.text,
                   location: mapsUtil.locationtoString(_locations),
                   userID: prefs.userID,
-                  description: _desc,
+                  description: _descTxtController.text,
                   imgRef: imagesRef,
                   services: _selectedServices);
               _db.addBusiness(business).then((value) {
-                prefs.businessName = '';
-                prefs.businessDescription = '';
+                editbusinessBloc.add(CleanData());
+                /*prefs.businessName = '';
+                prefs.businessDescription = '';*/
+                _dirTxtController.clear();
                 Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
@@ -454,6 +466,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
+    imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();

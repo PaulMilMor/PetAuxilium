@@ -337,6 +337,7 @@ class PublicationPageState extends State<PublicationPage> {
       ),
       onPressed: () {
         createpublicationBloc.add(CleanData());
+        //images.add("Add Image");
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
