@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pet_auxilium/blocs/createbusiness/createbusiness_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
 import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
@@ -33,6 +34,9 @@ import 'package:pet_auxilium/pages/user_map_page.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/pages/feed_page.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
+import 'package:provider/provider.dart';
+
+import 'blocs/editbusiness/editbusiness_bloc.dart';
 
 Future<void> main() async {
 //import 'package:flutter/cloud_firestore/cloud_firestore.dart';
@@ -53,8 +57,14 @@ class AppState extends StatelessWidget {
         BlocProvider<CreatepublicationBloc>(
             create: (_) => CreatepublicationBloc()),
         BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc()),
+<<<<<<< HEAD
         BlocProvider<EditbusinessBloc>(create: (_) => EditbusinessBloc()),
         BlocProvider<EditcomplaintBloc>(create: (_) => EditcomplaintBloc())
+=======
+         BlocProvider<EditbusinessBloc>(
+            create: (_) => EditbusinessBloc()),
+            BlocProvider<CreatebusinessBloc>(create: (_)=>CreatebusinessBloc())
+>>>>>>> 622607b05697dc44d038d9545c61e57b0015b3ec
       ],
       child: MyApp(),
     );

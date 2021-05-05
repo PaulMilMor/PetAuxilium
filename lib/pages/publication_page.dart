@@ -347,7 +347,7 @@ class PublicationPageState extends State<PublicationPage> {
         padding: const EdgeInsets.all(10.0),
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
-      onPressed: () {
+      onPressed: () {  
         createpublicationBloc.add(CleanData());
         //images.add("Add Image");
       },

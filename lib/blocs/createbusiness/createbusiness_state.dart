@@ -4,7 +4,7 @@ part of 'createbusiness_bloc.dart';
 class CreatebusinessState{
      final String name;
    final String desc;
-   final List<LatLng> locations;
+   final Set<Marker> locations;
    final List imgRef;
       final List<String> services;
 
@@ -13,7 +13,7 @@ class CreatebusinessState{
    CreatebusinessState copyWith({
     String name,
     String desc, 
-    List<LatLng> locations,
+    Set<Marker> locations,
     List imgRef,
     List<String> services,
   })=>CreatebusinessState(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:pet_auxilium/blocs/createbusiness/createbusiness_bloc.dart';
 import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -45,9 +46,9 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     //_name=ModalRoute.of(context).settings.arguments;
-    bloc=ModalRoute.of(context).settings.arguments;
+    bloc = ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
-      _markers =bloc.state.locations??this._markers;
+    _markers = bloc.state.locations ?? this._markers;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,11 +57,15 @@ class _MapPageState extends State<MapPage> {
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-              if (bloc.runtimeType==EditbusinessBloc) {
-                   bloc.add(EditUpdateLocations(_markers));
-                   print(bloc.state.locations);
-                 Navigator.pop(context);
-
+                if (bloc.runtimeType == EditbusinessBloc) {
+                  bloc.add(EditUpdateLocations(_markers));
+                  print(bloc.state.locations);
+                  Navigator.pop(context);
+                }
+                if (bloc.runtimeType == CreatebusinessBloc) {
+                  bloc.add(UpdateBusinessLocations(_markers));
+                  print(bloc.state.locations);
+                  Navigator.pop(context);
                 }
                 /*Navigator.popAndPushNamed(context, 'CreateBusiness',
                     arguments: _markers);*/
@@ -87,23 +92,24 @@ class _MapPageState extends State<MapPage> {
 
 //TODO:limitar los markers
   _addMarker(LatLng point) async {
-    if (_markers.length<5){
-
-   setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId(point.toString()),
-        position: point,
-        onTap: (){
-          _markers.remove(_markers.firstWhere((Marker marker) => marker.position == point));
-        },
-        infoWindow: InfoWindow(
-          title: prefs.businessName,
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-      ));
-    });
+    if (_markers.length < 5) {
+      setState(() {
+        _markers.add(Marker(
+          markerId: MarkerId(point.toString()),
+          position: point,
+          onTap: () {
+            _markers.remove(_markers
+                .firstWhere((Marker marker) => marker.position == point));
+            bloc.add(UpdateBusinessLocations(_markers));
+          },
+          infoWindow: InfoWindow(
+            title: bloc.state.name,
+          ),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        ));
+      });
     }
- 
   }
 
   getLoc() async {
