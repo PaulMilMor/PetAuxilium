@@ -81,23 +81,18 @@ class _Edit_account_pageState extends State<Edit_account_page> {
             AppBar(
                 elevation: 0,
                 leading: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
                   child: new IconButton(
                     icon: new Icon(
                       Icons.arrow_back_ios,
-                      color: Color.fromRGBO(49, 232, 93, 1),
+                      color: Color.fromRGBO(30, 215, 96, 1),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    iconSize: 32,
+                    iconSize: 31,
                   ),
                 ),
                 backgroundColor: Colors.white,
-                actions: [
-              Image.asset(
-                'assets/logo_asset.png',
-                //width: 120,
-              ),
-            ]),
+                actions: []),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -122,9 +117,9 @@ class _Edit_account_pageState extends State<Edit_account_page> {
             child: Text(
               'Editar cuenta',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(49, 232, 93, 1),
+                color: Color.fromRGBO(30, 215, 96, 1),
               ),
             ),
           ),
@@ -176,7 +171,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
             padding: const EdgeInsets.only(top: 60, left: 0),
             child: InkWell(
               child: Icon(Icons.edit,
-                  size: 20, color: Color.fromRGBO(49, 232, 93, 1)),
+                  size: 20, color: Color.fromRGBO(30, 215, 96, 1)),
               onTap: () {
                 _onAddImageClick();
               },
@@ -376,12 +371,12 @@ class _Edit_account_pageState extends State<Edit_account_page> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
                 child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                  backgroundColor: Color.fromRGBO(30, 215, 96, 1),
                 ),
               )
             : ElevatedButton(
                 child: Text('Guardar cambios',
-                    style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+                    style: TextStyle(color: Color.fromRGBO(30, 215, 96, 1))),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
                 ),

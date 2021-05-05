@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 
 class GrayTextFormField extends StatelessWidget {
-  GrayTextFormField({
-    this.hintText,
-    this.obscureText = false,
-    this.autocorrect = true,
-    this.textCapitalization = TextCapitalization.none,
-    this.enableSuggestions = true,
-    this.enableInteractiveSelection = true,
-    this.keyboardType,
-    this.controller,
-    this.validator,
-    this.onChanged,
-    this.onTap,
-    this.focusNode,
-    this.suffixIcon,
-    this.toolbarOptions,
-    this.autovalidateMode,
-    this.maxLines = 1,
-    this.maxLength,
-    this.readOnly = false,
-    this.prefixIcon,
-    this.labelText,
-    this.onEditingComplete,
-    //FIXME: Vease detail_page
-    InputDecoration decoration,
-    this.initialvalue,
-    this.key
-  });
+  GrayTextFormField(
+      {this.hintText,
+      this.obscureText = false,
+      this.autocorrect = true,
+      this.textCapitalization = TextCapitalization.none,
+      this.enableSuggestions = true,
+      this.enableInteractiveSelection = true,
+      this.keyboardType,
+      this.controller,
+      this.validator,
+      this.onChanged,
+      this.onTap,
+      this.focusNode,
+      this.suffixIcon,
+      this.toolbarOptions,
+      this.autovalidateMode,
+      this.maxLines = 1,
+      this.maxLength,
+      this.readOnly = false,
+      this.prefixIcon,
+      this.labelText,
+      this.onEditingComplete,
+      //FIXME: Vease detail_page
+      InputDecoration decoration,
+      this.initialvalue,
+      this.key});
   final String hintText;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
@@ -103,7 +102,7 @@ class GrayTextFormField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               borderSide: BorderSide(
-                color: Color.fromRGBO(49, 232, 93, 1),
+                color: Color.fromRGBO(30, 215, 96, 1),
               )),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),

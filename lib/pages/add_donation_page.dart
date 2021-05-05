@@ -269,7 +269,7 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
             padding:
                 const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
             child: CircularProgressIndicator(
-              backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+              backgroundColor: Color.fromRGBO(30, 215, 96, 1),
             ),
           )
         : ElevatedButton(

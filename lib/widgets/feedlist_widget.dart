@@ -76,7 +76,7 @@ class _ListFeedState extends State<ListFeed> {
                           children: <Widget>[
                             Text(_data.name,
                                 style: TextStyle(
-                                  fontSize: 19,
+                                  fontSize: 17,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -97,7 +97,7 @@ class _ListFeedState extends State<ListFeed> {
                               child: Text(
                                 _data.pricing,
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   color: Colors.grey[700],
                                 ),
                               ),

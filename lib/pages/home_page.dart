@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     print(ModalRoute.of(context).settings.name);
     return Scaffold(
       body: Container(
-        color: Color.fromRGBO(49, 232, 93, 1),
+        color: Color.fromRGBO(30, 215, 96, 1),
         child: Padding(
           padding: const EdgeInsets.all(36.0),
           child: Column(
@@ -81,9 +81,9 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Text(
-        'La comunidad de asistencia animalista por excelencia; hazlo a tu manera, hazlo PetAuxilium. ',
+        'La comunidad de asistencia animalista por excelencia.',
         style: TextStyle(
-          fontSize: 18,
+          fontSize: 16,
           color: Colors.white,
         ),
       ),
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buttons() {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       child: Text(
         'Registrarse',
         style: TextStyle(
-          color: Color.fromRGBO(49, 232, 93, 1),
+          color: Color.fromRGBO(30, 215, 96, 1),
         ),
       ),
       style: ElevatedButton.styleFrom(
@@ -124,12 +124,12 @@ class _HomePageState extends State<HomePage> {
     return ElevatedButton(
       child: Text('Iniciar Sesión', style: TextStyle(color: Colors.white)),
       style: ElevatedButton.styleFrom(
-        primary: Color.fromRGBO(49, 232, 93, 1),
+        primary: Color.fromRGBO(30, 215, 96, 1),
         elevation: 0,
-        // side: BorderSide(
-        //   width: 1.0,
-        //   color: Colors.white,
-        // )),)
+        side: BorderSide(
+          width: 1.0,
+          color: Colors.white,
+        ),
       ),
       onPressed: () {
         Navigator.pushNamed(context, 'login');

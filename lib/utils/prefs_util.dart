@@ -131,4 +131,10 @@ class preferencesUtil {
   get token {
     _prefs.getString('token');
   }
+  set previousPage(String page){
+    _prefs.setString('previousPage', page);
+  }
+  get previousPage{
+    _prefs.getString('previousPage');
+  }
 }

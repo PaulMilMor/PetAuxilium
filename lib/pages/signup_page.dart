@@ -83,7 +83,7 @@ class _SignupPageState extends State<SignupPage> {
               leading: IconButton(
                 icon: new Icon(
                   Icons.arrow_back_ios,
-                  color: Color.fromRGBO(49, 232, 93, 1),
+                  color: Color.fromRGBO(30, 215, 96, 1),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 iconSize: 32,
@@ -92,9 +92,9 @@ class _SignupPageState extends State<SignupPage> {
                 title: Text(
                   'Crea una cuenta',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 19,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(49, 232, 93, 1),
+                    color: Color.fromRGBO(30, 215, 96, 1),
                   ),
                 ),
                 background: Align(
@@ -112,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                 color: Colors.white,
                 width: double.infinity,
                 child: Padding(
-                    padding: EdgeInsets.all(36.0), child: _signUpForm()),
+                    padding: EdgeInsets.all(35.0), child: _signUpForm()),
               ),
             ),
           ],
@@ -426,12 +426,12 @@ class _SignupPageState extends State<SignupPage> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
                 child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                  backgroundColor: Color.fromRGBO(30, 215, 96, 1),
                 ),
               )
             : ElevatedButton(
                 child: Text('Registrarse',
-                    style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1))),
+                    style: TextStyle(color: Color.fromRGBO(30, 215, 96, 1))),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
                 ),

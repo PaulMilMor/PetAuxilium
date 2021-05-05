@@ -133,10 +133,10 @@ class _DetailPageState extends State<DetailPage> {
       leading: IconButton(
         icon: new Icon(
           Icons.arrow_back_ios,
-          color: Color.fromRGBO(49, 232, 93, 1),
+          color: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () => Navigator.of(context).pop(),
-        iconSize: 32,
+        iconSize: 24,
       ),
       flexibleSpace: FlexibleSpaceBar(
         title: Text(name,

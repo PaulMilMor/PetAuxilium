@@ -67,7 +67,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Widget _complaintForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,17 +75,17 @@ class _ComplaintPageState extends State<ComplaintPage> {
               height: 15,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
               child: Text(
-                'CREAR DENUNCIA',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                'PUBLICAR DENUNCIA',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 30),
               child: Text(
                 'Completa los siguientes campos',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 16),
               ),
             ),
             _titleTxt(),
@@ -104,7 +104,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _titleTxt() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      height: 73,
+      padding: const EdgeInsets.fromLTRB(1, 0, 11, 1),
       child: GrayTextFormField(
           controller: _titleTxtController,
           hintText: 'Título',
@@ -127,7 +128,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        height: 65,
+        padding: const EdgeInsets.fromLTRB(1, 7, 11, 5),
         child: Stack(
           children: [
             GrayTextFormField(
@@ -148,7 +150,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             ),
             Positioned(
               right: 1,
-              top: 5,
+              top: 3,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
@@ -174,32 +176,34 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _descriptionTxt() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-      child: TextField(
-        maxLength: 500,
-        maxLines: 4,
-        controller: _descTxtController,
-        decoration: InputDecoration(
-            labelText: "Describa su denuncia",
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              // color: Color.fromRGBO(49, 232, 93, 1),
-            ),
-            suffixIcon: IconButton(
-              onPressed: () {
-                _descTxtController.clear();
-              },
-              icon: Icon(Icons.clear),
-            ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey))),
-        onChanged: (value) {
-          setState(() {
-            //   prefs.businessDescription = value;
-            _desc = value;
-          });
-        },
-      ),
+      padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      child: Container(
+          height: 130,
+          child: TextField(
+            maxLength: 400,
+            maxLines: 3,
+            controller: _descTxtController,
+            decoration: InputDecoration(
+                labelText: "Describa su denuncia",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  // color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _descTxtController.clear();
+                  },
+                  icon: Icon(Icons.clear),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey))),
+            onChanged: (value) {
+              setState(() {
+                //   prefs.businessDescription = value;
+                _desc = value;
+              });
+            },
+          )),
     );
   }
 
@@ -221,7 +225,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Widget _saveBtn() {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () async {
           // print(mapsUtil.locationtoString(_locations));
