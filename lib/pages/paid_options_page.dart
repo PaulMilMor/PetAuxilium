@@ -217,7 +217,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
           return StatefulBuilder(builder: (context, setState) {
             return Container(
                 height: 450,
-                margin: EdgeInsets.only(left: 20),
+                margin: EdgeInsets.only(left: 15),
                 child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -316,31 +316,39 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 7),
+                          SizedBox(height: 10),
                           const Divider(
-                            color: Colors.black38,
+                            color: Colors.black26,
                             height: 5,
                             thickness: 1,
-                            endIndent: 50,
+                            endIndent: 20,
                           ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  '\$ ${(int.parse(_price) / 100).toString()}'),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Color.fromRGBO(30, 215, 96, 1)),
-                                  child: Text(
-                                    'PAGAR',
-                                    style: TextStyle(fontSize: 12),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(1, 1, 35, 1),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total a pagar: ' +
+                                        '\$${(int.parse(_price) / 100).toString()}' +
+                                        ' USD',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  onPressed: () {
-                                    _paid();
-                                  })
-                            ],
-                          ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary:
+                                              Color.fromRGBO(30, 215, 96, 1)),
+                                      child: Text(
+                                        'PAGAR',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      onPressed: () {
+                                        _paid();
+                                      }),
+                                ],
+                              )),
                         ])));
           });
         });
@@ -348,17 +356,16 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
 
   Widget _monthButton(String m, Function setS) {
     Color borderColor;
-    FontWeight font1;
     if (m == _packSelected) {
       borderColor = Color.fromRGBO(30, 215, 96, 1);
-      font1 = FontWeight.bold;
+      TextStyle(fontWeight: FontWeight.bold);
     } else {
       borderColor = Colors.grey;
     }
     return GestureDetector(
       onTap: () {
         if (m == '1 mes') {
-          _price = '100';
+          _price = '099';
         } else if (m == '4 meses') {
           _price = '299';
         } else if (m == '12 meses') {
@@ -407,12 +414,14 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         child: Padding(
             padding: EdgeInsets.fromLTRB(1, 1, 10, 20),
             child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, 'mypublicationsPage');
+                },
                 child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   Text('Continuar de forma gratuita'),
                   Icon(
                     Icons.chevron_right,
-                    color: Color.fromRGBO(49, 232, 93, 1),
+                    color: Color.fromRGBO(30, 215, 96, 1),
                   )
                 ]))));
   }
