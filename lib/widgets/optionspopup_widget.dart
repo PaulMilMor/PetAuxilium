@@ -177,6 +177,8 @@ class _OptionPopupState extends State<OptionPopup> {
               _ClosePubMenu(p);
               break;
             case 6:
+              print('POOOOOOOOOOOOOL ORIGINAL IMAGE');
+              print(p.imgRef);
               String temp = p.category;
               if (temp == 'ADOPCIÓN' ||
                   temp == 'ANIMAL PERDIDO' ||

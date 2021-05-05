@@ -70,18 +70,27 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
     imagesRef = widget.detailDocument.imgRef;
-
+    print('POOOOOOOOOOOOOOOL ImGREG1');
+    print(imagesRef);
+    print(widget.detailDocument.imgRef);
     print(widget.detailDocument.id);
     setState(() {
       images.remove("Add Image");
       //images.clear();
+      print('NOTPOOOOOOOOOOL4');
+      print(imagesRef);
       images.add("Add Image");
+      print('NOTPOOOOOOOOOOL3');
+      print(imagesRef);
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
     //_dirTxtController = TextEditingController(text: _location);
     _descTxtController = TextEditingController(text: _desc);
+    print('NOTPOOOOOOOOOOL');
     print(images);
+    print('NOTPOOOOOOOOOOL2');
+    print(imagesRef);
   }
 
   @override
@@ -149,6 +158,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                       setState(() {
                         images.removeAt(index);
                         imagesRef.removeAt(index);
+                        print('POOOOOOOOOOOOOOOL ImGREG2');
+                        print(imagesRef);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
@@ -164,6 +175,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           print("tuperra madre");
           print(images.length);
           print(images);
+          print('POOOOOOOOOOOOOOOL ImGREG3');
+          print(imagesRef);
           print(imagesRef);
           //imagesRef.add(images[index].toString());
           // imagesRef.remove("Add Image");
@@ -190,6 +203,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                         //images.add("Add Image");
                         images.removeAt(index);
                         imagesRef.removeAt(index);
+                        print('POOOOOOOOOOOOOOOL ImGREG4');
+                        print(imagesRef);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
@@ -248,7 +263,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
     imagesRef.removeLast();
-
+    print('POOOOOOOOOOOOOOOL ImGREG5');
+    print(imagesRef);
     print("chingado");
     print(imagesRef.length);
     print(imagesRef);
@@ -486,6 +502,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               _locations.isEmpty) {
             print("images");
             print(imagesRef);
+            print('POOOOOOOOOOOOOOOL ImGREG6');
+            print(imagesRef);
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -493,6 +511,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             print(_imgsFiles.toString());
+            imagesRef.remove('Add Image');
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 id: widget.detailDocument.id,
