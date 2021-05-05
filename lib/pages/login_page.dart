@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               leading: IconButton(
                 icon: new Icon(
                   Icons.arrow_back_ios,
-                  color: Color.fromRGBO(49, 232, 93, 1),
+                  color: Color.fromRGBO(30, 215, 96, 1),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
                 iconSize: 32,
@@ -73,9 +73,9 @@ class _LoginPageState extends State<LoginPage> {
                 title: Text(
                   'Iniciar sesión',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 19,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(49, 232, 93, 1),
+                    color: Color.fromRGBO(30, 215, 96, 1),
                   ),
                 ),
                 background: Align(
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
                 child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
+                  backgroundColor: Color.fromRGBO(30, 215, 96, 1),
                 ),
               )
             : ElevatedButton(
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text('Continuar', style: TextStyle(color: Colors.white)),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromRGBO(49, 232, 93, 1),
+                  primary: Color.fromRGBO(30, 215, 96, 1),
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {

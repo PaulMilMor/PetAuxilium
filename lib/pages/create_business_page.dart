@@ -78,7 +78,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _businessForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,7 +87,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
               child: Text(
                 'PUBLICAR NEGOCIO',
-                style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
               ),
             ),
             _selectService(),

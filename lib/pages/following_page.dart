@@ -29,7 +29,7 @@ class _FollowingPageState extends State<FollowingPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color.fromRGBO(49, 232, 93, 1),
+            color: Color.fromRGBO(30, 215, 96, 1),
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),

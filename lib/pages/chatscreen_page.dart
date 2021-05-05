@@ -134,7 +134,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       sendByMe ? Radius.circular(24) : Radius.circular(0),
                 ),
                 color: sendByMe
-                    ? Color.fromRGBO(49, 232, 93, 1)
+                    ? Color.fromRGBO(30, 215, 96, 1)
                     : Color(0xfff1f0f0),
               ),
               padding: EdgeInsets.all(16),

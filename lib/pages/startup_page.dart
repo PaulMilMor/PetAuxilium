@@ -20,7 +20,7 @@ class _StartupPageState extends State<StartupPage> {
             automaticallyImplyLeading: false,
             toolbarHeight: 49.0,
             title: TabBar(
-              indicatorColor: Colors.lightGreenAccent[700],
+              indicatorColor: Color.fromRGBO(30, 215, 96, 1),
               tabs: [
                 Container(
                   height: 47.0,

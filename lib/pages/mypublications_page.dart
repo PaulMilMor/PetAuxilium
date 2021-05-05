@@ -30,7 +30,7 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color.fromRGBO(49, 232, 93, 1),
+            color: Color.fromRGBO(30, 215, 96, 1),
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -42,7 +42,8 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
   Widget _MypublicationsList() {
     return StreamBuilder(
       stream: _db.getMypublications(_prefs.userID),
-      builder: (BuildContext context, AsyncSnapshot<List<PublicationModel>> publications) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<PublicationModel>> publications) {
         if (publications.connectionState != ConnectionState.waiting) {
           return publications.data.isEmpty
               ? Center(

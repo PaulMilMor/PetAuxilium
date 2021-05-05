@@ -140,7 +140,7 @@ class _OpinionsState extends State<Opinions> {
                                 WidgetSpan(
                                   child: Icon(
                                     Icons.star_rate_rounded,
-                                    color: Colors.greenAccent[400],
+                                    color: Color.fromRGBO(30, 215, 96, 1),
                                     size: 17,
                                   ),
                                 ),
@@ -305,10 +305,11 @@ class _OpinionsState extends State<Opinions> {
                                           msg,
                                           token);
                                       if (this.widget.userID != prefs.userID) {
-            
-                                      _db.updateNotifications(msg,
-                                          [this.widget.userID], this.widget.id);
-                                    }
+                                        _db.updateNotifications(
+                                            msg,
+                                            [this.widget.userID],
+                                            this.widget.id);
+                                      }
                                     },
                                     child: Align(
                                       alignment: Alignment.topRight,
@@ -370,7 +371,7 @@ class _OpinionsState extends State<Opinions> {
         children: [
           Icon(
             Icons.star_rate_rounded,
-            color: Colors.greenAccent[400],
+            color: Color.fromRGBO(30, 215, 96, 1),
             size: 25,
           ),
           Text(

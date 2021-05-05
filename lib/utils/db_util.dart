@@ -39,7 +39,6 @@ class dbUtil {
       _prefs.userID = id;
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
-      print('xxxxxxx');
       print(value.get("patreon"));
       if (value.get("patreon") != null) {
         _prefs.patreonUser = true;

@@ -59,7 +59,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _publicationForm(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
         child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
           builder: (context, state) {
             _locations = mapsUtil.getLocations(state.locations);
@@ -71,10 +71,10 @@ class PublicationPageState extends State<PublicationPage> {
                 SizedBox(height: 15),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
                   child: Text(
                     'CREAR PUBLICACIÓN',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   ),
                 ),
                 _category(state),
@@ -94,44 +94,50 @@ class PublicationPageState extends State<PublicationPage> {
 //Formulario
   Widget _category(state) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
-      child: Center(
-          child: Column(children: [
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 25),
+      child: Column(children: [
         Container(
-          margin: const EdgeInsets.only(right: 4.5),
+          alignment: Alignment.centerLeft,
+          margin: const EdgeInsets.only(bottom: 5),
           child: Text(
             'Categoría:',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 16),
           ),
         ),
-        GrayDropdownButton(
-          hint: Text("Selecciona una categoria"),
-          value: state.category,
-          onChanged: (newValue) {
-            createpublicationBloc.add(UpdateCategory(newValue));
-          },
-          items: listItems.map((valueItem) {
-            return DropdownMenuItem(
-              value: valueItem,
-              child: Text(valueItem),
-            );
-          }).toList(),
-        )
-      ])),
+        Container(
+            alignment: Alignment.centerLeft,
+            height: 50,
+            child: GrayDropdownButton(
+              hint: Text("Selecciona una categoría"),
+              value: state.category,
+              onChanged: (newValue) {
+                createpublicationBloc.add(UpdateCategory(newValue));
+              },
+              items: listItems.map((valueItem) {
+                return DropdownMenuItem(
+                  value: valueItem,
+                  child: Text(valueItem, style: TextStyle(fontSize: 14)),
+                );
+              }).toList(),
+            )),
+      ]),
     );
   }
 
   Widget _nameTxt(state) {
     return Container(
         child: Column(children: [
-      Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 15),
           child: Text(
             'Completa los siguientes campos',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 16),
           )),
       Container(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+          height: 77,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.fromLTRB(1, 4, 12, 1),
           child: GrayTextFormField(
             initialvalue: state.name,
             hintText: 'Nombre',
@@ -151,56 +157,63 @@ class PublicationPageState extends State<PublicationPage> {
   }
 
   Widget _descTxt(state) {
-    var txtController = TextEditingController(text: state.desc);
+    // var txtController = TextEditingController(text: state.desc);
     return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: TextFormField(
-          //key: UniqueKey(),
-          initialValue: state.desc,
-          decoration: InputDecoration(
-            labelText: 'Descripción',
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              // color: Color.fromRGBO(49, 232, 93, 1),
-            ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
-            // suffixIcon: IconButton(
-            //   onPressed: () {
-            //     createpublicationBloc.add(UpdateDesc(''));
-            //   },
-            //   icon: Icon(Icons.clear),
-            // )
-          ),
-          maxLength: 500,
-          maxLines: 4,
-          keyboardType: TextInputType.multiline,
-          onChanged: (value) {
-            createpublicationBloc.add(UpdateDesc(value));
-          },
-        ));
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+        child: Container(
+            alignment: Alignment.centerLeft,
+            height: 140,
+            //padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+            child: TextFormField(
+              //key: UniqueKey(),
+              initialValue: state.desc,
+              decoration: InputDecoration(
+                labelText: 'Descripción',
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  // color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                // suffixIcon: IconButton(
+                //   onPressed: () {
+                //     createpublicationBloc.add(UpdateDesc(''));
+                //   },
+                //   icon: Icon(Icons.clear),
+                // )
+              ),
+              maxLength: 400,
+              maxLines: 4,
+              keyboardType: TextInputType.multiline,
+              onChanged: (value) {
+                createpublicationBloc.add(UpdateDesc(value));
+              },
+            )));
   }
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        padding: const EdgeInsets.fromLTRB(1, 9, 13, 1),
         child: Stack(
           children: [
-            GrayTextFormField(
-              key: UniqueKey(),
-              controller: _dirTxtController,
-              readOnly: true,
-              hintText: 'Dirección',
-              focusNode: AlwaysDisabledFocusNode(),
-              maxLines: null,
-              onTap: () {
-                Navigator.pushNamed(context, 'mapPublication',
-                    arguments: _markers);
-              },
-            ),
+            Container(
+                height: 52,
+                alignment: Alignment.centerLeft,
+                child: GrayTextFormField(
+                  key: UniqueKey(),
+                  controller: _dirTxtController,
+                  readOnly: true,
+                  hintText: 'Dirección',
+                  focusNode: AlwaysDisabledFocusNode(),
+                  maxLines: null,
+                  onTap: () {
+                    Navigator.pushNamed(context, 'mapPublication',
+                        arguments: _markers);
+                  },
+                )),
             Positioned(
               right: 1,
-              top: 5,
+              top: 3,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
@@ -346,7 +359,7 @@ class PublicationPageState extends State<PublicationPage> {
   Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () {
           if (state.category == 'SITUACIÓN DE CALLE') {

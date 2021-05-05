@@ -63,12 +63,26 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     print('este es el token ${_prefs.token}');
     return Scaffold(
-      backgroundColor: Colors.white,
-      //appBar: getAppbar(),
-      body: _getTabs()[_prefs.selectedIndex],
-      bottomNavigationBar: _getBottomBar(),
-      // if (_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
-      floatingActionButton: Padding(
+        backgroundColor: Colors.white,
+        //appBar: getAppbar(),
+        body: _getTabs()[_prefs.selectedIndex],
+        bottomNavigationBar: _getBottomBar(),
+        floatingActionButton: _addFab(),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked);
+  }
+
+  List<Widget> _getTabs() {
+    if (isAdmin()) {
+      return _adminTabs;
+    } else {
+      return _tabs;
+    }
+  }
+
+  _addFab() {
+    if (_prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
+      return Padding(
         padding: const EdgeInsets.only(top: 55.0),
         child: FloatingActionButton(
           onPressed: () {
@@ -85,16 +99,9 @@ class _NavigationPageState extends State<NavigationPage> {
             side: BorderSide(color: Color.fromRGBO(30, 215, 96, 1), width: 2),
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
-  List<Widget> _getTabs() {
-    if (isAdmin()) {
-      return _adminTabs;
+      );
     } else {
-      return _tabs;
+      Container();
     }
   }
 
