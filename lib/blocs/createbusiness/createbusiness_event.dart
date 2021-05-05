@@ -2,30 +2,30 @@ part of 'createbusiness_bloc.dart';
 
 @immutable
 abstract class CreatebusinessEvent {}
-class UpdateName extends CreatebusinessEvent{
+class UpdateBusinessName extends CreatebusinessEvent{
   final String name;
 
-  UpdateName(this.name);
+  UpdateBusinessName(this.name);
 }
-class UpdateDesc extends CreatebusinessEvent{
+class UpdateBusinessDesc extends CreatebusinessEvent{
   final String desc;
 
-  UpdateDesc(this.desc);
+  UpdateBusinessDesc(this.desc);
 }
-class UpdateServices extends CreatebusinessEvent{
+class UpdateBusinessServices extends CreatebusinessEvent{
   final List<String> services;
 
-  UpdateServices(this.services);
+  UpdateBusinessServices(this.services);
 }
 
-class UpdateLocations extends CreatebusinessEvent{
-  final List<LatLng> locations;
+class UpdateBusinessLocations extends CreatebusinessEvent{
+  final Set<Marker> locations;
 
-  UpdateLocations(this.locations);
+  UpdateBusinessLocations(this.locations);
 }
-class UpdateImgs extends CreatebusinessEvent{
+class UpdateBusinessImgs extends CreatebusinessEvent{
   final List imgRef;
 
-  UpdateImgs(this.imgRef);
+  UpdateBusinessImgs(this.imgRef);
 }
 class CleanData extends CreatebusinessEvent{}

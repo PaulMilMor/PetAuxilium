@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:pet_auxilium/blocs/createbusiness/createbusiness_bloc.dart';
 
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
@@ -22,9 +24,10 @@ class CreateBusinessPage extends StatefulWidget {
 }
 
 class _CreateBusinessPageState extends State<CreateBusinessPage> {
-  TextEditingController _nameTxtController;
-  TextEditingController _dirTxtController;
-  TextEditingController _descTxtController;
+  // TextEditingController _nameTxtController;
+var  _dirTxtController= TextEditingController();
+  // TextEditingController _descTxtController;
+  CreatebusinessBloc createbusinessBloc = CreatebusinessBloc();
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
@@ -56,19 +59,19 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     setState(() {
       images.add("Add Image");
     });
-//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
-    _name = prefs.businessName ?? ' ';
-    _desc = prefs.businessDescription;
-    _nameTxtController = TextEditingController(text: _name);
-    _dirTxtController = TextEditingController();
-    _descTxtController = TextEditingController(text: _desc);
+    // _name = prefs.businessName ?? ' ';
+    // _desc = prefs.businessDescription;
+    // _nameTxtController = TextEditingController(text: _name);
+    // _dirTxtController = TextEditingController();
+    // _descTxtController = TextEditingController(text: _desc);
   }
 
   @override
   Widget build(BuildContext context) {
-    _markers = ModalRoute.of(context).settings.arguments;
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
+    createbusinessBloc = BlocProvider.of<CreatebusinessBloc>(context);
+    // _markers = ModalRoute.of(context).settings.arguments;
+    // _locations = mapsUtil.getLocations(_markers);
+    // getDir(_locations);
     //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
       body: SingleChildScrollView(child: _businessForm(context)),
@@ -79,61 +82,70 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Text(
-                'PUBLICAR NEGOCIO',
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-              ),
-            ),
-            _selectService(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-              child: Text('Completa los siguientes campos',
-                  style: TextStyle(fontSize: 16)),
-            ),
-            _nameTxt(),
-            _dirTxt(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
-              //child: Text('Describa los servicios que ofrece'),
-            ),
-            _descriptionTxt(),
-            _buildGridView(),
-            _buttons()
-          ],
+        child: BlocBuilder<CreatebusinessBloc, CreatebusinessState>(
+          
+          builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+           getDir(_locations);     
+          images=state.imgRef??this.images;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  child: Text(
+                    'PUBLICAR NEGOCIO',
+                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                _selectService(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                  child: Text('Completa los siguientes campos',
+                      style: TextStyle(fontSize: 16)),
+                ),
+                _nameTxt(state.name),
+                _dirTxt(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
+                  //child: Text('Describa los servicios que ofrece'),
+                ),
+                _descriptionTxt(state.desc),
+                _buildGridView(),
+                _buttons(state)
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _nameTxt() {
+  Widget _nameTxt(name) {
     return Container(
       height: 80,
       padding: const EdgeInsets.fromLTRB(1, 1, 31, 7),
       child: GrayTextFormField(
-        controller: _nameTxtController,
+        initialvalue: name,
         hintText: 'Nombre',
         maxLength: 20,
         textCapitalization: TextCapitalization.words,
         onChanged: (value) {
           setState(() {
-            prefs.businessName = value;
-            _name = value;
+            createbusinessBloc.add(UpdateBusinessName(value));
           });
         },
-        suffixIcon: IconButton(
-          onPressed: () {
-            _nameTxtController.clear();
-            prefs.businessName = '';
-            _name = '';
-          },
-          icon: Icon(Icons.clear),
-        ),
+        // suffixIcon: IconButton(
+        //   onPressed: () {
+        //     _nameTxtController.clear();
+        //     prefs.businessName = '';
+        //     _name = '';
+        //   },
+        //   icon: Icon(Icons.clear),
+        // ),
       ),
 
       /*TextField(
@@ -157,12 +169,14 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           children: [
             GrayTextFormField(
                 controller: _dirTxtController,
+                readOnly: true,
+                key: UniqueKey(),
                 hintText: 'Dirección',
                 //Esto es para que no se pueda editar manualmente el texta de la ubicación
                 focusNode: AlwaysDisabledFocusNode(),
                 maxLines: null,
                 onTap: () {
-                  Navigator.pushNamed(context, 'map', arguments: _markers);
+                  Navigator.pushNamed(context, 'map', arguments: createbusinessBloc);
                 }),
             Positioned(
               right: 1,
@@ -186,27 +200,28 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   }
 
   void _cleanDir() {
+    createbusinessBloc.add(UpdateBusinessLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [_cancelBtn(), _saveBtn()],
+      children: [_cancelBtn(), _saveBtn(state)],
     );
   }
 
-  Widget _descriptionTxt() {
+  Widget _descriptionTxt(desc) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
       child: Container(
           height: 120,
-          child: TextField(
+          child: TextFormField(
             maxLength: 400,
             maxLines: 3,
-            controller: _descTxtController,
+            initialValue: desc,
             decoration: InputDecoration(
                 labelText: 'Describa los servicios que ofrece',
                 labelStyle: TextStyle(
@@ -216,18 +231,18 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                 ),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    _descTxtController.clear();
-                    prefs.businessDescription = '';
-                    _desc = '';
-                  },
-                  icon: Icon(Icons.clear),
-                )),
+                // suffixIcon: IconButton(
+                //   onPressed: () {
+                //     _descTxtController.clear();
+                //     prefs.businessDescription = '';
+                //     _desc = '';
+                //   },
+                //   icon: Icon(Icons.clear),
+                // )
+                ),
             onChanged: (value) {
               setState(() {
-                prefs.businessDescription = value;
-                _desc = value;
+               createbusinessBloc.add(UpdateBusinessDesc(value));
               });
             },
           )),
@@ -242,6 +257,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
           child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         ),
         onPressed: () {
+             createbusinessBloc.add(CleanData());
+              _dirTxtController.clear();
           Navigator.pop(context);
         },
         style: TextButton.styleFrom(
@@ -253,30 +270,30 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
 // ignore: todo
 //TODO: cambiar el userID por el que este usando el usuario
-  Widget _saveBtn() {
+  Widget _saveBtn(state) {
     return Container(
       child: ElevatedButton(
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
-            if (_name.isEmpty ||
+            if (state.name.isEmpty ||
                 _locations.isEmpty ||
-                _desc.isEmpty ||
-                _selectedServices.isEmpty) {
+                state.desc.isEmpty ||
+                _selectedServices.isEmpty|| imagesRef.isEmpty) {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               BusinessModel business = BusinessModel(
-                  name: _name,
+                  name: state.name,
                   location: mapsUtil.locationtoString(_locations),
                   userID: prefs.userID,
-                  description: _desc,
+                  description: state.desc,
                   imgRef: imagesRef,
                   services: _selectedServices);
               _db.addBusiness(business).then((value) {
-                prefs.businessName = '';
-                prefs.businessDescription = '';
+                createbusinessBloc.add(CleanData());
+              _dirTxtController.clear();
                 Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()

@@ -1,24 +1,25 @@
-part of 'createbusiness_bloc.dart';
+  
+part of 'editbusiness_bloc.dart';
 
 
-class CreatebusinessState{
+class EditbusinessState{
      final String name;
    final String desc;
    final Set<Marker> locations;
-   final List imgRef;
+   final List<Object> imgRef;
       final List<String> services;
 
-  CreatebusinessState({this.name, this.desc, this.locations, this.imgRef, this.services});
+  EditbusinessState({this.name, this.desc, this.locations, this.imgRef, this.services});
 
-   CreatebusinessState copyWith({
+   EditbusinessState copyWith({
     String name,
     String desc, 
     Set<Marker> locations,
     List imgRef,
     List<String> services,
-  })=>CreatebusinessState(
+  })=>EditbusinessState(
     name: name ?? this.name,
-     services: services??this.services, 
+    services: services??this.services, 
     desc: desc ?? this.desc,
     locations: locations ?? this.locations,
     imgRef: imgRef ?? this.imgRef
