@@ -74,7 +74,6 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
-
     editcomplaintBloc = BlocProvider.of<EditcomplaintBloc>(context);
     return Scaffold(
       appBar: AppBar(
@@ -98,54 +97,53 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
       getDir(_locations);
     }
     return Scaffold(
-      body: SingleChildScrollView(child: _complaintForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _complaintForm(context))),
       backgroundColor: Colors.white,
     );
   }
 
   Widget _complaintForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
-        child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
-          builder: (context, state) {
-            _locations = mapsUtil.getLocations(state.locations);
-            getDir(_locations);
-            images = state.imgRef ?? this.images;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*SizedBox(
-              height: 15,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
+        builder: (context, state) {
+          _locations = mapsUtil.getLocations(state.locations);
+          getDir(_locations);
+          images = state.imgRef ?? this.images;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Text(
+              'CREAR DENUNCIA',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                'CREAR DENUNCIA',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),*/
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                child: Text(
+                  'Completa los siguientes campos',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
-            ),*/
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  child: Text(
-                    'Completa los siguientes campos',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                _titleTxt(state),
-                _dirTxt(),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                ),
-                _descriptionTxt(state),
-                _buildGridView(),
-                _buttons(state),
-              ],
-            );
-          },
-        ),
+              _titleTxt(state),
+              _dirTxt(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              ),
+              _descriptionTxt(state),
+              _buildGridView(),
+              _buttons(state),
+            ],
+          );
+        },
       ),
     );
   }
@@ -187,9 +185,9 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
               onTap: () {
                 /*Navigator.pushNamed(context, 'mapPublication',
                     arguments: _markers);*/
-                prefs.previousPage='publication';
+                prefs.previousPage = 'publication';
                 Navigator.pushNamed(context, 'mapPublication',
-                    arguments:editcomplaintBloc);
+                    arguments: editcomplaintBloc);
               },
               /* onChanged: (value) {
                 setState(() {

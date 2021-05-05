@@ -121,7 +121,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(child: _publicationForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _publicationForm(context))),
       backgroundColor: Colors.white,
     );
   }
@@ -284,37 +285,35 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-        child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
-          builder: (context, state) {
-            _locations = mapsUtil.getLocations(state.locations);
-            getDir(_locations);
-            images = state.imgRef ?? this.images;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                'EDITAR PUBLICACIÓN' ,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),*/
-                _category(state),
-                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
-                _dirTxt(),
-                _descTxt(state),
-                //_images(),
-                buildGridView(),
-                //_boton(),
-                _buttons(state)
-              ],
-            );
-          },
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+      child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
+        builder: (context, state) {
+          _locations = mapsUtil.getLocations(state.locations);
+          getDir(_locations);
+          images = state.imgRef ?? this.images;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Text(
+              'EDITAR PUBLICACIÓN' ,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),*/
+              _category(state),
+              if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
+              _dirTxt(),
+              _descTxt(state),
+              //_images(),
+              buildGridView(),
+              //_boton(),
+              _buttons(state)
+            ],
+          );
+        },
       ),
     );
   }

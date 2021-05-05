@@ -37,7 +37,8 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
-      UserModel userModel = UserModel.fromJsonMap(value.data(), id);
+      //FIXME: Esto no me funcionaba aspi q lo quité
+/*      UserModel userModel = UserModel.fromJsonMap(value.data(), id);
 
       if (userModel.patreon == null) {
         _prefs.patreonUser = false;
@@ -45,7 +46,7 @@ class dbUtil {
         _prefs.patreonUser = true;
       }
 
-      return userModel;
+      return userModel;*/
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 

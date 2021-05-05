@@ -25,7 +25,7 @@ class CreateBusinessPage extends StatefulWidget {
 
 class _CreateBusinessPageState extends State<CreateBusinessPage> {
   // TextEditingController _nameTxtController;
-var  _dirTxtController= TextEditingController();
+  var _dirTxtController = TextEditingController();
   // TextEditingController _descTxtController;
   CreatebusinessBloc createbusinessBloc = CreatebusinessBloc();
   final prefs = new preferencesUtil();
@@ -74,52 +74,50 @@ var  _dirTxtController= TextEditingController();
     // getDir(_locations);
     //  _dir=mapsUtil.getDir(_locations);
     return Scaffold(
-      body: SingleChildScrollView(child: _businessForm(context)),
+      body:
+          SafeArea(child: SingleChildScrollView(child: _businessForm(context))),
     );
   }
 
   Widget _businessForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
-        child: BlocBuilder<CreatebusinessBloc, CreatebusinessState>(
-          
-          builder: (context, state) {
-            _locations = mapsUtil.getLocations(state.locations);
-           getDir(_locations);     
-          images=state.imgRef??this.images;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                  child: Text(
-                    'PUBLICAR NEGOCIO',
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                  ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
+      child: BlocBuilder<CreatebusinessBloc, CreatebusinessState>(
+        builder: (context, state) {
+          _locations = mapsUtil.getLocations(state.locations);
+          getDir(_locations);
+          images = state.imgRef ?? this.images;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 15),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                child: Text(
+                  'PUBLICAR NEGOCIO',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                 ),
-                _selectService(),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-                  child: Text('Completa los siguientes campos',
-                      style: TextStyle(fontSize: 16)),
-                ),
-                _nameTxt(state.name),
-                _dirTxt(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
-                  //child: Text('Describa los servicios que ofrece'),
-                ),
-                _descriptionTxt(state.desc),
-                _buildGridView(),
-                _buttons(state)
-              ],
-            );
-          },
-        ),
+              ),
+              _selectService(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                child: Text('Completa los siguientes campos',
+                    style: TextStyle(fontSize: 16)),
+              ),
+              _nameTxt(state.name),
+              _dirTxt(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
+                //child: Text('Describa los servicios que ofrece'),
+              ),
+              _descriptionTxt(state.desc),
+              _buildGridView(),
+              _buttons(state)
+            ],
+          );
+        },
       ),
     );
   }
@@ -176,7 +174,8 @@ var  _dirTxtController= TextEditingController();
                 focusNode: AlwaysDisabledFocusNode(),
                 maxLines: null,
                 onTap: () {
-                  Navigator.pushNamed(context, 'map', arguments: createbusinessBloc);
+                  Navigator.pushNamed(context, 'map',
+                      arguments: createbusinessBloc);
                 }),
             Positioned(
               right: 1,
@@ -223,26 +222,26 @@ var  _dirTxtController= TextEditingController();
             maxLines: 3,
             initialValue: desc,
             decoration: InputDecoration(
-                labelText: 'Describa los servicios que ofrece',
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  // color: Color.fromRGBO(49, 232, 93, 1),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                // suffixIcon: IconButton(
-                //   onPressed: () {
-                //     _descTxtController.clear();
-                //     prefs.businessDescription = '';
-                //     _desc = '';
-                //   },
-                //   icon: Icon(Icons.clear),
-                // )
-                ),
+              labelText: 'Describa los servicios que ofrece',
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+                // color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey)),
+              // suffixIcon: IconButton(
+              //   onPressed: () {
+              //     _descTxtController.clear();
+              //     prefs.businessDescription = '';
+              //     _desc = '';
+              //   },
+              //   icon: Icon(Icons.clear),
+              // )
+            ),
             onChanged: (value) {
               setState(() {
-               createbusinessBloc.add(UpdateBusinessDesc(value));
+                createbusinessBloc.add(UpdateBusinessDesc(value));
               });
             },
           )),
@@ -257,8 +256,8 @@ var  _dirTxtController= TextEditingController();
           child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         ),
         onPressed: () {
-             createbusinessBloc.add(CleanData());
-              _dirTxtController.clear();
+          createbusinessBloc.add(CleanData());
+          _dirTxtController.clear();
           Navigator.pop(context);
         },
         style: TextButton.styleFrom(
@@ -278,7 +277,8 @@ var  _dirTxtController= TextEditingController();
             if (state.name.isEmpty ||
                 _locations.isEmpty ||
                 state.desc.isEmpty ||
-                _selectedServices.isEmpty|| imagesRef.isEmpty) {
+                _selectedServices.isEmpty ||
+                imagesRef.isEmpty) {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -294,7 +294,7 @@ var  _dirTxtController= TextEditingController();
                   services: _selectedServices);
               _db.addBusiness(business).then((value) {
                 createbusinessBloc.add(CleanData());
-              _dirTxtController.clear();
+                _dirTxtController.clear();
                 Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()

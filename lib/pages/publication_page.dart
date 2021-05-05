@@ -51,42 +51,41 @@ class PublicationPageState extends State<PublicationPage> {
     //_markers = ModalRoute.of(context).settings.arguments;
     createpublicationBloc = BlocProvider.of<CreatepublicationBloc>(context);
     return Scaffold(
-      body: SingleChildScrollView(child: _publicationForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _publicationForm(context))),
       backgroundColor: Colors.white,
     );
   }
 
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
-        child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
-          builder: (context, state) {
-            _locations = mapsUtil.getLocations(state.locations);
-            getDir(_locations);
-            images = state.imgRef ?? this.images;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-                  child: Text(
-                    'CREAR PUBLICACIÓN',
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                  ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
+      child: BlocBuilder<CreatepublicationBloc, CreatepublicationState>(
+        builder: (context, state) {
+          _locations = mapsUtil.getLocations(state.locations);
+          getDir(_locations);
+          images = state.imgRef ?? this.images;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 15),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                child: Text(
+                  'CREAR PUBLICACIÓN',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                 ),
-                _category(state),
-                if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
-                _dirTxt(),
-                _descTxt(state),
-                buildGridView(),
-                _buttons(state)
-              ],
-            );
-          },
-        ),
+              ),
+              _category(state),
+              if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
+              _dirTxt(),
+              _descTxt(state),
+              buildGridView(),
+              _buttons(state)
+            ],
+          );
+        },
       ),
     );
   }
@@ -347,7 +346,7 @@ class PublicationPageState extends State<PublicationPage> {
         padding: const EdgeInsets.all(10.0),
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
-      onPressed: () {  
+      onPressed: () {
         createpublicationBloc.add(CleanData());
         //images.add("Add Image");
       },

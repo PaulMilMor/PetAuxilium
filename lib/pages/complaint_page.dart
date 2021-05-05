@@ -60,44 +60,43 @@ class _ComplaintPageState extends State<ComplaintPage> {
     _locations = mapsUtil.getLocations(_markers);
     getDir(_locations);
     return Scaffold(
-      body: SingleChildScrollView(child: _complaintForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _complaintForm(context))),
     );
   }
 
   Widget _complaintForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 15,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            child: Text(
+              'PUBLICAR DENUNCIA',
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Text(
-                'PUBLICAR DENUNCIA',
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 30),
+            child: Text(
+              'Completa los siguientes campos',
+              style: TextStyle(fontSize: 16),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 30),
-              child: Text(
-                'Completa los siguientes campos',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            _titleTxt(),
-            _dirTxt(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            ),
-            _descriptionTxt(),
-            _buildGridView(),
-            _buttons(),
-          ],
-        ),
+          ),
+          _titleTxt(),
+          _dirTxt(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          ),
+          _descriptionTxt(),
+          _buildGridView(),
+          _buttons(),
+        ],
       ),
     );
   }

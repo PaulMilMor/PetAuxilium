@@ -56,8 +56,10 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
   void initState() {
     super.initState();
-    
-    _pricing = widget.detailDocument.pricing.replaceAll('\$', '').replaceAll(' por hora', '');
+
+    _pricing = widget.detailDocument.pricing
+        .replaceAll('\$', '')
+        .replaceAll(' por hora', '');
     _desc = widget.detailDocument.description;
 
     images = widget.detailDocument.imgRef;
@@ -96,7 +98,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
   Widget _body(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(child: _publicationForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _publicationForm(context))),
       backgroundColor: Colors.white,
     );
   }
@@ -210,8 +213,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        behavior: SnackBarBehavior.floating,
-                                  
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
@@ -236,27 +238,25 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                'CREAR PERFIL DE CUIDADOR',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-            ),*/
-            _services(),
-            _pricingTxt(),
-            _descTxt(),
-            buildGridView(),
-            _buttons()
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /*SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Text(
+              'CREAR PERFIL DE CUIDADOR',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),*/
+          _services(),
+          _pricingTxt(),
+          _descTxt(),
+          buildGridView(),
+          _buttons()
+        ],
       ),
     );
   }
@@ -426,6 +426,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       ),
     );
   }
+
 //FIXME: No detecta las imagenes
   Widget _saveBtn() {
     return Container(
@@ -444,8 +445,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                                  
+                    behavior: SnackBarBehavior.floating,
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               print(_imgsFiles.toString());
@@ -468,17 +468,14 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                                  
-                        content: Text(
-                            'Se ha editado correctamente')));
+                        behavior: SnackBarBehavior.floating,
+                        content: Text('Se ha editado correctamente')));
                 });
               } else {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                                  
+                      behavior: SnackBarBehavior.floating,
                       content:
                           Text('La tarifa debe tener un formato numérico')));
               }

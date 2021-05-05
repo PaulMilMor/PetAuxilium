@@ -72,7 +72,8 @@ class KeeperPageState extends State<KeeperPage> {
     // TODO: implement build
     _node = FocusScope.of(context);
     return Scaffold(
-      body: SingleChildScrollView(child: _publicationForm(context)),
+      body: SafeArea(
+          child: SingleChildScrollView(child: _publicationForm(context))),
       backgroundColor: Colors.white,
     );
   }
@@ -175,30 +176,28 @@ class KeeperPageState extends State<KeeperPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Text(
-                'CREAR PERFIL DE CUIDADOR',
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            child: Text(
+              'CREAR PERFIL DE CUIDADOR',
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
             ),
-            _services(),
-            _pricingTxt(),
-            _descTxt(),
-            buildGridView(),
-            SizedBox(
-              height: 10,
-            ),
-            _buttons()
-          ],
-        ),
+          ),
+          _services(),
+          _pricingTxt(),
+          _descTxt(),
+          buildGridView(),
+          SizedBox(
+            height: 10,
+          ),
+          _buttons()
+        ],
       ),
     );
   }

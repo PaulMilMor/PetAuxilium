@@ -83,7 +83,6 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     editbusinessBloc = BlocProvider.of<EditbusinessBloc>(context);
     return Scaffold(
       appBar: AppBar(
@@ -108,50 +107,50 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       getDir(_locations);
     }
     return Scaffold(
-      body: SingleChildScrollView(child: _businessForm(context)),
+      body:
+          SafeArea(child: SingleChildScrollView(child: _businessForm(context))),
       backgroundColor: Colors.white,
     );
   }
 
   Widget _businessForm(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-        child: BlocBuilder<EditbusinessBloc, EditbusinessState>(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+      child: BlocBuilder<EditbusinessBloc, EditbusinessState>(
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
-           getDir(_locations);     
-          images=state.imgRef??this.images;
+          getDir(_locations);
+          images = state.imgRef ?? this.images;
           return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Text(
-                'EDITAR NEGOCIO',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Text(
+              'EDITAR NEGOCIO',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),*/
+              _selectService(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                child: Text('Completa los siguientes campos',
+                    style: TextStyle(fontSize: 18)),
               ),
-            ),*/
-            _selectService(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: Text('Completa los siguientes campos',
-                  style: TextStyle(fontSize: 18)),
-            ),
-            _nameTxt(state),
-            _dirTxt(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-              //child: Text('Describa los servicios que ofrece'),
-            ),
-            _descriptionTxt(state),
-            _buildGridView(),
-            _buttons(state)
-          ],
-        );
+              _nameTxt(state),
+              _dirTxt(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                //child: Text('Describa los servicios que ofrece'),
+              ),
+              _descriptionTxt(state),
+              _buildGridView(),
+              _buttons(state)
+            ],
+          );
         },
-      ),
       ),
     );
   }
@@ -204,9 +203,9 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                 maxLines: null,
                 onTap: () {
                   //Navigator.pushNamed(context, 'map', arguments: _markers);
-                  prefs.previousPage='publication';
+                  prefs.previousPage = 'publication';
                   Navigator.pushNamed(context, 'map',
-                    arguments:editbusinessBloc);
+                      arguments: editbusinessBloc);
                 }),
             Positioned(
               right: 1,
@@ -267,8 +266,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               icon: Icon(Icons.clear),
             )),
         onChanged: (value) {
-            editbusinessBloc.add(UpdateDesc(value));
-
+          editbusinessBloc.add(UpdateDesc(value));
         },
       ),
     );
