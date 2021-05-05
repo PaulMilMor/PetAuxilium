@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
 
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
@@ -19,7 +21,7 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class EditComplaintPage extends StatefulWidget {
-  PublicationModel/*BusinessModel*/ detailDocument;
+  PublicationModel /*BusinessModel*/ detailDocument;
   EditComplaintPage(this.detailDocument);
   @override
   _EditComplaintPageState createState() => _EditComplaintPageState();
@@ -31,6 +33,8 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   TextEditingController _descTxtController;
   final prefs = new preferencesUtil();
   Set<Marker> _markers = new Set<Marker>();
+  EditcomplaintBloc editcomplaintBloc = EditcomplaintBloc();
+
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
   String _title = "";
@@ -49,14 +53,13 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   void initState() {
     super.initState();
 
-
     _title = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
-    List<String>latLng = _location.split(",");
+    List<String> latLng = _location.split(",");
     double latitude = double.parse(latLng[0]);
     double longitude = double.parse(latLng[1]);
-    LatLng temp = LatLng(latitude,longitude);
+    LatLng temp = LatLng(latitude, longitude);
     _locations.add(temp);
     images = widget.detailDocument.imgRef;
 
@@ -71,7 +74,8 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    editcomplaintBloc = BlocProvider.of<EditcomplaintBloc>(context);
+    return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR DENUNCIA'),
         leading: IconButton(
@@ -86,25 +90,31 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
     );
   }
 
-Widget _body(BuildContext context) {
-  _markers = ModalRoute.of(context).settings.arguments;
-  if(_locations== null){
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-  }
-  return Scaffold(
+  Widget _body(BuildContext context) {
+    _markers = ModalRoute.of(context).settings.arguments;
+    if (_locations == null) {
+      _locations = mapsUtil.getLocations(_markers);
+      getDir(_locations);
+    }
+    return Scaffold(
       body: SingleChildScrollView(child: _complaintForm(context)),
       backgroundColor: Colors.white,
     );
   }
+
   Widget _complaintForm(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*SizedBox(
+        child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
+          builder: (context, state) {
+            _locations = mapsUtil.getLocations(state.locations);
+            getDir(_locations);
+            images = state.imgRef ?? this.images;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*SizedBox(
               height: 15,
             ),
             Padding(
@@ -114,28 +124,32 @@ Widget _body(BuildContext context) {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),*/
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: Text(
-                'Completa los siguientes campos',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            _titleTxt(),
-            _dirTxt(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            ),
-            _descriptionTxt(),
-            _buildGridView(),
-            _buttons(),
-          ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  child: Text(
+                    'Completa los siguientes campos',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                _titleTxt(state),
+                _dirTxt(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                ),
+                _descriptionTxt(state),
+                _buildGridView(),
+                _buttons(state),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _titleTxt() {
+  Widget _titleTxt(state) {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
@@ -144,10 +158,11 @@ Widget _body(BuildContext context) {
           maxLength: 20,
           textCapitalization: TextCapitalization.words,
           onChanged: (value) {
-            setState(() {
+            editcomplaintBloc.add(UpdateName(value));
+            /*setState(() {
               //prefs.businessName = value;
               _title = value;
-            });
+            });*/
           },
           suffixIcon: IconButton(
             onPressed: () {
@@ -169,8 +184,11 @@ Widget _body(BuildContext context) {
               focusNode: AlwaysDisabledFocusNode(),
               maxLines: null,
               onTap: () {
+                /*Navigator.pushNamed(context, 'mapPublication',
+                    arguments: _markers);*/
+                prefs.previousPage='publication';
                 Navigator.pushNamed(context, 'mapPublication',
-                    arguments: _markers);
+                    arguments:editcomplaintBloc);
               },
               /* onChanged: (value) {
                 setState(() {
@@ -193,19 +211,20 @@ Widget _body(BuildContext context) {
   }
 
   void _cleanDir() {
+    editcomplaintBloc.add(EditUpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [_cancelBtn(), _saveBtn()],
+      children: [_cancelBtn(), _saveBtn(state)],
     );
   }
 
-  Widget _descriptionTxt() {
+  Widget _descriptionTxt(state) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: TextField(
@@ -227,10 +246,12 @@ Widget _body(BuildContext context) {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey))),
         onChanged: (value) {
-          setState(() {
+          editcomplaintBloc.add(UpdateDesc(value));
+
+          /*setState(() {
             //   prefs.businessDescription = value;
             _desc = value;
-          });
+          });*/
         },
       ),
     );
@@ -243,6 +264,7 @@ Widget _body(BuildContext context) {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
+        editcomplaintBloc.add(CleanData());
         Navigator.pop(context);
       },
       style: TextButton.styleFrom(
@@ -251,7 +273,7 @@ Widget _body(BuildContext context) {
     );
   }
 
-  Widget _saveBtn() {
+  Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: Color.fromRGBO(49, 232, 93, 1),
@@ -274,8 +296,10 @@ Widget _body(BuildContext context) {
                 description: _desc,
                 imgRef: imagesRef);
             _db.addComplaint(complaint).then((value) {
+              editcomplaintBloc.add(CleanData());
               /*prefs.businessName = '';
               prefs.businessDescription = '';*/
+              _dirTxtController.clear();
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
@@ -288,7 +312,7 @@ Widget _body(BuildContext context) {
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text('Publicar'),
+          child: Text('Guardar cambios'),
         ));
   }
 
@@ -339,10 +363,10 @@ Widget _body(BuildContext context) {
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -367,8 +391,7 @@ Widget _body(BuildContext context) {
               ],
             ),
           );
-        } 
-        else {
+        } else {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: _addBtn(index),
@@ -414,6 +437,7 @@ Widget _body(BuildContext context) {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
+    imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();

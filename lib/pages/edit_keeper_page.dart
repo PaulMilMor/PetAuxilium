@@ -216,6 +216,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'PublicationImages'));
+    imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
