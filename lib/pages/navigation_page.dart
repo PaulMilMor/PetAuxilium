@@ -29,6 +29,9 @@ class _NavigationPageState extends State<NavigationPage> {
   PublicationModel myKeeperProfile;
   void _onItemTapped(int index) {
     setState(() {
+      if (index == 2) {
+        index = _prefs.selectedIndex;
+      }
       _prefs.selectedIndex = index;
     });
   }
@@ -63,6 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
     // Feed(),
     StartupPage(),
     ChatRooms(),
+
     ChatRooms(),
     //Adoptionpage(),
     //CreatePage(),
@@ -74,6 +78,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     print('este es el token ${_prefs.token}');
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         //appBar: getAppbar(),
         body: _getTabs()[_prefs.selectedIndex],

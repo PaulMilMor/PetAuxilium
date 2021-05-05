@@ -68,19 +68,19 @@ class _OptionPopupState extends State<OptionPopup> {
                       ),
                       value: 6,
                     ),
-               this.widget.follows == null
+              this.widget.follows == null
                   ? null
-                  :_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
-                  ? null
-                  : PopupMenuItem(
-                      child: Column(
-                        children: [
-                          _isFollowedOption(
-                              widget.publication.id, this.widget.follows),
-                        ],
-                      ),
-                      value: 1,
-                    ),
+                  : _prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
+                      ? null
+                      : PopupMenuItem(
+                          child: Column(
+                            children: [
+                              _isFollowedOption(
+                                  widget.publication.id, this.widget.follows),
+                            ],
+                          ),
+                          value: 1,
+                        ),
               _prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                   ? null
                   : PopupMenuItem(
@@ -159,8 +159,9 @@ class _OptionPopupState extends State<OptionPopup> {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
                         ..showSnackBar(SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             content:
-                                Text('Usted ya reporto esta publicación')));
+                                Text('Usted ya reportó esta publicación')));
                       //print("Ya existe el usuario");
                     } else {
                       _ReportMenu(p);
@@ -243,6 +244,7 @@ class _OptionPopupState extends State<OptionPopup> {
       ..removeCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Se eliminó la publicación'),
           action: SnackBarAction(
             label: "DESHACER",
@@ -456,6 +458,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                     ScaffoldMessenger.of(context)
                                       ..removeCurrentSnackBar()
                                       ..showSnackBar(SnackBar(
+                                          behavior: SnackBarBehavior.floating,
                                           content: Text(
                                               'Debe seleccionar un motivo')));
                                   } else {
@@ -486,6 +489,8 @@ class _OptionPopupState extends State<OptionPopup> {
                                           ScaffoldMessenger.of(context)
                                             ..removeCurrentSnackBar()
                                             ..showSnackBar(SnackBar(
+                                                behavior:
+                                                    SnackBarBehavior.floating,
                                                 content: Text(
                                                     'Se reportó esta publicación')));
                                         }
@@ -506,6 +511,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                       ScaffoldMessenger.of(context)
                                         ..removeCurrentSnackBar()
                                         ..showSnackBar(SnackBar(
+                                            behavior: SnackBarBehavior.floating,
                                             content: Text(
                                                 'Se reportó esta publicación')));
                                     }
@@ -682,6 +688,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                   ScaffoldMessenger.of(context)
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(SnackBar(
+                                        behavior: SnackBarBehavior.floating,
                                         content: Text(
                                             'La publicación se ha cerrado exitosamente.')));
                                   _db.updateNotifications(

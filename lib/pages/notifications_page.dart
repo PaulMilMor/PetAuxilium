@@ -97,6 +97,7 @@ class _NotificationsState extends State<NotificationsPage> {
                               ScaffoldMessenger.of(context)
                                 ..removeCurrentSnackBar()
                                 ..showSnackBar(SnackBar(
+                                  behavior: SnackBarBehavior.floating,
                                   content: Text(
                                       'La publicación que buscabas ya no está disponible.'),
                                 ));
