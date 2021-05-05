@@ -1,10 +1,8 @@
 import 'dart:core';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
-import 'package:rxdart/rxdart.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -17,6 +15,14 @@ final dbUtil _db = dbUtil();
 class _FeedState extends State<Feed> {
   List<String> location;
   String tempLocation;
+  List<String> orderBy = [
+    'Más recientes',
+    'Más antiguas',
+    'Más populares',
+    'Mejor valorados',
+    'Mejor tarifa'
+  ];
+  String selectedOrder = 'Más recientes';
   void callback() {
     setState(() {});
   }
@@ -35,12 +41,34 @@ class _FeedState extends State<Feed> {
           return Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Destacados',
                     style: TextStyle(fontSize: 25),
                   ),
+                  DropdownButton(
+                    //value: selectedOrder,
+                    hint: Row(
+                      children: [
+                        Icon(Icons.sort),
+                        Text(
+                          'Ordenar por: $selectedOrder',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    items:
+                        orderBy.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                          value: value, child: Text(value));
+                    }).toList(),
+                    onChanged: (String value) {
+                      setState(() {
+                        selectedOrder = value;
+                      });
+                    },
+                  )
                 ],
               ),
               _listPatreon(follow),
@@ -69,10 +97,10 @@ class _FeedState extends State<Feed> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListFeed(
-                snapshot: snapshot,
-                follows: follow.data,
-                voidCallback: callback,
-              );
+                  snapshot: snapshot,
+                  follows: follow.data,
+                  voidCallback: callback,
+                  orderBy: selectedOrder);
             } else {
               return Center(
                 child: CircularProgressIndicator(),
@@ -84,7 +112,7 @@ class _FeedState extends State<Feed> {
 
   _listPatreon(follow) {
     return SizedBox(
-      height: 150,
+      height: 300,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: StreamBuilder(

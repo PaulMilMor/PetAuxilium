@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/stripe_util.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -389,7 +391,14 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     StripeTransactionResponse response = await StripeUtil.payViaCard(
         amount: _price, currency: 'USD', card: card, pack: pack);
 
-    if (response.success) Navigator.popAndPushNamed(context, 'navigation');
+    if (response.success) {
+      preferencesUtil().patreonUser = true;
+      await dbUtil()
+          .setPatreonPublications('publications', preferencesUtil().userID);
+      await dbUtil()
+          .setPatreonPublications('business', preferencesUtil().userID);
+      Navigator.popAndPushNamed(context, 'navigation');
+    }
     print(response.message);
   }
 

@@ -180,12 +180,15 @@ class _OpinionsState extends State<Opinions> {
                     child: SingleChildScrollView(
                         reverse: true,
                         child: Column(children: <Widget>[
-                          prefs.userID == ' '
+                          prefs.userID == ' ' ||
+                                  prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                               ? Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 16),
                                   child: Text(
-                                      'Inicia sesión para hacer una evaluación.',
+                                      prefs.userID == ' '
+                                          ? 'Inicia sesión para hacer una evaluación.'
+                                          : '',
                                       style: TextStyle(fontSize: 16)),
                                 )
                               : TextFormField(
@@ -233,7 +236,8 @@ class _OpinionsState extends State<Opinions> {
                                 ),
                           SizedBox(height: 10),
 
-                          if (prefs.userID != ' ')
+                          if (prefs.userID != ' ' &&
+                              prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2')
                             Container(
                               child: Align(
                                 //alignment: Alignment(-0.7, -1.0),
@@ -259,29 +263,34 @@ class _OpinionsState extends State<Opinions> {
                               ),
                             ),
 //FIXME: Ya hay un widget q hace esto...
-                          prefs.userID == ' '
+                          prefs.userID == ' ' ||
+                                  prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2'
                               ? Align(
                                   alignment: Alignment.centerRight,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Color.fromRGBO(49, 232, 93, 1),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.popUntil(context,
-                                            ModalRoute.withName('home'));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text('Volver al inicio'),
-                                      ),
-                                      /* style: ButtonStyle(
+                                    child: prefs.userID != ' '
+                                        ? null
+                                        : ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color.fromRGBO(
+                                                  49, 232, 93, 1),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.popUntil(context,
+                                                  ModalRoute.withName('home'));
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Text('Volver al inicio'),
+                                            ),
+                                            /* style: ButtonStyle(
                                           backgroundColor:
                                               Color.fromRGBO(49, 232, 93, 1),
                                         ),*/
-                                    ),
+                                          ),
                                   ),
                                 )
                               : Container(

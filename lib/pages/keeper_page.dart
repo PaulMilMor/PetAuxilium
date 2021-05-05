@@ -395,12 +395,20 @@ class KeeperPageState extends State<KeeperPage> {
                   prefs.keeperPricing = '';
                   prefs.keeperDescription = '';
                   //prefs.keeperCategory = 'ENTRENAMIENTO';
-                  Navigator.popAndPushNamed(context, 'navigation');
+                  //Navigator.popAndPushNamed(context, 'navigation');
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
                         content: Text(
                             'Te registraste correctamente como cuidador')));
+                              if(prefs.patreonUser){
+         Navigator.popAndPushNamed(context, 'navigation');
+          }else{
+
+             Navigator.pushNamed(context, 'paidOptionsPage');
+          }
+              
+            
                 });
               } else {
                 ScaffoldMessenger.of(context)

@@ -197,21 +197,21 @@ class PublicationPageState extends State<PublicationPage> {
         child: Stack(
           children: [
             Container(
-                height: 52,
-                alignment: Alignment.centerLeft,
-                child: GrayTextFormField(
-                  key: UniqueKey(),
-                  controller: _dirTxtController,
-                  readOnly: true,
-                  hintText: 'Dirección',
-                  focusNode: AlwaysDisabledFocusNode(),
-                  maxLines: null,
-                  onTap: () {
-                    prefs.previousPage = 'publication';
-                    Navigator.pushNamed(context, 'mapPublication',
-                        arguments: createpublicationBloc);
-                  },
-                )),
+              height: 52,
+              alignment: Alignment.centerLeft,
+              child: GrayTextFormField(
+                key: UniqueKey(),
+                controller: _dirTxtController,
+                readOnly: true,
+                hintText: 'Dirección',
+                focusNode: AlwaysDisabledFocusNode(),
+                maxLines: null,
+                onTap: () {
+                  Navigator.pushNamed(context, 'mapPublication',
+                      arguments: createpublicationBloc);
+                },
+              ),
+            ),
             Positioned(
               right: 1,
               top: 3,
@@ -390,8 +390,8 @@ class PublicationPageState extends State<PublicationPage> {
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                     SnackBar(content: Text('Se ha creado tu publicación.')));
+              Navigator.popAndPushNamed(context, 'navigation');
               if (prefs.patreonUser) {
-                Navigator.popAndPushNamed(context, 'navigation');
               } else {
                 Navigator.pushNamed(context, 'paidOptionsPage');
               }

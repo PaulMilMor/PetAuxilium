@@ -61,6 +61,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
     images = widget.detailDocument.imgRef;
 
     setState(() {
+      images.remove("Add Image");
       images.add("Add Image");
     });
     _titleTxtController = TextEditingController(text: _title);

@@ -13,13 +13,15 @@ class ListFeed extends StatefulWidget {
       this.follows,
       this.voidCallback,
       this.category,
-      this.physics});
+      this.physics,
+      this.orderBy});
 
   final VoidCallback voidCallback;
   var snapshot;
   List<String> follows;
   String category;
   ScrollPhysics physics;
+  String orderBy;
   @override
   _ListFeedState createState() => _ListFeedState();
 }
@@ -30,8 +32,7 @@ class _ListFeedState extends State<ListFeed> {
   final preferencesUtil _prefs = preferencesUtil();
   @override
   Widget build(BuildContext context) {
-    this.widget.snapshot.data.sort(
-        (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
+    _sortList();
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -130,6 +131,42 @@ class _ListFeedState extends State<ListFeed> {
             ),
           );
         });
+  }
+
+  _sortList() {
+    if (this.widget.orderBy == null) {
+      this.widget.snapshot.data.sort(
+          (PublicationModel a, PublicationModel b) => b.date.compareTo(a.date));
+    } else {
+      switch (this.widget.orderBy) {
+        case 'Más recientes':
+          this.widget.snapshot.data.sort(
+              (PublicationModel a, PublicationModel b) =>
+                  b.date.compareTo(a.date));
+          break;
+        case 'Más antiguas':
+          this.widget.snapshot.data.sort(
+              (PublicationModel a, PublicationModel b) =>
+                  a.date.compareTo(b.date));
+          break;
+        case 'Más populares':
+          this.widget.snapshot.data.sort(
+              (PublicationModel a, PublicationModel b) =>
+                  b.nevaluations.compareTo(a.nevaluations));
+          break;
+
+        case 'Mejor valorados':
+          this.widget.snapshot.data.sort(
+              (PublicationModel a, PublicationModel b) =>
+                  b.score.compareTo(a.score));
+          break;
+        case 'Mejor tarifa':
+          this.widget.snapshot.data.sort(
+              (PublicationModel a, PublicationModel b) =>
+                  b.pricing.compareTo(a.pricing));
+          break;
+      }
+    }
   }
 
   Widget _rating(publication) {

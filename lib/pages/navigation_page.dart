@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/models/business_model.dart';
+import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/pages/account_page.dart';
 import 'package:pet_auxilium/pages/chatsrooms_page.dart';
 import 'package:pet_auxilium/pages/create_business_page.dart';
+import 'package:pet_auxilium/pages/edit_business_page.dart';
+import 'package:pet_auxilium/pages/edit_keeper_page.dart';
 import 'package:pet_auxilium/pages/notifications_page.dart';
 import 'package:pet_auxilium/pages/report_page.dart';
 import 'package:pet_auxilium/pages/startup_page.dart';
@@ -19,7 +23,10 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final _prefs = new preferencesUtil();
   final _push = PushNotificationUtil();
+  
   final _db = dbUtil();
+  BusinessModel myBusiness;
+  PublicationModel myKeeperProfile;
   void _onItemTapped(int index) {
     setState(() {
       _prefs.selectedIndex = index;
@@ -33,13 +40,18 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   initState() {
+   initBusinessAndKeeper();
     _push.initialise();
     super.initState();
     // _prefs.selectedIndex =0;
   }
+    initBusinessAndKeeper() async{
+ myBusiness=await _db.getBusinessByUserID();
+    myKeeperProfile=await _db.getKeeperByUserID();
+ 
 
-  initToken() async {}
-
+    }
+     
   final List<String> _titles = [
     'INICIO',
     'CHAT',
@@ -142,6 +154,7 @@ class _NavigationPageState extends State<NavigationPage> {
       return false;
     }
   }
+  
 
   Widget _bottomBar() {
     return BottomNavigationBar(
@@ -240,6 +253,19 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _CreateMenu() {
+String txtKeeper, txtBusiness;
+if(myKeeperProfile.imgRef==null){
+      txtKeeper="   Registrarme como cuidador";
+}else{
+      txtKeeper="   Editar perfil de cuidador";          
+}
+ if(myBusiness.imgRef==null){
+      txtBusiness="   Publicar mi negocio";
+ }else{
+      txtBusiness="   Editar mi negocio";
+
+
+ }
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -275,10 +301,20 @@ class _NavigationPageState extends State<NavigationPage> {
                         SizedBox(
                           height: 30,
                         ),
+                        
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            Navigator.pushNamed(context, 'CreateBusiness');
+                            if (myBusiness.imgRef==null) {
+                             Navigator.pushNamed(context, 'CreateBusiness');                
+                            }else{
+                               Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditBusinessPage(PublicationModel.fromBusiness(myBusiness))),
+                );
+                                   
+
+                            }
                           },
                           child: Row(children: [
                             Icon(
@@ -286,7 +322,7 @@ class _NavigationPageState extends State<NavigationPage> {
                               color: Color.fromRGBO(210, 210, 210, 1),
                               size: 25,
                             ),
-                            Text("   Publicar mi negocio",
+                            Text(txtBusiness,
                                 style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.normal)),
@@ -298,7 +334,16 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
+                            if(myKeeperProfile.imgRef==null){
                             Navigator.pushNamed(context, 'caretakerPage');
+                               
+
+                            }else{
+                               Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditKeeperPage(myKeeperProfile)),
+                );
+                            }
                           },
                           child: Row(children: [
                             Icon(
@@ -306,7 +351,7 @@ class _NavigationPageState extends State<NavigationPage> {
                               color: Color.fromRGBO(210, 210, 210, 1),
                               size: 25,
                             ),
-                            Text("   Registrarme como cuidador",
+                            Text(txtKeeper,
                                 style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.normal)),

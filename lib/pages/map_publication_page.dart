@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
+
 
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
@@ -19,7 +21,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
 var bloc;
-
+var bloc2;
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -55,7 +57,9 @@ var bloc;
   bloc=ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
       _markers =bloc.state.locations??this._markers;
-
+  bloc2=ModalRoute.of(context).settings.arguments;
+    //if (ModalRoute.of(context).settings.arguments != null)
+      _markers =bloc.state.locations??this._markers;
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),
@@ -63,11 +67,19 @@ var bloc;
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
+                prefs.selectedIndex==2;
                 if (bloc.runtimeType==CreatepublicationBloc) {
                    bloc.add(UpdateLocations(_markers));
                    print(bloc.state.locations);
+
                  Navigator.popAndPushNamed(context, 'PublicationPage');
-                } else if (prefs.selectedIndex == 4) {
+                }
+                else if (bloc.runtimeType==EditpublicationBloc) {
+                   bloc.add(EditUpdateLocations(_markers));
+                   print(bloc.state.locations);
+                 Navigator.pop(context);
+                } 
+                else if (prefs.selectedIndex == 4) {
                   Navigator.popAndPushNamed(context, 'complaintPage',
                       arguments: _markers);
                 }
