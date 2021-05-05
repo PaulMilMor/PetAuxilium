@@ -57,14 +57,8 @@ class AppState extends StatelessWidget {
         BlocProvider<CreatepublicationBloc>(
             create: (_) => CreatepublicationBloc()),
         BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc()),
-<<<<<<< HEAD
         BlocProvider<EditbusinessBloc>(create: (_) => EditbusinessBloc()),
-        BlocProvider<EditcomplaintBloc>(create: (_) => EditcomplaintBloc())
-=======
-         BlocProvider<EditbusinessBloc>(
-            create: (_) => EditbusinessBloc()),
-            BlocProvider<CreatebusinessBloc>(create: (_)=>CreatebusinessBloc())
->>>>>>> 622607b05697dc44d038d9545c61e57b0015b3ec
+        BlocProvider<CreatebusinessBloc>(create: (_) => CreatebusinessBloc())
       ],
       child: MyApp(),
     );
