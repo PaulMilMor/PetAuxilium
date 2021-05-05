@@ -1,10 +1,8 @@
 import 'dart:core';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/feedlist_widget.dart';
-import 'package:rxdart/rxdart.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -114,7 +112,7 @@ class _FeedState extends State<Feed> {
 
   _listPatreon(follow) {
     return SizedBox(
-      height: 150,
+      height: 300,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: StreamBuilder(

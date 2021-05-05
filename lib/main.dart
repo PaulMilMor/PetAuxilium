@@ -102,7 +102,8 @@ class MyApp extends StatelessWidget {
           'Map_edit_Page': (BuildContext context) => Map_edit_Page(),
           'EditPublicationPage': (BuildContext context) =>
               EditPublicationPage(null),
-          'paidOptionsPage': (BuildContext context) => PaidOptionsPage()
+          'paidOptionsPage': (BuildContext context) => PaidOptionsPage(),
+          
         },
       ),
     );

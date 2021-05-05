@@ -35,7 +35,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   final StorageUtil _storage = StorageUtil();
   final MapsUtil mapsUtil = MapsUtil();
 
-  List<String> _selectedServices = [];
+  List _selectedServices;
   List listItems = [
     'CUIDADOS ESPECIALES',
     'CONSULTORÍA',
@@ -64,6 +64,10 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
     _pricingTxtController = TextEditingController(text: _pricing);
     _descTxtController = TextEditingController(text: _desc);
+
+    print('services');
+    print(widget.detailDocument.services);
+    _selectedServices = widget.detailDocument.services;
 
     setState(() {
       images.remove("Add Image");

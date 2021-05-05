@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class StripeTransactionResponse {
@@ -46,6 +47,7 @@ class StripeUtil{
       if (response.status == 'succeeded') {
         
         dbUtil().setPatreon(pack);
+
         return new StripeTransactionResponse(
           message: 'hecho',
           success: true

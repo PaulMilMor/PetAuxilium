@@ -1,9 +1,7 @@
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:geocoding/geocoding.dart';
-import 'package:path/path.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/donations_model.dart';
@@ -12,7 +10,6 @@ import 'package:pet_auxilium/models/comment_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
-
 import 'package:pet_auxilium/models/notification_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:rxdart/rxdart.dart';
@@ -40,14 +37,15 @@ class dbUtil {
       _prefs.userImg = value.get("imgRef");
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
-//FIXME: No jala con esta madre de abajo por eso lo comenté, acuerdense descomentarlo
-/*      print(value.get("patreon"));
-      if (value.get("patreon") != null) {
-        _prefs.patreonUser = true;
-      } else {
+      UserModel userModel = UserModel.fromJsonMap(value.data(), id);
+
+      if (userModel.patreon == null) {
         _prefs.patreonUser = false;
+      } else {
+        _prefs.patreonUser = true;
       }
-      return UserModel.fromJsonMap(value.data(), id);*/
+
+      return userModel;
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
@@ -103,17 +101,13 @@ class dbUtil {
     List<BusinessModel> locations = List<BusinessModel>();
     await _firestoreInstance.collection('business').get().then((value) {
       value.docs.forEach((element) {
-        locations.add(BusinessModel.fromJsonMap(element.data()));
+        locations.add(BusinessModel.fromJsonMap(element.data(), element.id));
       });
     });
     return locations;
   }
 
   Future<void> addPublication(PublicationModel ad) async {
-    print('xxxxx');
-    print(_prefs.patreonUser);
-    bool patreonValue = false;
-    if (_prefs.patreonUser) patreonValue = true;
     await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,
@@ -125,7 +119,7 @@ class dbUtil {
       'nevaluations': ad.nevaluations == null ? 0 : ad.nevaluations,
       'score': ad.score == null ? 0 : ad.score,
       'date': ad.date == null ? DateTime.now() : ad.date,
-      'patreon': patreonValue
+      'patreon': false
     });
   }
 
@@ -189,6 +183,8 @@ class dbUtil {
   }
 
   Future<void> addKeeper(PublicationModel ad) async {
+    bool patreonValue = false;
+    if (_prefs.patreonUser) patreonValue = true;
     await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,
@@ -201,6 +197,7 @@ class dbUtil {
       'score': 0,
       'services': ad.services,
       'date': DateTime.now(),
+      'patreon': patreonValue
     });
   }
 
@@ -341,6 +338,23 @@ print(docRef.documentID);*/
         .collection(collection)
         .where('category', isEqualTo: category)
         .get();
+  }
+
+  Future<Void> setPatreonPublications(String collection, String userID) async {
+    await _firestoreInstance
+        .collection(collection)
+        .where('userID', isEqualTo: userID)
+        .get()
+        .then((value) {
+      print('object');
+      value.docs.forEach((element) async {
+        print(element.id);
+        _firestoreInstance
+            .collection(collection)
+            .doc(element.id)
+            .update({'patreon': true});
+      });
+    });
   }
 
 //STREAM SERVICES
@@ -940,5 +954,35 @@ print(docRef.documentID);*/
         .collection('users')
         .doc(_prefs.userID)
         .update({'patreon': date});
+  }
+
+  Future<PublicationModel> getKeeperByUserID() async {
+    PublicationModel pub;
+    await _firestoreInstance
+        .collection('publications')
+        .where('userID', isEqualTo: _prefs.userID)
+        .where('category', isEqualTo: 'CUIDADOR')
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        pub = PublicationModel.fromJsonMap(element.data(), element.id);
+      });
+    });
+    return pub;
+  }
+
+  Future<BusinessModel> getBusinessByUserID() async {
+    BusinessModel bus;
+    await _firestoreInstance
+        .collection('publications')
+        .where('userID', isEqualTo: _prefs.userID)
+        .where('category', isEqualTo: 'CUIDADOR')
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        bus = BusinessModel.fromJsonMap(element.data(), element.id);
+      });
+    });
+    return bus;
   }
 }
