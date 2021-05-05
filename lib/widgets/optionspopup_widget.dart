@@ -445,7 +445,7 @@ class _OptionPopupState extends State<OptionPopup> {
                             ),
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Color.fromRGBO(49, 232, 93, 1),
+                                  primary: Color.fromRGBO(30, 215, 96, 1),
                                 ),
                                 onPressed: () async {
                                   List users = [];
@@ -579,7 +579,7 @@ class _OptionPopupState extends State<OptionPopup> {
                             leading: Radio<ClosePub>(
                               value: ClosePub.option1,
                               groupValue: _option,
-                              activeColor: Color.fromRGBO(49, 232, 93, 1),
+                              activeColor: Color.fromRGBO(30, 215, 96, 1),
                               onChanged: (ClosePub value) {
                                 setState(() {
                                   _option = value;
@@ -593,7 +593,7 @@ class _OptionPopupState extends State<OptionPopup> {
                             leading: Radio<ClosePub>(
                               value: ClosePub.eliminar,
                               groupValue: _option,
-                              activeColor: Color.fromRGBO(49, 232, 93, 1),
+                              activeColor: Color.fromRGBO(30, 215, 96, 1),
                               onChanged: (ClosePub value) {
                                 setState(() {
                                   _option = value;
@@ -618,7 +618,7 @@ class _OptionPopupState extends State<OptionPopup> {
                             ),
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Color.fromRGBO(49, 232, 93, 1),
+                                  primary: Color.fromRGBO(30, 215, 96, 1),
                                 ),
                                 onPressed: () {
                                   if (_option == ClosePub.eliminar) {

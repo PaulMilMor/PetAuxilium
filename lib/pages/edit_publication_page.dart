@@ -39,7 +39,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   String _name;
   String _desc;
   var _location;
-  List <LatLng>_locations =[];
+  List<LatLng> _locations = [];
   //List <String>_location;
   List<String> imagesRef = [];
   List<Object> images = [];
@@ -50,27 +50,26 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
   void initState() {
     super.initState();
-    
+
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
-    List<String>latLng = _location.split(",");
+    List<String> latLng = _location.split(",");
     double latitude = double.parse(latLng[0]);
     double longitude = double.parse(latLng[1]);
     print(latitude);
     print(longitude);
-    LatLng temp = LatLng(latitude,longitude);
+    LatLng temp = LatLng(latitude, longitude);
     print(temp);
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
-    
+
     print(widget.detailDocument.id);
     //images.add("Add Image");
     setState(() {
       images.remove("Add Image");
       images.add("Add Image");
-      
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
@@ -88,7 +87,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color.fromRGBO(49, 232, 93, 1),
+            color: Color.fromRGBO(30, 215, 96, 1),
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -96,19 +95,20 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       body: _body(context),
     );
   }
+
   Widget _body(BuildContext context) {
-  _markers = ModalRoute.of(context).settings.arguments;
-  if(_locations== null){
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-  }
-    
+    _markers = ModalRoute.of(context).settings.arguments;
+    if (_locations == null) {
+      _locations = mapsUtil.getLocations(_markers);
+      getDir(_locations);
+    }
+
     return Scaffold(
       body: SingleChildScrollView(child: _publicationForm(context)),
       backgroundColor: Colors.white,
     );
-
   }
+
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -116,7 +116,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
-        
         if (images[index] is ImageUploadModel) {
           ImageUploadModel uploadModel = images[index];
           print(images.length);
@@ -152,8 +151,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               ],
             ),
           );
-        } 
-          else if (images[index] != "Add Image") {
+        } else if (images[index] != "Add Image") {
           //ImageUploadModel uploadModel = images[index];
           print("tuperra madre");
           print(images.length);
@@ -165,10 +163,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -194,18 +192,16 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         }
-          //else {
-          print(images.length);
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AddImageButton(onTap: () {
-              images.length < 6
-                  ? _onAddImageClick(index)
-                  : _limitImages(context);
-            }),
-          );
-        }
-      /*}*/),
+        //else {
+        print(images.length);
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AddImageButton(onTap: () {
+            images.length < 6 ? _onAddImageClick(index) : _limitImages(context);
+          }),
+        );
+      }
+          /*}*/),
     );
   }
 
@@ -452,7 +448,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   Widget _saveBtn() {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () {
           if (_selectedCategory == 'SITUACIÓN DE CALLE') {
@@ -464,8 +460,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               _desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {
-                print("images");
-              print(imagesRef);
+            print("images");
+            print(imagesRef);
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(

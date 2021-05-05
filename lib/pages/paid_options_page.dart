@@ -34,15 +34,18 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(1, 31, 60, 1),
+                    // SizedBox(height: 25),
+                    child: Text(
+                      'Demuestra tu apoyo suscribiéndote a \nnuestro plan Patreon...',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    )),
                 SizedBox(height: 10),
-                Text(
-                  'Demuestra tu apoyo suscribiéndote a \n nuestro plan Patreon',
-                  style: TextStyle(fontSize: 14),
-                ),
-                SizedBox(height: 20),
                 _freeOption(),
                 _paidOption(),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 _freeButton()
               ]),
         ),
@@ -65,7 +68,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
       child: Text(
         'GRATIS',
         style: TextStyle(
-            fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+            fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
       ),
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(horizontal: 150, vertical: 20),
@@ -78,7 +81,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 45, vertical: 40),
-      padding: EdgeInsets.symmetric(vertical: 40),
+      padding: EdgeInsets.symmetric(vertical: 30),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey)),
@@ -91,14 +94,14 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
           height: 10,
         ),
         Text(
-          'Recibe retroalimentacion al instante',
+          'Recibe retroalimentación al instante',
           textAlign: TextAlign.center,
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'La comunidad podrá ver tus publicasiones \nen su feed',
+          'La comunidad podrá ver tus publicaciones \nen su feed',
           textAlign: TextAlign.center,
         ),
       ]),
@@ -120,12 +123,12 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
       child: Text(
         'PATREON',
         style: TextStyle(
-            fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+            fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
       ),
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.symmetric(horizontal: 150, vertical: 5),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      margin: EdgeInsets.symmetric(horizontal: 150, vertical: 0),
       decoration: BoxDecoration(
-          color: Color.fromRGBO(49, 232, 93, 1),
+          color: Color.fromRGBO(30, 215, 96, 1),
           borderRadius: BorderRadius.circular(10)),
     );
   }
@@ -133,10 +136,11 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
   Widget _paidDesc() {
     var align = TextAlign.center;
     var style = TextStyle(color: Colors.white);
+    var style2 = TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
     return Container(
       alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(horizontal: 45, vertical: 25),
-      padding: EdgeInsets.symmetric(vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 45, vertical: 15),
+      padding: EdgeInsets.fromLTRB(1, 35, 1, 20),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20), color: Colors.black87
           //border: Border.all(color:Colors.grey)
@@ -147,7 +151,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         SizedBox(
           height: 10,
         ),
-        Text('Obtén una mayor visibilidad en tu perful \n de cuidador',
+        Text('Obtén una mayor visibilidad en tu perfil \n de cuidador',
             textAlign: align, style: style),
         SizedBox(
           height: 10,
@@ -157,7 +161,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         SizedBox(
           height: 10,
         ),
-        Text('Consigue recompesas según tu proceso',
+        Text('Consigue recompensas según tu progreso',
             textAlign: align, style: style),
         SizedBox(
           height: 10,
@@ -177,11 +181,11 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
             textAlign: align,
             style: style),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
-        Text('Desde sólo \$19 al mes', textAlign: align, style: style),
+        Text('Desde sólo \$19 al mes', textAlign: align, style: style2),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         _paidButton()
       ]),
@@ -192,7 +196,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     return GestureDetector(
       child: Text(
         'PAGAR AHORA',
-        style: TextStyle(color: Colors.grey),
+        style: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),
       ),
       onTap: () {
         _bottomMenu();
@@ -203,14 +207,14 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
   _bottomMenu() {
     return showModalBottomSheet(
         context: context,
-           isScrollControlled: true,
+        isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
         ),
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setState) {
             return Container(
-                //eight: 350,
+                height: 450,
                 margin: EdgeInsets.only(left: 20),
                 child: Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -222,7 +226,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                           Center(
                             child: Text("Completa tu plan de pago",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
                           ),
                           SizedBox(
                             height: 15,
@@ -235,9 +239,9 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                           ),
                           Container(
                             child: Row(children: [
-                              _monthButton('1 mes',setState),
+                              _monthButton('1 mes', setState),
                               _monthButton('4 meses', setState),
-                              _monthButton('12 meses',setState)
+                              _monthButton('12 meses', setState)
                             ]),
                           ),
                           Container(
@@ -247,6 +251,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                             child: Text("Número de tarjeta",
                                 style: TextStyle(fontSize: 14)),
                           ),
+
                           Container(
                             width: 300,
                             child: GrayTextFormField(
@@ -320,10 +325,11 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('\$ ${(int.parse(_price)/100).toString()}'),
+                              Text(
+                                  '\$ ${(int.parse(_price) / 100).toString()}'),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      primary: Color.fromRGBO(49, 232, 93, 1)),
+                                      primary: Color.fromRGBO(30, 215, 96, 1)),
                                   child: Text(
                                     'PAGAR',
                                     style: TextStyle(fontSize: 12),
@@ -340,8 +346,10 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
 
   Widget _monthButton(String m, Function setS) {
     Color borderColor;
+    FontWeight font1;
     if (m == _packSelected) {
-      borderColor = Color.fromRGBO(49, 232, 93, 1);
+      borderColor = Color.fromRGBO(30, 215, 96, 1);
+      font1 = FontWeight.bold;
     } else {
       borderColor = Colors.grey;
     }
@@ -354,10 +362,9 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         } else if (m == '12 meses') {
           _price = '799';
         }
-          _packSelected = m;
+        _packSelected = m;
 
-        setS((){});
-        
+        setS(() {});
       },
       child: Container(
           child: Text(m),
@@ -376,28 +383,28 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         expMonth: int.parse(_expMonth),
         expYear: int.parse(_expYear),
         cvc: _cvv);
-      if(_packSelected=='1 mes') pack=1;
-        if(_packSelected=='4 meses') pack=4;
-          if(_packSelected=='12 meses') pack=6;
+    if (_packSelected == '1 mes') pack = 1;
+    if (_packSelected == '4 meses') pack = 4;
+    if (_packSelected == '12 meses') pack = 6;
     StripeTransactionResponse response = await StripeUtil.payViaCard(
         amount: _price, currency: 'USD', card: card, pack: pack);
 
-
-     if(response.success) Navigator.popAndPushNamed(context, 'navigation');
+    if (response.success) Navigator.popAndPushNamed(context, 'navigation');
     print(response.message);
   }
 
   Widget _freeButton() {
     return Container(
-        alignment: Alignment.bottomLeft,
-        child: GestureDetector(
-            onTap: () {},
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text('Continuar de forma gratuita'),
-              Icon(
-                Icons.chevron_right,
-                color: Color.fromRGBO(49, 232, 93, 1),
-              )
-            ])));
+        child: Padding(
+            padding: EdgeInsets.fromLTRB(1, 1, 10, 20),
+            child: GestureDetector(
+                onTap: () {},
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Text('Continuar de forma gratuita'),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Color.fromRGBO(49, 232, 93, 1),
+                  )
+                ]))));
   }
 }
