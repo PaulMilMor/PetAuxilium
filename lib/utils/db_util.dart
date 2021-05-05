@@ -113,7 +113,7 @@ class dbUtil {
     print('xxxxx');
     print(_prefs.patreonUser);
     bool patreonValue = false;
-    if (_prefs.patreonUser) patreonValue = true;
+    //if (_prefs.patreonUser) patreonValue = true;
     await _firestoreInstance.collection("publications").doc(ad.id).set({
       'category': ad.category,
       'name': ad.name,

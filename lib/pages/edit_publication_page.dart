@@ -2,9 +2,11 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -25,6 +27,9 @@ class EditPublicationPage extends StatefulWidget {
 class EditPublicationPageState extends State<EditPublicationPage> {
   final _db = dbUtil();
   final auth = AuthUtil();
+
+  EditpublicationBloc editpublicationBloc = EditpublicationBloc();
+
   final prefs = new preferencesUtil();
   var _nameTxtController = TextEditingController();
   //TextEditingController _nameTxtController;
@@ -85,6 +90,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    editpublicationBloc = BlocProvider.of<EditpublicationBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR PUBLICACIÓN'),
@@ -260,6 +267,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       print("en el file");
 
       images.replaceRange(index, index + 1, [imageUpload]);
+      editpublicationBloc.add(UpdateImgs(images));
+
     });
     /*});*/
   }
@@ -268,7 +277,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
-        child: Column(
+        child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
+        builder: (context, state) {
+        _locations = mapsUtil.getLocations(state.locations);
+           getDir(_locations);     
+          images=state.imgRef??this.images;
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /*SizedBox(height: 15),
@@ -279,21 +293,23 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),*/
-            _category(),
-            if (_selectedCategory != "SITUACIÓN DE CALLE") _nameTxt(),
+            _category(state),
+            if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
             _dirTxt(),
-            _descTxt(),
+            _descTxt(state),
             //_images(),
             buildGridView(),
             //_boton(),
-            _buttons()
+            _buttons(state)
           ],
+        );
+        },
         ),
       ),
-    );
-  }
+      );
+    }
 
-  Widget _category() {
+  Widget _category(state) {
     return Container(
       // height: 100.0,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
@@ -308,12 +324,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         ),
         GrayDropdownButton(
           hint: Text("Selecciona una categoria"),
-          value: _selectedCategory,
+          value: state.category,
           onChanged: (newValue) {
-            prefs.adoptionCategory = newValue;
-            setState(() {
-              _selectedCategory = newValue;
-            });
+            editpublicationBloc.add(UpdateCategory(newValue));
           },
           items: listItems.map((valueItem) {
             return DropdownMenuItem(
@@ -326,7 +339,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     );
   }
 
-  Widget _nameTxt() {
+  Widget _nameTxt(state) {
     return Container(
         //height: 100.0,
 
@@ -352,17 +365,18 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               icon: Icon(Icons.clear),
             ),
             onChanged: (value) {
-              setState(() {
+              editpublicationBloc.add(UpdateName(value));
+              /*setState(() {
                 // _nameTxtController.clear();
                 _name = value;
                 prefs.adoptionName = value;
-              });
+              });*/
             },
           ))
     ]));
   }
 
-  Widget _descTxt() {
+  Widget _descTxt(state) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
         child: TextField(
@@ -386,10 +400,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           maxLines: 4,
           keyboardType: TextInputType.multiline,
           onChanged: (value) {
-            setState(() {
+            editpublicationBloc.add(UpdateDesc(value));
+            /*setState(() {
               prefs.adoptionDescription = value;
               _desc = value;
-            });
+            });*/
           },
         ));
   }
@@ -406,8 +421,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               focusNode: AlwaysDisabledFocusNode(),
               maxLines: null,
               onTap: () {
-                Navigator.pushNamed(context, 'Map_edit_Page',
-                    arguments: _markers);
+                /*Navigator.pushNamed(context, 'Map_edit_Page',
+                    arguments: _markers);*/
+                prefs.previousPage='publication';
+                Navigator.pushNamed(context, 'mapPublication',
+                    arguments:editpublicationBloc);
               },
             ),
             Positioned(
@@ -424,16 +442,17 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   }
 
   void _cleanDir() {
+    editpublicationBloc.add(EditUpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }
 
-  Widget _buttons() {
+  Widget _buttons(state) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_cancelBtn(), _saveBtn()],
+        children: [_cancelBtn(), _saveBtn(state)],
       ),
     );
   }
@@ -445,9 +464,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
       onPressed: () {
-        _nameTxtController.clear();
+        /*_nameTxtController.clear();
         _descTxtController.clear();
-        _dirTxtController.clear();
+        _dirTxtController.clear();*/
+        editpublicationBloc.add(CleanData());
+
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -455,7 +476,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     );
   }
 
-  Widget _saveBtn() {
+  Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: Color.fromRGBO(49, 232, 93, 1),
@@ -488,9 +509,11 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                 description: _descTxtController.text,
                 imgRef: imagesRef);
             _db.addPublication(ad).then((value) {
-              prefs.adoptionCategory = 'ADOPCIÓN';
+              editpublicationBloc.add(CleanData());
+              /*prefs.adoptionCategory = 'ADOPCIÓN';
               prefs.adoptionDescription = '';
-              prefs.adoptionName = '';
+              prefs.adoptionName = '';*/
+              _dirTxtController.clear();
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
