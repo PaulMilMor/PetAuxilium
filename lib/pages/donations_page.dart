@@ -158,7 +158,7 @@ class DonationsPage extends StatelessWidget {
                                 fontSize: 8,
                                 color: Color.fromRGBO(105, 105, 105, 1),
                               ),
-                 ),
+                            ),
                           ),
                         ],
                       ),
@@ -176,7 +176,7 @@ class DonationsPage extends StatelessWidget {
                                 onPressed: () {
                                   _deleteDonation(donation, context);
                                 },
-                           ),
+                              ),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: TextButton(
@@ -229,6 +229,7 @@ class DonationsPage extends StatelessWidget {
       ..removeCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Se eliminó la organización'),
           action: SnackBarAction(
             label: "DESHACER",

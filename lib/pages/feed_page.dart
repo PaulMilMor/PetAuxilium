@@ -17,10 +17,10 @@ class _FeedState extends State<Feed> {
   String tempLocation;
   List<String> orderBy = [
     'Más recientes',
-    'Más antiguas',
+    //'Más antiguas',
     'Más populares',
     'Mejor valorados',
-    'Mejor tarifa'
+    //'Mejor tarifa'
   ];
   String selectedOrder = 'Más recientes';
   void callback() {

@@ -210,6 +210,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+                                  
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
@@ -441,6 +443,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                                  
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               print(_imgsFiles.toString());
@@ -463,6 +467,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                                  
                         content: Text(
                             'Se ha editado correctamente')));
                 });
@@ -470,6 +476,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                                  
                       content:
                           Text('La tarifa debe tener un formato numérico')));
               }

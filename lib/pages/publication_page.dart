@@ -301,6 +301,7 @@ class PublicationPageState extends State<PublicationPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
@@ -373,6 +374,7 @@ class PublicationPageState extends State<PublicationPage> {
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             PublicationModel ad = PublicationModel(
@@ -388,8 +390,9 @@ class PublicationPageState extends State<PublicationPage> {
               //Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Se ha creado tu publicación.')));
+                ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text('Se ha creado tu publicación.')));
               Navigator.popAndPushNamed(context, 'navigation');
               if (prefs.patreonUser) {
               } else {

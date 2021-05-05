@@ -144,11 +144,11 @@ class _ListFeedState extends State<ListFeed> {
               (PublicationModel a, PublicationModel b) =>
                   b.date.compareTo(a.date));
           break;
-        case 'Más antiguas':
+        /* case 'Más antiguas':
           this.widget.snapshot.data.sort(
               (PublicationModel a, PublicationModel b) =>
                   a.date.compareTo(b.date));
-          break;
+          break;*/
         case 'Más populares':
           this.widget.snapshot.data.sort(
               (PublicationModel a, PublicationModel b) =>
@@ -156,15 +156,35 @@ class _ListFeedState extends State<ListFeed> {
           break;
 
         case 'Mejor valorados':
-          this.widget.snapshot.data.sort(
-              (PublicationModel a, PublicationModel b) =>
-                  b.score.compareTo(a.score));
+          this
+              .widget
+              .snapshot
+              .data
+              .sort((PublicationModel a, PublicationModel b) {
+            /*if (b.score == 0 && b.score < a.score) {
+              return -1;
+            }*/
+            /*if (b.nevaluations == 0 && b.nevaluations < a.nevaluations) {
+              return 1;
+            }*/
+            if (a.score == 0 && b.score == 0) {
+              return b.nevaluations.compareTo(a.nevaluations);
+            } else if (b.nevaluations == 0) {
+              return (b.score / (b.nevaluations + 1))
+                  .compareTo(a.score / a.nevaluations);
+            } else if (a.nevaluations == 0) {
+              return (b.score / b.nevaluations)
+                  .compareTo(a.score / (a.nevaluations + 1));
+            }
+            return (b.score / b.nevaluations)
+                .compareTo(a.score / a.nevaluations);
+          });
           break;
-        case 'Mejor tarifa':
+        /*case 'Mejor tarifa':
           this.widget.snapshot.data.sort(
               (PublicationModel a, PublicationModel b) =>
                   b.pricing.compareTo(a.pricing));
-          break;
+          break;*/
       }
     }
   }

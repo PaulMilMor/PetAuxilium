@@ -72,7 +72,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     imagesRef = widget.detailDocument.imgRef;
 
     print(widget.detailDocument.id);
-    //images.add("Add Image");
     setState(() {
       images.remove("Add Image");
       //images.clear();
@@ -234,6 +233,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
@@ -489,6 +489,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             print(_imgsFiles.toString());
@@ -510,8 +511,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Has editado tu publicación.')));
+                ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text('Has editado tu publicación.')));
             });
             print(_name);
           }

@@ -299,8 +299,9 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
       });
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(
-            SnackBar(content: Text('Es necesario llenar todos los campos')));
+        ..showSnackBar(SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Es necesario llenar todos los campos')));
     } else {
       if (!_web.contains('http')) _web = 'http://' + _web;
       String imgRef = await _storage.uploadFile(_file, 'OrganizationsImages');

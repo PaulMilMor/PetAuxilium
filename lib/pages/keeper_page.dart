@@ -151,6 +151,7 @@ class KeeperPageState extends State<KeeperPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 
@@ -378,6 +379,7 @@ class KeeperPageState extends State<KeeperPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               print(_imgsFiles.toString());
@@ -399,21 +401,20 @@ class KeeperPageState extends State<KeeperPage> {
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
+                        behavior: SnackBarBehavior.floating,
                         content: Text(
                             'Te registraste correctamente como cuidador')));
-                              if(prefs.patreonUser){
-         Navigator.popAndPushNamed(context, 'navigation');
-          }else{
-
-             Navigator.pushNamed(context, 'paidOptionsPage');
-          }
-              
-            
+                  if (prefs.patreonUser) {
+                    Navigator.popAndPushNamed(context, 'navigation');
+                  } else {
+                    Navigator.pushNamed(context, 'paidOptionsPage');
+                  }
                 });
               } else {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(SnackBar(
+                      behavior: SnackBarBehavior.floating,
                       content:
                           Text('La tarifa debe tener un formato numérico')));
               }

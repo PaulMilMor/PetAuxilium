@@ -233,6 +233,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             ComplaintModel complaint = ComplaintModel(
@@ -249,8 +250,9 @@ class _ComplaintPageState extends State<ComplaintPage> {
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Se publicó tu denuncia.')));
+                ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text('Se publicó tu denuncia.')));
             });
           }
 
@@ -336,6 +338,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 

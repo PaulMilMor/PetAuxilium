@@ -295,6 +295,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
                     content: Text('Es necesario llenar todos los campos')));
             } else {
               BusinessModel business = BusinessModel(
@@ -312,7 +313,9 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(
-                    SnackBar(content: Text('Haz editado tu negocio.')),
+                    SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        content: Text('Haz editado tu negocio.')),
                   );
               });
             }
@@ -442,6 +445,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 

@@ -19,7 +19,7 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class EditComplaintPage extends StatefulWidget {
-  PublicationModel/*BusinessModel*/ detailDocument;
+  PublicationModel /*BusinessModel*/ detailDocument;
   EditComplaintPage(this.detailDocument);
   @override
   _EditComplaintPageState createState() => _EditComplaintPageState();
@@ -49,14 +49,13 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   void initState() {
     super.initState();
 
-
     _title = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
     _location = widget.detailDocument.location.first;
-    List<String>latLng = _location.split(",");
+    List<String> latLng = _location.split(",");
     double latitude = double.parse(latLng[0]);
     double longitude = double.parse(latLng[1]);
-    LatLng temp = LatLng(latitude,longitude);
+    LatLng temp = LatLng(latitude, longitude);
     _locations.add(temp);
     images = widget.detailDocument.imgRef;
 
@@ -71,7 +70,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR DENUNCIA'),
         leading: IconButton(
@@ -86,17 +85,18 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
     );
   }
 
-Widget _body(BuildContext context) {
-  _markers = ModalRoute.of(context).settings.arguments;
-  if(_locations== null){
-    _locations = mapsUtil.getLocations(_markers);
-    getDir(_locations);
-  }
-  return Scaffold(
+  Widget _body(BuildContext context) {
+    _markers = ModalRoute.of(context).settings.arguments;
+    if (_locations == null) {
+      _locations = mapsUtil.getLocations(_markers);
+      getDir(_locations);
+    }
+    return Scaffold(
       body: SingleChildScrollView(child: _complaintForm(context)),
       backgroundColor: Colors.white,
     );
   }
+
   Widget _complaintForm(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -262,6 +262,7 @@ Widget _body(BuildContext context) {
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             ComplaintModel complaint = ComplaintModel(
@@ -279,8 +280,9 @@ Widget _body(BuildContext context) {
               Navigator.popAndPushNamed(context, 'navigation');
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
-                ..showSnackBar(
-                    SnackBar(content: Text('Se publicó tu denuncia.')));
+                ..showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text('Se publicó tu denuncia.')));
             });
           }
 
@@ -339,10 +341,10 @@ Widget _body(BuildContext context) {
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
-                
-                Image(image: NetworkImage(images[index].toString()),
-                width: 300,
-                  height: 300),
+                Image(
+                    image: NetworkImage(images[index].toString()),
+                    width: 300,
+                    height: 300),
                 Positioned(
                   right: 5,
                   top: 5,
@@ -367,8 +369,7 @@ Widget _body(BuildContext context) {
               ],
             ),
           );
-        } 
-        else {
+        } else {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: _addBtn(index),
@@ -402,6 +403,7 @@ Widget _body(BuildContext context) {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('Solo se pueden insertar 5 imágenes a la vez')));
   }
 

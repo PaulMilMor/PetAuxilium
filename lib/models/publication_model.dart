@@ -13,7 +13,7 @@ class PublicationModel {
   String pricing;
   int nevaluations;
   DateTime date;
-  var score;
+  num score;
   List<dynamic> services;
   bool patreon;
   PublicationModel(
@@ -30,8 +30,7 @@ class PublicationModel {
       this.services,
       this.date,
       this.followers,
-      this.patreon
-      });
+      this.patreon});
 
   PublicationModel.fromJsonMap(Map<String, dynamic> json, String pid) {
     id = pid;
@@ -49,10 +48,9 @@ class PublicationModel {
     nevaluations = json['nevaluations'];
     date = json['date'].toDate();
     followers = json['followers'];
-    patreon=json['patreon'];
-
+    patreon = json['patreon'];
   }
-    PublicationModel.fromBusiness(BusinessModel publication) {
+  PublicationModel.fromBusiness(BusinessModel publication) {
     id = publication.id;
     category = publication.category;
     name = publication.name;
