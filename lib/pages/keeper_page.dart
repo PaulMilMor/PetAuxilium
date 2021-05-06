@@ -403,6 +403,7 @@ class KeeperPageState extends State<KeeperPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text(
                             'Te registraste correctamente como cuidador')));
+                            print(prefs.patreonUser);
                   if (prefs.patreonUser) {
                     Navigator.popAndPushNamed(context, 'navigation');
                   } else {

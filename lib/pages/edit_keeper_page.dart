@@ -47,7 +47,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
   String _pricing;
   String _desc;
 
-  List<String> imagesRef = [];
+  List imagesRef = [];
   List<Object> images = [];
   List<ImageUploadModel> _imgsFiles = [];
   File imageFile;
@@ -63,7 +63,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     _desc = widget.detailDocument.description;
 
     images = widget.detailDocument.imgRef;
-
+    imagesRef=widget.detailDocument.imgRef;
     _pricingTxtController = TextEditingController(text: _pricing);
     _descTxtController = TextEditingController(text: _desc);
 
@@ -442,6 +442,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                 _desc.isEmpty ||
                 imagesRef.isEmpty ||
                 _selectedServices.isEmpty) {
+                 
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -458,7 +459,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     userID: prefs.userID,
                     description: _desc,
                     pricing: '\$$_pricing por hora',
-                    imgRef: imagesRef,
+                    imgRef: widget.detailDocument.imgRef,
                     services: _selectedServices);
                 _db.addKeeper(ad).then((value) {
                   prefs.keeperPricing = '';

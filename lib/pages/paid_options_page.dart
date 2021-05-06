@@ -185,7 +185,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         SizedBox(
           height: 20,
         ),
-        Text('Desde sólo \$19 al mes', textAlign: align, style: style2),
+        Text('Desde sólo \$0.99 USD al mes', textAlign: align, style: style2),
         SizedBox(
           height: 20,
         ),

@@ -38,15 +38,19 @@ class dbUtil {
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
       //FIXME: Esto no me funcionaba aspi q lo quité
-/*      UserModel userModel = UserModel.fromJsonMap(value.data(), id);
-
-      if (userModel.patreon == null) {
+    
+if(_prefs.userEmail!='admin@admin.com'){
+   UserModel userModel = UserModel.fromJsonMap(value.data(), id);
+  if (userModel.patreon == null) {
         _prefs.patreonUser = false;
       } else {
         _prefs.patreonUser = true;
       }
+   return userModel;
 
-      return userModel;*/
+}
+    
+   
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 
