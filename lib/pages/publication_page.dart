@@ -193,11 +193,11 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(1, 9, 13, 1),
+        padding: const EdgeInsets.fromLTRB(1, 4, 13, 1),
         child: Stack(
           children: [
             Container(
-              height: 52,
+              height: 70,
               alignment: Alignment.centerLeft,
               child: GrayTextFormField(
                 key: UniqueKey(),
@@ -214,7 +214,7 @@ class PublicationPageState extends State<PublicationPage> {
             ),
             Positioned(
               right: 1,
-              top: 3,
+              top: 10,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
@@ -347,9 +347,9 @@ class PublicationPageState extends State<PublicationPage> {
         padding: const EdgeInsets.all(10.0),
         child: Text('Cancelar', style: TextStyle(color: Colors.black)),
       ),
-      onPressed: () {  
+      onPressed: () {
         createpublicationBloc.add(CleanData());
-        //images.add("Add Image");
+        Navigator.pop(context);
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),

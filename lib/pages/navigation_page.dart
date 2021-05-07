@@ -257,12 +257,12 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _CreateMenu() {
     String txtKeeper, txtBusiness;
-    if (myKeeperProfile.imgRef == null) {
+    if (myKeeperProfile == null) {
       txtKeeper = "   Registrarme como cuidador";
     } else {
       txtKeeper = "   Editar perfil de cuidador";
     }
-    if (myBusiness.imgRef == null) {
+    if (myBusiness == null) {
       txtBusiness = "   Publicar mi negocio";
     } else {
       txtBusiness = "   Editar mi negocio";
@@ -305,7 +305,7 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if (myBusiness.imgRef == null) {
+                            if (myBusiness == null) {
                               Navigator.pushNamed(context, 'CreateBusiness');
                             } else {
                               Navigator.of(context).push(
@@ -335,7 +335,7 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if (myKeeperProfile.imgRef == null) {
+                            if (myKeeperProfile == null) {
                               Navigator.pushNamed(context, 'caretakerPage');
                             } else {
                               Navigator.of(context).push(
