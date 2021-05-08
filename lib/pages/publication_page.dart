@@ -393,10 +393,7 @@ class PublicationPageState extends State<PublicationPage> {
                     behavior: SnackBarBehavior.floating,
                     content: Text('Se ha creado tu publicación.')));
               Navigator.popAndPushNamed(context, 'navigation');
-              if (prefs.patreonUser) {
-              } else {
-                Navigator.pushNamed(context, 'paidOptionsPage');
-              }
+             
             });
           }
         },
