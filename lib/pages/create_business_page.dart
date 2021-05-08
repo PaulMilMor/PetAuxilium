@@ -295,7 +295,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               _db.addBusiness(business).then((value) {
                 createbusinessBloc.add(CleanData());
                 _dirTxtController.clear();
-                Navigator.popAndPushNamed(context, 'navigation');
+                Navigator.popUntil(context, ModalRoute.withName('navigation'));
+                //Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(

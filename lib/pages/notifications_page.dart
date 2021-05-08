@@ -61,96 +61,94 @@ class _NotificationsState extends State<NotificationsPage> {
         appBar: AppBar(
           title: Text('Notificaciones'),
         ),
-        body: SingleChildScrollView(
-          child: StreamBuilder(
-            stream: _db.getNotifications(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                snapshot.data.sort((NotificationModel a, NotificationModel b) =>
-                    b.date.compareTo(a.date));
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      NotificationModel msg = snapshot.data[index];
-                      //print(msg.id);
-                      return GestureDetector(
-                        onTap: () async {
-                          if (msg.publicationID == null) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatScreenPage(
-                                        msg.senderID, msg.senderName)));
+        body: StreamBuilder(
+          stream: _db.getNotifications(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              snapshot.data.sort((NotificationModel a, NotificationModel b) =>
+                  b.date.compareTo(a.date));
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    NotificationModel msg = snapshot.data[index];
+                    //print(msg.id);
+                    return GestureDetector(
+                      onTap: () async {
+                        if (msg.publicationID == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreenPage(
+                                      msg.senderID, msg.senderName)));
+                        } else {
+                          PublicationModel _data =
+                              await _db.getPublication(msg.publicationID);
+                          List<String> follows =
+                              await _db.getFollowsFuture(_prefs.userID);
+                          if (_data != null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      DetailPage(_data, follows, callback)),
+                            );
                           } else {
-                            PublicationModel _data =
-                                await _db.getPublication(msg.publicationID);
-                            List<String> follows =
-                                await _db.getFollowsFuture(_prefs.userID);
-                            if (_data != null) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        DetailPage(_data, follows, callback)),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  content: Text(
-                                      'La publicación que buscabas ya no está disponible.'),
-                                ));
-                            }
+                            ScaffoldMessenger.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(
+                                    'La publicación que buscabas ya no está disponible.'),
+                              ));
                           }
-                        },
-                        child: Card(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  flex: 5,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                              msg.notification == null
-                                                  ? 'what'
-                                                  : msg.notification,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                              ),
-                                              overflow: TextOverflow.clip),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                        ],
-                                      )),
+                        }
+                      },
+                      child: Card(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                            msg.notification == null
+                                                ? 'what'
+                                                : msg.notification,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                            ),
+                                            overflow: TextOverflow.clip),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: GestureDetector(
+                                  child: Icon(Icons.close),
+                                  onTap: () {
+                                    _db.deleteDocument(msg.id, 'notifications');
+                                  },
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: GestureDetector(
-                                    child: Icon(Icons.close),
-                                    onTap: () {
-                                      _db.deleteDocument(
-                                          msg.id, 'notifications');
-                                    },
-                                  ),
-                                )
-                              ]),
-                        ),
-                      );
-                    });
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
+                              )
+                            ]),
+                      ),
+                    );
+                  });
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ));
   }
 }

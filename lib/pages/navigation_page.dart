@@ -255,7 +255,8 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _CreateMenu() {
+  void _CreateMenu() async {
+    await initBusinessAndKeeper();
     String txtKeeper, txtBusiness;
     if (myKeeperProfile == null) {
       txtKeeper = "   Registrarme como cuidador";
