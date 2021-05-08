@@ -305,7 +305,7 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if (myBusiness== null) {
+                            if (myBusiness == null) {
                               Navigator.pushNamed(context, 'CreateBusiness');
                             } else {
                               Navigator.of(context).push(
