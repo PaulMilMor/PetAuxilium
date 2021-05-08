@@ -306,8 +306,10 @@ class _NavigationPageState extends State<NavigationPage> {
                           onTap: () {
                             // PublicationPage();
                             if (myBusiness == null) {
+                              print('POOOOOOOOOOOOOOOOOL MYBUSINESS');
                               Navigator.pushNamed(context, 'CreateBusiness');
                             } else {
+                              print('POOOOOOOOOOOOOOOOOL NOTMYBUSINESS');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>

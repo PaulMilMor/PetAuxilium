@@ -205,7 +205,7 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _postBusinessButton() {
+  /*Widget _postBusinessButton() {
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -218,9 +218,9 @@ class _AccountPageState extends State<AccountPage> {
         },
       ),
     );
-  }
+  }*/
 
-  Widget _caretakerButton() {
+  /*Widget _caretakerButton() {
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -233,7 +233,7 @@ class _AccountPageState extends State<AccountPage> {
         },
       ),
     );
-  }
+  }*/
 
   Widget _followedButton() {
     return Container(
@@ -263,7 +263,7 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget _complaintButton() {
+  /*Widget _complaintButton() {
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -276,7 +276,7 @@ class _AccountPageState extends State<AccountPage> {
         },
       ),
     );
-  }
+  }*/
 
   Widget _donationsButton() {
     return Container(
@@ -311,7 +311,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   bool isSwitched = false;
-  Widget _switchB() {
+  /*Widget _switchB() {
     return Container(
         child: Column(children: <Widget>[
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -333,5 +333,5 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ])
     ]));
-  }
+  }*/
 }

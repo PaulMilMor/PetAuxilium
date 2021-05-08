@@ -9,7 +9,8 @@ import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/edit_business_page.dart';
 import 'package:pet_auxilium/pages/edit_keeper_page.dart';
-import 'package:pet_auxilium/pages/edit_publication_page.dart';
+
+import 'package:pet_auxilium/pages/edit_complaint_page.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -190,7 +191,10 @@ class _OptionPopupState extends State<OptionPopup> {
                 );
                 //Navigator.pushNamed(context, 'EditPublicationPage');
               } else if (p.category == 'DENUNCIA') {
-                Navigator.pushNamed(context, 'complaintPage');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditComplaintPage(p)),
+                );
               } else if (p.category == 'CUIDADOR') {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -679,7 +683,8 @@ class _OptionPopupState extends State<OptionPopup> {
                                       topic01,
                                     );
                                   }
-                                  Navigator.of(context).pop();
+                                  Navigator.popUntil(context,
+                                      ModalRoute.withName('navigation'));
                                   if (p.category == 'DENUNCIA') {
                                     _deletePublication(p);
                                   } else if (p.category == 'NEGOCIO') {

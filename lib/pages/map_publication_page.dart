@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 
-
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class MapPagePublication extends StatefulWidget {
@@ -15,13 +14,13 @@ class MapPagePublication extends StatefulWidget {
   _MapPagePublicationState createState() => _MapPagePublicationState();
 }
 
-//TODO: asignar punto inicial 
+//TODO: asignar punto inicial
 //TODO: solo utilizar un mapa
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-var bloc;
-var bloc2;
+  var bloc;
+  var bloc2;
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -36,7 +35,7 @@ var bloc2;
     // print('xd');
 
     // }
-    
+
     super.initState();
     getLoc();
   }
@@ -54,12 +53,12 @@ var bloc2;
 
   @override
   Widget build(BuildContext context) {
-  bloc=ModalRoute.of(context).settings.arguments;
+    bloc = ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
-      _markers =bloc.state.locations??this._markers;
-  bloc2=ModalRoute.of(context).settings.arguments;
+    _markers = bloc.state.locations ?? this._markers;
+    bloc2 = ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
-      _markers =bloc.state.locations??this._markers;
+    _markers = bloc.state.locations ?? this._markers;
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),
@@ -67,19 +66,17 @@ var bloc2;
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                prefs.selectedIndex==2;
-                if (bloc.runtimeType==CreatepublicationBloc) {
-                   bloc.add(UpdateLocations(_markers));
-                   print(bloc.state.locations);
+                prefs.selectedIndex == 2;
+                if (bloc.runtimeType == CreatepublicationBloc) {
+                  bloc.add(UpdateLocations(_markers));
+                  print(bloc.state.locations);
 
-                 Navigator.popAndPushNamed(context, 'PublicationPage');
-                }
-                else if (bloc.runtimeType==EditpublicationBloc) {
-                   bloc.add(EditUpdateLocations(_markers));
-                   print(bloc.state.locations);
-                 Navigator.pop(context);
-                } 
-                else if (prefs.selectedIndex == 4) {
+                  Navigator.pop(context);
+                } else if (bloc.runtimeType == EditpublicationBloc) {
+                  bloc.add(EditUpdateLocations(_markers));
+                  print(bloc.state.locations);
+                  Navigator.pop(context);
+                } else if (prefs.selectedIndex == 4) {
                   Navigator.popAndPushNamed(context, 'complaintPage',
                       arguments: _markers);
                 }
@@ -115,7 +112,7 @@ var bloc2;
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
-                bloc.add(UpdateLocations(_markers));
+            bloc.add(UpdateLocations(_markers));
           },
           infoWindow: InfoWindow(
             title: bloc.state.name,
