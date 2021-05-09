@@ -165,6 +165,8 @@ class PublicationPageState extends State<PublicationPage> {
             //padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
             child: TextFormField(
               //key: UniqueKey(),
+
+              textCapitalization: TextCapitalization.sentences,
               initialValue: state.desc,
               decoration: InputDecoration(
                 labelText: 'Descripción',
@@ -401,7 +403,6 @@ class PublicationPageState extends State<PublicationPage> {
               //images.add("Add Image");
 
               Navigator.popAndPushNamed(context, 'navigation');
-             
             });
           }
         },

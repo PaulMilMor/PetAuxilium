@@ -99,7 +99,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     editpublicationBloc = BlocProvider.of<EditpublicationBloc>(context);
 
     return Scaffold(
-      appBar: AppBar(
+      /* appBar: AppBar(
         title: Text('EDITAR PUBLICACIÓN'),
         leading: IconButton(
           icon: Icon(
@@ -108,8 +108,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-      ),
+      ),*/
       body: _body(context),
+      backgroundColor: Colors.white,
     );
   }
 
@@ -130,7 +131,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(11, 0, 12, 6),
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
@@ -181,7 +182,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           print('POOOOOOOOOOOOOOOL ImGREG3');
           print(imagesRef);
           //imagesRef.add(images[index].toString());
-           //imagesRef.remove("Add Image");
+          //imagesRef.remove("Add Image");
           //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -292,7 +293,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
       child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
@@ -301,14 +302,15 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /*SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Text(
-              'EDITAR PUBLICACIÓN' ,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ),*/
+              SizedBox(height: 15),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+                child: Text(
+                  'EDITAR PUBLICACIÓN',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                ),
+              ),
               _category(state),
               if (state.category != "SITUACIÓN DE CALLE") _nameTxt(state),
               _dirTxt(),
@@ -327,30 +329,34 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   Widget _category(state) {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 48),
-      child: Center(
-          child: Column(children: [
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 25),
+      child: Column(children: [
         Container(
-          margin: const EdgeInsets.only(right: 4.5),
+          alignment: Alignment.centerLeft,
+          margin: const EdgeInsets.only(bottom: 5),
           child: Text(
             'Categoría:',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 16),
           ),
         ),
-        GrayDropdownButton(
-          hint: Text("Selecciona una categoria"),
-          value: state.category,
-          onChanged: (newValue) {
-            editpublicationBloc.add(UpdateCategory(newValue));
-          },
-          items: listItems.map((valueItem) {
-            return DropdownMenuItem(
-              value: valueItem,
-              child: Text(valueItem),
-            );
-          }).toList(),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 50,
+          child: GrayDropdownButton(
+            hint: Text("Selecciona una categoria"),
+            value: state.category,
+            onChanged: (newValue) {
+              editpublicationBloc.add(UpdateCategory(newValue));
+            },
+            items: listItems.map((valueItem) {
+              return DropdownMenuItem(
+                value: valueItem,
+                child: Text(valueItem),
+              );
+            }).toList(),
+          ),
         )
-      ])),
+      ]),
     );
   }
 
@@ -359,14 +365,16 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         //height: 100.0,
 
         child: Column(children: [
-      Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 15),
           child: Text(
             'Completa los siguientes campos',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 16),
           )),
       Container(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6), //width: 300.0,
+          height: 77,
+          padding: const EdgeInsets.fromLTRB(1, 4, 12, 1), //width: 300.0,
           child: GrayTextFormField(
             controller: _nameTxtController,
             hintText: 'Nombre',
@@ -393,55 +401,64 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
   Widget _descTxt(state) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-        child: TextField(
-          controller: _descTxtController,
-          decoration: InputDecoration(
-              labelText: 'Descripción',
-              labelStyle: TextStyle(
-                color: Colors.grey,
-                // color: Color.fromRGBO(49, 232, 93, 1),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey)),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _descTxtController.clear();
-                  prefs.adoptionDescription = '';
-                },
-                icon: Icon(Icons.clear),
-              )),
-          maxLength: 500,
-          maxLines: 4,
-          keyboardType: TextInputType.multiline,
-          onChanged: (value) {
-            editpublicationBloc.add(UpdateDesc(value));
-            /*setState(() {
-              prefs.adoptionDescription = value;
-              _desc = value;
-            });*/
-          },
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+        child: Container(
+          alignment: Alignment.centerLeft,
+          height: 140,
+          child: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            controller: _descTxtController,
+            decoration: InputDecoration(
+                labelText: 'Descripción',
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  // color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _descTxtController.clear();
+                    prefs.adoptionDescription = '';
+                  },
+                  icon: Icon(Icons.clear),
+                )),
+            maxLength: 400,
+            maxLines: 4,
+            keyboardType: TextInputType.multiline,
+            onChanged: (value) {
+              editpublicationBloc.add(UpdateDesc(value));
+              /*setState(() {
+                prefs.adoptionDescription = value;
+                _desc = value;
+              });*/
+            },
+          ),
         ));
   }
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        padding: const EdgeInsets.fromLTRB(1, 4, 13, 1),
         child: Stack(
           children: [
-            GrayTextFormField(
-              controller: _dirTxtController,
-              readOnly: true,
-              hintText: 'Dirección',
-              focusNode: AlwaysDisabledFocusNode(),
-              maxLines: null,
-              onTap: () {
-                /*Navigator.pushNamed(context, 'Map_edit_Page',
-                    arguments: _markers);*/
-                prefs.previousPage = 'publication';
-                Navigator.pushNamed(context, 'mapPublication',
-                    arguments: editpublicationBloc);
-              },
+            Container(
+              height: 70,
+              alignment: Alignment.centerLeft,
+              child: GrayTextFormField(
+                controller: _dirTxtController,
+                readOnly: true,
+                hintText: 'Dirección',
+                focusNode: AlwaysDisabledFocusNode(),
+                maxLines: null,
+                onTap: () {
+                  /*Navigator.pushNamed(context, 'Map_edit_Page',
+                      arguments: _markers);*/
+                  prefs.previousPage = 'publication';
+                  Navigator.pushNamed(context, 'mapPublication',
+                      arguments: editpublicationBloc);
+                },
+              ),
             ),
             Positioned(
               right: 1,
@@ -483,6 +500,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         _descTxtController.clear();
         _dirTxtController.clear();*/
         editpublicationBloc.add(CleanData());
+        Navigator.pop(context);
         print("que pedo");
         print(images);
         print(imagesRef);
