@@ -314,7 +314,8 @@ class PublicationPageState extends State<PublicationPage> {
     });
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
-
+    print("qie pedo");
+    print(imagesRef);
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
       imageUpload.isUploaded = false;
@@ -349,6 +350,7 @@ class PublicationPageState extends State<PublicationPage> {
       onPressed: () {
         createpublicationBloc.add(CleanData());
         //images.add("Add Image");
+
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -376,6 +378,10 @@ class PublicationPageState extends State<PublicationPage> {
                   behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
+            print("que pedo alb");
+            print(imagesRef);
+            print(images);
+
             PublicationModel ad = PublicationModel(
                 category: state.category,
                 name: state.name,
@@ -392,6 +398,8 @@ class PublicationPageState extends State<PublicationPage> {
                 ..showSnackBar(SnackBar(
                     behavior: SnackBarBehavior.floating,
                     content: Text('Se ha creado tu publicación.')));
+              //images.add("Add Image");
+
               Navigator.popAndPushNamed(context, 'navigation');
               if (prefs.patreonUser) {
               } else {

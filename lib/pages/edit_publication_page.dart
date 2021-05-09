@@ -175,12 +175,13 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           //ImageUploadModel uploadModel = images[index];
           print("tuperra madre");
           print(images.length);
+          //images.add("Add Image");
+
           print(images);
           print('POOOOOOOOOOOOOOOL ImGREG3');
           print(imagesRef);
-          print(imagesRef);
           //imagesRef.add(images[index].toString());
-          // imagesRef.remove("Add Image");
+           //imagesRef.remove("Add Image");
           //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
@@ -263,7 +264,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     });
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
-    imagesRef.removeLast();
+
     print('POOOOOOOOOOOOOOOL ImGREG5');
     print(imagesRef);
     print("chingado");
@@ -279,7 +280,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       print("en el file");
 
       images.replaceRange(index, index + 1, [imageUpload]);
+      imagesRef.remove(imageUpload);
+      imagesRef.remove("Add Image");
+      images.add("Add Image");
+      //imagesRef.remove("Add Image");
       editpublicationBloc.add(UpdateImgs(images));
+      //imagesRef.removeLast();
     });
     /*});*/
   }
@@ -477,6 +483,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         _descTxtController.clear();
         _dirTxtController.clear();*/
         editpublicationBloc.add(CleanData());
+        print("que pedo");
+        print(images);
+        print(imagesRef);
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -510,7 +519,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                   content: Text('Es necesario llenar todos los campos')));
           } else {
             print(_imgsFiles.toString());
-            imagesRef.remove('Add Image');
+            print('SEBASSS ImGRE7');
+
+            print(imagesRef);
+            //imagesRef.remove('Add Image');
+            print(imagesRef);
+
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 id: widget.detailDocument.id,
