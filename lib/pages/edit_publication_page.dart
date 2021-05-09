@@ -47,6 +47,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   String _desc;
   var _location;
   List<LatLng> _locations = [];
+  var _realLocations;
   //List <String>_location;
   List imagesRef = [];
   List<Object> images = [];
@@ -78,6 +79,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     print(widget.detailDocument.imgRef);
     print(widget.detailDocument.id);
     editpublicationBloc.add(UpdateImgs(images));
+    
     setState(() {
       
       images.remove("Add Image");
@@ -306,10 +308,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
       child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
         builder: (context, state) {
-          _locations = mapsUtil.getLocations(state.locations);
+          _locations = getLocations();
           getDir(_locations);
           //Aqui esta el error, Si le asignas el valor de abajao a las imagenes se pone borra y se añade solo el icono
-          //images = state.imgRef ?? this.images;
+        //images = state.imgRef ??  ["Add Image"];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -335,7 +337,18 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       ),
     );
   }
+  List<LatLng> getLocations()  {
+   List<LatLng> locations=[];
+      widget.detailDocument.location.forEach((element) {
+        String location = element.toString();
+      locations.add(LatLng(
+              double.parse(location.substring(0, location.indexOf(',')).trim()),
+              double.parse( location.substring(location.indexOf(',') + 1).trim())));
+      });
+   return locations;
 
+    //element[]
+  }
   Widget _category(state) {
     return Container(
       // height: 100.0,
@@ -450,7 +463,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               onTap: () {
                 /*Navigator.pushNamed(context, 'Map_edit_Page',
                     arguments: _markers);*/
-                prefs.previousPage = 'publication';
+     
                 Navigator.pushNamed(context, 'mapPublication',
                     arguments: editpublicationBloc);
               },
@@ -516,14 +529,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             prefs.adoptionName = 'Animal Callejero';
           }
           print(_locations);
+          print(imagesRef);
           if (_name.isEmpty ||
               _desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {
-            print("images");
-            print(imagesRef);
-            print('POOOOOOOOOOOOOOOL ImGREG6');
-            print(imagesRef);
+ 
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
