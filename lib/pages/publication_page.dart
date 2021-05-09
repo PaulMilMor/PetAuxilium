@@ -401,10 +401,7 @@ class PublicationPageState extends State<PublicationPage> {
               //images.add("Add Image");
 
               Navigator.popAndPushNamed(context, 'navigation');
-              if (prefs.patreonUser) {
-              } else {
-                Navigator.pushNamed(context, 'paidOptionsPage');
-              }
+             
             });
           }
         },
