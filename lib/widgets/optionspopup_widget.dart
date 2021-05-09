@@ -20,10 +20,12 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 enum ClosePub { option1, eliminar }
 
 class OptionPopup extends StatefulWidget {
-  OptionPopup({@required this.publication, this.follows, this.voidCallback});
+  OptionPopup(
+      {@required this.publication, this.follows, this.voidCallback, this.size});
   List<String> follows;
   PublicationModel publication;
   VoidCallback voidCallback;
+  String size;
   @override
   _OptionPopupState createState() => _OptionPopupState();
 }
@@ -48,10 +50,16 @@ class _OptionPopupState extends State<OptionPopup> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<int>(
-        icon: Icon(
-          Icons.more_vert,
-          color: Color.fromRGBO(210, 210, 210, 1),
-        ),
+        icon: this.widget.size == 'small'
+            ? Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210, 210, 210, 1),
+                size: 20,
+              )
+            : Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210, 210, 210, 1),
+              ),
         itemBuilder: (BuildContext context) => [
               _prefs.userID != widget.publication.userID
                   ? null
