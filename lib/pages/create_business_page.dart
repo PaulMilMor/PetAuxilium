@@ -161,7 +161,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _dirTxt() {
     return Container(
-        height: 55,
+        //height: 55,
         padding: const EdgeInsets.fromLTRB(1, 0, 31, 1),
         child: Stack(
           children: [
@@ -215,6 +215,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _descriptionTxt(desc) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      //FIXME: Protip, no deberías darle alturas estáticas a los campos...
       child: Container(
           height: 120,
           child: TextFormField(
@@ -230,6 +231,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               ),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey)),
+              //FIXME: WHY THE FUCK?
               // suffixIcon: IconButton(
               //   onPressed: () {
               //     _descTxtController.clear();

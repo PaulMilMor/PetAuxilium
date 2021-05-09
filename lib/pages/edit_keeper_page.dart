@@ -496,7 +496,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text('Publicar'),
+            child: Text('Guardar Cambios'),
           )),
     );
   }

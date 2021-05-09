@@ -85,7 +85,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   Widget build(BuildContext context) {
     editbusinessBloc = BlocProvider.of<EditbusinessBloc>(context);
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text('EDITAR NEGOCIO'),
         leading: IconButton(
           icon: Icon(
@@ -94,7 +94,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-      ),
+      ),*/
       body: _body(context),
     );
     //  _dir=mapsUtil.getDir(_locations);
@@ -115,7 +115,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   Widget _businessForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 15),
       child: BlocBuilder<EditbusinessBloc, EditbusinessState>(
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
@@ -132,17 +132,26 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),*/
+              SizedBox(height: 15),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                child: Text(
+                  'EDITAR NEGOCIO',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                ),
+              ),
               _selectService(),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
                 child: Text('Completa los siguientes campos',
-                    style: TextStyle(fontSize: 18)),
+                    style: TextStyle(fontSize: 16)),
               ),
               _nameTxt(state),
               _dirTxt(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
                 //child: Text('Describa los servicios que ofrece'),
               ),
               _descriptionTxt(state),
@@ -157,7 +166,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   Widget _nameTxt(state) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(1, 1, 31, 7),
       child: GrayTextFormField(
         controller: _nameTxtController,
         hintText: 'Nombre',
@@ -191,7 +200,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        padding: const EdgeInsets.fromLTRB(1, 0, 31, 1),
         child: Stack(
           children: [
             GrayTextFormField(
@@ -244,30 +253,35 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
 
   Widget _descriptionTxt(state) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-      child: TextField(
-        maxLength: 500,
-        maxLines: 4,
-        controller: _descTxtController,
-        decoration: InputDecoration(
-            labelText: 'Describa los servicios que ofrece',
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              // color: Color.fromRGBO(49, 232, 93, 1),
-            ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
-            suffixIcon: IconButton(
-              onPressed: () {
-                _descTxtController.clear();
-                prefs.businessDescription = '';
-                _desc = '';
-              },
-              icon: Icon(Icons.clear),
-            )),
-        onChanged: (value) {
-          editbusinessBloc.add(UpdateDesc(value));
-        },
+      padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      child: Container(
+        height: 120,
+        child: TextField(
+          maxLength: 400,
+          maxLines: 3,
+          controller: _descTxtController,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+              labelText: 'Describa los servicios que ofrece',
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+                // color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey)),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _descTxtController.clear();
+                  prefs.businessDescription = '';
+                  _desc = '';
+                },
+                icon: Icon(Icons.clear),
+              )),
+          onChanged: (value) {
+            editbusinessBloc.add(UpdateDesc(value));
+          },
+        ),
       ),
     );
   }
@@ -333,7 +347,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
             //print(_dir);
           },
           style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(49, 232, 93, 1),
+            primary: Color.fromRGBO(30, 215, 96, 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -483,7 +497,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   Widget _selectService() {
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
+      margin: const EdgeInsets.fromLTRB(1, 24, 8, 18),
       child: MultiSelectBottomSheetField<String>(
         initialValue: this
             .widget
@@ -496,13 +510,13 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
         maxChildSize: 0.95,
         cancelText: Text(
           'CANCELAR',
-          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          style: TextStyle(color: Colors.black),
         ),
         confirmText: Text(
-          'OK',
-          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          'ACEPTAR',
+          style: TextStyle(color: Colors.black),
         ),
-        selectedColor: Color.fromRGBO(49, 232, 93, 1),
+        selectedColor: Color.fromRGBO(30, 215, 96, 1),
         decoration: BoxDecoration(
           color: Color.fromRGBO(235, 235, 235, 1),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -512,7 +526,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           ),
         ),
         title: Text(
-          'Servicios',
+          'Seleccionar servicios',
           style: TextStyle(
             //color: Color.fromRGBO(202, 202, 202, 1),
             fontSize: 16,
@@ -520,7 +534,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           ),
         ),
         buttonText: Text(
-          "Servicios que ofrece",
+          "Servicios que ofrece el negocio",
           style: TextStyle(
             //color: Color.fromRGBO(202, 202, 202, 1),
             fontSize: 16,
