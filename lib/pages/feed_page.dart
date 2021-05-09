@@ -59,7 +59,7 @@ class _FeedState extends State<Feed> {
                 margin: EdgeInsets.symmetric(vertical: 20),
                 child: Divider(
                   color: Colors.black12,
-                  height: 5,
+                  height: 1,
                   thickness: 2,
                   indent: 30,
                   endIndent: 30,

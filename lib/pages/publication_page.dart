@@ -215,7 +215,7 @@ class PublicationPageState extends State<PublicationPage> {
             ),
             Positioned(
               right: 1,
-              top: 10,
+              top: 5,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
