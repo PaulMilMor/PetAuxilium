@@ -127,7 +127,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _dirTxt() {
     return Container(
-        height: 65,
+        //height: 65,
         padding: const EdgeInsets.fromLTRB(1, 7, 11, 5),
         child: Stack(
           children: [

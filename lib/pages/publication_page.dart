@@ -198,7 +198,7 @@ class PublicationPageState extends State<PublicationPage> {
         child: Stack(
           children: [
             Container(
-              height: 70,
+              //height: 70,
               alignment: Alignment.centerLeft,
               child: GrayTextFormField(
                 key: UniqueKey(),
