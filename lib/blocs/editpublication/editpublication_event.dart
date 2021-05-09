@@ -29,4 +29,5 @@ class UpdateImgs extends EditpublicationEvent{
   UpdateImgs(this.imgRef);
 }
 class CleanData extends EditpublicationEvent{
+  
 }

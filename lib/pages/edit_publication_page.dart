@@ -8,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
+import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -50,12 +52,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   List<Object> images = [];
   List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
+  List comparisonList;
   final picker = ImagePicker();
   PublicationModel publication;
 
   void initState() {
     super.initState();
-
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
@@ -70,14 +72,18 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
     imagesRef = widget.detailDocument.imgRef;
+    
     print('POOOOOOOOOOOOOOOL ImGREG1');
     print(imagesRef);
     print(widget.detailDocument.imgRef);
     print(widget.detailDocument.id);
+    editpublicationBloc.add(UpdateImgs(images));
     setState(() {
+      
       images.remove("Add Image");
       //images.clear();
       print('NOTPOOOOOOOOOOL4');
+      print(images);
       print(imagesRef);
       images.add("Add Image");
       print('NOTPOOOOOOOOOOL3');
@@ -96,8 +102,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    
     editpublicationBloc = BlocProvider.of<EditpublicationBloc>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR PUBLICACIÓN'),
@@ -157,7 +163,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         print('POOOOOOOOOOOOOOOL ImGREG2');
                         print(imagesRef);
@@ -203,7 +209,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                     onTap: () {
                       setState(() {
                         //images.add("Add Image");
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         print('POOOOOOOOOOOOOOOL ImGREG4');
                         print(imagesRef);
@@ -219,7 +225,9 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           );
         }
         //else {
+        print("wahatt");
         print(images.length);
+        print(images);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: AddImageButton(onTap: () {
@@ -283,6 +291,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       imagesRef.remove(imageUpload);
       imagesRef.remove("Add Image");
       images.add("Add Image");
+          print(imagesRef);
+
       //imagesRef.remove("Add Image");
       editpublicationBloc.add(UpdateImgs(images));
       //imagesRef.removeLast();
@@ -291,13 +301,15 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   }
 
   Widget _publicationForm(BuildContext context) {
+   
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
       child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
           getDir(_locations);
-          images = state.imgRef ?? this.images;
+          //Aqui esta el error, Si le asignas el valor de abajao a las imagenes se pone borra y se añade solo el icono
+          //images = state.imgRef ?? this.images;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -482,10 +494,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         /*_nameTxtController.clear();
         _descTxtController.clear();
         _dirTxtController.clear();*/
+        
         editpublicationBloc.add(CleanData());
-        print("que pedo");
-        print(images);
-        print(imagesRef);
+        Navigator.pop(context);
+
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -522,9 +534,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             print('SEBASSS ImGRE7');
 
             print(imagesRef);
-            //imagesRef.remove('Add Image');
+            imagesRef.remove('Add Image');
             print(imagesRef);
-
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 id: widget.detailDocument.id,
