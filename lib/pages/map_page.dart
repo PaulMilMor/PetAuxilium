@@ -101,7 +101,7 @@ class _MapPageState extends State<MapPage> {
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
-            bloc.add(UpdateBusinessLocations(_markers));
+           // bloc.add(UpdateBusinessLocations(_markers));
           },
           infoWindow: InfoWindow(
             title: bloc.state.name,

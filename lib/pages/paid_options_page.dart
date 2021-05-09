@@ -415,7 +415,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
             padding: EdgeInsets.fromLTRB(1, 1, 10, 20),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, 'navigation');
                 },
                 child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   Text('Continuar de forma gratuita'),

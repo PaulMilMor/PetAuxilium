@@ -471,7 +471,13 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     ..showSnackBar(SnackBar(
                         behavior: SnackBarBehavior.floating,
                         content: Text('Se ha editado correctamente')));
+                            if (prefs.patreonUser) {
+                    Navigator.popAndPushNamed(context, 'navigation');
+                  } else {
+                    Navigator.pushNamed(context, 'paidOptionsPage');
+                  }
                 });
+                
               } else {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()

@@ -64,7 +64,7 @@ class PublicationPageState extends State<PublicationPage> {
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
           getDir(_locations);
-          images = state.imgRef ?? this.images;
+         // images = state.imgRef ?? this.images;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -348,6 +348,7 @@ class PublicationPageState extends State<PublicationPage> {
       ),
       onPressed: () {
         createpublicationBloc.add(CleanData());
+        Navigator.pop(context);
         //images.add("Add Image");
       },
       style: TextButton.styleFrom(

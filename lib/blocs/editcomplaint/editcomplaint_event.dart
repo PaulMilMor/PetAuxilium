@@ -18,10 +18,10 @@ class UpdateDesc extends EditcomplaintEvent{
   UpdateServices(this.services);
 }*/
 
-class EditUpdateLocations extends EditcomplaintEvent{
+class EditComplaintUpdateLocations extends EditcomplaintEvent{
   final Set<Marker> locations;
 
-  EditUpdateLocations(this.locations);
+  EditComplaintUpdateLocations(this.locations);
 }
 class UpdateImgs extends EditcomplaintEvent{
   final List<Object> imgRef;

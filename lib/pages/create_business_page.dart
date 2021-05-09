@@ -32,14 +32,12 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Set<Marker> _markers = new Set<Marker>();
   final _db = dbUtil();
   final StorageUtil _storage = StorageUtil();
-  String _name = " ";
-  String _desc;
-  Future<File> _imageFile;
+
   File imageFile;
 
-  List<String> _dir;
+
   List<String> imagesRef = [];
-  List<ImageUploadModel> _imgsFiles = [];
+
   final picker = ImagePicker();
   List<LatLng> _locations;
   List<Object> images = [];
@@ -303,6 +301,11 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text('Se ha publicado tu negocio.')),
                   );
+                      if (prefs.patreonUser) {
+                    Navigator.popAndPushNamed(context, 'navigation');
+                  } else {
+                    Navigator.pushNamed(context, 'paidOptionsPage');
+                  }
               });
             }
 

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pet_auxilium/blocs/createbusiness/createbusiness_bloc.dart';
+import 'package:pet_auxilium/blocs/createcomplaint/createcomplaint_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
 import 'package:pet_auxilium/blocs/editbusiness/editbusiness_bloc.dart';
 import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
@@ -54,11 +55,18 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CreatepublicationBloc>(
+  BlocProvider<CreatepublicationBloc>(
             create: (_) => CreatepublicationBloc()),
-        BlocProvider<EditpublicationBloc>(create: (_) => EditpublicationBloc()),
-        BlocProvider<EditbusinessBloc>(create: (_) => EditbusinessBloc()),
-        BlocProvider<CreatebusinessBloc>(create: (_) => CreatebusinessBloc())
+        BlocProvider<EditpublicationBloc>(
+            create: (_) => EditpublicationBloc()),
+        BlocProvider<EditbusinessBloc>(
+            create: (_) => EditbusinessBloc()),
+        BlocProvider<EditcomplaintBloc>(
+            create: (_) => EditcomplaintBloc()),
+        BlocProvider(
+            create: (_) => CreatecomplaintBloc() ) ,
+              BlocProvider<CreatebusinessBloc>(
+            create: (_) => CreatebusinessBloc()), 
       ],
       child: MyApp(),
     );

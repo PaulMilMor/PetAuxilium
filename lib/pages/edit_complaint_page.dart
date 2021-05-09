@@ -91,11 +91,11 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   }
 
   Widget _body(BuildContext context) {
-    _markers = ModalRoute.of(context).settings.arguments;
-    if (_locations == null) {
-      _locations = mapsUtil.getLocations(_markers);
-      getDir(_locations);
-    }
+    // _markers = ModalRoute.of(context).settings.arguments;
+    // if (_locations == null) {
+    //   _locations = mapsUtil.getLocations(_markers);
+    //   getDir(_locations);
+    // }
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(child: _complaintForm(context))),
@@ -185,7 +185,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
               onTap: () {
                 /*Navigator.pushNamed(context, 'mapPublication',
                     arguments: _markers);*/
-                prefs.previousPage = 'publication';
+                //prefs.previousPage = 'publication';
                 Navigator.pushNamed(context, 'mapPublication',
                     arguments: editcomplaintBloc);
               },
@@ -210,7 +210,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   }
 
   void _cleanDir() {
-    editcomplaintBloc.add(EditUpdateLocations(Set<Marker>()));
+    editcomplaintBloc.add(EditComplaintUpdateLocations(Set<Marker>()));
     _dirTxtController.clear();
     _markers.clear();
   }

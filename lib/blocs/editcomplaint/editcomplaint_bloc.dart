@@ -19,7 +19,7 @@ class EditcomplaintBloc extends Bloc<EditcomplaintEvent, EditcomplaintState> {
   yield* this._updateName(event);
    }else if(event is UpdateDesc){
   yield* this._updateDesc(event);
-   }else if(event is EditUpdateLocations){
+   }else if(event is EditComplaintUpdateLocations){
   yield* this._updateLocations(event);   
    }else if(event is UpdateImgs){
   yield* this._updateImgs(event);

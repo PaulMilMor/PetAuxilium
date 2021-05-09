@@ -5,6 +5,7 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/business_model.dart';
 import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/report_model.dart';
+import 'package:pet_auxilium/pages/edit_complaint_page.dart';
 
 import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/edit_business_page.dart';
@@ -190,7 +191,10 @@ class _OptionPopupState extends State<OptionPopup> {
                 );
                 //Navigator.pushNamed(context, 'EditPublicationPage');
               } else if (p.category == 'DENUNCIA') {
-                Navigator.pushNamed(context, 'complaintPage');
+                  Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EditComplaintPage(p)),
+                );
               } else if (p.category == 'CUIDADOR') {
                 Navigator.of(context).push(
                   MaterialPageRoute(

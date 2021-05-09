@@ -327,6 +327,11 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text('Haz editado tu negocio.')),
                   );
+                      if (prefs.patreonUser) {
+                    Navigator.popAndPushNamed(context, 'navigation');
+                  } else {
+                    Navigator.pushNamed(context, 'paidOptionsPage');
+                  }
               });
             }
 

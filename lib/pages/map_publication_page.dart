@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_auxilium/blocs/createcomplaint/createcomplaint_bloc.dart';
 import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart';
+import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 
 
@@ -67,22 +69,27 @@ var bloc2;
           IconButton(
               icon: Icon(Icons.save),
               onPressed: () async {
-                prefs.selectedIndex==2;
+              
                 if (bloc.runtimeType==CreatepublicationBloc) {
                    bloc.add(UpdateLocations(_markers));
-                   print(bloc.state.locations);
 
                  Navigator.popAndPushNamed(context, 'PublicationPage');
                 }
                 else if (bloc.runtimeType==EditpublicationBloc) {
                    bloc.add(EditUpdateLocations(_markers));
-                   print(bloc.state.locations);
                  Navigator.pop(context);
                 } 
-                else if (prefs.selectedIndex == 4) {
-                  Navigator.popAndPushNamed(context, 'complaintPage',
-                      arguments: _markers);
-                }
+                  else if (bloc.runtimeType==CreatecomplaintBloc) {
+                   bloc.add(UpdateComplaintLocations(_markers));
+                 Navigator.pop(context);
+                } else if (bloc.runtimeType==EditcomplaintBloc) {
+                   bloc.add(EditComplaintUpdateLocations(_markers));
+                 Navigator.pop(context);
+                } 
+                // else if (prefs.selectedIndex == 4) {
+                //   Navigator.popAndPushNamed(context, 'complaintPage',
+                //       arguments: _markers);
+                // }
               })
         ],
       ),
@@ -115,7 +122,8 @@ var bloc2;
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
-                bloc.add(UpdateLocations(_markers));
+                //bloc.add(UpdateLocations(_markers));
+                
           },
           infoWindow: InfoWindow(
             title: bloc.state.name,
