@@ -321,6 +321,7 @@ class KeeperPageState extends State<KeeperPage> {
           maxLength: 400,
           maxLines: 3,
           keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {
             setState(() {
               prefs.keeperDescription = value;

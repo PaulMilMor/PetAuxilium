@@ -63,7 +63,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     _desc = widget.detailDocument.description;
 
     images = widget.detailDocument.imgRef;
-    imagesRef=widget.detailDocument.imgRef;
+    imagesRef = widget.detailDocument.imgRef;
     _pricingTxtController = TextEditingController(text: _pricing);
     _descTxtController = TextEditingController(text: _desc);
 
@@ -82,7 +82,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     // TODO: implement build
     _node = FocusScope.of(context);
     return Scaffold(
-      appBar: AppBar(
+      /* appBar: AppBar(
         title: Text('EDITAR PUBLICACIÓN DE CUIDADOR'),
         leading: IconButton(
           icon: Icon(
@@ -91,7 +91,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-      ),
+      ),*/
       body: _body(context),
     );
   }
@@ -239,7 +239,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
   Widget _publicationForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -251,10 +251,21 @@ class EditKeeperPageState extends State<EditKeeperPage> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),*/
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            child: Text(
+              'EDITAR PERFIL DE CUIDADOR',
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            ),
+          ),
           _services(),
           _pricingTxt(),
           _descTxt(),
           buildGridView(),
+          SizedBox(
+            height: 10,
+          ),
           _buttons()
         ],
       ),
@@ -266,7 +277,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     print(this.widget.detailDocument.services[0]);
     return Container(
       // height: 100.0,
-      margin: const EdgeInsets.fromLTRB(8, 24, 8, 18),
+      margin: const EdgeInsets.fromLTRB(1, 24, 65, 11),
       child: MultiSelectBottomSheetField<String>(
         initialValue: this
             .widget
@@ -279,13 +290,13 @@ class EditKeeperPageState extends State<EditKeeperPage> {
         maxChildSize: 0.95,
         cancelText: Text(
           'CANCELAR',
-          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          style: TextStyle(color: Colors.black),
         ),
         confirmText: Text(
-          'OK',
-          style: TextStyle(color: Color.fromRGBO(49, 232, 93, 1)),
+          'ACEPTAR',
+          style: TextStyle(color: Colors.black),
         ),
-        selectedColor: Color.fromRGBO(49, 232, 93, 1),
+        selectedColor: Color.fromRGBO(30, 215, 96, 1),
         decoration: BoxDecoration(
           color: Color.fromRGBO(235, 235, 235, 1),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -295,7 +306,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
           ),
         ),
         title: Text(
-          'Servicios',
+          'Seleccionar servicios',
           style: TextStyle(
             //color: Color.fromRGBO(202, 202, 202, 1),
             fontSize: 16,
@@ -335,14 +346,15 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 25),
             child: Text(
               'Completa los siguientes campos',
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 16),
             )),
       ),
       Container(
-          margin: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+          height: 53,
+          margin: const EdgeInsets.fromLTRB(1, 1, 14, 5),
           child: GrayTextFormField(
             keyboardType: TextInputType.number,
             controller: _pricingTxtController,
@@ -367,7 +379,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
   Widget _descTxt() {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        padding: const EdgeInsets.fromLTRB(9, 9, 14, 6),
         child: TextField(
           controller: _descTxtController,
           decoration: InputDecoration(
@@ -384,9 +396,10 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                 },
                 icon: Icon(Icons.clear),
               )),
-          maxLength: 500,
-          maxLines: 4,
+          maxLength: 400,
+          maxLines: 3,
           keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {
             setState(() {
               prefs.keeperDescription = value;
@@ -409,7 +422,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
   Widget _CancelBtn() {
     return Container(
-      margin: const EdgeInsets.only(right: 30.0, bottom: 50),
+      margin: const EdgeInsets.only(right: 11.0, bottom: 50),
       child: TextButton(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -433,7 +446,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       margin: const EdgeInsets.only(right: 12.0, bottom: 50),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Color.fromRGBO(49, 232, 93, 1),
+            primary: Color.fromRGBO(30, 215, 96, 1),
           ),
           onPressed: () {
             bool _isTarifa = _isNumeric(_pricing[0]) &&
@@ -442,7 +455,6 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                 _desc.isEmpty ||
                 imagesRef.isEmpty ||
                 _selectedServices.isEmpty) {
-                 
               ScaffoldMessenger.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(SnackBar(
