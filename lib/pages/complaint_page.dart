@@ -179,6 +179,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
       child: Container(
           height: 130,
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             maxLength: 400,
             maxLines: 3,
             controller: _descTxtController,

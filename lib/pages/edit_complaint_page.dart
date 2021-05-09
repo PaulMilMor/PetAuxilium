@@ -76,7 +76,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   Widget build(BuildContext context) {
     editcomplaintBloc = BlocProvider.of<EditcomplaintBloc>(context);
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text('EDITAR DENUNCIA'),
         leading: IconButton(
           icon: Icon(
@@ -85,7 +85,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-      ),
+      ),*/
       body: _body(context),
     );
   }
@@ -105,7 +105,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   Widget _complaintForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
       child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
         builder: (context, state) {
           _locations = mapsUtil.getLocations(state.locations);
@@ -124,12 +124,23 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),*/
+              SizedBox(
+                height: 15,
+              ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                child: Text(
+                  'EDITAR DENUNCIA',
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 1, vertical: 30),
                 child: Text(
                   'Completa los siguientes campos',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
               _titleTxt(state),
@@ -150,7 +161,8 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   Widget _titleTxt(state) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      height: 73,
+      padding: const EdgeInsets.fromLTRB(1, 0, 11, 1),
       child: GrayTextFormField(
           controller: _titleTxtController,
           hintText: 'Título',
@@ -174,7 +186,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        padding: const EdgeInsets.fromLTRB(1, 7, 11, 5),
         child: Stack(
           children: [
             GrayTextFormField(
@@ -198,7 +210,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
             ),
             Positioned(
               right: 1,
-              top: 5,
+              top: 3,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
@@ -225,33 +237,37 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
 
   Widget _descriptionTxt(state) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-      child: TextField(
-        maxLength: 500,
-        maxLines: 4,
-        controller: _descTxtController,
-        decoration: InputDecoration(
-            labelText: "Describa su denuncia",
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              // color: Color.fromRGBO(49, 232, 93, 1),
-            ),
-            suffixIcon: IconButton(
-              onPressed: () {
-                _descTxtController.clear();
-              },
-              icon: Icon(Icons.clear),
-            ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey))),
-        onChanged: (value) {
-          editcomplaintBloc.add(UpdateDesc(value));
+      padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      child: Container(
+        height: 130,
+        child: TextField(
+          textCapitalization: TextCapitalization.sentences,
+          maxLength: 400,
+          maxLines: 3,
+          controller: _descTxtController,
+          decoration: InputDecoration(
+              labelText: "Describa su denuncia",
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                // color: Color.fromRGBO(49, 232, 93, 1),
+              ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _descTxtController.clear();
+                },
+                icon: Icon(Icons.clear),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey))),
+          onChanged: (value) {
+            editcomplaintBloc.add(UpdateDesc(value));
 
-          /*setState(() {
-            //   prefs.businessDescription = value;
-            _desc = value;
-          });*/
-        },
+            /*setState(() {
+              //   prefs.businessDescription = value;
+              _desc = value;
+            });*/
+          },
+        ),
       ),
     );
   }
@@ -275,7 +291,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
   Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () async {
           // print(mapsUtil.locationtoString(_locations));
