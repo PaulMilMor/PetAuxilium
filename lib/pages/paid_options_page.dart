@@ -19,6 +19,8 @@ String _cvv = '';
 String _expMonth = '';
 String _expYear = '';
 String _price = '799';
+String _error = '';
+bool _isLoading = false;
 
 class _PaidOptionsPageState extends State<PaidOptionsPage> {
   @override
@@ -201,6 +203,14 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
         style: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),
       ),
       onTap: () {
+        _cardNumber = '';
+        _packSelected = '12 meses';
+        _cvv = '';
+        _expMonth = '';
+        _expYear = '';
+        _price = '799';
+        _error = '';
+        _isLoading = false;
         _bottomMenu();
       },
     );
@@ -286,7 +296,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                           Row(
                             children: [
                               Container(
-                                width: 60,
+                                width: 65,
                                 child: GrayTextFormField(
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
@@ -294,9 +304,13 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                                   },
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text('/'),
+                              ),
                               Container(
                                 margin: EdgeInsets.only(left: 15),
-                                width: 60,
+                                width: 65,
                                 child: GrayTextFormField(
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
@@ -306,7 +320,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 65),
-                                width: 60,
+                                width: 75,
                                 child: GrayTextFormField(
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
@@ -336,19 +350,51 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromRGBO(30, 215, 96, 1)),
-                                      child: Text(
-                                        'PAGAR',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      onPressed: () {
-                                        _paid();
-                                      }),
+                                  _isLoading
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0, horizontal: 25.0),
+                                          child: CircularProgressIndicator(
+                                            backgroundColor:
+                                                Color.fromRGBO(30, 215, 96, 1),
+                                          ),
+                                        )
+                                      : ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Color.fromRGBO(
+                                                  30, 215, 96, 1)),
+                                          child: Text(
+                                            'PAGAR',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            print(
+                                                'POOOOOOOOOOOOOOLOOO TIRED OF THIS FCKIN BS');
+                                            print(_cardNumber);
+                                            print(_cvv);
+                                            print(_expMonth);
+                                            print(_expYear);
+                                            if (_cardNumber != '' &&
+                                                _cvv != '' &&
+                                                _expMonth != '' &&
+                                                _expYear != '') {
+                                              _paid(setState);
+                                            } else {
+                                              setState(() {
+                                                _error =
+                                                    'Es necesario llenar todos los campos correctamente';
+                                                _isLoading = false;
+                                              });
+                                            }
+                                          }),
                                 ],
                               )),
+                          Text(_error,
+                              style:
+                                  TextStyle(color: Colors.red, fontSize: 10)),
                         ])));
           });
         });
@@ -385,7 +431,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     );
   }
 
-  _paid() async {
+  _paid(Function setS) async {
     var pack;
     CreditCard card = CreditCard(
         number: _cardNumber,
@@ -395,9 +441,10 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     if (_packSelected == '1 mes') pack = 1;
     if (_packSelected == '4 meses') pack = 4;
     if (_packSelected == '12 meses') pack = 6;
+    print('pooleano 1');
     StripeTransactionResponse response = await StripeUtil.payViaCard(
         amount: _price, currency: 'USD', card: card, pack: pack);
-
+    print('pooleano 2');
     if (response.success) {
       preferencesUtil().patreonUser = true;
       await dbUtil()
@@ -407,6 +454,10 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
       Navigator.popAndPushNamed(context, 'navigation');
     }
     print(response.message);
+    setS(() {
+      _error = 'Los datos no son válidos';
+      _isLoading = false;
+    });
   }
 
   Widget _freeButton() {
@@ -415,7 +466,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
             padding: EdgeInsets.fromLTRB(1, 1, 10, 20),
             child: GestureDetector(
                 onTap: () {
-                        Navigator.popAndPushNamed(context, 'navigation');
+                  Navigator.popAndPushNamed(context, 'navigation');
                 },
                 child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   Text('Continuar de forma gratuita'),

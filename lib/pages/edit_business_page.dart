@@ -163,15 +163,16 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       ),
     );
   }
-  List<LatLng> getLocations()  {
-   List<LatLng> locations=[];
-      widget.detailDocument.location.forEach((element) {
-        String location = element.toString();
+
+  List<LatLng> getLocations() {
+    List<LatLng> locations = [];
+    widget.detailDocument.location.forEach((element) {
+      String location = element.toString();
       locations.add(LatLng(
-              double.parse(location.substring(0, location.indexOf(',')).trim()),
-              double.parse( location.substring(location.indexOf(',') + 1).trim())));
-      });
-   return locations;
+          double.parse(location.substring(0, location.indexOf(',')).trim()),
+          double.parse(location.substring(location.indexOf(',') + 1).trim())));
+    });
+    return locations;
   }
 
   Widget _nameTxt(state) {
@@ -322,13 +323,14 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
             } else {
               imagesRef.remove('Add Image');
               BusinessModel business = BusinessModel(
-                  id: widget.detailDocument.id,
-                  name: _nameTxtController.text,
-                  location: mapsUtil.locationtoString(_locations),
-                  userID: prefs.userID,
-                  description: _descTxtController.text,
-                  imgRef: imagesRef,
-                  services: _selectedServices);
+                id: widget.detailDocument.id,
+                name: _nameTxtController.text,
+                location: mapsUtil.locationtoString(_locations),
+                userID: prefs.userID,
+                description: _descTxtController.text,
+                imgRef: imagesRef,
+                services: _selectedServices,
+              );
               _db.addBusiness(business).then((value) {
                 editbusinessBloc.add(CleanData());
                 /*prefs.businessName = '';
@@ -342,11 +344,11 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text('Haz editado tu negocio.')),
                   );
-                      if (prefs.patreonUser) {
-                    Navigator.popAndPushNamed(context, 'navigation');
-                  } else {
-                    Navigator.pushNamed(context, 'paidOptionsPage');
-                  }
+                if (prefs.patreonUser) {
+                  Navigator.popAndPushNamed(context, 'navigation');
+                } else {
+                  Navigator.pushNamed(context, 'paidOptionsPage');
+                }
               });
             }
 
