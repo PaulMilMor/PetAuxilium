@@ -34,15 +34,17 @@ class BusinessModel {
 
   //   final latLng = this.location.substring(4).split(',');
   //   final lat = double.parse( latLng[0] );
-  //   final lng = double.parse( latLng[1] );
+  //   final lng = double.parse( latLng[1] );s
 
   //   return LatLng( lat, lng );
   // }
 
   BusinessModel.fromJsonMap(Map<String, dynamic> json, bid) {
-    id=bid;
+    id = bid;
     name = json['name'];
+    category = json['category'];
     location = json['location'];
+    imgRef = json['imgRef'];
     description = json['description'];
     userID = json['userID'];
     this.services = json['services'];

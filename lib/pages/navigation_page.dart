@@ -311,6 +311,9 @@ class _NavigationPageState extends State<NavigationPage> {
                               Navigator.pushNamed(context, 'CreateBusiness');
                             } else {
                               print('POOOOOOOOOOOOOOOOOL NOTMYBUSINESS');
+                              print('POOOOOOOOOOOOOL WHAT');
+                              print(myBusiness.imgRef);
+                              print('POOOOOOOOOOOOOL WHAT');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
