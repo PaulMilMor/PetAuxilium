@@ -7,9 +7,9 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="pet_auxilium"
+        android:label="Pet Auxilium"
         android:requestLegacyExternalStorage="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launch_image">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBf0REFbfdJV_0LymbmA3bKGT1GIIdvFDs"/>
         <activity
