@@ -51,7 +51,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   //List <String>_location;
   List imagesRef = [];
   List<Object> images = [];
-  List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
   List comparisonList;
   final picker = ImagePicker();
@@ -83,22 +82,12 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     setState(() {
       
       images.remove("Add Image");
-      //images.clear();
-      print('NOTPOOOOOOOOOOL4');
-      print(images);
-      print(imagesRef);
       images.add("Add Image");
-      print('NOTPOOOOOOOOOOL3');
-      print(imagesRef);
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
     //_dirTxtController = TextEditingController(text: _location);
     _descTxtController = TextEditingController(text: _desc);
-    print('NOTPOOOOOOOOOOL');
-    print(images);
-    print('NOTPOOOOOOOOOOL2');
-    print(imagesRef);
   }
 
   @override
@@ -167,11 +156,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                       setState(() {
                         //images.removeAt(index);
                         imagesRef.removeAt(index);
-                        print('POOOOOOOOOOOOOOOL ImGREG2');
-                        print(imagesRef);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
-                        //_imgsFiles.removeAt(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -180,17 +164,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         } else if (images[index] != "Add Image") {
-          //ImageUploadModel uploadModel = images[index];
-          print("tuperra madre");
-          print(images.length);
-          //images.add("Add Image");
-
-          print(images);
-          print('POOOOOOOOOOOOOOOL ImGREG3');
-          print(imagesRef);
-          //imagesRef.add(images[index].toString());
-           //imagesRef.remove("Add Image");
-          //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -213,11 +186,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                         //images.add("Add Image");
                         //images.removeAt(index);
                         imagesRef.removeAt(index);
-                        print('POOOOOOOOOOOOOOOL ImGREG4');
-                        print(imagesRef);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
-                        //_imgsFiles.removeAt(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -227,9 +195,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           );
         }
         //else {
-        print("wahatt");
-        print(images.length);
-        print(images);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: AddImageButton(onTap: () {
@@ -277,9 +242,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
 
     print('POOOOOOOOOOOOOOOL ImGREG5');
     print(imagesRef);
-    print("chingado");
-    print(imagesRef.length);
-    print(imagesRef);
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
       imageUpload.isUploaded = false;
@@ -311,7 +273,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           _locations = getLocations();
           getDir(_locations);
           //Aqui esta el error, Si le asignas el valor de abajao a las imagenes se pone borra y se añade solo el icono
-        //images = state.imgRef ??  ["Add Image"];
+          //images = getImages();
+          //state.imgRef ??  ["Add Image"];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -346,6 +309,17 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               double.parse( location.substring(location.indexOf(',') + 1).trim())));
       });
    return locations;
+
+    //element[]
+  }
+  
+  List getImages()  {
+   List images=[];
+      widget.detailDocument.imgRef.forEach((element) {
+        String image = element.toString();
+      images.add(image);
+      });
+   return images;
 
     //element[]
   }
@@ -541,10 +515,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                   behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
-            print(_imgsFiles.toString());
-            print('SEBASSS ImGRE7');
-
-            print(imagesRef);
             imagesRef.remove('Add Image');
             print(imagesRef);
             //print(mapsUtil.locationtoString(_locations));

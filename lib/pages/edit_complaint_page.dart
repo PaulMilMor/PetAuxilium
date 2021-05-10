@@ -108,9 +108,9 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
       child: BlocBuilder<EditcomplaintBloc, EditcomplaintState>(
         builder: (context, state) {
-          _locations = mapsUtil.getLocations(state.locations);
+          _locations = getLocations();
           getDir(_locations);
-          images = state.imgRef ?? this.images;
+          //images = state.imgRef ?? this.images;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -146,6 +146,16 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
         },
       ),
     );
+  }
+  List<LatLng> getLocations()  {
+   List<LatLng> locations=[];
+      widget.detailDocument.location.forEach((element) {
+        String location = element.toString();
+      locations.add(LatLng(
+              double.parse(location.substring(0, location.indexOf(',')).trim()),
+              double.parse( location.substring(location.indexOf(',') + 1).trim())));
+      });
+   return locations;
   }
 
   Widget _titleTxt(state) {
@@ -286,6 +296,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
                   behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
+            imagesRef.remove('Add Image');
             ComplaintModel complaint = ComplaintModel(
                 id: widget.detailDocument.id,
                 name: _title,
@@ -346,7 +357,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         imagesRef.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
@@ -380,7 +391,7 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
                     onTap: () {
                       setState(() {
                         //images.add("Add Image");
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
@@ -449,6 +460,10 @@ class _EditComplaintPageState extends State<EditComplaintPage> {
       imageUpload.imageUrl = '';
       // _imgsFiles.add(imageUpload);
       images.replaceRange(index, index + 1, [imageUpload]);
+      imagesRef.remove(imageUpload);
+      imagesRef.remove("Add Image");
+      images.add("Add Image");
+      editcomplaintBloc.add(UpdateImgs(images));
     });
   }
 

@@ -46,6 +46,6 @@ class CreatepublicationBloc extends Bloc<CreatepublicationEvent, Createpublicati
     yield state.copyWith(locations:event.locations);
   }
   Stream<CreatepublicationState> _cleanData()async*{
-    yield CreatepublicationState(name: '',desc:'',category: 'ADOPCIÓN', imgRef: [], locations:Set<Marker>());
+    yield CreatepublicationState(name: '',desc:'',category: 'ADOPCIÓN', imgRef: ["Add Image"], locations:Set<Marker>());
   }
 }

@@ -49,6 +49,6 @@ class EditbusinessBloc extends Bloc<EditbusinessEvent, EditbusinessState> {
 
   Stream<EditbusinessState> _cleanData() async* {
     yield EditbusinessState(
-        name: '', desc: '', imgRef: [], locations: Set<Marker>());
+        name: '', desc: '', imgRef: ["Add Image"], locations: Set<Marker>());
   }
 }
