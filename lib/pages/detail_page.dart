@@ -83,7 +83,7 @@ class _DetailPageState extends State<DetailPage> {
                                         .toString()
                                         .contains('CUIDADOR') &&
                                     widget.detailDocument.userID !=
-                                        _prefs.userID)
+                                        _prefs.userID && _prefs.userName!='anonimo')
                                   _buttonChat()
                               ],
                             ),
