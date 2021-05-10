@@ -368,7 +368,7 @@ class PublicationPageState extends State<PublicationPage> {
         ),
         onPressed: () {
           if (state.category == 'SITUACIÓN DE CALLE') {
-            state.name = 'Animal Callejero';
+          createpublicationBloc.add(UpdateName('Animal Callejero'));
           }
           if (state.name.isEmpty ||
               state.desc.isEmpty ||

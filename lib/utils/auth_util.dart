@@ -129,7 +129,7 @@ class AuthUtil {
           name: user.displayName,
           email: user.email,
           imgRef: user.photoURL,
-          follows: data.follows,
+         // follows: data.follows,
           notifications: data.notifications,
           patreon: data.patreon);
       if (userModel.patreon != null) {
