@@ -362,6 +362,7 @@ class PublicationPageState extends State<PublicationPage> {
 
 //TODO: Posiblemente mover el proceso al bloc o por lo menos adaptar lo de los validadores
   Widget _saveBtn(state) {
+    var name='';
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           primary: Color.fromRGBO(30, 215, 96, 1),
@@ -369,8 +370,11 @@ class PublicationPageState extends State<PublicationPage> {
         onPressed: () {
           if (state.category == 'SITUACIÓN DE CALLE') {
           createpublicationBloc.add(UpdateName('Animal Callejero'));
+          name='Animal Callejero';
+          }else{
+            name=state.name;
           }
-          if (state.name.isEmpty ||
+          if (name.isEmpty ||
               state.desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {

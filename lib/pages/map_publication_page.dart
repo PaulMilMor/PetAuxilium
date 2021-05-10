@@ -121,7 +121,7 @@ class _MapPagePublicationState extends State<MapPagePublication> {
           onTap: () {
             _markers.remove(_markers
                 .firstWhere((Marker marker) => marker.position == point));
-                //bloc.add(UpdateLocations(_markers));
+                bloc.add(UpdateLocations(_markers));
                 
           },
           infoWindow: InfoWindow(
