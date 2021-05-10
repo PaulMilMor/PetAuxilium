@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapsUtil {
   List<LatLng> getLocations(Set<Marker> markers) {
     if (markers != null) {
-     
       List<LatLng> listLocations = [];
       markers.forEach((Marker element) {
         listLocations.add(element.position);
@@ -26,12 +25,11 @@ class MapsUtil {
     return stringlocations;
   }
 
-  Widget getLocationText(String location) {
+  Widget getLocationText(String location, {String size = ''}) {
     List<String> loc = location.split(',');
     double lat = double.parse(loc[0].replaceAll('(', ''));
     double long = double.parse(loc[1].replaceAll(')', ''));
     if (lat == 29.115967 && long == -111.025490) {
-  
       return Container(
         width: 150,
         child: Text(
@@ -43,7 +41,6 @@ class MapsUtil {
         ),
       );
     } else {
-    
       return FutureBuilder(
           future: getAddress(lat, long),
           builder:
@@ -57,7 +54,7 @@ class MapsUtil {
                       ", " +
                       snapshot.data.first.locality,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: size == 'small' ? 8 : 13,
                     color: Colors.black54,
                   ),
                 ),

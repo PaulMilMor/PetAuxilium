@@ -346,14 +346,16 @@ class _DestacadosListState extends State<DestacadosList> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              _data.pricing,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.grey[700],
+                            if (_data.category == 'CUIDADOR')
+                              Text(
+                                _data.pricing,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey[700],
+                                ),
                               ),
-                            ),
-                            mapsUtil.getLocationText(_data.location.first),
+                            mapsUtil.getLocationText(_data.location.first,
+                                size: 'small'),
                           ],
                         ),
                       ),

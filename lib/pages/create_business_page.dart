@@ -35,7 +35,6 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   File imageFile;
 
-
   List<String> imagesRef = [];
 
   final picker = ImagePicker();
@@ -274,7 +273,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       child: ElevatedButton(
           onPressed: () async {
             // print(mapsUtil.locationtoString(_locations));
-            if (state.name.isEmpty ||
+            if (state.name == null ||
                 _locations.isEmpty ||
                 state.desc.isEmpty ||
                 _selectedServices.isEmpty ||
@@ -304,11 +303,11 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text('Se ha publicado tu negocio.')),
                   );
-                      if (prefs.patreonUser) {
-                    Navigator.popAndPushNamed(context, 'navigation');
-                  } else {
-                    Navigator.pushNamed(context, 'paidOptionsPage');
-                  }
+                if (prefs.patreonUser) {
+                  Navigator.popAndPushNamed(context, 'navigation');
+                } else {
+                  Navigator.pushNamed(context, 'paidOptionsPage');
+                }
               });
             }
 
