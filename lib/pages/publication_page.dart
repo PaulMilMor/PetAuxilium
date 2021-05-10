@@ -165,6 +165,8 @@ class PublicationPageState extends State<PublicationPage> {
             //padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
             child: TextFormField(
               //key: UniqueKey(),
+
+              textCapitalization: TextCapitalization.sentences,
               initialValue: state.desc,
               decoration: InputDecoration(
                 labelText: 'Descripción',
@@ -192,11 +194,11 @@ class PublicationPageState extends State<PublicationPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(1, 9, 13, 1),
+        padding: const EdgeInsets.fromLTRB(1, 4, 13, 1),
         child: Stack(
           children: [
             Container(
-              height: 52,
+              //height: 70,
               alignment: Alignment.centerLeft,
               child: GrayTextFormField(
                 key: UniqueKey(),
@@ -213,7 +215,7 @@ class PublicationPageState extends State<PublicationPage> {
             ),
             Positioned(
               right: 1,
-              top: 3,
+              top: 10,
               child: IconButton(
                 color: Colors.grey[600],
                 onPressed: _cleanDir,
@@ -351,7 +353,6 @@ class PublicationPageState extends State<PublicationPage> {
         createpublicationBloc.add(CleanData());
         Navigator.pop(context);
         //images.add("Add Image");
-
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -402,7 +403,6 @@ class PublicationPageState extends State<PublicationPage> {
               //images.add("Add Image");
 
               Navigator.popAndPushNamed(context, 'navigation');
-             
             });
           }
         },

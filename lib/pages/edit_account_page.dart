@@ -425,6 +425,8 @@ class _Edit_account_pageState extends State<Edit_account_page> {
         await _auth.updatePassword(_passwordController.text);
       }
       _db.addUser(_user);
+      //Aquí debería usarse un Navigator.pop, no es necesario hacer esto.
+      //Pero lo voy a dejar porque funciona.
       Navigator.pushNamedAndRemoveUntil(
           context, 'navigation', (Route<dynamic> route) => false);
     } else {
@@ -456,6 +458,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     );
   }
 
+//USAR camelCase PLEASE
   Widget _CancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 5.0, bottom: 7.0),

@@ -38,19 +38,20 @@ class dbUtil {
       _prefs.userEmail = value.get("email");
       print('xxxxxxx');
       //FIXME: Esto no me funcionaba aspi q lo quité
-    
-if(_prefs.userEmail!='admin@admin.com'){
-   UserModel userModel = UserModel.fromJsonMap(value.data(), id);
-  if (userModel.patreon == null) {
-        _prefs.patreonUser = false;
-      } else {
-        _prefs.patreonUser = true;
-      }
-   return userModel;
 
-}
-    
-   
+      if (_prefs.userEmail != 'admin@admin.com') {
+        print('POOOOOOOOOOOOOOOOOL USER');
+        print(value.data());
+        UserModel userModel = UserModel.fromJsonMap(value.data(), id);
+        print(userModel.follows);
+        if (userModel.patreon == null) {
+          _prefs.patreonUser = false;
+        } else {
+          _prefs.patreonUser = true;
+        }
+        return userModel;
+      }
+
       //TODO: Remover todo rastro del cumpleaños
       // print(value.get("birthday"));
 

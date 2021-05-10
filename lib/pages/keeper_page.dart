@@ -321,6 +321,7 @@ class KeeperPageState extends State<KeeperPage> {
           maxLength: 400,
           maxLines: 3,
           keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
           onChanged: (value) {
             setState(() {
               prefs.keeperDescription = value;
@@ -403,9 +404,9 @@ class KeeperPageState extends State<KeeperPage> {
                         behavior: SnackBarBehavior.floating,
                         content: Text(
                             'Te registraste correctamente como cuidador')));
-                            print(prefs.patreonUser);
+                  print(prefs.patreonUser);
+                  Navigator.popAndPushNamed(context, 'navigation');
                   if (prefs.patreonUser) {
-                    Navigator.popAndPushNamed(context, 'navigation');
                   } else {
                     Navigator.pushNamed(context, 'paidOptionsPage');
                   }

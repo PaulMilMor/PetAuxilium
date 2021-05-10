@@ -125,7 +125,7 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
       child: GrayTextFormField(
         controller: _websiteController,
-        hintText: 'Website',
+        hintText: 'Sitio de contacto',
         maxLength: null,
         textCapitalization: TextCapitalization.none,
         onChanged: (value) {

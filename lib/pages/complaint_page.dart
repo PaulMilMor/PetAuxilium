@@ -141,7 +141,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _dirTxt() {
     return Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+        //height: 65,
+        padding: const EdgeInsets.fromLTRB(1, 7, 11, 5),
         child: Stack(
           children: [
             GrayTextFormField(
@@ -192,34 +193,35 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   Widget _descriptionTxt(state) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-      child: TextField(
-        maxLength: 500,
-        maxLines: 4,
-        controller: _descTxtController,
-        decoration: InputDecoration(
-            labelText: "Describa su denuncia",
-            labelStyle: TextStyle(
-              color: Colors.grey,
-              // color: Color.fromRGBO(49, 232, 93, 1),
-            ),
-            suffixIcon: IconButton(
-              onPressed: () {
-                _descTxtController.clear();
-              },
-              icon: Icon(Icons.clear),
-            ),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey))),
-        onChanged: (value) {
-          createcomplaintBloc.add(UpdateDesc(value));
-
-          /*setState(() {
-            //   prefs.businessDescription = value;
-            _desc = value;
-          });*/
-        },
-      ),
+      padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      child: Container(
+          height: 130,
+          child: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            maxLength: 400,
+            maxLines: 3,
+            controller: _descTxtController,
+            decoration: InputDecoration(
+                labelText: "Describa su denuncia",
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  // color: Color.fromRGBO(49, 232, 93, 1),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _descTxtController.clear();
+                  },
+                  icon: Icon(Icons.clear),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey))),
+            onChanged: (value) {
+              setState(() {
+                //   prefs.businessDescription = value;
+                _desc = value;
+              });
+            },
+          )),
     );
   }
 

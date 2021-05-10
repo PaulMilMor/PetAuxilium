@@ -9,7 +9,6 @@ import 'package:pet_auxilium/blocs/createpublication/createpublication_bloc.dart
 import 'package:pet_auxilium/blocs/editcomplaint/editcomplaint_bloc.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 
-
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class MapPagePublication extends StatefulWidget {
@@ -17,13 +16,13 @@ class MapPagePublication extends StatefulWidget {
   _MapPagePublicationState createState() => _MapPagePublicationState();
 }
 
-//TODO: asignar punto inicial 
+//TODO: asignar punto inicial
 //TODO: solo utilizar un mapa
 class _MapPagePublicationState extends State<MapPagePublication> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-var bloc;
-var bloc2;
+  var bloc;
+  var bloc2;
   final prefs = preferencesUtil();
   LocationData _currentPosition;
   Location location = Location();
@@ -38,7 +37,7 @@ var bloc2;
     // print('xd');
 
     // }
-    
+
     super.initState();
     getLoc();
   }
@@ -56,12 +55,12 @@ var bloc2;
 
   @override
   Widget build(BuildContext context) {
-  bloc=ModalRoute.of(context).settings.arguments;
+    bloc = ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
-      _markers =bloc.state.locations??this._markers;
-  bloc2=ModalRoute.of(context).settings.arguments;
+    _markers = bloc.state.locations ?? this._markers;
+    bloc2 = ModalRoute.of(context).settings.arguments;
     //if (ModalRoute.of(context).settings.arguments != null)
-      _markers =bloc.state.locations??this._markers;
+    _markers = bloc.state.locations ?? this._markers;
     return Scaffold(
       appBar: AppBar(
         title: Text('Mapa'),

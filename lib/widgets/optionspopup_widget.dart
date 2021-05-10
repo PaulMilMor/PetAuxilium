@@ -10,7 +10,8 @@ import 'package:pet_auxilium/pages/edit_complaint_page.dart';
 import 'package:pet_auxilium/pages/edit_publication_page.dart';
 import 'package:pet_auxilium/pages/edit_business_page.dart';
 import 'package:pet_auxilium/pages/edit_keeper_page.dart';
-import 'package:pet_auxilium/pages/edit_publication_page.dart';
+
+import 'package:pet_auxilium/pages/edit_complaint_page.dart';
 import 'package:pet_auxilium/pages/following_page.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
@@ -20,10 +21,12 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 enum ClosePub { option1, eliminar }
 
 class OptionPopup extends StatefulWidget {
-  OptionPopup({@required this.publication, this.follows, this.voidCallback});
+  OptionPopup(
+      {@required this.publication, this.follows, this.voidCallback, this.size});
   List<String> follows;
   PublicationModel publication;
   VoidCallback voidCallback;
+  String size;
   @override
   _OptionPopupState createState() => _OptionPopupState();
 }
@@ -48,10 +51,16 @@ class _OptionPopupState extends State<OptionPopup> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<int>(
-        icon: Icon(
-          Icons.more_vert,
-          color: Color.fromRGBO(210, 210, 210, 1),
-        ),
+        icon: this.widget.size == 'small'
+            ? Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210, 210, 210, 1),
+                size: 20,
+              )
+            : Icon(
+                Icons.more_vert,
+                color: Color.fromRGBO(210, 210, 210, 1),
+              ),
         itemBuilder: (BuildContext context) => [
               _prefs.userID != widget.publication.userID
                   ? null
@@ -191,7 +200,7 @@ class _OptionPopupState extends State<OptionPopup> {
                 );
                 //Navigator.pushNamed(context, 'EditPublicationPage');
               } else if (p.category == 'DENUNCIA') {
-                  Navigator.of(context).push(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (BuildContext context) => EditComplaintPage(p)),
                 );
@@ -683,7 +692,8 @@ class _OptionPopupState extends State<OptionPopup> {
                                       topic01,
                                     );
                                   }
-                                  Navigator.of(context).pop();
+                                  Navigator.popUntil(context,
+                                      ModalRoute.withName('navigation'));
                                   if (p.category == 'DENUNCIA') {
                                     _deletePublication(p);
                                   } else if (p.category == 'NEGOCIO') {

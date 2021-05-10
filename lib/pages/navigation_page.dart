@@ -255,7 +255,8 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _CreateMenu() {
+  void _CreateMenu() async {
+    await initBusinessAndKeeper();
     String txtKeeper, txtBusiness;
     if (myKeeperProfile == null) {
       txtKeeper = "   Registrarme como cuidador";
@@ -305,9 +306,11 @@ class _NavigationPageState extends State<NavigationPage> {
                         GestureDetector(
                           onTap: () {
                             // PublicationPage();
-                            if (myBusiness== null) {
+                            if (myBusiness == null) {
+                              print('POOOOOOOOOOOOOOOOOL MYBUSINESS');
                               Navigator.pushNamed(context, 'CreateBusiness');
                             } else {
+                              print('POOOOOOOOOOOOOOOOOL NOTMYBUSINESS');
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>

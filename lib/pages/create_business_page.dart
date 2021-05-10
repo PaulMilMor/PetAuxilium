@@ -159,7 +159,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
 
   Widget _dirTxt() {
     return Container(
-        height: 55,
+        //height: 55,
         padding: const EdgeInsets.fromLTRB(1, 0, 31, 1),
         child: Stack(
           children: [
@@ -213,6 +213,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget _descriptionTxt(desc) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(9, 1, 12, 1),
+      //FIXME: Protip, no deberías darle alturas estáticas a los campos...
       child: Container(
           height: 120,
           child: TextFormField(
@@ -228,6 +229,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               ),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey)),
+              //FIXME: WHY THE FUCK?
               // suffixIcon: IconButton(
               //   onPressed: () {
               //     _descTxtController.clear();
@@ -293,7 +295,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
               _db.addBusiness(business).then((value) {
                 createbusinessBloc.add(CleanData());
                 _dirTxtController.clear();
-                Navigator.popAndPushNamed(context, 'navigation');
+                Navigator.popUntil(context, ModalRoute.withName('navigation'));
+                //Navigator.popAndPushNamed(context, 'navigation');
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
                   ..showSnackBar(

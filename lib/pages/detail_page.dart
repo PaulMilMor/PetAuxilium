@@ -124,11 +124,13 @@ class _DetailPageState extends State<DetailPage> {
       elevation: 1,
       expandedHeight: 350,
       actions: [
-        OptionPopup(
-          publication: widget.detailDocument,
-          follows: widget.follows,
-          voidCallback: widget.voidCallback,
-        )
+        _prefs.userID == ' '
+            ? Container()
+            : OptionPopup(
+                publication: widget.detailDocument,
+                follows: widget.follows,
+                voidCallback: widget.voidCallback,
+              )
       ],
       leading: IconButton(
         icon: new Icon(

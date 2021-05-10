@@ -11,7 +11,7 @@ class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final preferencesUtil _prefs = preferencesUtil();
-  final _pushUtil=PushNotificationUtil();
+  final _pushUtil = PushNotificationUtil();
   final _db = dbUtil();
   //Utiliza los datos del modelo User para registrar los datos en la base de datos y En el servicio de aunteticacion de firebase
   Future registerWithEmailAndPassword(UserModel user) async {
@@ -49,15 +49,13 @@ class AuthUtil {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-    
+
       await _db.getUser(result.user.uid);
-      
-       
+
       _prefs.userID = result.user.uid;
 
       _prefs.selectedIndex = 0;
       return 'Ingresó';
-   
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -92,7 +90,7 @@ class AuthUtil {
     try {
       //TODO:Poner img default para los anonimos
       var result = await _auth.signInAnonymously();
-    
+
       return (UserModel(id: result.user.uid, name: "anonimo"));
     } catch (e) {
       print(e.toString());
@@ -123,8 +121,9 @@ class AuthUtil {
 
       final authResult = await _auth.signInWithCredential(credential);
       final user = authResult.user;
-       final data= await _db.getUser(user.uid);
-    
+      final data = await _db.getUser(user.uid);
+      print('POOOOOOOOOOOOL USERDATA');
+      print(data);
       UserModel userModel = UserModel(
           id: user.uid,
           name: user.displayName,
@@ -132,19 +131,18 @@ class AuthUtil {
           imgRef: user.photoURL,
           follows: data.follows,
           notifications: data.notifications,
-          patreon: data.patreon
-          );
-  if (userModel.patreon!=null) {
-        _prefs.patreonUser=true;
-      }else{
-        _prefs.patreonUser=false;
+          patreon: data.patreon);
+      if (userModel.patreon != null) {
+        _prefs.patreonUser = true;
+      } else {
+        _prefs.patreonUser = false;
       }
       _db.addUser(userModel);
       _prefs.userName = userModel.name;
       _prefs.userID = userModel.id;
       _prefs.userImg = userModel.imgRef;
       _prefs.userEmail = userModel.email;
-      
+
       return 'Ingresó';
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
