@@ -70,7 +70,8 @@ class EditKeeperPageState extends State<EditKeeperPage> {
     print('services');
     print(widget.detailDocument.services);
     _selectedServices = widget.detailDocument.services;
-
+    //print(images);
+    //print(imagesRef);
     setState(() {
       images.remove("Add Image");
       images.add("Add Image");
@@ -134,8 +135,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        images.removeAt(index);
-
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         //
                       });
@@ -168,7 +168,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     onTap: () {
                       setState(() {
                         //images.add("Add Image");
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
@@ -224,7 +224,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'PublicationImages'));
-    imagesRef.removeLast();
+    //imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
@@ -234,6 +234,9 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       imageUpload.imageUrl = '';
       // _imgsFiles.add(imageUpload);
       images.replaceRange(index, index + 1, [imageUpload]);
+      imagesRef.remove(imageUpload);
+      imagesRef.remove("Add Image");
+      images.add("Add Image");
     });
   }
 
@@ -449,6 +452,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
                     behavior: SnackBarBehavior.floating,
                     content: Text('Es necesario llenar todos los campos')));
             } else {
+               imagesRef.remove('Add Image');
               print(_imgsFiles.toString());
               if (_isTarifa) {
                 PublicationModel ad = PublicationModel(
@@ -490,7 +494,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text('Publicar'),
+            child: Text('Guardar cambios'),
           )),
     );
   }

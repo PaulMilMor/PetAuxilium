@@ -8,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/blocs/editpublication/editpublication_bloc.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
+import 'package:pet_auxilium/pages/feed_page.dart';
+import 'package:pet_auxilium/pages/startup_page.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
@@ -45,17 +47,17 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   String _desc;
   var _location;
   List<LatLng> _locations = [];
+  var _realLocations;
   //List <String>_location;
   List imagesRef = [];
   List<Object> images = [];
-  List<ImageUploadModel> _imgsFiles = [];
   File imagefile;
+  List comparisonList;
   final picker = ImagePicker();
   PublicationModel publication;
 
   void initState() {
     super.initState();
-
     _selectedCategory = widget.detailDocument.category;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
@@ -70,34 +72,29 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     _locations.add(temp); //= [latitude,longitude];
     images = widget.detailDocument.imgRef;
     imagesRef = widget.detailDocument.imgRef;
+    
     print('POOOOOOOOOOOOOOOL ImGREG1');
     print(imagesRef);
     print(widget.detailDocument.imgRef);
     print(widget.detailDocument.id);
+    editpublicationBloc.add(UpdateImgs(images));
+    
     setState(() {
+      
       images.remove("Add Image");
-      //images.clear();
-      print('NOTPOOOOOOOOOOL4');
-      print(imagesRef);
       images.add("Add Image");
-      print('NOTPOOOOOOOOOOL3');
-      print(imagesRef);
     });
     _nameTxtController = TextEditingController(text: _name);
     getDir(_locations);
     //_dirTxtController = TextEditingController(text: _location);
     _descTxtController = TextEditingController(text: _desc);
-    print('NOTPOOOOOOOOOOL');
-    print(images);
-    print('NOTPOOOOOOOOOOL2');
-    print(imagesRef);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    
     editpublicationBloc = BlocProvider.of<EditpublicationBloc>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITAR PUBLICACIÓN'),
@@ -157,13 +154,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
-                        print('POOOOOOOOOOOOOOOL ImGREG2');
-                        print(imagesRef);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
-                        //_imgsFiles.removeAt(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -172,16 +164,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             ),
           );
         } else if (images[index] != "Add Image") {
-          //ImageUploadModel uploadModel = images[index];
-          print("tuperra madre");
-          print(images.length);
-          print(images);
-          print('POOOOOOOOOOOOOOOL ImGREG3');
-          print(imagesRef);
-          print(imagesRef);
-          //imagesRef.add(images[index].toString());
-          // imagesRef.remove("Add Image");
-          //images.add("Add Image");
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
@@ -202,13 +184,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
                     onTap: () {
                       setState(() {
                         //images.add("Add Image");
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
-                        print('POOOOOOOOOOOOOOOL ImGREG4');
-                        print(imagesRef);
-                        // images.replaceRange(index, index + 1, ['Add Image']);
-                        //_imgsFiles.removeAt(index);
-                        //         images.replaceRange(index, index + 1, ['Add Image']);
                       });
                     },
                   ),
@@ -218,7 +195,6 @@ class EditPublicationPageState extends State<EditPublicationPage> {
           );
         }
         //else {
-        print(images.length);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: AddImageButton(onTap: () {
@@ -263,11 +239,8 @@ class EditPublicationPageState extends State<EditPublicationPage> {
     });
 
     imagesRef.add(await _storage.uploadFile(imagefile, 'PublicationImages'));
-    imagesRef.removeLast();
+
     print('POOOOOOOOOOOOOOOL ImGREG5');
-    print(imagesRef);
-    print("chingado");
-    print(imagesRef.length);
     print(imagesRef);
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
@@ -279,19 +252,29 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       print("en el file");
 
       images.replaceRange(index, index + 1, [imageUpload]);
+      imagesRef.remove(imageUpload);
+      imagesRef.remove("Add Image");
+      images.add("Add Image");
+          print(imagesRef);
+
+      //imagesRef.remove("Add Image");
       editpublicationBloc.add(UpdateImgs(images));
+      //imagesRef.removeLast();
     });
     /*});*/
   }
 
   Widget _publicationForm(BuildContext context) {
+   
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
       child: BlocBuilder<EditpublicationBloc, EditpublicationState>(
         builder: (context, state) {
-          _locations = mapsUtil.getLocations(state.locations);
+          _locations = getLocations();
           getDir(_locations);
-          images = state.imgRef ?? this.images;
+          //Aqui esta el error, Si le asignas el valor de abajao a las imagenes se pone borra y se añade solo el icono
+          //images = getImages();
+          //state.imgRef ??  ["Add Image"];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -317,7 +300,29 @@ class EditPublicationPageState extends State<EditPublicationPage> {
       ),
     );
   }
+  List<LatLng> getLocations()  {
+   List<LatLng> locations=[];
+      widget.detailDocument.location.forEach((element) {
+        String location = element.toString();
+      locations.add(LatLng(
+              double.parse(location.substring(0, location.indexOf(',')).trim()),
+              double.parse( location.substring(location.indexOf(',') + 1).trim())));
+      });
+   return locations;
 
+    //element[]
+  }
+  
+  List getImages()  {
+   List images=[];
+      widget.detailDocument.imgRef.forEach((element) {
+        String image = element.toString();
+      images.add(image);
+      });
+   return images;
+
+    //element[]
+  }
   Widget _category(state) {
     return Container(
       // height: 100.0,
@@ -432,7 +437,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
               onTap: () {
                 /*Navigator.pushNamed(context, 'Map_edit_Page',
                     arguments: _markers);*/
-                prefs.previousPage = 'publication';
+     
                 Navigator.pushNamed(context, 'mapPublication',
                     arguments: editpublicationBloc);
               },
@@ -476,7 +481,10 @@ class EditPublicationPageState extends State<EditPublicationPage> {
         /*_nameTxtController.clear();
         _descTxtController.clear();
         _dirTxtController.clear();*/
+        
         editpublicationBloc.add(CleanData());
+        Navigator.pop(context);
+
       },
       style: TextButton.styleFrom(
         primary: Color.fromRGBO(49, 232, 93, 1),
@@ -495,22 +503,20 @@ class EditPublicationPageState extends State<EditPublicationPage> {
             prefs.adoptionName = 'Animal Callejero';
           }
           print(_locations);
+          print(imagesRef);
           if (_name.isEmpty ||
               _desc.isEmpty ||
               imagesRef.isEmpty ||
               _locations.isEmpty) {
-            print("images");
-            print(imagesRef);
-            print('POOOOOOOOOOOOOOOL ImGREG6');
-            print(imagesRef);
+ 
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
                   behavior: SnackBarBehavior.floating,
                   content: Text('Es necesario llenar todos los campos')));
           } else {
-            print(_imgsFiles.toString());
             imagesRef.remove('Add Image');
+            print(imagesRef);
             //print(mapsUtil.locationtoString(_locations));
             PublicationModel ad = PublicationModel(
                 id: widget.detailDocument.id,

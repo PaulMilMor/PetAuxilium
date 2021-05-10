@@ -9,7 +9,7 @@ part 'editpublication_state.dart';
 
 class EditpublicationBloc extends Bloc<EditpublicationEvent, EditpublicationState> {
   EditpublicationBloc() : super(EditpublicationState());
-
+  
   @override
   Stream<EditpublicationState> mapEventToState(
     EditpublicationEvent event,
@@ -41,11 +41,12 @@ class EditpublicationBloc extends Bloc<EditpublicationEvent, EditpublicationStat
   }
   Stream<EditpublicationState> _updateImgs(event)async*{
     yield state.copyWith(imgRef:event.imgRef);
+
   }
   Stream<EditpublicationState> _updateLocations(event)async*{
     yield state.copyWith(locations:event.locations);
   }
   Stream<EditpublicationState> _cleanData()async*{
-    yield EditpublicationState(name: '',desc:'',category: 'ADOPCIÓN', imgRef: [], locations:Set<Marker>());
+    yield EditpublicationState(name: '',desc:'',category: 'ADOPCIÓN', imgRef: ["Add Image"], locations:Set<Marker>());
   }
 }

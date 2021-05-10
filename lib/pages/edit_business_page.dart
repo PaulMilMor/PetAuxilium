@@ -20,7 +20,7 @@ import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 
 class EditBusinessPage extends StatefulWidget {
-  PublicationModel /*BusinessModel*/ detailDocument;
+  PublicationModel detailDocument;
   EditBusinessPage(this.detailDocument);
   @override
   _EditBusinessPageState createState() => _EditBusinessPageState();
@@ -118,9 +118,9 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 10),
       child: BlocBuilder<EditbusinessBloc, EditbusinessState>(
         builder: (context, state) {
-          _locations = mapsUtil.getLocations(state.locations);
+          _locations = getLocations();
           getDir(_locations);
-          images = state.imgRef ?? this.images;
+          //images = state.imgRef ?? this.images;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -154,6 +154,16 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       ),
     );
   }
+  List<LatLng> getLocations()  {
+   List<LatLng> locations=[];
+      widget.detailDocument.location.forEach((element) {
+        String location = element.toString();
+      locations.add(LatLng(
+              double.parse(location.substring(0, location.indexOf(',')).trim()),
+              double.parse( location.substring(location.indexOf(',') + 1).trim())));
+      });
+   return locations;
+  }
 
   Widget _nameTxt(state) {
     return Container(
@@ -175,17 +185,6 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           icon: Icon(Icons.clear),
         ),
       ),
-
-      /*TextField(
-      controller: _nameTxtController,
-      hintText: 'Nombre',
-      onChanged: (value) {
-        setState(() {
-          prefs.businessName = value;
-          _name = value;
-        });
-      },
-    )*/
     );
   }
 
@@ -280,6 +279,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
           child: Text('Cancelar', style: TextStyle(color: Colors.black)),
         ),
         onPressed: () {
+          editbusinessBloc.add(CleanData());
           Navigator.pop(context);
         },
         style: TextButton.styleFrom(
@@ -306,6 +306,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                     behavior: SnackBarBehavior.floating,
                     content: Text('Es necesario llenar todos los campos')));
             } else {
+              imagesRef.remove('Add Image');
               BusinessModel business = BusinessModel(
                   id: widget.detailDocument.id,
                   name: _nameTxtController.text,
@@ -376,7 +377,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         imagesRef.removeAt(index);
                         //         images.replaceRange(index, index + 1, ['Add Image']);
@@ -410,7 +411,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
                     onTap: () {
                       setState(() {
                         //images.add("Add Image");
-                        images.removeAt(index);
+                        //images.removeAt(index);
                         imagesRef.removeAt(index);
                         // images.replaceRange(index, index + 1, ['Add Image']);
                         //_imgsFiles.removeAt(index);
@@ -473,7 +474,7 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
-    imagesRef.removeLast();
+    //imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
@@ -482,6 +483,10 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
       imageUpload.imageFile = imageFile;
       imageUpload.imageUrl = '';
       images.replaceRange(index, index + 1, [imageUpload]);
+      imagesRef.remove(imageUpload);
+      imagesRef.remove("Add Image");
+      images.add("Add Image");
+      editbusinessBloc.add(UpdateImgs(images));
     });
   }
 

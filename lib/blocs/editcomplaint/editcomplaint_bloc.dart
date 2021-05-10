@@ -43,6 +43,6 @@ class EditcomplaintBloc extends Bloc<EditcomplaintEvent, EditcomplaintState> {
     yield state.copyWith(locations:event.locations);
   }
   Stream<EditcomplaintState> _cleanData()async*{
-    yield EditcomplaintState(name: '',desc:'', imgRef: [], locations:Set<Marker>());
+    yield EditcomplaintState(name: '',desc:'', imgRef: ["Add Image"], locations:Set<Marker>());
   }
 }

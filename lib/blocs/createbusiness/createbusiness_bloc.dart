@@ -48,6 +48,6 @@ class CreatebusinessBloc extends Bloc<CreatebusinessEvent, CreatebusinessState> 
     yield state.copyWith(services: event.services);
   }
   Stream<CreatebusinessState> _cleanData()async*{
-    yield CreatebusinessState(name: '',desc:'',services: [], imgRef: [], locations: Set<Marker>());
+    yield CreatebusinessState(name: '',desc:'',services: [], imgRef: ["Add Image"], locations: Set<Marker>());
   }
 }
