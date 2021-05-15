@@ -353,7 +353,7 @@ class _CommentsState extends State<Comments> {
             padding: const EdgeInsets.symmetric(horizontal: 36),
             child: _infoRow(),
           ),
-          if (widget.userid != _prefs.userID)
+          if (widget.userid != _prefs.userID && _prefs.userName!='anonimo')
             Align(
               alignment: Alignment.topLeft,
               child: Padding(

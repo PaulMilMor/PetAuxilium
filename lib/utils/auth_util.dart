@@ -90,6 +90,7 @@ class AuthUtil {
     try {
       //TODO:Poner img default para los anonimos
       var result = await _auth.signInAnonymously();
+ 
 
       return (UserModel(id: result.user.uid, name: "anonimo"));
     } catch (e) {

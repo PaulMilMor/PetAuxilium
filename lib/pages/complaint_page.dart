@@ -218,7 +218,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
             onChanged: (value) {
               setState(() {
                 //   prefs.businessDescription = value;
-                _desc = value;
+                createcomplaintBloc.add(UpdateDesc(value));
               });
             },
           )),
@@ -247,8 +247,12 @@ class _ComplaintPageState extends State<ComplaintPage> {
           primary: Color.fromRGBO(49, 232, 93, 1),
         ),
         onPressed: () async {
+                     print(state.name);
+            print(state.desc);
           // print(mapsUtil.locationtoString(_locations));
           if (state.name.isEmpty || _locations.isEmpty || state.desc.isEmpty) {
+            print(state.name);
+            print(state.desc);
             ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
