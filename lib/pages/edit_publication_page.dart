@@ -48,7 +48,7 @@ class EditPublicationPageState extends State<EditPublicationPage> {
   var _location;
   List<LatLng> _locations = [];
   var _realLocations;
-  //List <String>_location;
+
   List imagesRef = [];
   List<Object> images = [];
   File imagefile;

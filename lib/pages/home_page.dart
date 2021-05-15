@@ -142,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
         onTap: () {
+          _prefs.userName='anonimo';
           Navigator.pushNamed(context, 'startupPage');
         },
         child: new Text(
