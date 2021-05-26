@@ -25,7 +25,7 @@ class _FollowingPageState extends State<FollowingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LISTA DE SEGUIMIENTO'),
+        title: Text('Lista de seguimiento', style: TextStyle(fontSize: 19)),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

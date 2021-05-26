@@ -49,17 +49,26 @@ class _AccountPageState extends State<AccountPage> {
             Center(
               child: Text(
                 'PERFIL',
-                style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             _userInfo(),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
-              child: Divider(),
+              child: Divider(
+                color: Colors.black12,
+                height: 5,
+                thickness: 1,
+                indent: 1,
+                endIndent: 1,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Text('Mi Cuenta'),
+              child: Text(
+                'Mi cuenta',
+                style: TextStyle(fontSize: 15),
+              ),
             ),
             _buttonColumn(),
           ],
@@ -71,7 +80,7 @@ class _AccountPageState extends State<AccountPage> {
   Widget _userInfo() {
     return IntrinsicHeight(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.fromLTRB(25, 35, 25, 25),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -101,15 +110,16 @@ class _AccountPageState extends State<AccountPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 11.0),
+                        vertical: 10.0, horizontal: 25.0),
                     child: Text(
                       this._user.name,
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 12.0),
+                        vertical: 8.0, horizontal: 25.0),
                     child: Text(this._user.email),
                   ),
                 ],
@@ -131,7 +141,7 @@ class _AccountPageState extends State<AccountPage> {
 
   Widget _buttonColumn() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 1.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

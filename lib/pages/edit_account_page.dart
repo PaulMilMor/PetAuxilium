@@ -88,7 +88,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
                       color: Color.fromRGBO(30, 215, 96, 1),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    iconSize: 31,
+                    iconSize: 24,
                   ),
                 ),
                 backgroundColor: Colors.white,
@@ -98,7 +98,9 @@ class _Edit_account_pageState extends State<Edit_account_page> {
         child: Container(
           color: Colors.white,
           width: double.infinity,
-          child: Padding(padding: EdgeInsets.all(36.0), child: _signUpForm()),
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(30, 0, 30, 130),
+              child: _signUpForm()),
         ),
       ),
     );
@@ -113,11 +115,11 @@ class _Edit_account_pageState extends State<Edit_account_page> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
             child: Text(
               'Editar cuenta',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(30, 215, 96, 1),
               ),
@@ -138,7 +140,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
 
   Widget _photo() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 25, 12, 6),
       child: Row(
         children: [
           _image == null ? _addPhoto() : _removePhoto(),
@@ -264,7 +266,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
 
   Widget _nameTxt() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 25, 12, 6),
       child: GrayTextFormField(
         hintText: 'Nombre',
         textCapitalization: TextCapitalization.words,
@@ -363,7 +365,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
 
   Widget _signUpButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(5, 20, 12, 6),
       child: Align(
         alignment: Alignment.centerRight,
         child: _isLoading
@@ -376,9 +378,9 @@ class _Edit_account_pageState extends State<Edit_account_page> {
               )
             : ElevatedButton(
                 child: Text('Guardar cambios',
-                    style: TextStyle(color: Color.fromRGBO(30, 215, 96, 1))),
+                    style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: Color.fromRGBO(30, 215, 96, 1),
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {

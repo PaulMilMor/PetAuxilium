@@ -26,7 +26,10 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MIS PUBLICACIONES'),
+        title: Text(
+          'Mis Publicaciones',
+          style: TextStyle(fontSize: 19),
+        ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
