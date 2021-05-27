@@ -113,7 +113,7 @@ class DonationsPage extends StatelessWidget {
             // width: 250,
             child: Card(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25)),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
               child: Column(
                 children: [
@@ -196,7 +196,7 @@ class DonationsPage extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 10),
+                                      fontSize: 11),
                                 ),
                                 Icon(
                                   Icons.navigate_next,

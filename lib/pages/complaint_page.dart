@@ -74,9 +74,9 @@ class _ComplaintPageState extends State<ComplaintPage> {
       padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
       child: BlocBuilder<CreatecomplaintBloc, CreatecomplaintState>(
         builder: (context, state) {
-           _locations = mapsUtil.getLocations(state.locations);
+          _locations = mapsUtil.getLocations(state.locations);
           getDir(_locations);
-         // images = state.imgRef ?? this.images;
+          // images = state.imgRef ?? this.images;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -244,11 +244,11 @@ class _ComplaintPageState extends State<ComplaintPage> {
   Widget _saveBtn(state) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Color.fromRGBO(49, 232, 93, 1),
+          primary: Color.fromRGBO(30, 215, 96, 1),
         ),
         onPressed: () async {
-                     print(state.name);
-            print(state.desc);
+          print(state.name);
+          print(state.desc);
           // print(mapsUtil.locationtoString(_locations));
           if (state.name.isEmpty || _locations.isEmpty || state.desc.isEmpty) {
             print(state.name);
@@ -285,7 +285,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text('Guardar cambios'),
+          child: Text('Publicar'),
         ));
   }
 
@@ -411,8 +411,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
       }
     });
     imagesRef.add(await _storage.uploadFile(imageFile, 'BusinessImages'));
-   
-   // imagesRef.removeLast();
+
+    // imagesRef.removeLast();
 
     setState(() {
       ImageUploadModel imageUpload = new ImageUploadModel();
@@ -422,7 +422,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
       imageUpload.imageUrl = '';
       // _imgsFiles.add(imageUpload);
       images.replaceRange(index, index + 1, [imageUpload]);
-       createcomplaintBloc.add(UpdateImgs(images));
+      createcomplaintBloc.add(UpdateImgs(images));
     });
   }
 

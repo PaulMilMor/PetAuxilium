@@ -54,7 +54,7 @@ class _ListFeedState extends State<ListFeed> {
             },
             child: Card(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(15.0)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -125,6 +125,7 @@ class _ListFeedState extends State<ListFeed> {
                           publication: _data,
                           follows: widget.follows,
                           voidCallback: widget.voidCallback,
+                          size: 'small',
                         )
                 ],
               ),
@@ -274,7 +275,7 @@ class _DestacadosListState extends State<DestacadosList> {
               );
             },
             child: Container(
-              width: 160,
+              width: 205,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
@@ -282,18 +283,21 @@ class _DestacadosListState extends State<DestacadosList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Flexible(
-                      flex: 4,
+                      flex: 5,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(15),
                             topRight: Radius.circular(15)),
                         child: Image.network(
                           _foto,
-                          width: 160,
+                          width: 200,
                           //height: 100,
                           fit: BoxFit.cover,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Flexible(
                       child: Padding(
@@ -303,7 +307,7 @@ class _DestacadosListState extends State<DestacadosList> {
                           children: [
                             Text(_data.name,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -342,7 +346,7 @@ class _DestacadosListState extends State<DestacadosList> {
                     Flexible(
                       flex: 3,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -350,7 +354,7 @@ class _DestacadosListState extends State<DestacadosList> {
                               Text(
                                 _data.pricing,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: Colors.grey[700],
                                 ),
                               ),

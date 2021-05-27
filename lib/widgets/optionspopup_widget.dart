@@ -44,8 +44,8 @@ class _OptionPopupState extends State<OptionPopup> {
   String _msg = 'La publicación que seguías ha sido cerrada';
   List listItems = [
     'Spam',
-    'Informacion fraudulenta',
-    'Suplantacion de identidad',
+    'Información fraudulenta',
+    'Suplantación de identidad',
     'Fotos Inapropiadas'
   ];
   @override
@@ -417,15 +417,15 @@ class _OptionPopupState extends State<OptionPopup> {
                         color: Colors.black38,
                         height: 5,
                         thickness: 1,
-                        indent: 50,
-                        endIndent: 50,
+                        indent: 40,
+                        endIndent: 40,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 30, bottom: 10),
                         child: Center(
                           child: Text(
                               "¿Por qué estás reportando esta publicación?",
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 15)),
                         ),
                       ),
                       Padding(
@@ -450,13 +450,13 @@ class _OptionPopupState extends State<OptionPopup> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.fromLTRB(0, 20, 15, 0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                              child: Text('Cancelar',
+                              child: Text('Cancelar     ',
                                   style: TextStyle(color: Colors.black)),
                               onPressed: () {
                                 Navigator.of(context).pop();
@@ -507,7 +507,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                                 behavior:
                                                     SnackBarBehavior.floating,
                                                 content: Text(
-                                                    'Se reportó esta publicación')));
+                                                    'Se reportó la publicación')));
                                         }
                                       }
                                           //}
@@ -528,7 +528,7 @@ class _OptionPopupState extends State<OptionPopup> {
                                         ..showSnackBar(SnackBar(
                                             behavior: SnackBarBehavior.floating,
                                             content: Text(
-                                                'Se reportó esta publicación')));
+                                                'Se reportó la publicación')));
                                     }
                                     //Navigator.of(context).pop();
                                   }

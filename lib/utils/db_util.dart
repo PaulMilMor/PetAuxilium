@@ -160,7 +160,7 @@ class dbUtil {
         'nspam': FieldValue.increment(1),
       });
     }
-    if (selectedoption == "Informacion fraudulenta") {
+    if (selectedoption == "Información fraudulenta") {
       await _firestoreInstance
           .collection("reports")
           .doc(rm.publicationid)
@@ -170,7 +170,7 @@ class dbUtil {
         'nfalseinfo': FieldValue.increment(1),
       });
     }
-    if (selectedoption == "Suplantacion de identidad") {
+    if (selectedoption == "Suplantación de identidad") {
       await _firestoreInstance
           .collection("reports")
           .doc(rm.publicationid)

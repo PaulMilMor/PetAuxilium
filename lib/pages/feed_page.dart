@@ -48,7 +48,7 @@ class _FeedState extends State<Feed> {
                   children: [
                     Text(
                       'Destacados',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 17),
                     ),
                     _sorter('destacados'),
                   ],
@@ -56,11 +56,11 @@ class _FeedState extends State<Feed> {
               ),
               _listPatreon(follow),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
                 child: Divider(
-                  color: Colors.black12,
+                  color: Colors.black26,
                   height: 1,
-                  thickness: 2,
+                  thickness: .5,
                   indent: 30,
                   endIndent: 30,
                 ),
@@ -72,7 +72,7 @@ class _FeedState extends State<Feed> {
                   children: [
                     Text(
                       'Publicaciones',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 17),
                     ),
                     _sorter('publicaciones'),
                   ],
