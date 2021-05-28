@@ -62,8 +62,8 @@ class _ListFeedState extends State<ListFeed> {
                     borderRadius: BorderRadius.circular(5.0),
                     child: Image.network(
                       _foto,
-                      width: 100,
-                      height: 100,
+                      width: 115,
+                      height: 140,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -76,7 +76,7 @@ class _ListFeedState extends State<ListFeed> {
                           children: <Widget>[
                             Text(_data.name,
                                 style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -105,7 +105,7 @@ class _ListFeedState extends State<ListFeed> {
 
                             Container(
                                 alignment: Alignment.centerLeft,
-                                width: 171,
+                                width: 200,
                                 child: mapsUtil
                                     .getLocationText(_data.location.first)),
                             SizedBox(

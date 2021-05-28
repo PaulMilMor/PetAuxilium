@@ -76,14 +76,12 @@ class _DetailPageState extends State<DetailPage> {
                                     color: Colors.green,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 52,
-                                ),
                                 if (widget.detailDocument.category
                                         .toString()
                                         .contains('CUIDADOR') &&
                                     widget.detailDocument.userID !=
-                                        _prefs.userID && _prefs.userName!='anonimo')
+                                        _prefs.userID &&
+                                    _prefs.userName != 'anonimo')
                                   _buttonChat()
                               ],
                             ),

@@ -348,19 +348,19 @@ class _CommentsState extends State<Comments> {
               ),
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 25),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36),
+            padding: const EdgeInsets.symmetric(horizontal: 35),
             child: _infoRow(),
           ),
-          if (widget.userid != _prefs.userID && _prefs.userName!='anonimo')
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(66, 0, 0, 0),
-                child: _buttonChat(),
-              ),
-            ),
+          // if (widget.userid != _prefs.userID && _prefs.userName != 'anonimo')
+          //   Align(
+          //     alignment: Alignment.topLeft,
+          //     child: Padding(
+          //       padding: const EdgeInsets.fromLTRB(60, 0, 0, 0),
+          //       child: _buttonChat(),
+          //     ),
+          //   ),
 
           SizedBox(
             height: 35,
@@ -373,7 +373,7 @@ class _CommentsState extends State<Comments> {
             endIndent: 1,
           ),
           SizedBox(
-            height: 10,
+            height: 1,
           ),
           _makeComment(snapshot.data.length.toString()),
           SizedBox(
@@ -393,7 +393,7 @@ class _CommentsState extends State<Comments> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Flexible(
-          flex: 3,
+          flex: 4,
           fit: FlexFit.tight,
           child: Row(
             children: [
@@ -414,6 +414,15 @@ class _CommentsState extends State<Comments> {
                   style: TextStyle(fontSize: 12),
                 ),
               ),
+              if (widget.userid != _prefs.userID &&
+                  _prefs.userName != 'anonimo')
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(60, 0, 0, 0),
+                    child: _buttonChat(),
+                  ),
+                ),
             ],
           ),
         ),
@@ -498,6 +507,7 @@ class _CommentsState extends State<Comments> {
       child: Icon(
         Icons.chat,
         color: Colors.grey,
+        size: 20,
       ),
       onPressed: () {
         _chats();
