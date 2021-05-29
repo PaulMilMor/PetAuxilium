@@ -89,9 +89,9 @@ class _DetailPageState extends State<DetailPage> {
                               height: 7,
                             ),
                             Divider(
-                              color: Colors.black45,
-                              height: 5,
-                              thickness: 1,
+                              color: Colors.black26,
+                              height: 7,
+                              thickness: 0.5,
                               indent: 50,
                               endIndent: 50,
                             ),
@@ -119,8 +119,8 @@ class _DetailPageState extends State<DetailPage> {
       pinned: true,
       snap: false,
       floating: false,
-      elevation: 1,
-      expandedHeight: 350,
+      elevation: 5,
+      expandedHeight: 330,
       actions: [
         _prefs.userID == ' '
             ? Container()
@@ -141,7 +141,7 @@ class _DetailPageState extends State<DetailPage> {
       flexibleSpace: FlexibleSpaceBar(
         title: Text(name,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 15,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             )),
@@ -214,6 +214,7 @@ class _DetailPageState extends State<DetailPage> {
       child: Icon(
         Icons.chat,
         color: Colors.grey,
+        size: 21,
       ),
       onPressed: () {
         _chats();

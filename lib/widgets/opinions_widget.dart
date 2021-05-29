@@ -373,24 +373,23 @@ class _OpinionsState extends State<Opinions> {
   }
 
   Widget _serviceNumbers() {
-    if (this.widget.category == 'CUIDADOR' ||
-        this.widget.category == 'NEGOCIO') {
+    if (this.widget.category == 'CUIDADOR') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.star_rate_rounded,
             color: Color.fromRGBO(30, 215, 96, 1),
-            size: 25,
+            size: 20,
           ),
           Text(
             avgscore.isNaN || avgscore <= 0
-                ? 'N/A'
+                ? ' N/A'
                 : avgscore.toStringAsFixed(1),
           ),
           Text(" (${this.widget.nevaluations})"),
           Container(
-            height: 25,
+            height: 15,
             child: VerticalDivider(
               color: Colors.black45,
               width: 20,
@@ -403,6 +402,23 @@ class _OpinionsState extends State<Opinions> {
               color: Colors.grey[600],
             ),
           ),
+        ],
+      );
+    } else if (this.widget.category == 'NEGOCIO') {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.star_rate_rounded,
+            color: Color.fromRGBO(30, 215, 96, 1),
+            size: 20,
+          ),
+          Text(
+            avgscore.isNaN || avgscore <= 0
+                ? ' N/A'
+                : avgscore.toStringAsFixed(1),
+          ),
+          Text(" (${this.widget.nevaluations})"),
         ],
       );
     } else {
@@ -586,9 +602,12 @@ class _OpinionsState extends State<Opinions> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               //FIXME: Así como está no muestra el número de opiniones
+              SizedBox(
+                height: 1,
+              ),
               _serviceNumbers(),
               SizedBox(
-                height: 21,
+                height: 25,
               ),
               Container(
                 width: 340,
@@ -602,20 +621,23 @@ class _OpinionsState extends State<Opinions> {
                   ),
                 ),
               ),
-              SizedBox(height: 5),
-              _chipList(),
               SizedBox(height: 15),
+              _chipList(),
+              SizedBox(height: 5),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Publicado el ${this.widget.date.day} de " +
-                      "${_getMonth(this.widget.date.month)} de " +
-                      "${this.widget.date.year}"),
+                  child: Text(
+                    "Publicado el ${this.widget.date.day} de " +
+                        "${_getMonth(this.widget.date.month)} de " +
+                        "${this.widget.date.year}",
+                    style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                  ),
                 ),
               ),
               SizedBox(
-                height: 35,
+                height: 30,
               ),
 
               const Divider(
@@ -626,7 +648,7 @@ class _OpinionsState extends State<Opinions> {
                 endIndent: 1,
               ),
               SizedBox(
-                height: 3,
+                height: 1,
               ),
               _myEvaluation == null
                   ? _makeOpinion(snapshot.data.length.toString())
@@ -707,20 +729,19 @@ class _OpinionsState extends State<Opinions> {
 
   Widget _chipList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Wrap(
-            spacing: 6,
+            spacing: 5,
             children: this.widget.services.map((service) {
               String serviceString = service.toString()[0] +
                   service.toString().substring(1).toLowerCase();
 
               return ActionChip(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
                   backgroundColor: Color.fromRGBO(210, 210, 210, 1),
-
-                  //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
-                  label: Text(serviceString),
+                  label: Text(serviceString, style: TextStyle(fontSize: 12)),
                   onPressed: () {
                     switch (serviceString) {
                       case 'Cuidados especiales':

@@ -348,9 +348,9 @@ class _CommentsState extends State<Comments> {
               ),
             ),
           ),
-          SizedBox(height: 25),
+          SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: _infoRow(),
           ),
           // if (widget.userid != _prefs.userID && _prefs.userName != 'anonimo')
@@ -419,18 +419,19 @@ class _CommentsState extends State<Comments> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(60, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: _buttonChat(),
                   ),
                 ),
+              if (widget.userid != _prefs.userID &&
+                  _prefs.userName != 'anonimo')
+                Container(
+                    height: 35, child: VerticalDivider(color: Colors.black38)),
             ],
           ),
         ),
-        SizedBox(
-          width: 5,
-        ),
         Flexible(
-          flex: 2,
+          flex: 3,
           fit: FlexFit.tight,
           child: Text(
             "Publicado el ${this.widget.date.day} de " +
@@ -507,7 +508,7 @@ class _CommentsState extends State<Comments> {
       child: Icon(
         Icons.chat,
         color: Colors.grey,
-        size: 20,
+        size: 19,
       ),
       onPressed: () {
         _chats();
