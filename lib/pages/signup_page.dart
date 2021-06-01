@@ -78,31 +78,23 @@ class _SignupPageState extends State<SignupPage> {
               pinned: true,
               snap: false,
               floating: false,
-              elevation: 1,
-              expandedHeight: 200,
+              elevation: 5,
+              expandedHeight: 0,
               leading: IconButton(
                 icon: new Icon(
                   Icons.arrow_back_ios,
+                  size: 24,
                   color: Color.fromRGBO(30, 215, 96, 1),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
-                iconSize: 32,
               ),
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   'Crea una cuenta',
                   style: TextStyle(
-                    fontSize: 19,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(30, 215, 96, 1),
-                  ),
-                ),
-                background: Align(
-                  alignment: Alignment.topRight,
-                  child: Image.asset(
-                    'assets/logo_asset.png',
-                    width: 55,
-                    //width: 120,
                   ),
                 ),
               ),
@@ -112,7 +104,7 @@ class _SignupPageState extends State<SignupPage> {
                 color: Colors.white,
                 width: double.infinity,
                 child: Padding(
-                    padding: EdgeInsets.all(35.0), child: _signUpForm()),
+                    padding: EdgeInsets.all(25.0), child: _signUpForm()),
               ),
             ),
           ],
@@ -137,11 +129,11 @@ class _SignupPageState extends State<SignupPage> {
           _confirmPasswordTxt(),
           _signUpButton(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 72, 12, 6),
+            padding: const EdgeInsets.fromLTRB(12, 20, 12, 6),
             child: Row(
               children: [
                 Expanded(child: Divider()),
-                Text('O ingresa con Google®'),
+                Text('  O  '),
                 Expanded(
                   child: Divider(),
                 ),
@@ -156,7 +148,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _photo() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
       child: Row(
         children: [
           _image == null ? _addPhoto() : _removePhoto(),
@@ -164,7 +156,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: _imageSelected
-                  ? Text('Foto de Perfil')
+                  ? Text('    Foto de Perfil')
                   : Text('Selecciona una foto de perfil',
                       style: TextStyle(
                         color: Color.fromRGBO(232, 49, 93, 1),
@@ -418,7 +410,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _signUpButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 17, 12, 6),
       child: Align(
         alignment: Alignment.centerRight,
         child: _isLoading
@@ -430,10 +422,16 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               )
             : ElevatedButton(
-                child: Text('Registrarse',
-                    style: TextStyle(color: Color.fromRGBO(30, 215, 96, 1))),
+                child: Text('  Registrarse  ',
+                    style: TextStyle(
+                        color: Color.fromRGBO(30, 215, 96, 1), fontSize: 15)),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
+                  elevation: 1,
+                  side: BorderSide(
+                    width: 1.0,
+                    color: Color.fromRGBO(30, 215, 96, 1),
+                  ),
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
@@ -461,17 +459,18 @@ class _SignupPageState extends State<SignupPage> {
   Widget _googleSignUpButton() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         child: _isGoogleLoading
             ? Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 25.0),
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 25.0),
                 child: CircularProgressIndicator(
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
                 ),
               )
             : GoogleSignInButton(
-                text: 'Registrarse con Google',
+                text: 'Registrarse con Google  ',
+                textStyle: TextStyle(fontSize: 15, color: Colors.white),
                 darkMode: true,
                 onPressed: () {
                   setState(() {

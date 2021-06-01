@@ -234,7 +234,7 @@ class _OpinionsState extends State<Opinions> {
                                   controller: _commentController,
                                   onEditingComplete: () => _focusNode.unfocus(),
                                 ),
-                          SizedBox(height: 10),
+                          //SizedBox(height: 10),
 
                           if (prefs.userID != ' ' &&
                               prefs.userID != 'gmMu6mxOb1RN9D596ToO2nuFMKQ2')
@@ -275,7 +275,7 @@ class _OpinionsState extends State<Opinions> {
                                         : ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               primary: Color.fromRGBO(
-                                                  49, 232, 93, 1),
+                                                  30, 215, 96, 1),
                                             ),
                                             onPressed: () {
                                               Navigator.popUntil(context,
@@ -439,19 +439,8 @@ class _OpinionsState extends State<Opinions> {
                     alignment: Alignment.center,
                     child: SingleChildScrollView(
                         child: Column(children: <Widget>[
-                      Container(
-                        width: 290,
-                        height: 40,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            length == '1'
-                                ? length + ' Opinión'
-                                : length + ' Opiniones',
-                            //maxLines: 3,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Container(
                         width: 290,
@@ -465,7 +454,7 @@ class _OpinionsState extends State<Opinions> {
                                   child: Text(
                                     prefs.userName,
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.justify,
                                     overflow: TextOverflow.fade,
@@ -485,7 +474,7 @@ class _OpinionsState extends State<Opinions> {
                             ),
                             Text(
                               _comment,
-                              textAlign: TextAlign.left,
+                              textAlign: TextAlign.justify,
                             ),
                           ]),
                         ),
@@ -495,7 +484,6 @@ class _OpinionsState extends State<Opinions> {
                           onDoubleTap: () {},
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            print('Eliminar comentario');
                             _scoredelete();
                             _db.deleteDocument(_id, "evaluations");
                             //_evaluacion();
@@ -517,7 +505,7 @@ class _OpinionsState extends State<Opinions> {
                           child: Align(
                             alignment: Alignment.topRight,
                             child: Text(
-                              'ELIMINAR EVALUACIÓN',
+                              'ELIMINAR OPINIÓN',
                               style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.black,
@@ -527,10 +515,35 @@ class _OpinionsState extends State<Opinions> {
                         ),
                       ),
                       SizedBox(
-                        height: 11,
+                        height: 15,
                       ),
-
-                      //_opinionList(),
+                      Container(
+                          width: 350,
+                          child: Text.rich(TextSpan(
+                            style: TextStyle(
+                              fontSize: 13.5,
+                            ),
+                            children: [
+                              WidgetSpan(
+                                child: Icon(
+                                  Icons.comment,
+                                  color: Colors.black45,
+                                  size: 17,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '  ',
+                              ),
+                              TextSpan(
+                                text: length == '1'
+                                    ? length + ' Opinión'
+                                    : length + ' Opiniones',
+                                //maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                            ],
+                          ))),
                     ]))))));
   }
 

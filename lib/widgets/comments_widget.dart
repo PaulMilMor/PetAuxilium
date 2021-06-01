@@ -376,9 +376,7 @@ class _CommentsState extends State<Comments> {
             height: 1,
           ),
           _makeComment(snapshot.data.length.toString()),
-          SizedBox(
-            height: 10,
-          ),
+
           if (prefs.userID != ' ') _listComments(snapshot),
           SizedBox(
             height: 350,

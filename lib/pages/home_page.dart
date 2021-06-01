@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
   Widget _signUpButton() {
     return ElevatedButton(
       child: Text(
-        'Registrarse',
+        ' Registrarse ',
         style: TextStyle(
           color: Color.fromRGBO(30, 215, 96, 1),
         ),
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
         onTap: () {
-          _prefs.userName='anonimo';
+          _prefs.userName = 'anonimo';
           Navigator.pushNamed(context, 'startupPage');
         },
         child: new Text(

@@ -59,31 +59,23 @@ class _LoginPageState extends State<LoginPage> {
               pinned: true,
               snap: false,
               floating: false,
-              elevation: 1,
-              expandedHeight: 200,
+              elevation: 5,
+              expandedHeight: 120,
               leading: IconButton(
                 icon: new Icon(
                   Icons.arrow_back_ios,
                   color: Color.fromRGBO(30, 215, 96, 1),
+                  size: 24,
                 ),
                 onPressed: () => Navigator.of(context).pop(),
-                iconSize: 32,
               ),
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   'Iniciar sesión',
                   style: TextStyle(
-                    fontSize: 19,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(30, 215, 96, 1),
-                  ),
-                ),
-                background: Align(
-                  alignment: Alignment.topRight,
-                  child: Image.asset(
-                    'assets/logo_asset.png',
-                    width: 55,
-                    //width: 120,
                   ),
                 ),
               ),
@@ -93,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white,
                 width: double.infinity,
                 child:
-                    Padding(padding: EdgeInsets.all(36.0), child: _loginForm()),
+                    Padding(padding: EdgeInsets.all(30.0), child: _loginForm()),
               ),
             ),
           ]),
@@ -125,11 +117,11 @@ class _LoginPageState extends State<LoginPage> {
           _passwordTxt(),
           _loginButton(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 72, 12, 6),
+            padding: const EdgeInsets.fromLTRB(12, 55, 12, 6),
             child: Row(
               children: [
                 Expanded(child: Divider()),
-                Text('O ingresa con Google®'),
+                Text('  O  '),
                 Expanded(
                   child: Divider(),
                 ),
@@ -144,13 +136,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _emailTxt() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 1, 12, 6),
       child: GrayTextFormField(
         hintText: 'Correo Electrónico',
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
         validator: (value) {
-          return value.trim().isEmpty ? 'Introduce el correo' : null;
+          return value.trim().isEmpty
+              ? 'Introduce un correo electrónico'
+              : null;
         },
         onEditingComplete: () => node.nextFocus(),
       ),
@@ -165,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
         controller: _pswdController,
         obscureText: true,
         validator: (value) {
-          return value.trim().isEmpty ? 'Introduce la contraseña' : null;
+          return value.trim().isEmpty ? 'Introduce una contraseña' : null;
         },
         onEditingComplete: () {
           if (_formKey.currentState.validate()) {
@@ -182,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
       child: Align(
         alignment: Alignment.centerRight,
         child: _isLoading
@@ -196,11 +190,12 @@ class _LoginPageState extends State<LoginPage> {
             : ElevatedButton(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child:
-                      Text('Continuar', style: TextStyle(color: Colors.white)),
+                  child: Text('Continuar',
+                      style: TextStyle(color: Colors.white, fontSize: 15)),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromRGBO(30, 215, 96, 1),
+                  elevation: 3,
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
@@ -235,7 +230,8 @@ class _LoginPageState extends State<LoginPage> {
                   });
                   _loginGoogle();
                 },
-                text: 'Ingresar con Google',
+                text: 'Ingresar con Google  ',
+                textStyle: TextStyle(fontSize: 16, color: Colors.black54),
               ),
             ),
     );
