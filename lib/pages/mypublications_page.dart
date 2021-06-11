@@ -35,11 +35,11 @@ class _MypublicationsPageState extends State<MypublicationsPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: _MypublicationsList(),
+      body: _myPublicationsList(),
     );
   }
 
-  Widget _MypublicationsList() {
+  Widget _myPublicationsList() {
     return StreamBuilder(
       stream: _db.getMypublications(_prefs.userID),
       builder: (BuildContext context,

@@ -22,17 +22,7 @@ class DonationsPage extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
           elevation: 0,
-          /*actions: [
-            if(_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2')
-            PopupMenuButton(
-              icon: Icon(
-                Icons.more_vert,
-                color: Color.fromRGBO(210,210,210,1),
-              )
-              itemBuilder: ()
-            ),
-                      
-          ]*/
+    
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
@@ -79,20 +69,7 @@ class DonationsPage extends StatelessWidget {
                 DonationModel donation = snapshot.data.elementAt(index);
                 return _donationCard(donation, context);
               }),
-              /*itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, index) {
-                DonationModel donation = snapshot.data.elementAt(index);
-                return Container(
-                  child: Column(
-                    children: [
-                      Text(donation.name),
-                      //Text(donation.description),
-                      //Text(donation.img),
-                      //Text(donation.website),
-                    ],
-                  ),
-                );
-              },*/
+        
             );
           } else {
             return Center(

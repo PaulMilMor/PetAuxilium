@@ -1,4 +1,4 @@
-//import 'dart:html';
+
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -6,7 +6,6 @@ import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
-import 'package:app_settings/app_settings.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -15,6 +14,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final preferencesUtil _prefs = preferencesUtil();
+  final String adminID='gmMu6mxOb1RN9D596ToO2nuFMKQ2';
   PushNotificationUtil notifications = PushNotificationUtil();
   UserModel _user;
   void initState() {
@@ -22,7 +22,6 @@ class _AccountPageState extends State<AccountPage> {
     if (_prefs.userID != ' ') {
       _user = UserModel(
         name: _prefs.userName,
-        //birthday: "16/02/99",
         email: _prefs.userEmail,
         imgRef: _prefs.userImg,
       );
@@ -31,14 +30,12 @@ class _AccountPageState extends State<AccountPage> {
         name: 'Usuario Anónimo',
         email: '',
         imgRef: ' ',
-        //imgRef:
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context).settings.name);
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -78,22 +75,8 @@ class _AccountPageState extends State<AccountPage> {
             CircleAvatar(
               backgroundImage: NetworkImage(this._user.imgRef),
               backgroundColor: Colors.white,
-              //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
               radius: 50,
             ),
-            /*Stack(children: [
-              Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(49, 232, 93, 1),
-                ),
-              ),
-              CircleAvatar(
-                backgroundImage: NetworkImage(this._user.imgRef),
-                backgroundColor: Colors.white,
-                //backgroundColor: Color.fromRGBO(210, 210, 210, 1),
-                radius: 50,
-              ),
-            ]),*/
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +105,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   bool isAdmin() {
-    if (_prefs.userID == 'gmMu6mxOb1RN9D596ToO2nuFMKQ2') {
+    if (_prefs.userID == adminID) {
       return true;
     } else {
       return false;
@@ -235,19 +218,6 @@ class _AccountPageState extends State<AccountPage> {
     );
   }*/
 
-  Widget _followedButton() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Publicaciones seguidas',
-        icon: Icons.navigate_next,
-        onPressed: () {},
-      ),
-    );
-  }
-
   Widget _settingsButton() {
     return Container(
       decoration: BoxDecoration(
@@ -303,14 +273,13 @@ class _AccountPageState extends State<AccountPage> {
         _prefs.userImg = '';
         _prefs.userEmail = '';
         _prefs.selectedIndex = 0;
-        print('USER ID');
-        print(_prefs.userID);
+        
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       },
     );
   }
 
-  bool isSwitched = false;
+  //bool isSwitched = false;
   /*Widget _switchB() {
     return Container(
         child: Column(children: <Widget>[

@@ -35,12 +35,8 @@ class _ComplaintPageState extends State<ComplaintPage> {
   final StorageUtil _storage = StorageUtil();
   String _title = "";
   String _desc = "";
-  String _direct = "";
-  Future<File> _imageFile;
   File imageFile;
-  List<String> _dir;
   List<String> imagesRef = [];
-  List<ImageUploadModel> _imgsFiles = [];
   List<LatLng> _locations;
   List<Object> images = [];
   final picker = ImagePicker();

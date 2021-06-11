@@ -35,7 +35,6 @@ class _FeedState extends State<Feed> {
         body: Container(
       padding: EdgeInsets.only(top: 7),
       child: StreamBuilder(
-        //FIXME: corregir follows para anonimos
         stream: _db.getFollows(_prefs.userID),
         builder: (BuildContext context, AsyncSnapshot<List<String>> follow) {
           print(follow.data);
@@ -130,8 +129,7 @@ class _FeedState extends State<Feed> {
   _listPatreon(follow) {
     return Container(
       height: 180,
-      //width: 100,
-      //padding: EdgeInsets.symmetric(vertical: 10),
+     
       child: StreamBuilder(
           stream: _db.PatreonFeedElements,
           builder: (context, snapshot) {

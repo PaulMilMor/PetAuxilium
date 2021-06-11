@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/models/publication_model.dart';
-import 'package:pet_auxilium/pages/startup_page.dart';
 
 class HomePage extends StatefulWidget {
   @override

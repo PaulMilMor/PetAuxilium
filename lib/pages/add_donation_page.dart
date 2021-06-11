@@ -23,16 +23,16 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   TextEditingController _nameController;
   TextEditingController _descriptionController;
   TextEditingController _websiteController;
-  final _prefs = new preferencesUtil();
+ 
   final _db = dbUtil();
   final _storage = StorageUtil();
   String _name = '';
   String _desc = '';
   String _web = '';
   bool _isLoading = false;
-  Future<File> _imageFile;
+  
   File _file;
-  ImageUploadModel _imageUpload = null;
+  ImageUploadModel _imageUpload ;
   final picker = ImagePicker();
 
   @override

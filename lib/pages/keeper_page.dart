@@ -1,10 +1,8 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -47,10 +45,8 @@ class KeeperPageState extends State<KeeperPage> {
 
   List<String> imagesRef = [];
   List<Object> images = [];
-  Future<File> _imageFile;
   List<ImageUploadModel> _imgsFiles = [];
   File imageFile;
-  List<File> _listImages = [];
   final picker = ImagePicker();
   FocusScopeNode _node;
   //GlobalKey<FormFieldState<dynamic>> _multiSelectKey = GlobalKey();
@@ -141,9 +137,7 @@ class KeeperPageState extends State<KeeperPage> {
       if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-        print("xd" + imageFile.toString());
       } else {
-        print("faros");
       }
     });
   }
@@ -337,12 +331,12 @@ class KeeperPageState extends State<KeeperPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _saveBtn()],
+        children: [_cancelBtn(), _saveBtn()],
       ),
     );
   }
 
-  Widget _CancelBtn() {
+  Widget _cancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 11.0, bottom: 50),
       child: TextButton(

@@ -201,7 +201,7 @@ class _CommentsState extends State<Comments> {
                             height: 10,
                           ),
 
-                          comentar_button(),
+                          commentBtn(),
 
                           Padding(
                               padding: EdgeInsets.only(
@@ -248,7 +248,7 @@ class _CommentsState extends State<Comments> {
     setState(() {});
   }
 
-  comentar_button() {
+  commentBtn() {
     if (_commentController.text.isNotEmpty) {
       return Container(
         width: 310,

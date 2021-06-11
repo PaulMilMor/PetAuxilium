@@ -1,19 +1,11 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import 'package:pet_auxilium/models/business_model.dart';
-import 'package:pet_auxilium/models/complaint_model.dart';
 import 'package:pet_auxilium/models/publication_model.dart';
-import 'package:pet_auxilium/models/report_model.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
-import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/maps_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
-import 'package:pet_auxilium/utils/push_notifications_util.dart';
-import 'package:pet_auxilium/widgets/button_widget.dart';
 
 import 'package:pet_auxilium/widgets/opinions_widget.dart';
 import 'package:pet_auxilium/widgets/comments_widget.dart';
@@ -83,7 +75,8 @@ class _DetailPageState extends State<DetailPage> {
                                         .toString()
                                         .contains('CUIDADOR') &&
                                     widget.detailDocument.userID !=
-                                        _prefs.userID && _prefs.userName!='anonimo')
+                                        _prefs.userID &&
+                                    _prefs.userName != 'anonimo')
                                   _buttonChat()
                               ],
                             ),
@@ -153,6 +146,51 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+//Carusel donde de depliegan las imagenes
+  Widget _setCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        aspectRatio: 2.0,
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
+        initialPage: 0,
+        autoPlay: false,
+      ),
+      items: widget.detailDocument.imgRef
+          .map((element) => Container(
+                child: Center(
+                    child:
+                        Image.network(element, fit: BoxFit.cover, width: 300)),
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _buttonChat() {
+    return TextButton(
+      child: Icon(
+        Icons.chat,
+        color: Colors.grey,
+      ),
+      onPressed: () {
+        _chats();
+      },
+    );
+  }
+
+  void _chats() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatScreenPage(
+                    widget.detailDocument.userID,
+                    widget.detailDocument.name,
+                  )));
+    });
+  }
+  
+  //Zona de abajo con comentarios y evaluaciones
   _bottomSection() {
     if (widget.detailDocument.category.toString().contains('CUIDADOR') ||
         widget.detailDocument.category.toString().contains('NEGOCIO')) {
@@ -175,51 +213,5 @@ class _DetailPageState extends State<DetailPage> {
         userid: widget.detailDocument.userID,
       );
     }
-  }
-
-  Widget _setCarousel() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        aspectRatio: 2.0,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: false,
-        initialPage: 0,
-        autoPlay: false,
-      ),
-      items: widget.detailDocument.imgRef
-          .map((element) => Container(
-                child: Center(
-                    child:
-                        Image.network(element, fit: BoxFit.cover, width: 300)),
-              ))
-          .toList(),
-    );
-  }
-
-  _chats() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //var myId = _prefs.userID;
-      //    var chatRoomId = _getChatRoomIdByIds(myId, widget.detailDocument.userID);
-
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChatScreenPage(
-                    widget.detailDocument.userID,
-                    widget.detailDocument.name,
-                  )));
-    });
-  }
-
-  Widget _buttonChat() {
-    return TextButton(
-      child: Icon(
-        Icons.chat,
-        color: Colors.grey,
-      ),
-      onPressed: () {
-        _chats();
-      },
-    );
   }
 }

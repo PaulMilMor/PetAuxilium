@@ -19,8 +19,7 @@ class _MapPageState extends State<MapPage> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   var bloc;
   // String _name;
-  String _dateTime;
-  LocationData _currentPosition;
+ 
   Location location = Location();
   GoogleMapController _controller;
   final prefs = preferencesUtil();

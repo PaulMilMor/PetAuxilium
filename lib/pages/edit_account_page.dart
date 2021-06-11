@@ -404,7 +404,15 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       ),
     );
   }
-
+  Widget _buttons() {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [_cancelBtn(), _signUpButton()],
+      ),
+    );
+  }
   void _signUp(BuildContext context2) async {
     UserModel _user = UserModel(
       id: _prefs.userID,
@@ -418,8 +426,7 @@ class _Edit_account_pageState extends State<Edit_account_page> {
       _prefs.userImg = _user.imgRef;
       _prefs.userName = _user.name;
       _prefs.userEmail = _user.email;
-      print("aqui wey");
-      print(_user.email);
+   
       await _auth.updateEmail(_emailController.text);
       if (_passwordController.text != "") {
         await _auth.updatePassword(_passwordController.text);
@@ -448,18 +455,9 @@ class _Edit_account_pageState extends State<Edit_account_page> {
     }
   }
 
-  Widget _buttons() {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _signUpButton()],
-      ),
-    );
-  }
 
-//USAR camelCase PLEASE
-  Widget _CancelBtn() {
+
+  Widget _cancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 5.0, bottom: 7.0),
       child: TextButton(

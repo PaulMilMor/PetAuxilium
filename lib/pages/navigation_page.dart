@@ -102,7 +102,7 @@ class _NavigationPageState extends State<NavigationPage> {
         padding: const EdgeInsets.only(top: 55.0),
         child: FloatingActionButton(
           onPressed: () {
-            _CreateMenu();
+            _createMenu();
           },
           child: Icon(
             Icons.add,
@@ -255,7 +255,7 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _CreateMenu() async {
+  void _createMenu() async {
     await initBusinessAndKeeper();
     String txtKeeper, txtBusiness;
     if (myKeeperProfile == null) {

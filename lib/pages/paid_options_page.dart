@@ -371,12 +371,7 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
                                             setState(() {
                                               _isLoading = true;
                                             });
-                                            print(
-                                                'POOOOOOOOOOOOOOLOOO TIRED OF THIS FCKIN BS');
-                                            print(_cardNumber);
-                                            print(_cvv);
-                                            print(_expMonth);
-                                            print(_expYear);
+                                            
                                             if (_cardNumber != '' &&
                                                 _cvv != '' &&
                                                 _expMonth != '' &&
@@ -444,7 +439,6 @@ class _PaidOptionsPageState extends State<PaidOptionsPage> {
     print('pooleano 1');
     StripeTransactionResponse response = await StripeUtil.payViaCard(
         amount: _price, currency: 'USD', card: card, pack: pack);
-    print('pooleano 2');
     if (response.success) {
       preferencesUtil().patreonUser = true;
       await dbUtil()

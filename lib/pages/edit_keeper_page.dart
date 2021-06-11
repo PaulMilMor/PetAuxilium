@@ -80,7 +80,6 @@ class EditKeeperPageState extends State<EditKeeperPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     _node = FocusScope.of(context);
     return Scaffold(
       /* appBar: AppBar(
@@ -202,9 +201,7 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       if (imageFile != null) {
         if (images.length < 6) images.add("Add Image");
         getFileImage(index);
-        print("xd" + imageFile.toString());
       } else {
-        print("faros");
       }
     });
   }
@@ -418,12 +415,12 @@ class EditKeeperPageState extends State<EditKeeperPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [_CancelBtn(), _saveBtn()],
+        children: [_cancelBtn(), _saveBtn()],
       ),
     );
   }
 
-  Widget _CancelBtn() {
+  Widget _cancelBtn() {
     return Container(
       margin: const EdgeInsets.only(right: 11.0, bottom: 50),
       child: TextButton(
