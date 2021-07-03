@@ -648,49 +648,36 @@ class _OptionPopupState extends State<OptionPopup> {
                                     _msg = 'El usuario ' +
                                         _prefs.userName +
                                         ' ha eliminado una de sus publicaciones';
-                                    _pushUtil.sendCloseNotif(
-                                      _prefs.userID,
-                                      _prefs.userName,
-                                      _msg,
-                                      topic01,
-                                    );
+                                    _pushUtil.sendFcmMessage(
+             _prefs.userName, _msg, '/topics/$topic01', _prefs.userID,'chat');
                                   } else {
-                                    if (p.category == 'ADOPCIÓN') {
-                                      _msg = 'El usuario ' +
+                                    var deleteMsg={
+                                      'ADOPCION':'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la publicación porque ' +
                                           p.name +
-                                          ' fue dado en adopción :)';
-                                    } else if (p.category == 'ANIMAL PERDIDO') {
-                                      _msg = 'El usuario ' +
+                                          ' fue dado en adopción :)',
+                                     'ANIMAL PERDIDO':'El usuario ' +
                                           _prefs.userName +
                                           ' cerró la publicación porque ' +
                                           p.name +
-                                          ' ha sido encontrado ;)';
-                                    } else if (p.category == 'CUIDADOR') {
-                                      _msg = 'El usuario ' +
+                                          ' ha sido encontrado ;)',
+                                     'CUIDADOR':'El usuario ' +
                                           _prefs.userName +
-                                          ' cerró la publicación porque ya no continuará siendo cuidador';
-                                    } else if (p.category == 'NEGOCIO') {
-                                      _msg = 'El negocio ' +
+                                          ' cerró la publicación porque ya no continuará siendo cuidador',
+                                      'NEGOCIO':'El negocio ' +
                                           p.name +
-                                          ' decidió cerrar la publicación que seguías';
-                                    } else if (p.category ==
-                                        'SITUACIÓN DE CALLE') {
-                                      _msg = 'El usuario ' +
+                                          ' decidió cerrar la publicación que seguías',
+                                      'SITUACIÓN DE CALLE':'El usuario ' +
                                           _prefs.userName +
-                                          ' cerró la publicación porque el animal callejero fue atendido';
-                                    } else if (p.category == 'DENUNCIA') {
-                                      _msg = 'El usuario ' +
+                                          ' cerró la publicación porque el animal callejero fue atendido',
+                                      'DENUNCIA':'El usuario ' +
                                           _prefs.userName +
-                                          ' cerró la denuncia porque esta ya ha sido atendida/resuelta';
-                                    }
-                                    _pushUtil.sendCloseNotif(
-                                      _prefs.userID,
-                                      _prefs.userName,
-                                      _msg,
-                                      topic01,
-                                    );
+                                          ' cerró la denuncia porque esta ya ha sido atendida/resuelta'
+              
+                                    };
+                                  
+                                   _pushUtil.sendFcmMessage( _prefs.userName, deleteMsg[p.category], '/topics/$topic01', _prefs.userID,'chat');
                                   }
                                   Navigator.popUntil(context,
                                       ModalRoute.withName('navigation'));

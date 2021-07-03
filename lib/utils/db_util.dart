@@ -13,7 +13,7 @@ import 'package:pet_auxilium/models/publication_model.dart';
 import 'package:pet_auxilium/models/notification_model.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:rxdart/rxdart.dart';
-
+//TODO: Fragmentar el dbUtil en providers para que quede el codigo en segmentos
 class dbUtil {
   final _firestoreInstance = FirebaseFirestore.instance;
   final preferencesUtil _prefs = preferencesUtil();
@@ -71,7 +71,9 @@ class dbUtil {
   Future<void> addBusiness(BusinessModel business) async {
     bool patreonValue = false;
     if (_prefs.patreonUser) patreonValue = true;
-    await _firestoreInstance.collection("business").doc(business.id).set({
+    business.category="NEGOCIO";
+    if(business.score==null) business.score=0;  
+        await _firestoreInstance.collection("business").doc(business.id).set({
       'category': 'NEGOCIO',
       'name': business.name,
       'location': business.location,

@@ -15,7 +15,6 @@ class Map_edit_Page extends StatefulWidget {
 class _Map_edit_PageState extends State<Map_edit_Page> {
   LatLng _initialcameraposition = LatLng(29.115967, -111.025490);
   // String _name;
-  String _dateTime;
   LocationData _currentPosition;
   Location location = Location();
   GoogleMapController _controller;

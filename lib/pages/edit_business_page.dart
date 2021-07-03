@@ -58,7 +58,6 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   void initState() {
     super.initState();
 
-//FIXME: cambiar esto en proximos sprints para que esta info la obtenga de Firebase
     _selectedServices = widget.detailDocument.services;
     _name = widget.detailDocument.name;
     _desc = widget.detailDocument.description;
@@ -85,19 +84,9 @@ class _EditBusinessPageState extends State<EditBusinessPage> {
   Widget build(BuildContext context) {
     editbusinessBloc = BlocProvider.of<EditbusinessBloc>(context);
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text('EDITAR NEGOCIO'),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Color.fromRGBO(49, 232, 93, 1),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),*/
+
       body: _body(context),
     );
-    //  _dir=mapsUtil.getDir(_locations);
   }
 
   Widget _body(BuildContext context) {

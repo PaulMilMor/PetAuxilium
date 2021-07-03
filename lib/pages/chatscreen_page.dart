@@ -193,8 +193,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         };
         _db.updateLastMessageSend(chatRoomId, lastMessageInfoMap);
         if (sendClicked) {
-          _pushUtil.sendChatMensagge(
-              _prefs.userID, _prefs.userName, msg, token);
+          _pushUtil.sendFcmMessage(
+             _prefs.userName, msg, token, _prefs.userID,'chat');
           messageTextEdittingController.text = "";
           _db.updateNotifications(
               '${_prefs.userName} te envió un mensaje', [widget.id], null);

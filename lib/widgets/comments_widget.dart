@@ -257,8 +257,8 @@ class _CommentsState extends State<Comments> {
           onTap: () {
             _comentar();
             _commentController.clear();
-            _pushUtil.sendNewCommentNotif(
-                prefs.userID, prefs.userName, msg, token);
+            _pushUtil..sendFcmMessage(
+             _prefs.userName, msg, token, _prefs.userID,'chat');
             if (this.widget.userid != _prefs.userID) {
               _db.updateNotifications(
                   'Alguien comentó sobre una de tus publicaciones',

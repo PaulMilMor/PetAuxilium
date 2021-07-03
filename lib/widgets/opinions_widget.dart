@@ -308,11 +308,8 @@ class _OpinionsState extends State<Opinions> {
                                       _evaluacion();
                                       if (this.widget.callback != null)
                                         this.widget.callback();
-                                      _pushUtil.sendNewOpinionNotif(
-                                          prefs.userID,
-                                          prefs.userName,
-                                          msg,
-                                          token);
+                                      _pushUtil.sendFcmMessage(
+             prefs.userName, msg, token, prefs.userID,'chat');
                                       if (this.widget.userID != prefs.userID) {
                                         _db.updateNotifications(
                                             msg,
