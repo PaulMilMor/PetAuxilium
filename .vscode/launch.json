@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PetAuxilium",
+            "name": "pet_auxilium",
             "request": "launch",
             "type": "dart"
         }

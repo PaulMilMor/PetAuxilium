@@ -71,7 +71,7 @@ flutter_icons:
   ios: true
   image_path: "assets/app_icon.png"
 flutter_launcher_name:
-  name: "PetAuxilium"
+  name: "pet_auxilium"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,7 +94,6 @@ flutter:
     - assets/
     - assets/icons/
   #   - images/a_dot_ham.jpeg
-  # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
   # For details regarding adding assets from package dependencies, see

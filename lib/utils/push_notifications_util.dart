@@ -60,7 +60,7 @@ class PushNotificationUtil {
   dispose() {
     _dataStream?.close();
   }
-//TODO:Conseguir un servidor donde subir peticiones REST, esto no puede salir asi
+//TODO:Conseguir un servidor donde subir peticiones REST, esto no puede salir asi, o encontrar una forma de ocultar la key
   /// PARA ENVIAR
   Future<bool> sendFcmMessage( String title, String message, String token,String id,  String type) async {
     var msgTipes={

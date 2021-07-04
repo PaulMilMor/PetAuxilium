@@ -1,17 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
-
 import 'package:pet_auxilium/models/donations_model.dart';
-
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
-
 import 'package:pet_auxilium/utils/db_util.dart';
-import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 
 class AddDonationsPage extends StatefulWidget {
@@ -23,18 +17,15 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   TextEditingController _nameController;
   TextEditingController _descriptionController;
   TextEditingController _websiteController;
- 
   final _db = dbUtil();
   final _storage = StorageUtil();
   String _name = '';
   String _desc = '';
   String _web = '';
   bool _isLoading = false;
-  
   File _file;
   ImageUploadModel _imageUpload ;
   final picker = ImagePicker();
-
   @override
   void initState() {
     super.initState();

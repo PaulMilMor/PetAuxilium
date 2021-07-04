@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/utils/auth_util.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
+import 'package:pet_auxilium/utils/image_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/storage_util.dart';
 import 'package:pet_auxilium/models/user_model.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
-import 'package:pet_auxilium/widgets/appbar_widget.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class SignupPage extends StatefulWidget {
@@ -35,10 +35,9 @@ class _SignupPageState extends State<SignupPage> {
   final StorageUtil _storage = StorageUtil();
   final _db = dbUtil();
   final preferencesUtil _prefs = preferencesUtil();
-  Future<File> _imageFile;
-  File imageFile;
+  ImageUtil imageUtil = ImageUtil();
 
-  ImageUploadModel _image = null;
+  ImageUploadModel _image;
   final picker = ImagePicker();
 
   @override
@@ -218,9 +217,8 @@ class _SignupPageState extends State<SignupPage> {
               size: 20,
               color: Color.fromRGBO(49, 232, 93, 1),
             ),
-            onTap: () {
-              _onAddImageClick();
-            },
+            onTap: _onAddImageClick
+            
           ),
         ),
       ],
@@ -228,35 +226,14 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future _onAddImageClick() async {
-    final _imageFile = await picker.getImage(source: ImageSource.gallery);
-    imageFile = File(_imageFile.path);
-
-    setState(() {
-      if (imageFile != null) {
-        getFileImage();
-      }
-    });
-  }
-
-  void getFileImage() async {
-    //  _imgRef = await _storage.uploadFile(file, 'usuarios');
-    if (imageFile != null) {
-      setState(() {
-        ImageUploadModel imageUpload = new ImageUploadModel();
-        imageUpload.isUploaded = false;
-        imageUpload.uploading = false;
-        imageUpload.imageFile = imageFile;
-        imageUpload.imageUrl = '';
-        print('Image UPLOAD');
-        _image = imageUpload;
-        _imageSelected = true;
-      });
+    ImageUploadModel img = await imageUtil.onAddImageClick();
+    if (img != null) {
+      _image = img;
+      _imageSelected = true;
+      setState(() {});
     } else {
-      setState(() {
-        if (_image == null) {
-          _imageSelected = false;
-        }
-      });
+      if (_image == null) _imageSelected = false;
+      setState(() {});
     }
   }
 
@@ -496,7 +473,7 @@ class _SignupPageState extends State<SignupPage> {
     await _auth.registerWithEmailAndPassword(_user);
     String _result =
         await _auth.signInWithEmailAndPassword(_user.email, _user.pass);
-    _user.imgRef = await _storage.uploadFile(imageFile, 'usuarios');
+    _user.imgRef = await _storage.uploadFile(_image.imageFile, 'usuarios');
     _prefs.userImg = _user.imgRef;
     print('IMGREF');
     print(_user.imgRef);

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_auxilium/models/user_model.dart';
@@ -14,24 +12,22 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final preferencesUtil _prefs = preferencesUtil();
-  final String adminID='gmMu6mxOb1RN9D596ToO2nuFMKQ2';
+  final String adminID = 'gmMu6mxOb1RN9D596ToO2nuFMKQ2';
   PushNotificationUtil notifications = PushNotificationUtil();
+
   UserModel _user;
   void initState() {
     super.initState();
-    if (_prefs.userID != ' ') {
-      _user = UserModel(
-        name: _prefs.userName,
-        email: _prefs.userEmail,
-        imgRef: _prefs.userImg,
-      );
-    } else {
-      _user = UserModel(
-        name: 'Usuario Anónimo',
-        email: '',
-        imgRef: ' ',
-      );
-    }
+    (_prefs.userID != ' ')
+        ? _user = UserModel(
+            name: _prefs.userName,
+            email: _prefs.userEmail,
+            imgRef: _prefs.userImg)
+        : _user = UserModel(
+            name: 'Usuario Anónimo',
+            email: '',
+            imgRef: ' ',
+          );
   }
 
   @override
@@ -105,11 +101,8 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   bool isAdmin() {
-    if (_prefs.userID == adminID) {
-      return true;
-    } else {
-      return false;
-    }
+     if (_prefs.userID == adminID) return true;
+      return false;    
   }
 
   Widget _buttonColumn() {
@@ -121,17 +114,9 @@ class _AccountPageState extends State<AccountPage> {
           if (!isAdmin()) _editProfileBtn(),
           if (!isAdmin()) _myPostsButton(),
           if (!isAdmin()) _followListButton(),
-          //if (!isAdmin()) _postBusinessButton(),
-          //if (!isAdmin()) _caretakerButton(),
-          //if (!isAdmin()) _complaintButton(),
           if (isAdmin()) _donationsButton(),
-          //_createPostButton(),
-          //_followedButton(),
-          // _settingsButton(),
           if (!isAdmin()) _settingsButton(),
           _logoutButton(),
-
-          //if (!isAdmin()) _switchB(),
         ],
       ),
     );
@@ -188,35 +173,6 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  /*Widget _postBusinessButton() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Publicar mi negocio',
-        icon: Icons.navigate_next,
-        onPressed: () {
-          Navigator.pushNamed(context, 'CreateBusiness');
-        },
-      ),
-    );
-  }*/
-
-  /*Widget _caretakerButton() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Anunciarme como cuidador',
-        icon: Icons.navigate_next,
-        onPressed: () {
-          Navigator.pushNamed(context, 'caretakerPage');
-        },
-      ),
-    );
-  }*/
 
   Widget _settingsButton() {
     return Container(
@@ -233,20 +189,6 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  /*Widget _complaintButton() {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(color: Color.fromRGBO(202, 202, 202, 1)))),
-      child: GrayFlatButton(
-        text: 'Hacer una denuncia',
-        icon: Icons.navigate_next,
-        onPressed: () {
-          Navigator.pushNamed(context, 'complaintPage');
-        },
-      ),
-    );
-  }*/
 
   Widget _donationsButton() {
     return Container(
@@ -273,34 +215,11 @@ class _AccountPageState extends State<AccountPage> {
         _prefs.userImg = '';
         _prefs.userEmail = '';
         _prefs.selectedIndex = 0;
-        
+
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       },
     );
   }
 
-  //bool isSwitched = false;
-  /*Widget _switchB() {
-    return Container(
-        child: Column(children: <Widget>[
-      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Text(
-          '    Recibir notificaciones',
-          style: TextStyle(fontSize: 15),
-        ),
-        Switch(
-          value: isSwitched,
-          onChanged: (value) {
-            setState(() {
-              isSwitched = value;
-              //notifications.onoffNotifications(isSwitched);
-              print(isSwitched);
-            });
-          },
-          activeTrackColor: Colors.greenAccent[400],
-          activeColor: Colors.greenAccent[600],
-        ),
-      ])
-    ]));
-  }*/
+
 }
