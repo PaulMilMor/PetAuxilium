@@ -15,7 +15,7 @@ APP SCREENSHOTS:
 
 <br>
 
-![Screenshot_2021-12-02-20-46-58-237_com example pet_auxilium](https://user-images.githubusercontent.com/45349730/148883110-d1cb4cd1-00df-4eb3-842d-8171cfe7db52.jpg)
+![Screenshot_2021-12-02-20-49-16-763_com example pet_auxilium](https://user-images.githubusercontent.com/45349730/148883561-c55afe93-0d5e-4cbc-8f2a-65ca4e161e0f.jpg)
 
 <br>
 
