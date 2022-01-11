@@ -7,11 +7,12 @@ PetAuxilium es una aplicación móvil que ofrece una plataforma cuyo propósito 
 
 APP SCREENSHOTS:
 
+
 ![Screenshot_2021-12-02-20-50-13-597_com example pet_auxilium](https://user-images.githubusercontent.com/45349730/148883023-0c493860-25ec-4052-8b94-817801dcf77c.jpg)
 
 <br>
 
-![Screenshot_2021-12-02-20-49-16-763_com example pet_auxilium](https://user-images.githubusercontent.com/45349730/148883037-45c141c5-1bb8-450e-9486-4571a700da90.jpg)
+![Screenshot_2021-12-02-20-49-16-763_com example pet_auxilium (2)](https://user-images.githubusercontent.com/45349730/148883676-9090ac62-93c9-49fd-8942-bed4d7c42116.jpg)
 
 <br>
 
