@@ -27,7 +27,7 @@ class dbUtil {
       "evaluationsID": user.evaluationsID,
     }).then((value) {});
   }
-
+FirebaseFirestore get instancia=>_firestoreInstance;
 //Obtiene los datos de un usario utilizando su ID
   Future<UserModel> getUser(String id) async {
     //throw Exception('jiji');
@@ -44,11 +44,7 @@ class dbUtil {
         print(value.data());
         UserModel userModel = UserModel.fromJsonMap(value.data(), id);
         print(userModel.follows);
-        if (userModel.patreon == null) {
-          _prefs.patreonUser = false;
-        } else {
-          _prefs.patreonUser = true;
-        }
+        userModel.patreon == null ?_prefs.patreonUser = false : _prefs.patreonUser = true;
         return userModel;
       }
 
@@ -109,7 +105,7 @@ class dbUtil {
     List<BusinessModel> locations = List<BusinessModel>();
     await _firestoreInstance.collection('business').get().then((value) {
       value.docs.forEach((element) {
-        locations.add(BusinessModel.fromJsonMap(element.data(), element.id));
+        locations.add(BusinessModel.fromJson(element.data(), element.id));
       });
     });
     return locations;
@@ -869,62 +865,8 @@ print(docRef.documentID);*/
     return evaluationsID;
   }
 
-  Future addMessage(
-      String chatRoomId, String messageId, Map messageInfoMap) async {
-    return await FirebaseFirestore.instance
-        .collection("chatrooms")
-        .doc(chatRoomId)
-        .collection("chats")
-        .doc(messageId)
-        .set(messageInfoMap);
-  }
+  
 
-  Future updateLastMessageSend(
-      String chatRoomId, Map lastMessageInfoMap) async {
-    print('deberia entrar en update');
-    print(chatRoomId);
-    return FirebaseFirestore.instance
-        .collection("chatrooms")
-        .doc(chatRoomId)
-        .update(lastMessageInfoMap)
-        .then((value) => print('en teoria funciono'));
-  }
-
-  createChatRoom(String chatRoomId, Map chatRoomInfoMap) async {
-    final snapShot = await FirebaseFirestore.instance
-        .collection("chatrooms")
-        .doc(chatRoomId)
-        .get();
-
-    if (snapShot.exists) {
-      // chatroom already exists
-      return true;
-    } else {
-      // chatroom does not exists
-      return FirebaseFirestore.instance
-          .collection("chatrooms")
-          .doc(chatRoomId)
-          .set(chatRoomInfoMap);
-    }
-  }
-
-  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
-    return FirebaseFirestore.instance
-        .collection("chatrooms")
-        .doc(chatRoomId)
-        .collection("chats")
-        .orderBy("ts", descending: true)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot> getChatRooms() {
-    //print('El user es $myUsername');
-    return FirebaseFirestore.instance
-        .collection("chatrooms")
-        // .orderBy("lastMessageSendTs", descending: true)
-        .where("users", arrayContains: _prefs.userID)
-        .snapshots();
-  }
 
   Stream<List<DonationModel>> getDonations() =>
       _firestoreInstance.collection('donations').snapshots().map((value) {
@@ -946,10 +888,7 @@ print(docRef.documentID);*/
     });
   }
 
-  Future<QuerySnapshot> getAllChatRooms() async {
-    // print('El user es $myUsername');
-    return FirebaseFirestore.instance.collection("chatrooms").get();
-  }
+
 
   updateToken(id, token) async {
     await _firestoreInstance
@@ -991,7 +930,7 @@ print(docRef.documentID);*/
         .get()
         .then((value) {
       value.docs.forEach((element) {
-        bus = BusinessModel.fromJsonMap(element.data(), element.id);
+        bus =BusinessModel.fromJson(element.data(), element.id);
       });
     });
     return bus;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_auxilium/models/ImageUploadModel.dart';
 import 'package:pet_auxilium/models/donations_model.dart';
+import 'package:pet_auxilium/utils/image_util.dart';
 import 'package:pet_auxilium/widgets/button_widget.dart';
 import 'package:pet_auxilium/widgets/textfield_widget.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
@@ -19,13 +20,16 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   TextEditingController _websiteController;
   final _db = dbUtil();
   final _storage = StorageUtil();
+  ImageUtil _imageUtil=ImageUtil();
+  
   String _name = '';
   String _desc = '';
   String _web = '';
   bool _isLoading = false;
   File _file;
   ImageUploadModel _imageUpload ;
-  final picker = ImagePicker();
+
+  
   @override
   void initState() {
     super.initState();
@@ -216,26 +220,12 @@ class _AddDonationsPageState extends State<AddDonationsPage> {
   }
 
   Future _onAddImageClick() async {
-    final _imageFile = await picker.getImage(source: ImageSource.gallery);
-    _file = File(_imageFile.path);
-
-    setState(() {
-      if (_file != null) {
-        getFileImage();
-      }
-    });
-  }
-
-  void getFileImage() async {
-    if (_file != null) {
-      setState(() {
-        ImageUploadModel imageUpload2 = new ImageUploadModel();
-        imageUpload2.isUploaded = false;
-        imageUpload2.uploading = false;
-        imageUpload2.imageFile = _file;
-        imageUpload2.imageUrl = '';
-        _imageUpload = imageUpload2;
-      });
+ ImageUploadModel img = await _imageUtil.onAddImageClick();
+    if (img != null) {
+    _imageUpload  = img;
+      setState(() {});
+    } else {
+      setState(() {});
     }
   }
 

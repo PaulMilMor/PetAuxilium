@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/models/notification_model.dart';
+import 'package:pet_auxilium/providers/chat_provider.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/utils/push_notifications_util.dart';
@@ -22,6 +23,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   Stream messageStream;
   final preferencesUtil _prefs = preferencesUtil();
   final dbUtil _db = dbUtil();
+  final ChatProvider _chatProvider = ChatProvider();
   final _pushUtil = PushNotificationUtil();
   String chatRoomId;
   TextEditingController messageTextEdittingController = TextEditingController();
@@ -34,7 +36,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   getAndSetMessages() async {
-    messageStream = await _db.getChatRoomMessages(chatRoomId);
+    messageStream = await _chatProvider.getChatRoomMessages(chatRoomId);
     setState(() {});
   }
 
@@ -175,7 +177,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       Map<String, dynamic> chatRoomInfoMap = {
         "users": [_prefs.userID, widget.id]
       };
-      _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+      _chatProvider.createChatRoom(chatRoomId, chatRoomInfoMap);
       Map<String, dynamic> messageInfoMap = {
         "message": msg,
         "sendBy": _prefs.userID,
@@ -185,16 +187,18 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       if (messageId == "") {
         messageId = randomAlphaNumeric(12);
       }
-      await _db.addMessage(chatRoomId, messageId, messageInfoMap).then((value) {
+      await _chatProvider
+          .addMessage(chatRoomId, messageId, messageInfoMap)
+          .then((value) {
         Map<String, dynamic> lastMessageInfoMap = {
           "lastMessage": msg,
           "lastMessageSendTs": lastMessageTs,
           "lastMessageSendBy": _prefs.userID
         };
-        _db.updateLastMessageSend(chatRoomId, lastMessageInfoMap);
+        _chatProvider.updateLastMessageSend(chatRoomId, lastMessageInfoMap);
         if (sendClicked) {
           _pushUtil.sendFcmMessage(
-             _prefs.userName, msg, token, _prefs.userID,'chat');
+              _prefs.userName, msg, token, _prefs.userID, 'chat');
           messageTextEdittingController.text = "";
           _db.updateNotifications(
               '${_prefs.userName} te envió un mensaje', [widget.id], null);

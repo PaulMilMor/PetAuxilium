@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_auxilium/providers/chat_provider.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 import 'package:pet_auxilium/widgets/ChatRoomListTile_widget.dart';
@@ -9,10 +10,11 @@ class ChatRooms extends StatefulWidget {
   _ChatRoomsState createState() => _ChatRoomsState();
 }
 
+
+
 class _ChatRoomsState extends State<ChatRooms> {
   final preferencesUtil _prefs = preferencesUtil();
-  final dbUtil _db = dbUtil();
-
+ final  ChatProvider _chatProvider=ChatProvider();
   @override
   void initState() {
     super.initState();
@@ -25,8 +27,9 @@ class _ChatRoomsState extends State<ChatRooms> {
       ),
       body: Container(
         child: StreamBuilder(
-          stream: _db.getChatRooms(),
+          stream: _chatProvider.getChatRooms(),
           builder: (context, snapshot) {
+            
             if (snapshot.hasData) {
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,

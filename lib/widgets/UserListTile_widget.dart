@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pet_auxilium/pages/chatscreen_page.dart';
+import 'package:pet_auxilium/providers/chat_provider.dart';
 import 'package:pet_auxilium/utils/db_util.dart';
 import 'package:pet_auxilium/utils/prefs_util.dart';
 
 class UserListTile extends StatelessWidget {
   UserListTile({this.id, this.imgUrl, this.name, this.username, this.email});
   final String imgUrl, name, username, email, id;
-  final dbUtil _db = dbUtil();
+  final ChatProvider _chatProvider=ChatProvider();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -18,7 +19,7 @@ class UserListTile extends StatelessWidget {
     Map<String, dynamic> chatRoomInfoMap = {
       "users": [myId, this.id]
     };
-    _db.createChatRoom(chatRoomId, chatRoomInfoMap);
+    _chatProvider.createChatRoom(chatRoomId, chatRoomInfoMap);
     Navigator.popUntil(context, (route) => true);
     
      Navigator.of(context).push(
